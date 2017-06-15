@@ -7,3 +7,12 @@
 /build
 /captures
 .externalNativeBuild
+OkHttpFinal/build/generated/source/buildConfig/release/cn/finalteam/okhttpfinal/BuildConfig.java
+OkHttpFinal/build/intermediates/bundles/default/classes.jar
+*.class
+OkHttpFinal/build/intermediates/incremental-safeguard/debug/tag.txt
+OkHttpFinal/build/intermediates/incremental-safeguard/release/tag.txt
+OkHttpFinal/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml
+OkHttpFinal/build/outputs/aar/OkHttpFinal-release.aar
+OkHttpFinal/build/outputs/aar/OkHttpFinal-release.aar
+OkHttpFinal/build/outputs/aar/OkHttpFinal-release.aar

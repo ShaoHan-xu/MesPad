@@ -1,12 +1,10 @@
 package com.eeka.mespad.activity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import android.widget.RadioGroup;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
-import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 
 import java.lang.ref.WeakReference;
@@ -29,7 +26,7 @@ import java.util.List;
 import cn.finalteam.okhttpfinal.HttpRequest;
 import cn.finalteam.okhttpfinal.RequestParams;
 
-public class MainFragment extends BaseFragment{
+public class MainFragment extends BaseFragment {
 
     private ImageView mIv_processBmp;
 
@@ -62,7 +59,7 @@ public class MainFragment extends BaseFragment{
         mRadioGroup = (RadioGroup) mView.findViewById(R.id.rg_main_indication);
         mRadioGroup.setOnCheckedChangeListener(new RadioChangedListener());
 
-        mView.findViewById(R.id.iv_brand).setOnClickListener(this);
+        mView.findViewById(R.id.iv_materials).setOnClickListener(this);
         mView.findViewById(R.id.tv_gxdm).setOnClickListener(this);
     }
 
@@ -94,7 +91,7 @@ public class MainFragment extends BaseFragment{
         if (v.getId() == R.id.iv_main_processBmp) {
             mIv_processBmp.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
-        } else if (v.getId() == R.id.iv_brand) {
+        } else if (v.getId() == R.id.iv_materials) {
             RequestParams params = new RequestParams();
             params.put("gxdm", "SZSFHS001");
             HttpRequest.post(HttpHelper.GETGXDM_URL, params, HttpHelper.getResponseHandler(HttpHelper.GETGXDM_URL, this));
