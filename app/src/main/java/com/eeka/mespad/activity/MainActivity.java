@@ -7,10 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.eeka.mespad.R;
 
-import java.io.File;
-
-import io.reactivex.Flowable;
-
 /**
  * Created by Lenovo on 2017/6/12.
  */
