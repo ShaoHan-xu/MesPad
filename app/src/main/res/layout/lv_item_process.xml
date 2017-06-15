@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/tv_item_process_code"
+        style="@style/textStyle_default"
+        android:layout_centerVertical="true"
+        android:text="20170615010101010101" />
+
+    <Button
+        android:id="@+id/btn_item_process_finish"
+        style="@style/btnStyle_primary"
+        android:layout_alignParentRight="true"
+        android:text="完工" />
+
+</RelativeLayout>

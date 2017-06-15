@@ -1,5 +1,6 @@
 package com.eeka.mespad.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,12 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
+import com.eeka.mespad.adapter.CommonAdapter;
+import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.http.HttpHelper;
 
 import java.lang.ref.WeakReference;
@@ -31,10 +35,13 @@ public class MainFragment extends BaseFragment {
     private ImageView mIv_processBmp;
 
     private ViewPager mViewPager;
-    private ViewPagerAdapter mAdapter;
+    private ViewPagerAdapter mViewPagerAdapter;
     private List<Integer> mList_data;
 
     private RadioGroup mRadioGroup;
+
+    private ListView mLv_process;
+    private ProcessAdapter mProcessAdapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -60,7 +67,10 @@ public class MainFragment extends BaseFragment {
         mRadioGroup.setOnCheckedChangeListener(new RadioChangedListener());
 
         mView.findViewById(R.id.iv_materials).setOnClickListener(this);
-        mView.findViewById(R.id.tv_gxdm).setOnClickListener(this);
+        mView.findViewById(R.id.btn_returnMaterials).setOnClickListener(this);
+        mView.findViewById(R.id.btn_getMaterials).setOnClickListener(this);
+
+        mLv_process = (ListView) mView.findViewById(R.id.lv_processCode);
     }
 
     protected void initData() {
@@ -70,8 +80,8 @@ public class MainFragment extends BaseFragment {
         mList_data.add(R.drawable.zhaoyun);
         mList_data.add(R.drawable.renzhe);
 
-        mAdapter = new ViewPagerAdapter();
-        mViewPager.setAdapter(mAdapter);
+        mViewPagerAdapter = new ViewPagerAdapter();
+        mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPagerChangedListener());
 
         for (int i = 0; i < mList_data.size(); i++) {
@@ -82,6 +92,25 @@ public class MainFragment extends BaseFragment {
                 rb.setChecked(true);
             }
         }
+
+        List<String> list = new ArrayList<>();
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        list.add("");
+        mProcessAdapter = new ProcessAdapter(mContext, list, R.layout.lv_item_process);
+        mLv_process.setAdapter(mProcessAdapter);
 
         mHandler.sendEmptyMessageDelayed(0, 3000);
     }
@@ -95,12 +124,11 @@ public class MainFragment extends BaseFragment {
             RequestParams params = new RequestParams();
             params.put("gxdm", "SZSFHS001");
             HttpRequest.post(HttpHelper.GETGXDM_URL, params, HttpHelper.getResponseHandler(HttpHelper.GETGXDM_URL, this));
-        } else if (v.getId() == R.id.tv_gxdm) {
-            if (mHandler.hasMessages(0)) {
-                mHandler.removeMessages(0);
-            } else {
+        } else if (v.getId() == R.id.btn_returnMaterials) {
+            mHandler.removeMessages(0);
+        } else if (v.getId() == R.id.btn_getMaterials) {
+            if (!mHandler.hasMessages(0))
                 mHandler.sendEmptyMessageDelayed(0, 1000);
-            }
         }
     }
 
@@ -108,6 +136,22 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        }
+    }
+
+    private class ProcessAdapter extends CommonAdapter<String> {
+
+        public ProcessAdapter(Context context, List<String> list, int layoutId) {
+            super(context, list, layoutId);
+        }
+
+        @Override
+        public void convert(ViewHolder holder, String item, int position) {
+            if (position == 0) {
+                holder.getView(R.id.btn_item_process_finish).setVisibility(View.VISIBLE);
+            }else {
+                holder.getView(R.id.btn_item_process_finish).setVisibility(View.GONE);
+            }
         }
     }
 

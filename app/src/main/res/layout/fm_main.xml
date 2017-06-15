@@ -3,18 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="1dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="1dp"
+            android:layout_weight="2"
             android:background="@color/colorPrimary">
 
             <android.support.v4.view.ViewPager
@@ -41,34 +43,231 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="2dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <ScrollView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="款式：501010101" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="数量：5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <ListView
+                        android:id="@+id/lv_processCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary">
-
-                <include layout="@layout/layout_grid" />
-
-            </ScrollView>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1">
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/layout_materials"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="2dp"
-                    android:divider="@color/black"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="工艺说明：" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="1、确认排料图是否准确" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="2、检查裁刀情况，刀片锋利" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="品质要求：" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="1、确保面料正反面运用正确" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="2、做到“三齐一准一平”" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:id="@+id/layout_controlPanel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="1dp"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <Button
+                    android:id="@+id/btn_returnMaterials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="退料" />
+
+                <Button
+                    android:id="@+id/btn_getMaterials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="领料" />
+
+                <Button
+                    android:id="@+id/btn_recordLabu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="记录拉布数据" />
+
+                <Button
+                    android:id="@+id/btn_rest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="休息一下" />
+
+                <Button
+                    android:id="@+id/btn_quit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="退出" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_processCode"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:background="@color/white"
+                android:padding="2dp" />
+
+            <Button
+                android:id="@+id/btn_queryProcess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/et_processCode"
+                android:text="查询" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layout_controlPanel"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="1dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="面料1" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="面料1" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="特殊说明：" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="4"
+                    android:background="@color/colorPrimary"
                     android:orientation="horizontal">
 
                     <include layout="@layout/layout_materials" />
@@ -76,260 +275,31 @@
                     <include layout="@layout/layout_materials" />
 
                     <include layout="@layout/layout_materials" />
-
-                    <include layout="@layout/layout_materials" />
-
-                    <include layout="@layout/layout_materials" />
-
-                    <include layout="@layout/layout_materials" />
                 </LinearLayout>
-            </HorizontalScrollView>
-        </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="5"
-                android:orientation="horizontal">
-
-                <ScrollView
+                <LinearLayout
+                    android:id="@+id/layout_processName"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:padding="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="XD1101" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="公司品牌：娜尔斯" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="商标：订商标" />
-                    </LinearLayout>
-                </ScrollView>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:background="@color/colorPrimary">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="2dp">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:text="订单：11219179" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:text="数量：1" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:text="生产版本：S4" />
-                        </LinearLayout>
-
-                    </ScrollView>
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_weight="3"
-                        android:background="@color/colorPrimary">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="2dp">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:text="平车：M0754" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:text="锁眼：1" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:text="商标：娜尔斯" />
-                        </LinearLayout>
-
-                    </ScrollView>
-
-                </LinearLayout>
-
-                <ScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="2dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="YKK带星拉链：FL02DL890#" />
-
-                    </LinearLayout>
-
-                </ScrollView>
-
-
-            </LinearLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="2dp">
 
                     <TextView
                         style="@style/textStyle_default"
-                        android:text="里料成分：聚酯纤维100%" />
-
-                </LinearLayout>
-
-            </ScrollView>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:gravity="center"
-                    android:text="商标图" />
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:gravity="center"
-                    android:text="进口料图" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:background="@color/colorPrimary"
-                    android:padding="5dp">
+                        android:text="工序：拉布" />
 
                     <TextView
-                        android:id="@+id/tv_gxdm"
                         style="@style/textStyle_default"
-                        android:text="[序号：20090][工序名称：先连后档]" />
+                        android:text="工序：裁剪" />
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_weight="1">
-
-                    <Button
-                        android:id="@+id/btn_orderSearch"
-                        style="@style/textStyle_default"
-                        android:layout_alignParentRight="true"
-                        android:background="@color/colorPrimaryDark"
-                        android:text="订单查询" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_toLeftOf="@id/btn_orderSearch"
-                        android:background="@color/white"
-                        android:gravity="center_vertical"
-                        android:maxLines="1"
-                        android:padding="2dp"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/textSize_default" />
-
-                </RelativeLayout>
 
             </LinearLayout>
 
+
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
