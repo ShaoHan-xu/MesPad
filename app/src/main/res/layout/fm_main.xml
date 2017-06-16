@@ -55,23 +55,29 @@
                 android:layout_weight="2"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="1dp"
                     android:layout_weight="2"
                     android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:scrollbars="none">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="款式：501010101" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="数量：5" />
-                </LinearLayout>
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="款式：501010101" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="数量：5" />
+                    </LinearLayout>
+                </ScrollView>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -81,9 +87,10 @@
                     android:orientation="vertical"
                     android:padding="2dp">
 
-                    <ListView
-                        android:id="@+id/lv_processCode"
+                    <ExpandableListView
+                        android:id="@+id/elv_processCode"
                         android:layout_width="match_parent"
+                        android:groupIndicator="@null"
                         android:layout_height="match_parent" />
 
                 </LinearLayout>
@@ -95,49 +102,68 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="1dp"
                     android:layout_weight="2"
                     android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:scrollbars="none">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="工艺说明：" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="1、确认排料图是否准确" />
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工艺说明：" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="2、检查裁刀情况，刀片锋利" />
-                </LinearLayout>
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="1、确认排料图是否准确" />
 
-                <LinearLayout
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="2、检查裁刀情况，刀片锋利" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="2、检查裁刀情况，刀片锋利" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="2、检查裁刀情况，刀片锋利" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:scrollbars="none">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="品质要求：" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="1、确保面料正反面运用正确" />
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="品质要求：" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="2、做到“三齐一准一平”" />
-                </LinearLayout>
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="1、确保面料正反面运用正确" />
 
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="2、做到“三齐一准一平”" />
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
         </LinearLayout>
 
@@ -223,38 +249,37 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <GridView
+                    android:id="@+id/gv_materials"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="1dp"
                     android:layout_weight="2"
                     android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:numColumns="2" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="面料1" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="面料1" />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:scrollbars="none">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="特殊说明：" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-                </LinearLayout>
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="特殊说明：" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="是你后又回顾与股份我固衣柜防备我回家吧发布岁法国业务" />
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
 
             <LinearLayout
@@ -262,41 +287,64 @@
                 android:layout_height="0dp"
                 android:layout_weight="2">
 
-                <LinearLayout
+                <HorizontalScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="1dp"
                     android:layout_weight="4"
-                    android:background="@color/colorPrimary"
-                    android:orientation="horizontal">
+                    android:background="@color/colorPrimary">
 
-                    <include layout="@layout/layout_materials" />
+                    <LinearLayout
+                        android:id="@+id/layout_materials"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
 
-                    <include layout="@layout/layout_materials" />
-
-                    <include layout="@layout/layout_materials" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_processName"
+                <ScrollView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:scrollbars="none">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="工序：拉布" />
+                    <LinearLayout
+                        android:id="@+id/layout_processName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="工序：裁剪" />
-                </LinearLayout>
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：拉布" />
 
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：拉布" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：拉布" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：裁剪" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：裁剪" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：裁剪" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="工序：裁剪" />
+                    </LinearLayout>
+                </ScrollView>
             </LinearLayout>
-
 
         </LinearLayout>
 
