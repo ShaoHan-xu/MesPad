@@ -1,4 +1,4 @@
-package com.eeka.mespad.activity;
+package com.eeka.mespad.fragment;
 
 import android.app.Dialog;
 import android.content.Context;

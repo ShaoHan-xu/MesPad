@@ -1,4 +1,4 @@
-package com.eeka.mespad.activity;
+package com.eeka.mespad.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.activity.ImageBrowser;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.MaterialsBo;
@@ -136,7 +137,18 @@ public class MainFragment extends BaseFragment {
             mLayout_materials.addView(getMaterialsView(item));
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mHandler.sendEmptyMessageDelayed(0, 3000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mHandler.removeMessages(0);
     }
 
     @Override
@@ -238,7 +250,7 @@ public class MainFragment extends BaseFragment {
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.lv_item_process, null);
-            convertView.setBackgroundResource(R.color.gray);
+            convertView.setBackgroundResource(R.color.white);
             Button btn_finish = (Button) convertView.findViewById(R.id.btn_item_process_finish);
             if (childPosition == 0) {
                 btn_finish.setText("开始");
@@ -247,6 +259,7 @@ public class MainFragment extends BaseFragment {
                 btn_finish.setVisibility(View.INVISIBLE);
             }
             TextView text = (TextView) convertView.findViewById(R.id.tv_item_process_code);
+            text.setTextColor(getResources().getColor(R.color.black));
             text.setText("第" + childPosition + "车床");
             return convertView;
         }
@@ -353,9 +366,4 @@ public class MainFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-    }
 }
