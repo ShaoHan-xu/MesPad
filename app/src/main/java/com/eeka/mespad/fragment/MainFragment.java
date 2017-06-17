@@ -1,5 +1,6 @@
 package com.eeka.mespad.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -37,8 +37,6 @@ import cn.finalteam.okhttpfinal.RequestParams;
 
 public class MainFragment extends BaseFragment {
 
-    private ImageView mIv_processBmp;
-
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
     private List<Integer> mList_processData;
@@ -48,7 +46,8 @@ public class MainFragment extends BaseFragment {
     private ExpandableListView mElv_process;
     private ProcessAdapter mProcessAdapter;
 
-    private LinearLayout mLayout_materials;
+    private LinearLayout mLayout_materials1;
+    private LinearLayout mLayout_materials2;
     private GridView mGv_materials;
     private List<MaterialsBo> mList_materialsData;
 
@@ -69,18 +68,14 @@ public class MainFragment extends BaseFragment {
 
     protected void initView() {
         mViewPager = (ViewPager) mView.findViewById(R.id.viewPager_main_processBmp);
-        mIv_processBmp = (ImageView) mView.findViewById(R.id.iv_main_processBmp);
-        mIv_processBmp.setOnClickListener(this);
 
         mRadioGroup = (RadioGroup) mView.findViewById(R.id.rg_main_indication);
         mRadioGroup.setOnCheckedChangeListener(new RadioChangedListener());
 
-        mView.findViewById(R.id.btn_returnMaterials).setOnClickListener(this);
-        mView.findViewById(R.id.btn_getMaterials).setOnClickListener(this);
-
         mElv_process = (ExpandableListView) mView.findViewById(R.id.elv_processCode);
-        mLayout_materials = (LinearLayout) mView.findViewById(R.id.layout_materials);
-        mGv_materials = (GridView) mView.findViewById(R.id.gv_materials);
+        mLayout_materials1 = (LinearLayout) mView.findViewById(R.id.layout_materials1);
+        mLayout_materials2 = (LinearLayout) mView.findViewById(R.id.layout_materials2);
+        mGv_materials = (GridView) mView.findViewById(R.id.gv_info);
     }
 
     protected void initData() {
@@ -125,16 +120,25 @@ public class MainFragment extends BaseFragment {
         mList_materialsData.add(new MaterialsBo("" + R.drawable.hanxin, "面料4"));
         mList_materialsData.add(new MaterialsBo("" + R.drawable.libai, "面料5"));
         mList_materialsData.add(new MaterialsBo("" + R.drawable.zhaoyun, "面料6"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.renzhe, "面料7"));
+        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料7"));
+        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料8"));
+        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料9"));
         mGv_materials.setAdapter(new CommonAdapter<MaterialsBo>(mContext, mList_materialsData, R.layout.item_textview) {
             @Override
             public void convert(ViewHolder holder, MaterialsBo item, int position) {
-                holder.setText(R.id.text, item.getName());
+                if (position % 3 == 0) {
+                    holder.setText(R.id.text, "38");
+                } else if (position % 3 == 1) {
+                    holder.setText(R.id.text, "红");
+                } else if (position % 3 == 2) {
+                    holder.setText(R.id.text, "18");
+                }
             }
         });
 
         for (MaterialsBo item : mList_materialsData) {
-            mLayout_materials.addView(getMaterialsView(item));
+            mLayout_materials1.addView(getMaterialsView(item));
+            mLayout_materials2.addView(getMaterialsView(item));
         }
 
     }
@@ -153,18 +157,10 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_main_processBmp) {
-            mIv_processBmp.setVisibility(View.GONE);
-            mViewPager.setVisibility(View.VISIBLE);
-        } else if (v.getId() == R.id.iv_materials) {
+        if (v.getId() == R.id.iv_materials) {
             RequestParams params = new RequestParams();
             params.put("gxdm", "SZSFHS001");
             HttpRequest.post(HttpHelper.GETGXDM_URL, params, HttpHelper.getResponseHandler(HttpHelper.GETGXDM_URL, this));
-        } else if (v.getId() == R.id.btn_returnMaterials) {
-            mHandler.removeMessages(0);
-        } else if (v.getId() == R.id.btn_getMaterials) {
-            if (!mHandler.hasMessages(0))
-                mHandler.sendEmptyMessageDelayed(0, 1000);
         }
     }
 
@@ -238,26 +234,26 @@ public class MainFragment extends BaseFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.lv_item_process, null);
-            Button btn_finish = (Button) convertView.findViewById(R.id.btn_item_process_finish);
-            if (groupPosition == 0) {
-                btn_finish.setVisibility(View.VISIBLE);
-            } else {
-                btn_finish.setVisibility(View.INVISIBLE);
-            }
+//            Button btn_finish = (Button) convertView.findViewById(R.id.btn_item_process_finish);
+//            if (groupPosition == 0) {
+//                btn_finish.setVisibility(View.VISIBLE);
+//            } else {
+//                btn_finish.setVisibility(View.INVISIBLE);
+//            }
             return convertView;
         }
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.lv_item_process, null);
-            convertView.setBackgroundResource(R.color.white);
-            Button btn_finish = (Button) convertView.findViewById(R.id.btn_item_process_finish);
-            if (childPosition == 0) {
-                btn_finish.setText("开始");
-                btn_finish.setVisibility(View.VISIBLE);
-            } else {
-                btn_finish.setVisibility(View.INVISIBLE);
-            }
+            convertView.setBackgroundColor(Color.parseColor("#C7E6F8"));
+//            Button btn_finish = (Button) convertView.findViewById(R.id.btn_item_process_finish);
+//            if (childPosition == 0) {
+//                btn_finish.setText("开始");
+//                btn_finish.setVisibility(View.VISIBLE);
+//            } else {
+//                btn_finish.setVisibility(View.INVISIBLE);
+//            }
             TextView text = (TextView) convertView.findViewById(R.id.tv_item_process_code);
             text.setTextColor(getResources().getColor(R.color.black));
             text.setText("第" + childPosition + "车床");

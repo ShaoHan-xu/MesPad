@@ -1,47 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawerLayout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/layout_content"
+    <RelativeLayout
+        android:id="@+id/layout_controlPanel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
 
-    <LinearLayout
-        android:id="@+id/layout_slide"
-        android:layout_width="150dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/colorPrimary"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="10dp">
+        <Button
+            style="@style/textStyle_default"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_primary"
+            android:text="完成"
+            android:textColor="@color/white" />
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/hanxin" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="韩信" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/tv_caijian"
-            style="@style/textStyle_default"
-            android:padding="10dp"
-            android:text="裁剪作业界面" />
+            <Button
+                android:id="@+id/btn_returnMaterials"
+                style="@style/btnStyle_round"
+                android:text="退料" />
 
-        <TextView
-            android:id="@+id/tv_diaogua"
-            style="@style/textStyle_default"
-            android:padding="10dp"
-            android:text="吊挂作业界面" />
+            <Button
+                android:id="@+id/btn_getMaterials"
+                style="@style/btnStyle_round"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="领料" />
 
-    </LinearLayout>
-</android.support.v4.widget.DrawerLayout>
+            <Button
+                android:id="@+id/btn_recordLabu"
+                style="@style/btnStyle_round"
+                android:text="记录拉布数据" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_pause"
+            style="@style/btnStyle_round_green"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="暂停" />
+
+        <Button
+            android:id="@+id/btn_quit"
+            style="@style/btnStyle_round_green"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/btn_pause"
+            android:text="退出" />
+    </RelativeLayout>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_controlPanel"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp" />
+
+        <LinearLayout
+            android:id="@+id/layout_slide"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/hanxin" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="韩信" />
+
+            <TextView
+                android:id="@+id/tv_caijian"
+                style="@style/textStyle_default"
+                android:padding="10dp"
+                android:text="裁剪作业界面" />
+
+            <TextView
+                android:id="@+id/tv_diaogua"
+                style="@style/textStyle_default"
+                android:padding="10dp"
+                android:text="吊挂作业界面" />
+
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

@@ -8,8 +8,8 @@
     <TextView
         android:id="@+id/tv_item_process_code"
         style="@style/textStyle_default"
-        android:layout_centerVertical="true"
-        android:text="20170615010101010101" />
+        android:layout_centerInParent="true"
+        android:text="20170615010" />
 
     <Button
         android:id="@+id/btn_item_process_finish"
@@ -17,6 +17,7 @@
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:text="完工" />
+        android:text="完工"
+        android:visibility="invisible" />
 
 </RelativeLayout>

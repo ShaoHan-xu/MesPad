@@ -40,6 +40,8 @@ public class MainActivity extends BaseActivity {
 
         findViewById(R.id.tv_caijian).setOnClickListener(this);
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
+        findViewById(R.id.btn_returnMaterials).setOnClickListener(this);
+        findViewById(R.id.btn_getMaterials).setOnClickListener(this);
 
     }
 
@@ -67,6 +69,12 @@ public class MainActivity extends BaseActivity {
             case R.id.tv_diaogua:
                 changeFragment(1);
                 mDrawerLayout.closeDrawer(Gravity.START);
+                break;
+            case R.id.btn_returnMaterials:
+
+                break;
+            case R.id.btn_getMaterials:
+
                 break;
         }
     }

@@ -7,20 +7,36 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
     </style>
 
     <style name="textStyle_default">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/textSize_default</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/text_black_default</item>
     </style>
 
     <style name="btnStyle_primary" parent="textStyle_default">
         <item name="android:background">@drawable/btn_primary</item>
         <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">35dp</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="btnStyle_round" parent="textStyle_default">
+        <item name="android:background">@drawable/btn_trans_round</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+
+    <style name="btnStyle_round_green" parent="textStyle_default">
+        <item name="android:background">@drawable/btn_green_round</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
     </style>
 
     <style name="gridStyle">

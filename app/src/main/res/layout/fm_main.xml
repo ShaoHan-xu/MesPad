@@ -1,23 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:orientation="vertical">
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/layout_processList"
+        android:layout_width="170dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="14"
+                    android:textColor="@color/text_blue_default"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="定制订单/h"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23"
+                    android:textColor="@color/text_blue_default"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="大货订单/h"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ExpandableListView
+            android:id="@+id/elv_processCode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#DEF0FA"
+            android:groupIndicator="@null" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_describe"
+        android:layout_width="170dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/layout_processList"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="60dp"
+                    android:text="数量/件" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="@color/text_green_default"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="60dp"
+                    android:text="款式" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="1234567"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/text_green_default"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="码数"
+                android:textColor="@color/white" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="颜色"
+                android:textColor="@color/white" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="数量"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gv_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:numColumns="3"
+            android:padding="5dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="特殊要求："
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="1、面料尽裁" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_marginTop="15dp"
+                    android:text="品质要求："
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="1、确保面料正反面运用正常。" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_marginTop="15dp"
+                    android:text="工艺说明："
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="1、确保面料正反面运用正常。" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_marginTop="15dp"
+                    android:text="特殊说明："
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="1、确保面料正反面运用正常。" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="1dp"
-        android:layout_weight="2"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/layout_describe"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="1dp"
-            android:layout_weight="2"
-            android:background="@color/colorPrimary">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:background="@color/white">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager_main_processBmp"
@@ -30,324 +245,49 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:orientation="horizontal">
-
-            </RadioGroup>
-
-            <ImageView
-                android:id="@+id/iv_main_processBmp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:orientation="horizontal" />
 
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="vertical">
 
-            <LinearLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="1dp"
-                android:layout_weight="2"
-                android:orientation="horizontal">
-
-                <ScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="2"
-                    android:background="@color/colorPrimary"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="款式：501010101" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="数量：5" />
-                    </LinearLayout>
-                </ScrollView>
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:background="@color/white">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/layout_materials1"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:background="@color/colorPrimary"
-                    android:orientation="vertical"
-                    android:padding="2dp">
+                    android:divider="@drawable/divider_white"
+                    android:orientation="horizontal"
+                    android:showDividers="middle" />
+            </HorizontalScrollView>
 
-                    <ExpandableListView
-                        android:id="@+id/elv_processCode"
-                        android:layout_width="match_parent"
-                        android:groupIndicator="@null"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:background="@color/white">
 
-                <ScrollView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/layout_materials2"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="2"
-                    android:background="@color/colorPrimary"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工艺说明：" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="1、确认排料图是否准确" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="2、检查裁刀情况，刀片锋利" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="2、检查裁刀情况，刀片锋利" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="2、检查裁刀情况，刀片锋利" />
-                    </LinearLayout>
-                </ScrollView>
-
-                <ScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:background="@color/colorPrimary"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="品质要求：" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="1、确保面料正反面运用正确" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="2、做到“三齐一准一平”" />
-                    </LinearLayout>
-                </ScrollView>
-            </LinearLayout>
+                    android:divider="@drawable/divider_white"
+                    android:orientation="horizontal"
+                    android:showDividers="middle" />
+            </HorizontalScrollView>
         </LinearLayout>
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <RelativeLayout
-            android:id="@+id/layout_controlPanel"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="1dp"
-            android:background="@color/colorPrimary">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
-
-                <Button
-                    android:id="@+id/btn_returnMaterials"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="退料" />
-
-                <Button
-                    android:id="@+id/btn_getMaterials"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="领料" />
-
-                <Button
-                    android:id="@+id/btn_recordLabu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="记录拉布数据" />
-
-                <Button
-                    android:id="@+id/btn_rest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="休息一下" />
-
-                <Button
-                    android:id="@+id/btn_quit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="退出" />
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/et_processCode"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:background="@color/white"
-                android:padding="2dp" />
-
-            <Button
-                android:id="@+id/btn_queryProcess"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/et_processCode"
-                android:text="查询" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/layout_controlPanel"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="1dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <GridView
-                    android:id="@+id/gv_materials"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="2"
-                    android:background="@color/colorPrimary"
-                    android:numColumns="2" />
-
-                <ScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="特殊说明：" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="是你后又回顾与股份我固衣柜防备我回家吧发布岁法国业务" />
-                    </LinearLayout>
-                </ScrollView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2">
-
-                <HorizontalScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="1dp"
-                    android:layout_weight="4"
-                    android:background="@color/colorPrimary">
-
-                    <LinearLayout
-                        android:id="@+id/layout_materials"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" />
-                </HorizontalScrollView>
-
-                <ScrollView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/colorPrimary"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/layout_processName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：拉布" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：拉布" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：拉布" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：裁剪" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：裁剪" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：裁剪" />
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:text="工序：裁剪" />
-                    </LinearLayout>
-                </ScrollView>
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
