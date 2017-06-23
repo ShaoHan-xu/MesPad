@@ -44,7 +44,7 @@ public class MainFragment extends BaseFragment {
     private RadioGroup mRadioGroup;
 
     private ExpandableListView mElv_process;
-    private ProcessAdapter mProcessAdapter;
+    private OrderAdapter mOrderAdapter;
 
     private LinearLayout mLayout_materials1;
     private LinearLayout mLayout_materials2;
@@ -76,6 +76,7 @@ public class MainFragment extends BaseFragment {
         mLayout_materials1 = (LinearLayout) mView.findViewById(R.id.layout_materials1);
         mLayout_materials2 = (LinearLayout) mView.findViewById(R.id.layout_materials2);
         mGv_materials = (GridView) mView.findViewById(R.id.gv_info);
+
     }
 
     protected void initData() {
@@ -110,8 +111,8 @@ public class MainFragment extends BaseFragment {
             }
             child.add(list);
         }
-        mProcessAdapter = new ProcessAdapter(group, child);
-        mElv_process.setAdapter(mProcessAdapter);
+        mOrderAdapter = new OrderAdapter(group, child);
+        mElv_process.setAdapter(mOrderAdapter);
 
         mList_materialsData = new ArrayList<>();
         mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料1"));
@@ -186,12 +187,12 @@ public class MainFragment extends BaseFragment {
         }
     }
 
-    private class ProcessAdapter extends BaseExpandableListAdapter {
+    private class OrderAdapter extends BaseExpandableListAdapter {
 
         private List<String> mList_group;
         private List<List<String>> mList_child;
 
-        public ProcessAdapter(List<String> mList_group, List<List<String>> mList_child) {
+        public OrderAdapter(List<String> mList_group, List<List<String>> mList_child) {
             this.mList_group = mList_group;
             this.mList_child = mList_child;
         }
