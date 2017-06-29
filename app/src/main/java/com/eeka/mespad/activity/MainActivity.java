@@ -1,5 +1,6 @@
 package com.eeka.mespad.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import com.eeka.mespad.R;
 import com.eeka.mespad.fragment.MainFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
+import com.eeka.mespad.utils.SpUtil;
 
 /**
  * Created by Lenovo on 2017/6/12.
@@ -46,6 +48,10 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
         findViewById(R.id.btn_returnMaterials).setOnClickListener(this);
         findViewById(R.id.btn_getMaterials).setOnClickListener(this);
+        findViewById(R.id.btn_recordLabu).setOnClickListener(this);
+        findViewById(R.id.btn_pause).setOnClickListener(this);
+        findViewById(R.id.btn_quit).setOnClickListener(this);
+        findViewById(R.id.btn_done).setOnClickListener(this);
 
     }
 
@@ -77,10 +83,24 @@ public class MainActivity extends BaseActivity {
                 mDrawerLayout.closeDrawer(Gravity.START);
                 break;
             case R.id.btn_returnMaterials:
-
+                toast("退料");
                 break;
             case R.id.btn_getMaterials:
-
+                toast("领料");
+                break;
+            case R.id.btn_recordLabu:
+                toast("记录拉布数据");
+                break;
+            case R.id.btn_pause:
+                toast("暂停");
+                break;
+            case R.id.btn_quit:
+                startActivity(new Intent(mContext, LoginActivity.class));
+                SpUtil.saveLoginStatus(false);
+                finish();
+                break;
+            case R.id.btn_done:
+                toast("完成");
                 break;
         }
     }

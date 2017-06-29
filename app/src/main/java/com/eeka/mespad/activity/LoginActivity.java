@@ -8,8 +8,9 @@ import android.widget.EditText;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.fragment.MainFragment;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 
 /**
  * 登录界面
@@ -34,6 +35,17 @@ public class LoginActivity extends BaseActivity {
         mEt_user = (EditText) findViewById(R.id.et_login_user);
         mEt_pwd = (EditText) findViewById(R.id.et_login_pwd);
 
+        UserInfoBo userInfo = SpUtil.getUserInfo();
+        boolean loginStatus = SpUtil.getLoginStatus();
+        if (loginStatus && userInfo != null) {
+            startActivity(new Intent(mContext, MainActivity.class));
+            finish();
+        }
+        if (userInfo != null) {
+            mEt_user.setText(userInfo.getUserName());
+            mEt_pwd.setText(userInfo.getPassword());
+        }
+
         findViewById(R.id.btn_login).setOnClickListener(this);
     }
 
@@ -56,31 +68,37 @@ public class LoginActivity extends BaseActivity {
             toast("请输入密码");
             return;
         }
-        HttpHelper.login(user, pwd, this);
 
         showLoading();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                    dismissLoading();
-                    startActivity(new Intent(mContext, MainFragment.class));
-                    finish();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        HttpHelper.login(user, pwd, this);
     }
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
+        dismissLoading();
+        if (url.contains("method=login")) {
+            String status = resultJSON.getString("status");
+            if ("Y".equals(status)) {
+                String user = mEt_user.getText().toString();
+                String pwd = mEt_pwd.getText().toString();
+                UserInfoBo userInfoBo = new UserInfoBo(user, pwd);
+                SpUtil.saveUserInfo(userInfoBo);
+                SpUtil.saveLoginStatus(true);
+
+                toast("登录成功");
+                startActivity(new Intent(mContext, MainActivity.class));
+                finish();
+            } else {
+                toast("登录失败");
+            }
+        }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
         super.onFailure(url, code, message);
+        dismissLoading();
+        toast("登录失败");
     }
 }

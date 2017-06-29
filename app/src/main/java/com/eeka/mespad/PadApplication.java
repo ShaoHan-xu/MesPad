@@ -1,10 +1,10 @@
 package com.eeka.mespad;
 
 import android.app.Application;
+import android.content.Context;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
-import okhttp3.Headers;
 
 /**
  * Created by Lenovo on 2017/5/13.
@@ -12,12 +12,17 @@ import okhttp3.Headers;
 
 public class PadApplication extends Application {
 
+    public static Context mContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+        mContext = this;
         initOkHttp();
     }
+
+
 
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();

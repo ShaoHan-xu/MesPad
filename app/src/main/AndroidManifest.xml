@@ -3,6 +3,8 @@
     package="com.eeka.mespad">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <application
         android:name=".PadApplication"
@@ -13,9 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="landscape">
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,8 +25,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ImageBrowser"
+            android:name=".activity.ImageBrowserActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.MainActivity"
             android:screenOrientation="landscape" />
     </application>
 
+    <meta-data
+        android:name="com.bumptech.glide.samples.flickr.FlickrGlideModule"
+        android:value="GlideModule" />
 </manifest>

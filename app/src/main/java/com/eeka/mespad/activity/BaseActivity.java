@@ -4,11 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +24,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected Context mContext;
 
-    private Toast mToast;
     private Dialog mProDialog;
     private TextView mTv_loadingMsg;
 
@@ -74,6 +73,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         mTv_loadingMsg = (TextView) view.findViewById(R.id.tv_loading_msg);
 
         mProDialog = new Dialog(mContext);
+        mProDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mProDialog.setContentView(view);
     }
 
@@ -82,10 +82,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void toast(String msg, int duration) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mContext, msg, duration);
-        }
-        mToast.show();
+        Toast.makeText(mContext, msg, duration).show();
     }
 
     @Override

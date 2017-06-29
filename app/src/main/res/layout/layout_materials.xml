@@ -7,16 +7,21 @@
         android:id="@+id/tv_materials"
         style="@style/textStyle_default"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="面料1" />
+        android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:id="@+id/iv_materials"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@id/tv_materials"
-        android:scaleType="centerCrop"
-        android:src="@drawable/hanxin" />
+        android:background="@drawable/border_black"
+        android:padding="0.5dp">
 
+        <ImageView
+            android:id="@+id/iv_materials"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

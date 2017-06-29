@@ -7,10 +7,13 @@
         android:id="@+id/layout_bottomBar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/white"
         android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <Button
+            android:id="@+id/btn_done"
             style="@style/textStyle_default"
             android:layout_width="175dp"
             android:layout_height="match_parent"

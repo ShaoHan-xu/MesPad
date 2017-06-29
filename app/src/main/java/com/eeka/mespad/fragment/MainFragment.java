@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -21,25 +20,21 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
-import com.eeka.mespad.activity.ImageBrowser;
-import com.eeka.mespad.adapter.CommonAdapter;
-import com.eeka.mespad.adapter.ViewHolder;
-import com.eeka.mespad.bo.MaterialsBo;
+import com.eeka.mespad.activity.ImageBrowserActivity;
+import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.finalteam.okhttpfinal.HttpRequest;
-import cn.finalteam.okhttpfinal.RequestParams;
-
 public class MainFragment extends BaseFragment {
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
-    private List<Integer> mList_processData;
+    private ArrayList<String> mList_processData;
 
     private RadioGroup mRadioGroup;
 
@@ -48,8 +43,8 @@ public class MainFragment extends BaseFragment {
 
     private LinearLayout mLayout_materials1;
     private LinearLayout mLayout_materials2;
-    private GridView mGv_materials;
-    private List<MaterialsBo> mList_materialsData;
+    private LinearLayout mLayout_sizeInfo;
+    private TailorInfoBo.TailorResultBean mTailorResult;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -75,29 +70,23 @@ public class MainFragment extends BaseFragment {
         mElv_process = (ExpandableListView) mView.findViewById(R.id.elv_processCode);
         mLayout_materials1 = (LinearLayout) mView.findViewById(R.id.layout_materials1);
         mLayout_materials2 = (LinearLayout) mView.findViewById(R.id.layout_materials2);
-        mGv_materials = (GridView) mView.findViewById(R.id.gv_info);
+        mLayout_sizeInfo = (LinearLayout) mView.findViewById(R.id.layout_sizeInfo);
 
+        mElv_process.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                HttpHelper.viewCutPadInfo("", MainFragment.this);
+                return false;
+            }
+        });
     }
 
     protected void initData() {
-        mList_processData = new ArrayList<>();
-        mList_processData.add(R.drawable.libai);
-        mList_processData.add(R.drawable.hanxin);
-        mList_processData.add(R.drawable.zhaoyun);
-        mList_processData.add(R.drawable.renzhe);
+        HttpHelper.viewCutPadInfo("", MainFragment.this);
 
         mViewPagerAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPagerChangedListener());
-
-        for (int i = 0; i < mList_processData.size(); i++) {
-            RadioButton rb = new RadioButton(mContext);
-            rb.setEnabled(false);
-            mRadioGroup.addView(rb);
-            if (i == 0) {
-                rb.setChecked(true);
-            }
-        }
 
         List<String> group = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -114,40 +103,37 @@ public class MainFragment extends BaseFragment {
         mOrderAdapter = new OrderAdapter(group, child);
         mElv_process.setAdapter(mOrderAdapter);
 
-        mList_materialsData = new ArrayList<>();
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料1"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials2, "面料2"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials3, "面料3"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.hanxin, "面料4"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.libai, "面料5"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.zhaoyun, "面料6"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料7"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料8"));
-        mList_materialsData.add(new MaterialsBo("" + R.drawable.materials1, "面料9"));
-        mGv_materials.setAdapter(new CommonAdapter<MaterialsBo>(mContext, mList_materialsData, R.layout.item_textview) {
-            @Override
-            public void convert(ViewHolder holder, MaterialsBo item, int position) {
-                if (position % 3 == 0) {
-                    holder.setText(R.id.text, "38");
-                } else if (position % 3 == 1) {
-                    holder.setText(R.id.text, "红");
-                } else if (position % 3 == 2) {
-                    holder.setText(R.id.text, "18");
-                }
-            }
-        });
-
-        for (MaterialsBo item : mList_materialsData) {
-            mLayout_materials1.addView(getMaterialsView(item));
-            mLayout_materials2.addView(getMaterialsView(item));
-        }
-
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mHandler.sendEmptyMessageDelayed(0, 3000);
+    private void refreshView() {
+        mLayout_materials1.removeAllViews();
+        mLayout_materials2.removeAllViews();
+        List<TailorInfoBo.TailorResultBean.ItemArrayBean> itemArray = mTailorResult.getItemArray();
+        for (int i = 0; i < itemArray.size(); i++) {
+            mLayout_materials1.addView(getMaterialsView(itemArray.get(i), i));
+            mLayout_materials2.addView(getMaterialsView(itemArray.get(i), i));
+        }
+
+        mLayout_sizeInfo.removeAllViews();
+        List<TailorInfoBo.TailorResultBean.SizeArrayBean> sizeArray = mTailorResult.getSizeArray();
+        for (int i = 0; i < sizeArray.size(); i++) {
+            mLayout_sizeInfo.addView(getSizeInfoView(sizeArray.get(i)));
+        }
+
+        mList_processData = new ArrayList<>();
+        mList_processData.add(mTailorResult.getDrawPicUrl());
+        mViewPagerAdapter.notifyDataSetChanged();
+        if (mList_processData.size() > 1) {
+            for (int i = 0; i < mList_processData.size(); i++) {
+                RadioButton rb = new RadioButton(mContext);
+                rb.setEnabled(false);
+                mRadioGroup.addView(rb);
+                if (i == 0) {
+                    rb.setChecked(true);
+                }
+            }
+            mHandler.sendEmptyMessageDelayed(0, 3000);
+        }
     }
 
     @Override
@@ -158,25 +144,40 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_materials) {
-            RequestParams params = new RequestParams();
-            params.put("gxdm", "SZSFHS001");
-            HttpRequest.post(HttpHelper.GETGXDM_URL, params, HttpHelper.getResponseHandler(HttpHelper.GETGXDM_URL, this));
-        }
+
     }
 
-    private View getMaterialsView(final MaterialsBo item) {
+    private View getMaterialsView(final TailorInfoBo.TailorResultBean.ItemArrayBean item, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_materials, null);
+        view.setTag(position);
         ImageView iv_materials = (ImageView) view.findViewById(R.id.iv_materials);
         TextView tv_materials = (TextView) view.findViewById(R.id.tv_materials);
-        iv_materials.setImageResource(Integer.valueOf(item.getPicUrl()));
-        tv_materials.setText(item.getName());
+        Glide.with(mContext).load(item.getMaterialUrl()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(iv_materials);
+        iv_materials.setTag(position);
+        tv_materials.setText(item.getMaterial());
         iv_materials.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ImageBrowser.getIntent(mContext, item.getPicUrl()));
+                ArrayList<String> urls = new ArrayList<>();
+                List<TailorInfoBo.TailorResultBean.ItemArrayBean> list = mTailorResult.getItemArray();
+                for (TailorInfoBo.TailorResultBean.ItemArrayBean item : list) {
+                    urls.add(item.getMaterialUrl());
+                }
+
+                startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
             }
         });
+        return view;
+    }
+
+    private View getSizeInfoView(TailorInfoBo.TailorResultBean.SizeArrayBean sizeInfo) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sizeinfo, null);
+        TextView tv_yardage = (TextView) view.findViewById(R.id.tv_item_yardage);
+        TextView tv_color = (TextView) view.findViewById(R.id.tv_item_color);
+        TextView tv_count = (TextView) view.findViewById(R.id.tv_item_count);
+        tv_yardage.setText(sizeInfo.getSize() + "");
+        tv_color.setText(sizeInfo.getColor());
+        tv_count.setText(sizeInfo.getQty() + "");
         return view;
     }
 
@@ -280,6 +281,9 @@ public class MainFragment extends BaseFragment {
             if (childAt != null) {
                 ((RadioButton) childAt).setChecked(true);
             }
+
+            mHandler.removeMessages(0);
+            mHandler.sendEmptyMessageDelayed(0, 3000);
         }
 
         @Override
@@ -298,12 +302,14 @@ public class MainFragment extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             final View view = LayoutInflater.from(mContext).inflate(R.layout.vp_item_main_processbmp, null);
-            ImageView imageView = (ImageView) view.findViewById(R.id.iv_item_main_processBmp);
-            imageView.setImageResource(mList_processData.get(position));
+            final ImageView imageView = (ImageView) view.findViewById(R.id.iv_item_main_processBmp);
+
+            Glide.with(mContext).load(mList_processData.get(position)).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(imageView);
+
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(ImageBrowser.getIntent(mContext, mList_processData.get(position) + ""));
+                    startActivity(ImageBrowserActivity.getIntent(mContext, mList_processData, position));
                 }
             });
 
@@ -315,6 +321,7 @@ public class MainFragment extends BaseFragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
             View item = (View) object;
             container.removeView(item);
+
         }
 
         @Override
@@ -356,11 +363,19 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
+        String status = resultJSON.getString("status");
+        if ("Y".equals(status)) {
+            TailorInfoBo tailorInfoBo = JSONObject.parseObject(resultJSON.toJSONString(), TailorInfoBo.class);
+            mTailorResult = tailorInfoBo.getResult();
+            refreshView();
+        } else {
+            toast("获取数据失败");
+        }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
-
+        toast(message);
     }
 
 }
