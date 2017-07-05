@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/layout_dlg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/btn_dlg_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/tv_dlg_title"
+            style="@style/textStyle_default"
+            android:layout_alignBaseline="@id/btn_dlg_close"
+            android:text="拉布数据记录及完工确认"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_title"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_recordLabu_saveAndDone"
+        style="@style/btnStyle_primary"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="保存及确认完成" />
+
+    <Button
+        android:id="@+id/btn_recordLabu_save"
+        style="@style/btnStyle_primary"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/btn_recordLabu_saveAndDone"
+        android:text="保存" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_recordLabu_save"
+        android:layout_below="@id/layout_dlg_title"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="5dp">
+
+            <LinearLayout
+                android:id="@+id/layout_recordLabu_materialImg"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:orientation="horizontal" />
+
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#CCCCCC"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="物料编号" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="卷号" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="长度/米" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="拉布层数" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="余料/米" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="备注" />
+
+            <Button
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView_recordLabu_material"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layout_recordLabu_material"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:divider="@drawable/divider_grid"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:showDividers="middle">
+
+                <Button
+                    android:id="@+id/btn_recordLabu_addMaterial"
+                    style="@style/btnStyle_green_round"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="添加物料" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>

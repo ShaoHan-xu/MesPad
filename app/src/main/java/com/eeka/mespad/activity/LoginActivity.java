@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity {
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         dismissLoading();
-        if (url.contains("method=login")) {
+        if (url.contains(HttpHelper.LOGIN_URL)) {
             String status = resultJSON.getString("status");
             if ("Y".equals(status)) {
                 String user = mEt_user.getText().toString();

@@ -13,14 +13,6 @@
         android:text="码数" />
 
     <TextView
-        android:id="@+id/tv_item_color"
-        style="@style/textStyle_default"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="颜色" />
-
-    <TextView
         android:id="@+id/tv_item_count"
         style="@style/textStyle_default"
         android:layout_width="0dp"

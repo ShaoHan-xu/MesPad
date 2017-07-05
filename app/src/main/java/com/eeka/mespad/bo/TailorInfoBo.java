@@ -9,163 +9,193 @@ import java.util.List;
 public class TailorInfoBo {
 
     /**
-     * status : Y
-     * result : {"shopOrder":"工单","planCut":"床次","drawPicUrl":"排料图url地址","material":"款式","qty":"数量/件","itemArray":[{"material":"M001","materialUrl":"http://10.8.41.187/50011后袋.jpg"},{"name":"M002","materialUrl":"http://10.8.41.187/50011后片.jpg"},{"name":"M003","materialUrl":"http://10.8.41.187/50011拉链.jpg"}],"sizeArray":[{"size":38,"qty":30},{"size":39,"qty":20}]}
+     * OPER_INFOR : {"SOP_URL":"http://10.8.41.187/裁片.jpg","OPERATION_BO":"OperationBO:TEST,OP002,A"}
+     * SHOP_ORDER_INFOR : {"SHOP_ORDER":"MODA-SO-01","PROCESS_LOT":"201708031960292","ITEM":"MODA-MAT-01","AMOUNT":100,"LAYERS":30,"MAT_URL":"http://10.8.41.187/50011前袋.jpg","Z_LAYOUT_BO":"1"}
+     * IS_CUSTOM : false
+     * CUT_SIZES : [{"SIZE":"39","SIZE_AMOUNT":4},{"SIZE":"40","SIZE_AMOUNT":5}]
      */
 
-    private String status;
-    private TailorResultBean result;
+    private List<OPERINFORBean> OPER_INFOR;
+    private SHOPORDERINFORBean SHOP_ORDER_INFOR;
+    private boolean IS_CUSTOM;
+    private List<CUTSIZESBean> CUT_SIZES;
+    private List<MatInfoBean> MAT_INFOR;
 
-    public String getStatus() {
-        return status;
+    public List<MatInfoBean> getMAT_INFOR() {
+        return MAT_INFOR;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setMAT_INFOR(List<MatInfoBean> MAT_INFOR) {
+        this.MAT_INFOR = MAT_INFOR;
     }
 
-    public TailorResultBean getResult() {
-        return result;
+    public List<OPERINFORBean> getOPER_INFOR() {
+        return OPER_INFOR;
     }
 
-    public void setResult(TailorResultBean result) {
-        this.result = result;
+    public void setOPER_INFOR(List<OPERINFORBean> OPER_INFOR) {
+        this.OPER_INFOR = OPER_INFOR;
     }
 
-    public static class TailorResultBean {
+    public SHOPORDERINFORBean getSHOP_ORDER_INFOR() {
+        return SHOP_ORDER_INFOR;
+    }
+
+    public void setSHOP_ORDER_INFOR(SHOPORDERINFORBean SHOP_ORDER_INFOR) {
+        this.SHOP_ORDER_INFOR = SHOP_ORDER_INFOR;
+    }
+
+    public boolean isIS_CUSTOM() {
+        return IS_CUSTOM;
+    }
+
+    public void setIS_CUSTOM(boolean IS_CUSTOM) {
+        this.IS_CUSTOM = IS_CUSTOM;
+    }
+
+    public List<CUTSIZESBean> getCUT_SIZES() {
+        return CUT_SIZES;
+    }
+
+    public void setCUT_SIZES(List<CUTSIZESBean> CUT_SIZES) {
+        this.CUT_SIZES = CUT_SIZES;
+    }
+
+    public static class MatInfoBean {
+        private int LAYERS;
+        private String MAT_URL;
+        private String MAT_NO;
+
+        public String getMAT_NO() {
+            return MAT_NO;
+        }
+
+        public void setMAT_NO(String MAT_NO) {
+            this.MAT_NO = MAT_NO;
+        }
+
+        public int getLAYERS() {
+            return LAYERS;
+        }
+
+        public void setLAYERS(int LAYERS) {
+            this.LAYERS = LAYERS;
+        }
+
+        public String getMAT_URL() {
+            return MAT_URL;
+        }
+
+        public void setMAT_URL(String MAT_URL) {
+            this.MAT_URL = MAT_URL;
+        }
+    }
+
+    public static class OPERINFORBean {
         /**
-         * shopOrder : 工单
-         * planCut : 床次
-         * drawPicUrl : 排料图url地址
-         * material : 款式
-         * qty : 数量/件
-         * itemArray : [{"material":"M001","materialUrl":"http://10.8.41.187/50011后袋.jpg"},{"name":"M002","materialUrl":"http://10.8.41.187/50011后片.jpg"},{"name":"M003","materialUrl":"http://10.8.41.187/50011拉链.jpg"}]
-         * sizeArray : [{"size":38,"qty":30},{"size":39,"qty":20}]
+         * SOP_URL : http://10.8.41.187/裁片.jpg
+         * OPERATION_BO : OperationBO:TEST,OP002,A
          */
 
-        private String shopOrder;
-        private String planCut;
-        private String drawPicUrl;
-        private String material;
-        private String qty;
-        private List<ItemArrayBean> itemArray;
-        private List<SizeArrayBean> sizeArray;
+        private String SOP_URL;
+        private String OPERATION_BO;
 
-        public String getShopOrder() {
-            return shopOrder;
+        public String getSOP_URL() {
+            return SOP_URL;
         }
 
-        public void setShopOrder(String shopOrder) {
-            this.shopOrder = shopOrder;
+        public void setSOP_URL(String SOP_URL) {
+            this.SOP_URL = SOP_URL;
         }
 
-        public String getPlanCut() {
-            return planCut;
+        public String getOPERATION_BO() {
+            return OPERATION_BO;
         }
 
-        public void setPlanCut(String planCut) {
-            this.planCut = planCut;
+        public void setOPERATION_BO(String OPERATION_BO) {
+            this.OPERATION_BO = OPERATION_BO;
+        }
+    }
+
+    public static class SHOPORDERINFORBean {
+        /**
+         * SHOP_ORDER : MODA-SO-01
+         * PROCESS_LOT : 201708031960292
+         * ITEM : MODA-MAT-01
+         * AMOUNT : 100
+         * Z_LAYOUT_BO : 1
+         */
+
+        private String SHOP_ORDER;
+        private String PROCESS_LOT;
+        private String ITEM;
+        private int AMOUNT;
+        private String Z_LAYOUT_BO;
+
+        public String getSHOP_ORDER() {
+            return SHOP_ORDER;
         }
 
-        public String getDrawPicUrl() {
-            return drawPicUrl;
+        public void setSHOP_ORDER(String SHOP_ORDER) {
+            this.SHOP_ORDER = SHOP_ORDER;
         }
 
-        public void setDrawPicUrl(String drawPicUrl) {
-            this.drawPicUrl = drawPicUrl;
+        public String getPROCESS_LOT() {
+            return PROCESS_LOT;
         }
 
-        public String getMaterial() {
-            return material;
+        public void setPROCESS_LOT(String PROCESS_LOT) {
+            this.PROCESS_LOT = PROCESS_LOT;
         }
 
-        public void setMaterial(String material) {
-            this.material = material;
+        public String getITEM() {
+            return ITEM;
         }
 
-        public String getQty() {
-            return qty;
+        public void setITEM(String ITEM) {
+            this.ITEM = ITEM;
         }
 
-        public void setQty(String qty) {
-            this.qty = qty;
+        public int getAMOUNT() {
+            return AMOUNT;
         }
 
-        public List<ItemArrayBean> getItemArray() {
-            return itemArray;
+        public void setAMOUNT(int AMOUNT) {
+            this.AMOUNT = AMOUNT;
         }
 
-        public void setItemArray(List<ItemArrayBean> itemArray) {
-            this.itemArray = itemArray;
+        public String getZ_LAYOUT_BO() {
+            return Z_LAYOUT_BO;
         }
 
-        public List<SizeArrayBean> getSizeArray() {
-            return sizeArray;
+        public void setZ_LAYOUT_BO(String Z_LAYOUT_BO) {
+            this.Z_LAYOUT_BO = Z_LAYOUT_BO;
+        }
+    }
+
+    public static class CUTSIZESBean {
+        /**
+         * SIZE : 39
+         * SIZE_AMOUNT : 4
+         */
+
+        private String SIZE;
+        private int SIZE_AMOUNT;
+
+        public String getSIZE() {
+            return SIZE;
         }
 
-        public void setSizeArray(List<SizeArrayBean> sizeArray) {
-            this.sizeArray = sizeArray;
+        public void setSIZE(String SIZE) {
+            this.SIZE = SIZE;
         }
 
-        public static class ItemArrayBean {
-            /**
-             * material : M001
-             * materialUrl : http://10.8.41.187/50011后袋.jpg
-             */
-
-            private String material;
-            private String materialUrl;
-
-            public String getMaterial() {
-                return material;
-            }
-
-            public void setMaterial(String material) {
-                this.material = material;
-            }
-
-            public String getMaterialUrl() {
-                return materialUrl;
-            }
-
-            public void setMaterialUrl(String materialUrl) {
-                this.materialUrl = materialUrl;
-            }
+        public int getSIZE_AMOUNT() {
+            return SIZE_AMOUNT;
         }
 
-        public static class SizeArrayBean {
-            /**
-             * size : 38
-             * qty : 30
-             */
-
-            private int size;
-            private int qty;
-            private String color;
-
-            public int getSize() {
-                return size;
-            }
-
-            public void setSize(int size) {
-                this.size = size;
-            }
-
-            public int getQty() {
-                return qty;
-            }
-
-            public void setQty(int qty) {
-                this.qty = qty;
-            }
-
-            public String getColor() {
-                return color;
-            }
-
-            public void setColor(String color) {
-                this.color = color;
-            }
+        public void setSIZE_AMOUNT(int SIZE_AMOUNT) {
+            this.SIZE_AMOUNT = SIZE_AMOUNT;
         }
     }
 }
