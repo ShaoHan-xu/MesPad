@@ -22,4 +22,5 @@
     <color name="text_gray_default">#989898</color>
     <color name="text_green_default">#00C073</color>
     <color name="text_blue_default">#0080C0</color>
+    <color name="text_red_default">#c0002a</color>
 </resources>

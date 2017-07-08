@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tv_item_orderList_orderNum"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:text="订单号" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_styleNum"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:text="款号" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_startTime"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:text="生产开始时间" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_endNum"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:text="生产结束时间" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_amount"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="数量" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_labuRecord"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="拉布记录"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/textSize_content" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_addMat"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/textSize_content" />
+
+    <TextView
+        android:id="@+id/tv_item_orderList_returnMat"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/textSize_content" />
+
+</LinearLayout>

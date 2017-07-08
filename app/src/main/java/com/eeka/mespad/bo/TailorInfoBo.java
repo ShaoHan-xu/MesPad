@@ -20,6 +20,24 @@ public class TailorInfoBo {
     private boolean IS_CUSTOM;
     private List<CUTSIZESBean> CUT_SIZES;
     private List<MatInfoBean> MAT_INFOR;
+    private List<LayoutInfoBean> LAYOUT_INFOR;
+    private NextOrderInfo NEXT_OPER_INFOR;
+
+    public NextOrderInfo getNEXT_OPER_INFOR() {
+        return NEXT_OPER_INFOR;
+    }
+
+    public void setNEXT_OPER_INFOR(NextOrderInfo NEXT_OPER_INFOR) {
+        this.NEXT_OPER_INFOR = NEXT_OPER_INFOR;
+    }
+
+    public List<LayoutInfoBean> getLAYOUT_INFOR() {
+        return LAYOUT_INFOR;
+    }
+
+    public void setLAYOUT_INFOR(List<LayoutInfoBean> LAYOUT_INFOR) {
+        this.LAYOUT_INFOR = LAYOUT_INFOR;
+    }
 
     public List<MatInfoBean> getMAT_INFOR() {
         return MAT_INFOR;
@@ -99,6 +117,42 @@ public class TailorInfoBo {
 
         private String SOP_URL;
         private String OPERATION_BO;
+        private String QUALITY_REQUIREMENT;
+        private String OPERATION;
+        private String DESCRIPTION;
+        private String OPERATION_INSTRUCTION;
+
+        public String getQUALITY_REQUIREMENT() {
+            return QUALITY_REQUIREMENT;
+        }
+
+        public void setQUALITY_REQUIREMENT(String QUALITY_REQUIREMENT) {
+            this.QUALITY_REQUIREMENT = QUALITY_REQUIREMENT;
+        }
+
+        public String getOPERATION() {
+            return OPERATION;
+        }
+
+        public void setOPERATION(String OPERATION) {
+            this.OPERATION = OPERATION;
+        }
+
+        public String getDESCRIPTION() {
+            return DESCRIPTION;
+        }
+
+        public void setDESCRIPTION(String DESCRIPTION) {
+            this.DESCRIPTION = DESCRIPTION;
+        }
+
+        public String getOPERATION_INSTRUCTION() {
+            return OPERATION_INSTRUCTION;
+        }
+
+        public void setOPERATION_INSTRUCTION(String OPERATION_INSTRUCTION) {
+            this.OPERATION_INSTRUCTION = OPERATION_INSTRUCTION;
+        }
 
         public String getSOP_URL() {
             return SOP_URL;
@@ -196,6 +250,66 @@ public class TailorInfoBo {
 
         public void setSIZE_AMOUNT(int SIZE_AMOUNT) {
             this.SIZE_AMOUNT = SIZE_AMOUNT;
+        }
+    }
+
+    public static class LayoutInfoBean {
+        private String PICTURE_URL;
+        private String LAYOUT;
+
+        public String getLAYOUT() {
+            return LAYOUT;
+        }
+
+        public void setLAYOUT(String LAYOUT) {
+            this.LAYOUT = LAYOUT;
+        }
+
+        public String getPICTURE_URL() {
+            return PICTURE_URL;
+        }
+
+        public void setPICTURE_URL(String PICTURE_URL) {
+            this.PICTURE_URL = PICTURE_URL;
+        }
+    }
+
+    public static class NextOrderInfo {
+        private String ROUTER_STEP_BO;
+        private String NEXT_STEP_BO;
+        private String OPERATION;
+        private String OPER_DESC;
+
+        public String getROUTER_STEP_BO() {
+            return ROUTER_STEP_BO;
+        }
+
+        public void setROUTER_STEP_BO(String ROUTER_STEP_BO) {
+            this.ROUTER_STEP_BO = ROUTER_STEP_BO;
+        }
+
+        public String getNEXT_STEP_BO() {
+            return NEXT_STEP_BO;
+        }
+
+        public void setNEXT_STEP_BO(String NEXT_STEP_BO) {
+            this.NEXT_STEP_BO = NEXT_STEP_BO;
+        }
+
+        public String getOPERATION() {
+            return OPERATION;
+        }
+
+        public void setOPERATION(String OPERATION) {
+            this.OPERATION = OPERATION;
+        }
+
+        public String getOPER_DESC() {
+            return OPER_DESC;
+        }
+
+        public void setOPER_DESC(String OPER_DESC) {
+            this.OPER_DESC = OPER_DESC;
         }
     }
 }

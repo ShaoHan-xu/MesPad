@@ -6,28 +6,27 @@
     <RelativeLayout
         android:id="@+id/layout_bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:background="@color/white">
 
-        <Button
-            android:id="@+id/btn_done"
+        <TextView
             style="@style/textStyle_default"
-            android:layout_width="175dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/btn_primary"
-            android:text="完成"
-            android:textColor="@color/white" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/border_black"
+            android:padding="5dp"
+            android:text="PC1011010" />
 
         <LinearLayout
             android:id="@+id/layout_controlPanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp">
 
             <Button
                 android:id="@+id/btn_returnMaterials"
@@ -37,8 +36,8 @@
             <Button
                 android:id="@+id/btn_getMaterials"
                 style="@style/btnStyle_round"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:text="领料" />
 
             <Button
@@ -46,22 +45,32 @@
                 style="@style/btnStyle_round"
                 android:text="记录拉布数据" />
 
+            <Button
+                android:id="@+id/btn_orderList"
+                style="@style/btnStyle_round"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="查看作业订单" />
+
+            <Button
+                android:id="@+id/btn_pause"
+                style="@style/btnStyle_green_round"
+                android:text="休息一下" />
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/btnStyle_green_round"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="多人登录" />
+
+            <Button
+                android:id="@+id/btn_quit"
+                style="@style/btnStyle_green_round"
+                android:layout_width="80dp"
+                android:text="退出" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_pause"
-            style="@style/btnStyle_green_round"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:text="暂停" />
-
-        <Button
-            android:id="@+id/btn_quit"
-            style="@style/btnStyle_green_round"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/btn_pause"
-            android:text="退出" />
     </RelativeLayout>
 
     <android.support.v4.widget.DrawerLayout

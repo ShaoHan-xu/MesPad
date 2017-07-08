@@ -1,297 +1,354 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:id="@+id/layout_processList"
-        android:layout_width="170dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_weight="5"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/layout_processTab"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_height="30dp"
             android:background="@color/white"
+            android:divider="@drawable/divider_grid_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:showDividers="middle|end" />
 
-            <LinearLayout
+        <View style="@style/line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginRight="5dp"
+                android:layout_weight="4"
+                android:background="@color/white">
 
-                <TextView
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager_main_processBmp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <RadioGroup
+                    android:id="@+id/rg_main_indication"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="14"
-                    android:textColor="@color/text_blue_default"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal" />
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="定制订单/h"
-                    android:textSize="14sp" />
+            </RelativeLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
+            <ScrollView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:background="@color/white">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/layout_processDescription"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="23"
-                    android:textColor="@color/text_blue_default"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="大货订单/h"
-                    android:textSize="14sp" />
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="工艺说明："
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tv_craftDescribe"
+                        style="@style/textStyle_default" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_marginTop="10dp"
+                        android:text="品质要求："
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_qualityDescribe"
+                        style="@style/textStyle_default" />
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
 
-        <ExpandableListView
-            android:id="@+id/elv_processCode"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#DEF0FA"
-            android:groupIndicator="@null" />
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.2"
+            android:orientation="horizontal">
+
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/layout_material1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:divider="@drawable/divider_white"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:showDividers="middle" />
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:id="@+id/layout_material2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:divider="@drawable/divider_white"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:showDividers="middle" />
+            </HorizontalScrollView>
+        </LinearLayout>
+
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/layout_describe"
-        android:layout_width="170dp"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/layout_processList"
-        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_weight="1"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_user"
+            style="@style/textStyle_default"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="60dp"
-                    android:text="数量/件" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="30"
-                    android:textColor="@color/text_green_default"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="60dp"
-                    android:text="款式" />
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="1234567"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </LinearLayout>
+            android:gravity="center"
+            android:text="林宛瑜" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@color/text_green_default"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:orientation="vertical">
 
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="码数"
-                android:textColor="@color/white" />
-
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="颜色"
-                android:textColor="@color/white" />
-
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="数量"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_sizeInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:showDividers="middle"
-            android:divider="@drawable/divider_white"
-            android:padding="5dp" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:background="@color/white"
-            android:padding="10dp">
-
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
+                android:padding="5dp">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="特殊要求："
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="1、面料尽裁" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_marginTop="15dp"
-                    android:text="品质要求："
-                    android:textStyle="bold" />
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="订单号：" />
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="1、确保面料正反面运用正常。" />
+                        <TextView
+                            android:id="@+id/tv_orderNum"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_marginTop="15dp"
-                    android:text="工艺说明："
-                    android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="1、确保面料正反面运用正常。" />
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="批次号：" />
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_marginTop="15dp"
-                    android:text="特殊说明："
-                    android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tv_batchNum"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="1、确保面料正反面运用正常。" />
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/layout_describe"
-        android:orientation="vertical">
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="款式：" />
+
+                        <TextView
+                            android:id="@+id/tv_style"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="数量：" />
+
+                        <TextView
+                            android:id="@+id/tv_qty"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_sizeInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:divider="@drawable/divider_white"
+                        android:orientation="vertical"
+                        android:padding="5dp"
+                        android:showDividers="middle"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/text_green_default"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="码数"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="数量"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_special"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="特殊信息："
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_special"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1.2"
             android:background="@color/white">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager_main_processBmp"
+            <Button
+                android:id="@+id/btn_done"
+                style="@style/btnStyle_green"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <RadioGroup
-                android:id="@+id/rg_main_indication"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal" />
+                android:layout_alignParentRight="true"
+                android:text="开始" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/btn_done">
+
+                <LinearLayout
+                    android:id="@+id/layout_nextProcess"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="下一工序：" />
+
+                    <TextView
+                        android:id="@+id/tv_nextProcess"
+                        style="@style/textStyle_default"
+                        android:layout_width="match_parent" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/layout_nextProcess"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="当前工序：" />
+
+                    <ListView
+                        android:id="@+id/lv_processList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white" />
+                </LinearLayout>
+
+
+            </RelativeLayout>
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.1"
-            android:orientation="vertical">
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:background="@color/white">
-
-                <LinearLayout
-                    android:id="@+id/layout_materials1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:divider="@drawable/divider_white"
-                    android:orientation="horizontal"
-                    android:showDividers="middle" />
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:background="@color/white">
-
-                <LinearLayout
-                    android:id="@+id/layout_materials2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:divider="@drawable/divider_white"
-                    android:orientation="horizontal"
-                    android:showDividers="middle" />
-            </HorizontalScrollView>
-        </LinearLayout>
 
     </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

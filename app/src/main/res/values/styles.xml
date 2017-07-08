@@ -13,20 +13,24 @@
     <style name="textStyle_default">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textSize_default</item>
+        <item name="android:textSize">@dimen/textSize_content</item>
         <item name="android:textColor">@color/text_black_default</item>
     </style>
 
     <style name="btnStyle_primary" parent="textStyle_default">
         <item name="android:background">@drawable/btn_primary</item>
         <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:minWidth">40dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="btnStyle_round" parent="textStyle_default">
         <item name="android:background">@drawable/btn_trans_round</item>
-        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:minWidth">40dp</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
     </style>
@@ -34,7 +38,8 @@
     <style name="btnStyle_green_round" parent="textStyle_default">
         <item name="android:background">@drawable/btn_green_round</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:minWidth">40dp</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingRight">15dp</item>
     </style>
@@ -51,7 +56,7 @@
     <style name="gridTextStyle" parent="gridStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/textSize_default</item>
+        <item name="android:textSize">@dimen/textSize_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -59,13 +64,13 @@
     <style name="line">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/text_gray_default</item>
     </style>
 
     <style name="line_vertical">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@color/black</item>
+        <item name="android:background">@color/text_gray_default</item>
     </style>
 
 </resources>

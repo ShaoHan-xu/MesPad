@@ -1,6 +1,7 @@
 package com.eeka.mespad.activity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -17,10 +17,12 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.bo.RecordLabuMaterialInfoBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
+import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.fragment.MainFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
+import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 
@@ -31,7 +33,7 @@ import java.util.List;
  * Created by Lenovo on 2017/6/12.
  */
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements LoginFragment.OnLoginCallback {
 
     private DrawerLayout mDrawerLayout;
 
@@ -44,6 +46,8 @@ public class MainActivity extends BaseActivity {
     private List<RecordLabuMaterialInfoBo> mList_materialInfo;
     private ReturnMaterialInfoBo mReturnMaterialInfo;//退料
     private ReturnMaterialInfoBo mAddMaterialInfo;//补料
+
+    private Dialog mLoginDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,9 +69,10 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_returnMaterials).setOnClickListener(this);
         findViewById(R.id.btn_getMaterials).setOnClickListener(this);
         findViewById(R.id.btn_recordLabu).setOnClickListener(this);
+        findViewById(R.id.btn_orderList).setOnClickListener(this);
+        findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.btn_pause).setOnClickListener(this);
         findViewById(R.id.btn_quit).setOnClickListener(this);
-        findViewById(R.id.btn_done).setOnClickListener(this);
 
     }
 
@@ -148,6 +153,12 @@ public class MainActivity extends BaseActivity {
                     }
                 }).show();
                 break;
+            case R.id.btn_orderList:
+                startActivity(new Intent(mContext, WorkOrderListActivity.class));
+                break;
+            case R.id.btn_login:
+                showLoginDialog();
+                break;
             case R.id.btn_pause:
                 toast("暂停");
                 break;
@@ -156,35 +167,27 @@ public class MainActivity extends BaseActivity {
                 SpUtil.saveLoginStatus(false);
                 finish();
                 break;
-            case R.id.btn_done:
-                toast("完成");
-                break;
         }
     }
 
     /**
-     * 显示退料弹窗
+     * 显示登录弹框
      */
-    private void showReturnMaterialDialog() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_return_material, null);
-        LinearLayout layout_materialImg = (LinearLayout) view.findViewById(R.id.layout_returnMaterial_material);
-        layout_materialImg.addView(getReturnMaterialView());
-        layout_materialImg.addView(getReturnMaterialView());
-        layout_materialImg.addView(getReturnMaterialView());
+    private void showLoginDialog() {
+        mLoginDialog = new Dialog(mContext);
+        mLoginDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mLoginDialog.setContentView(R.layout.dlg_login);
 
-        Dialog dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(view);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout((int) (SystemUtils.getScreenWidth(this) * 0.8), (int) (SystemUtils.getScreenHeight(this) * 0.9));
-    }
+        final LoginFragment loginFragment = (LoginFragment) mFragmentManager.findFragmentById(R.id.loginFragment);
+        loginFragment.setCallback(this);
 
-    private View getReturnMaterialView() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_return_material, null);
-
-
-        return view;
+        mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mFragmentManager.beginTransaction().remove(loginFragment).commit();
+            }
+        });
+        mLoginDialog.show();
     }
 
     private void changeFragment(int position) {
@@ -202,4 +205,11 @@ public class MainActivity extends BaseActivity {
         ft.commit();
     }
 
+    @Override
+    public void loginCallback(boolean success, UserInfoBo userInfo) {
+        if (success) {
+            mLoginDialog.dismiss();
+            HttpHelper.viewCutPadInfo("", mMainFragment);
+        }
+    }
 }

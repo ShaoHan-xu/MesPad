@@ -2,10 +2,12 @@ package com.eeka.mespad.http;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 
 import java.util.List;
@@ -75,7 +77,7 @@ public class HttpHelper {
      */
     public static void viewCutPadInfo(String processLot, HttpCallback callback) {
         JSONObject json = new JSONObject();
-        json.put("RFID", "R00000001");
+        json.put("RFID", "RFID00000001");
         json.put("PAD_ID", "R00000001");
         RequestParams params = getBaseParams();
         params.put("site", "TEST");
@@ -116,7 +118,9 @@ public class HttpHelper {
             @Override
             protected void onSuccess(Headers headers, JSONObject jsonObject) {
                 super.onSuccess(headers, jsonObject);
-
+                if (!NetUtil.isNetworkAvalible(mContext)) {
+                    return;
+                }
                 //登录的时候保存cookie
                 if (url.contains(LOGIN_URL)) {
                     if (headers != null) {
@@ -137,6 +141,13 @@ public class HttpHelper {
             @Override
             public void onResponse(Response httpResponse, String response, Headers headers) {
                 super.onResponse(httpResponse, response, headers);
+                if (!NetUtil.isNetworkAvalible(mContext)) {
+                    Toast.makeText(mContext, "网络不可用，请检查网络设置", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (response == null) {
+                    Toast.makeText(mContext, "连接错误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Logger.d(response);
 
                 //网页方式登录测试用

@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="textSize_default">15sp</dimen>
+    <!-- 标题字体大小-->
+    <dimen name="textSize_title">18sp</dimen>
+
+    <!-- 小标题字体大小-->
+    <dimen name="textSize_itemTitle">16sp</dimen>
+
+    <!-- 正文内容字体大小-->
+    <dimen name="textSize_content">14sp</dimen>
+
+    <!-- 描述类型、小字体大小-->
+    <dimen name="textSize_describe">12sp</dimen>
 </resources>

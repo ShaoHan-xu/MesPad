@@ -3,8 +3,11 @@
     package="com.eeka.mespad">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <meta-data
         android:name="com.bumptech.glide.samples.flickr.FlickrGlideModule"
@@ -33,8 +36,12 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.MainActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".activity.Main2Activity"></activity>
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".activity.WorkOrderListActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

@@ -29,7 +29,7 @@
                     android:paddingLeft="5dp"
                     android:paddingTop="5dp"
                     android:text="裁片上吊挂"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/textSize_itemTitle"
                     android:textStyle="bold" />
 
                 <HorizontalScrollView
@@ -217,13 +217,13 @@
                         android:layout_height="wrap_content"
                         android:text="14"
                         android:textColor="@color/text_blue_default"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/textSize_itemTitle"
                         android:textStyle="bold" />
 
                     <TextView
                         style="@style/textStyle_default"
                         android:text="定制订单/h"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/textSize_describe" />
 
                 </LinearLayout>
 
@@ -239,13 +239,13 @@
                         android:layout_height="wrap_content"
                         android:text="23"
                         android:textColor="@color/text_blue_default"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/textSize_itemTitle"
                         android:textStyle="bold" />
 
                     <TextView
                         style="@style/textStyle_default"
                         android:text="大货订单/h"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/textSize_describe" />
 
                 </LinearLayout>
             </LinearLayout>

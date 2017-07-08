@@ -194,7 +194,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         view.setTag(position);
         ImageView iv_materials = (ImageView) view.findViewById(R.id.iv_materials);
-        TextView tv_materials = (TextView) view.findViewById(R.id.tv_materials);
+        TextView tv_materials = (TextView) view.findViewById(R.id.tv_matNum);
         Glide.with(mContext).load(item.getMAT_URL()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(iv_materials);
         iv_materials.setTag(position);
         tv_materials.setText(item.getMAT_NO());

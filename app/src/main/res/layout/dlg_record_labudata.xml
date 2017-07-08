@@ -54,12 +54,12 @@
         android:layout_above="@id/btn_recordLabu_save"
         android:layout_below="@id/layout_dlg_title"
         android:layout_marginBottom="5dp"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:paddingTop="5dp">
 
             <LinearLayout
@@ -133,7 +133,6 @@
                 android:id="@+id/layout_recordLabu_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:divider="@drawable/divider_grid"
                 android:orientation="vertical"
                 android:paddingLeft="10dp"
