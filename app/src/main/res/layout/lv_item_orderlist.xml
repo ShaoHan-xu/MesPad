@@ -45,7 +45,7 @@
         android:text="数量" />
 
     <TextView
-        android:id="@+id/tv_item_orderList_labuRecord"
+        android:id="@+id/tv_item_orderList_status"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
@@ -55,21 +55,8 @@
         android:textSize="@dimen/textSize_content" />
 
     <TextView
-        android:id="@+id/tv_item_orderList_addMat"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/textSize_content" />
-
-    <TextView
-        android:id="@+id/tv_item_orderList_returnMat"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:gravity="center"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/textSize_content" />
+        android:layout_weight="2" />
 
 </LinearLayout>

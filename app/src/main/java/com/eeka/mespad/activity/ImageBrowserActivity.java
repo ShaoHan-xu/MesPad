@@ -57,7 +57,7 @@ public class ImageBrowserActivity extends BaseActivity {
             final View view = LayoutInflater.from(mContext).inflate(R.layout.vp_item_main_processbmp, null);
             PhotoView imageView = (PhotoView) view.findViewById(R.id.iv_item_main_processBmp);
             imageView.enable();
-            Glide.with(mContext).load(mList_processData.get(position)).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(imageView);
+            Glide.with(mContext).load(mList_processData.get(position)).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -209,7 +209,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
     public void loginCallback(boolean success, UserInfoBo userInfo) {
         if (success) {
             mLoginDialog.dismiss();
-            HttpHelper.viewCutPadInfo("", mMainFragment);
+            HttpHelper.findProcessWithPadId("", mMainFragment);
         }
     }
 }

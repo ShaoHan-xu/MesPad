@@ -27,8 +27,8 @@ class ILogger {
     public static final String DEFAULT_TAG = "OkHttpFinal";
     protected static boolean DEBUG = BuildConfig.DEBUG;
 
-    public static void d(String message, Object... args) {
-        Log.d(message, args.toString());
+    public static void d(String message) {
+        Log.d(DEFAULT_TAG, message);
     }
 
     public static void e(Throwable throwable) {

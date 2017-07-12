@@ -24,7 +24,6 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     protected Context mContext;
     protected View mView;
 
-    private Toast mToast;
     private Dialog mProDialog;
     private TextView mTv_loadingMsg;
 
@@ -82,10 +81,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     }
 
     protected void toast(String msg, int duration) {
-        if (mToast == null) {
-            mToast = Toast.makeText(mContext, msg, duration);
-        }
-        mToast.show();
+        Toast.makeText(mContext, msg, duration).show();
     }
 
     @Override

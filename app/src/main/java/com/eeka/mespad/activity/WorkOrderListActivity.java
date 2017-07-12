@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.RecordLabuMaterialInfoBo;
 import com.eeka.mespad.bo.WorkOrderBo;
+import com.eeka.mespad.view.dialog.RecordLabuDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +24,14 @@ import java.util.List;
  * Created by Lenovo on 2017/7/6.
  */
 
-public class WorkOrderListActivity extends BaseActivity {
+public class WorkOrderListActivity extends BaseActivity implements RecordLabuDialog.OnRecordLabuCallback {
 
     private static final int TYPE_UNDO = 0;//未完成
     private static final int TYPE_DONE = 1;//已完成
 
     private Button mBtn_undo, mBtn_done, mBtn_search;
     private EditText mEt_search;
+    private TextView mTv_statusTag;
 
     private ListView mListView;
     private OrderAdapter mAdapter;
@@ -52,6 +55,7 @@ public class WorkOrderListActivity extends BaseActivity {
         mBtn_undo = (Button) findViewById(R.id.btn_orderList_undo);
         mBtn_done = (Button) findViewById(R.id.btn_orderList_done);
         mBtn_search = (Button) findViewById(R.id.btn_orderList_search);
+        mTv_statusTag = (TextView) findViewById(R.id.tv_orderList_status);
 
         mListView = (ListView) findViewById(R.id.lv_orderList);
 
@@ -88,12 +92,14 @@ public class WorkOrderListActivity extends BaseActivity {
                 mBtn_undo.setBackgroundResource(R.color.text_gray_default);
                 mBtn_done.setBackgroundResource(R.color.white);
                 mAdapter.notifyDataSetChanged();
+                mTv_statusTag.setVisibility(View.VISIBLE);
                 break;
             case R.id.btn_orderList_done:
                 mType = TYPE_DONE;
                 mBtn_done.setBackgroundResource(R.color.text_gray_default);
                 mBtn_undo.setBackgroundResource(R.color.white);
                 mAdapter.notifyDataSetChanged();
+                mTv_statusTag.setVisibility(View.INVISIBLE);
                 break;
             case R.id.btn_orderList_search:
                 search();
@@ -120,33 +126,28 @@ public class WorkOrderListActivity extends BaseActivity {
             holder.setText(R.id.tv_item_orderList_endNum, item.getEndTime());
             holder.setText(R.id.tv_item_orderList_amount, item.getAmount() + "");
 
-            TextView tv_return = holder.getView(R.id.tv_item_orderList_returnMat);
-            TextView tv_addMat = holder.getView(R.id.tv_item_orderList_addMat);
-            TextView tv_labuRecord = holder.getView(R.id.tv_item_orderList_labuRecord);
+            TextView tv_status = holder.getView(R.id.tv_item_orderList_status);
             if (mType == TYPE_DONE) {
-                tv_addMat.setVisibility(View.VISIBLE);
-                tv_return.setVisibility(View.VISIBLE);
-                tv_labuRecord.setVisibility(View.VISIBLE);
-
-                int addStatus = item.getAddStatus();
-                if (addStatus == 1) {
-                    tv_addMat.setText("已补料");
-                } else {
-                    tv_addMat.setText("补料申请");
-                }
-
-                int returnStatus = item.getReturnStatus();
-                if (returnStatus == 1) {
-                    tv_return.setText("已退料");
-                } else {
-                    tv_return.setText("退料申请");
-                }
+                tv_status.setText("拉布记录");
+                tv_status.setTextColor(getResources().getColor(R.color.colorPrimary));
+                tv_status.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new RecordLabuDialog(mContext, null, WorkOrderListActivity.this).show();
+                    }
+                });
             } else {
-                tv_addMat.setVisibility(View.INVISIBLE);
-                tv_return.setVisibility(View.INVISIBLE);
-                tv_labuRecord.setVisibility(View.INVISIBLE);
+                tv_status.setText("未调度");
+                tv_status.setTextColor(getResources().getColor(R.color.text_black_default));
+                tv_status.setOnClickListener(null);
             }
 
         }
+    }
+
+
+    @Override
+    public void recordLabuCallback(List<RecordLabuMaterialInfoBo> list_materialInfo, boolean done) {
+
     }
 }

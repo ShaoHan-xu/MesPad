@@ -131,22 +131,17 @@
             android:text="数量" />
 
         <TextView
+            android:id="@+id/tv_orderList_status"
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="2"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="状态" />
 
         <TextView
-            style="@style/textStyle_default"
             android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center" />
-
-        <TextView
-            style="@style/textStyle_default"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:gravity="center" />
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
     </LinearLayout>
 

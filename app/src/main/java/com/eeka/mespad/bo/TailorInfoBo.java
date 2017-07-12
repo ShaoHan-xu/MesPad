@@ -181,10 +181,28 @@ public class TailorInfoBo {
          */
 
         private String SHOP_ORDER;
+        private String SHOP_ORDER_BO;
         private String PROCESS_LOT;
+        private String PROCESS_LOT_BO;
         private String ITEM;
         private int AMOUNT;
         private String Z_LAYOUT_BO;
+
+        public String getSHOP_ORDER_BO() {
+            return SHOP_ORDER_BO;
+        }
+
+        public void setSHOP_ORDER_BO(String SHOP_ORDER_BO) {
+            this.SHOP_ORDER_BO = SHOP_ORDER_BO;
+        }
+
+        public String getPROCESS_LOT_BO() {
+            return PROCESS_LOT_BO;
+        }
+
+        public void setPROCESS_LOT_BO(String PROCESS_LOT_BO) {
+            this.PROCESS_LOT_BO = PROCESS_LOT_BO;
+        }
 
         public String getSHOP_ORDER() {
             return SHOP_ORDER;

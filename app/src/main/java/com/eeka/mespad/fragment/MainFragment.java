@@ -18,14 +18,17 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SystemUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -53,7 +56,6 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext = getActivity();
         initView();
         initData();
     }
@@ -85,15 +87,16 @@ public class MainFragment extends BaseFragment {
     }
 
     protected void initData() {
-        HttpHelper.viewCutPadInfo("", MainFragment.this);
-
+        HttpHelper.login("shawn", "sap12345", this);
         mViewPagerAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPagerChangedListener());
-
     }
 
     public void refreshView() {
+        mView.findViewById(R.id.tv_startWork).setVisibility(View.GONE);
+        mView.findViewById(R.id.layout_processDescription).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.layout_orderInfo).setVisibility(View.VISIBLE);
         mLayout_material.removeAllViews();
         List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
         if (itemArray != null) {
@@ -125,8 +128,6 @@ public class MainFragment extends BaseFragment {
         }
 
 //        mRadioGroup.removeAllViews();
-        mList_processData = new ArrayList<>();
-        mList_processData = mTailorInfo.getOPER_INFOR();
         mViewPagerAdapter.notifyDataSetChanged();
 //        if (mList_processData.size() > 1) {
 //            for (int i = 0; i < mList_processData.size(); i++) {
@@ -148,26 +149,28 @@ public class MainFragment extends BaseFragment {
                 textView.setPadding(10, 10, 10, 10);
             }
         });
+        mLv_process.setItemChecked(0, true);
 
         mLayout_processTab.removeAllViews();
-        for (int i = 0; i < mList_processData.size(); i++) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-            TextView textView = (TextView) view.findViewById(R.id.text);
-            textView.setTag(i);
-            TailorInfoBo.OPERINFORBean item1 = mList_processData.get(i);
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewPager.setCurrentItem((Integer) v.getTag());
-                }
-            });
-            textView.setText(item1.getDESCRIPTION());
-            mLayout_processTab.addView(view);
+        if (mList_processData != null) {
+            for (int i = 0; i < mList_processData.size(); i++) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
+                TextView textView = (TextView) view.findViewById(R.id.text);
+                textView.setTag(i);
+                TailorInfoBo.OPERINFORBean item1 = mList_processData.get(i);
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewPager.setCurrentItem((Integer) v.getTag());
+                    }
+                });
+                textView.setText(item1.getDESCRIPTION());
+                mLayout_processTab.addView(view);
+            }
+            if (mList_processData.size() != 0) {
+                refreshProcessView(0);
+            }
         }
-        if (mList_processData != null && mList_processData.size() != 0) {
-            refreshProcessView(0);
-        }
-
         TailorInfoBo.NextOrderInfo nextOperInfo = mTailorInfo.getNEXT_OPER_INFOR();
         if (nextOperInfo != null) {
             mTv_nextProcess.setText(nextOperInfo.getOPER_DESC());
@@ -195,8 +198,8 @@ public class MainFragment extends BaseFragment {
 
         TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_craftDescribe);
         TextView tv_qualityDes = (TextView) mView.findViewById(R.id.tv_qualityDescribe);
-        tv_craftDesc.setText(item.getOPERATION_INSTRUCTION());
-        tv_qualityDes.setText(item.getQUALITY_REQUIREMENT());
+        tv_craftDesc.setText(item.getOPERATION_INSTRUCTION().replace("\\n", "\n"));
+        tv_qualityDes.setText(item.getQUALITY_REQUIREMENT().replace("\\n", "\n"));
 
         int childCount = mLayout_processTab.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -215,8 +218,55 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_done) {
-            mBtn_done.setText("完成");
-            mBtn_done.setBackgroundResource(R.drawable.btn_primary);
+            if (mTailorInfo == null) {
+                HttpHelper.viewCutPadInfo("", MainFragment.this);
+                return;
+            }
+            StartWorkParamsBo params = new StartWorkParamsBo();
+            params.setPAD_ID(SystemUtils.getIMEI(mContext));
+            params.setPROCESS_LOT(mTailorInfo.getSHOP_ORDER_INFOR().getPROCESS_LOT());
+            params.setPROCESS_LOT_BO(mTailorInfo.getSHOP_ORDER_INFOR().getPROCESS_LOT_BO());
+            params.setSHOP_ORDER(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
+            params.setSHOP_ORDER_BO(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());
+            params.setRESOURCE_BO("ResourceBO:TEST,DEFAULT");
+            List<String> opList = new ArrayList<>();
+            if (mList_processData != null) {
+                for (TailorInfoBo.OPERINFORBean item : mList_processData) {
+                    opList.add(item.getOPERATION_BO());
+                }
+            }
+            params.setOPERATIONS(opList);
+            if ("开始".equals(mBtn_done.getText().toString())) {
+                if (mTailorInfo.isIS_CUSTOM()) {
+                    params.setORDER_QTY(2);
+                    if (mList_processData != null) {
+                        for (TailorInfoBo.OPERINFORBean process : mList_processData) {
+                            if (process.getOPERATION().contains("LABU")) {
+                                HttpHelper.startBatchWorkWithLabu(params, this);
+                                return;
+                            }
+                        }
+                    }
+                    HttpHelper.startBatchWork(params, this);
+                } else {
+                    params.setLAYERS(2);
+                    if (mList_processData != null) {
+                        for (TailorInfoBo.OPERINFORBean process : mList_processData) {
+                            if (process.getOPERATION().contains("LABU")) {
+                                HttpHelper.startCustomWorkWithLabu(params, this);
+                                return;
+                            }
+                        }
+                    }
+                    HttpHelper.startCustomWork(params, this);
+                }
+            } else {
+                if (mTailorInfo.isIS_CUSTOM()) {
+                    HttpHelper.completeCustomWork(params, this);
+                } else {
+                    HttpHelper.completeBatchWork(params, this);
+                }
+            }
         }
     }
 
@@ -244,7 +294,7 @@ public class MainFragment extends BaseFragment {
         ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
         TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
         TextView tv_layers = (TextView) view.findViewById(R.id.tv_matLayers);
-        Glide.with(mContext).load(item.getMAT_URL()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(iv_material);
+        Glide.with(mContext).load(item.getMAT_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
         iv_material.setTag(position);
         tv_material.setText(item.getMAT_NO());
         int layers = item.getLAYERS();
@@ -279,7 +329,7 @@ public class MainFragment extends BaseFragment {
         view.setTag(position);
         ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
         TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
-        Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(iv_material);
+        Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
         iv_material.setTag(position);
         tv_material.setText(item.getLAYOUT());
 
@@ -352,7 +402,7 @@ public class MainFragment extends BaseFragment {
             final ImageView imageView = (ImageView) view.findViewById(R.id.iv_item_main_processBmp);
 
             TailorInfoBo.OPERINFORBean operinforBean = mList_processData.get(position);
-            Glide.with(mContext).load(operinforBean.getSOP_URL()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(imageView);
+            Glide.with(mContext).load(operinforBean.getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -417,10 +467,34 @@ public class MainFragment extends BaseFragment {
     public void onSuccess(String url, JSONObject resultJSON) {
         String status = resultJSON.getString("status");
         if ("Y".equals(status)) {
-            mTailorInfo = JSONObject.parseObject(resultJSON.getJSONObject("result").toJSONString(), TailorInfoBo.class);
-            refreshView();
+            switch (url) {
+                case HttpHelper.LOGIN_URL:
+                    HttpHelper.findProcessWithPadId("", this);
+                    break;
+                case HttpHelper.findProcessWithPadId_url:
+                    String operArray = resultJSON.getJSONObject("result").getJSONArray("OPER_INFOR").toString();
+                    mList_processData = JSON.parseArray(operArray, TailorInfoBo.OPERINFORBean.class);
+                    break;
+                case HttpHelper.viewCutPadInfo_url:
+                    mTailorInfo = JSON.parseObject(resultJSON.getJSONObject("result").toString(), TailorInfoBo.class);
+//                    mTailorInfo.setOPER_INFOR(mList_processData);
+                    refreshView();
+                    break;
+                case HttpHelper.startBatchWorkWithLabu_url:
+                case HttpHelper.startCustomWorkWithLabu_url:
+                    mBtn_done.setText("完成");
+                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
+                    toast("开始作业");
+                    break;
+                case HttpHelper.completeBatchWork_url:
+                case HttpHelper.completeCustomWork_url:
+                    mBtn_done.setText("开始");
+                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
+                    toast("本工序已完成");
+                    break;
+            }
         } else {
-            toast("获取数据失败");
+            toast(resultJSON.getString("message"));
         }
     }
 

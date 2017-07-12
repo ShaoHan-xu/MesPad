@@ -262,6 +262,14 @@ public class SystemUtils {
     }
 
     /**
+     * 获取手机IMEI号
+     */
+    public static String getIMEI(Context context) {
+//        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return android.provider.Settings.System.getString(context.getContentResolver(), android.provider.Settings.System.ANDROID_ID);
+    }
+
+    /**
      * 收起键盘
      *
      * @param context

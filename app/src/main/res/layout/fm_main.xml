@@ -35,6 +35,15 @@
                 android:layout_weight="4"
                 android:background="@color/white">
 
+                <TextView
+                    android:id="@+id/tv_startWork"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="请刷卡开始作业"
+                    android:textColor="@color/text_black_default"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewPager_main_processBmp"
                     android:layout_width="match_parent"
@@ -62,7 +71,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="5dp"
+                    android:visibility="gone">
 
                     <TextView
                         style="@style/textStyle_default"
@@ -161,9 +171,11 @@
                 android:padding="5dp">
 
                 <LinearLayout
+                    android:id="@+id/layout_orderInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -233,11 +245,10 @@
                         android:id="@+id/layout_sizeInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:divider="@drawable/divider_white"
+                        android:background="@drawable/border_black"
+                        android:divider="@drawable/divider_grid"
                         android:orientation="vertical"
-                        android:padding="5dp"
-                        android:showDividers="middle"
+                        android:showDividers="middle|end"
                         android:visibility="gone">
 
                         <LinearLayout
@@ -342,7 +353,8 @@
                         android:id="@+id/lv_processList"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/white" />
+                        android:background="@color/white"
+                        android:choiceMode="singleChoice" />
                 </LinearLayout>
 
 

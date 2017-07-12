@@ -59,7 +59,6 @@ public class NetUtil {
                 }
             }).create().show();
         }
-        return;
     }
 
     /**
