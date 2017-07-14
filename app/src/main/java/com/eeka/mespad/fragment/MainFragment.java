@@ -28,7 +28,6 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.utils.SystemUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -52,6 +51,8 @@ public class MainFragment extends BaseFragment {
     private LinearLayout mLayout_processTab;
     private TextView mTv_nextProcess;
     private Button mBtn_done;
+
+    private TailorInfoBo.ResultInfo mResultInfo;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -177,14 +178,14 @@ public class MainFragment extends BaseFragment {
         }
 
         TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_orderNum);
-        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
+//        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
         TextView tv_style = (TextView) mView.findViewById(R.id.tv_style);
         TextView tv_qty = (TextView) mView.findViewById(R.id.tv_qty);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
-        tv_batchNum.setText(orderInfo.getPROCESS_LOT());
+//        tv_batchNum.setText(orderInfo.getPROCESS_LOT());
         tv_style.setText(orderInfo.getITEM());
-        tv_qty.setText(orderInfo.getAMOUNT() + "/件");
+        tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
 
     }
 
@@ -198,8 +199,12 @@ public class MainFragment extends BaseFragment {
 
         TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_craftDescribe);
         TextView tv_qualityDes = (TextView) mView.findViewById(R.id.tv_qualityDescribe);
-        tv_craftDesc.setText(item.getOPERATION_INSTRUCTION().replace("\\n", "\n"));
-        tv_qualityDes.setText(item.getQUALITY_REQUIREMENT().replace("\\n", "\n"));
+        String craftDesc = item.getOPERATION_INSTRUCTION();
+        if (!isEmpty(craftDesc))
+            tv_craftDesc.setText(craftDesc.replace("\\n", "\n"));
+        String qualityDesc = item.getQUALITY_REQUIREMENT();
+        if (!isEmpty(qualityDesc))
+            tv_qualityDes.setText(qualityDesc.replace("\\n", "\n"));
 
         int childCount = mLayout_processTab.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -222,13 +227,15 @@ public class MainFragment extends BaseFragment {
                 HttpHelper.viewCutPadInfo("", MainFragment.this);
                 return;
             }
+            TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
             StartWorkParamsBo params = new StartWorkParamsBo();
-            params.setPAD_ID(SystemUtils.getIMEI(mContext));
-            params.setPROCESS_LOT(mTailorInfo.getSHOP_ORDER_INFOR().getPROCESS_LOT());
-            params.setPROCESS_LOT_BO(mTailorInfo.getSHOP_ORDER_INFOR().getPROCESS_LOT_BO());
-            params.setSHOP_ORDER(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
-            params.setSHOP_ORDER_BO(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());
-            params.setRESOURCE_BO("ResourceBO:TEST,DEFAULT");
+            params.setPAD_ID(HttpHelper.PAD_ID);
+            params.setPROCESS_LOTS(orderInfo.getPROCESS_LOT_BO());
+            params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
+            params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
+            params.setLAYERS(orderInfo.getLAYERS());
+            params.setRESOURCE_BO(mResultInfo.getRESOURCE_BO());
+            params.setORDER_QTY(orderInfo.getORDER_QTY());
             List<String> opList = new ArrayList<>();
             if (mList_processData != null) {
                 for (TailorInfoBo.OPERINFORBean item : mList_processData) {
@@ -238,27 +245,9 @@ public class MainFragment extends BaseFragment {
             params.setOPERATIONS(opList);
             if ("开始".equals(mBtn_done.getText().toString())) {
                 if (mTailorInfo.isIS_CUSTOM()) {
-                    params.setORDER_QTY(2);
-                    if (mList_processData != null) {
-                        for (TailorInfoBo.OPERINFORBean process : mList_processData) {
-                            if (process.getOPERATION().contains("LABU")) {
-                                HttpHelper.startBatchWorkWithLabu(params, this);
-                                return;
-                            }
-                        }
-                    }
-                    HttpHelper.startBatchWork(params, this);
-                } else {
-                    params.setLAYERS(2);
-                    if (mList_processData != null) {
-                        for (TailorInfoBo.OPERINFORBean process : mList_processData) {
-                            if (process.getOPERATION().contains("LABU")) {
-                                HttpHelper.startCustomWorkWithLabu(params, this);
-                                return;
-                            }
-                        }
-                    }
                     HttpHelper.startCustomWork(params, this);
+                } else {
+                    HttpHelper.startBatchWork(params, this);
                 }
             } else {
                 if (mTailorInfo.isIS_CUSTOM()) {
@@ -467,21 +456,23 @@ public class MainFragment extends BaseFragment {
     public void onSuccess(String url, JSONObject resultJSON) {
         String status = resultJSON.getString("status");
         if ("Y".equals(status)) {
+            JSONObject result = resultJSON.getJSONObject("result");
             switch (url) {
                 case HttpHelper.LOGIN_URL:
                     HttpHelper.findProcessWithPadId("", this);
                     break;
                 case HttpHelper.findProcessWithPadId_url:
-                    String operArray = resultJSON.getJSONObject("result").getJSONArray("OPER_INFOR").toString();
+                    String operArray = result.getJSONArray("OPER_INFOR").toString();
                     mList_processData = JSON.parseArray(operArray, TailorInfoBo.OPERINFORBean.class);
+                    mResultInfo = JSON.parseObject(result.getJSONArray("RESR_INFOR").get(0).toString(), TailorInfoBo.ResultInfo.class);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
-                    mTailorInfo = JSON.parseObject(resultJSON.getJSONObject("result").toString(), TailorInfoBo.class);
+                    mTailorInfo = JSON.parseObject(result.toString(), TailorInfoBo.class);
 //                    mTailorInfo.setOPER_INFOR(mList_processData);
                     refreshView();
                     break;
-                case HttpHelper.startBatchWorkWithLabu_url:
-                case HttpHelper.startCustomWorkWithLabu_url:
+                case HttpHelper.startBatchWork_url:
+                case HttpHelper.startCustomWork_url:
                     mBtn_done.setText("完成");
                     mBtn_done.setBackgroundResource(R.drawable.btn_primary);
                     toast("开始作业");

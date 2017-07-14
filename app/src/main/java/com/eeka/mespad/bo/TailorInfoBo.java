@@ -10,7 +10,7 @@ public class TailorInfoBo {
 
     /**
      * OPER_INFOR : {"SOP_URL":"http://10.8.41.187/裁片.jpg","OPERATION_BO":"OperationBO:TEST,OP002,A"}
-     * SHOP_ORDER_INFOR : {"SHOP_ORDER":"MODA-SO-01","PROCESS_LOT":"201708031960292","ITEM":"MODA-MAT-01","AMOUNT":100,"LAYERS":30,"MAT_URL":"http://10.8.41.187/50011前袋.jpg","Z_LAYOUT_BO":"1"}
+     * SHOP_ORDER_INFOR : {"SHOP_ORDER":"MODA-SO-01","PROCESS_LOT":"201708031960292","ITEM":"MODA-MAT-01","ORDER_QTY":100,"LAYERS":30,"MAT_URL":"http://10.8.41.187/50011前袋.jpg","Z_LAYOUT_BO":"1"}
      * IS_CUSTOM : false
      * CUT_SIZES : [{"SIZE":"39","SIZE_AMOUNT":4},{"SIZE":"40","SIZE_AMOUNT":5}]
      */
@@ -22,6 +22,15 @@ public class TailorInfoBo {
     private List<MatInfoBean> MAT_INFOR;
     private List<LayoutInfoBean> LAYOUT_INFOR;
     private NextOrderInfo NEXT_OPER_INFOR;
+    private ResultInfo RESR_INFOR;
+
+    public ResultInfo getRESR_INFOR() {
+        return RESR_INFOR;
+    }
+
+    public void setRESR_INFOR(ResultInfo RESR_INFOR) {
+        this.RESR_INFOR = RESR_INFOR;
+    }
 
     public NextOrderInfo getNEXT_OPER_INFOR() {
         return NEXT_OPER_INFOR;
@@ -176,17 +185,34 @@ public class TailorInfoBo {
          * SHOP_ORDER : MODA-SO-01
          * PROCESS_LOT : 201708031960292
          * ITEM : MODA-MAT-01
-         * AMOUNT : 100
+         * ORDER_QTY : 100
          * Z_LAYOUT_BO : 1
          */
 
         private String SHOP_ORDER;
         private String SHOP_ORDER_BO;
-        private String PROCESS_LOT;
-        private String PROCESS_LOT_BO;
+        private List<String> PROCESS_LOT_BO;
         private String ITEM;
-        private int AMOUNT;
+        private String SALE_ORDER;
+        private int ORDER_QTY;
+        private int LAYERS;
         private String Z_LAYOUT_BO;
+
+        public String getSALE_ORDER() {
+            return SALE_ORDER;
+        }
+
+        public void setSALE_ORDER(String SALE_ORDER) {
+            this.SALE_ORDER = SALE_ORDER;
+        }
+
+        public int getLAYERS() {
+            return LAYERS;
+        }
+
+        public void setLAYERS(int LAYERS) {
+            this.LAYERS = LAYERS;
+        }
 
         public String getSHOP_ORDER_BO() {
             return SHOP_ORDER_BO;
@@ -196,11 +222,11 @@ public class TailorInfoBo {
             this.SHOP_ORDER_BO = SHOP_ORDER_BO;
         }
 
-        public String getPROCESS_LOT_BO() {
+        public List<String> getPROCESS_LOT_BO() {
             return PROCESS_LOT_BO;
         }
 
-        public void setPROCESS_LOT_BO(String PROCESS_LOT_BO) {
+        public void setPROCESS_LOT_BO(List<String> PROCESS_LOT_BO) {
             this.PROCESS_LOT_BO = PROCESS_LOT_BO;
         }
 
@@ -212,14 +238,6 @@ public class TailorInfoBo {
             this.SHOP_ORDER = SHOP_ORDER;
         }
 
-        public String getPROCESS_LOT() {
-            return PROCESS_LOT;
-        }
-
-        public void setPROCESS_LOT(String PROCESS_LOT) {
-            this.PROCESS_LOT = PROCESS_LOT;
-        }
-
         public String getITEM() {
             return ITEM;
         }
@@ -228,12 +246,12 @@ public class TailorInfoBo {
             this.ITEM = ITEM;
         }
 
-        public int getAMOUNT() {
-            return AMOUNT;
+        public int getORDER_QTY() {
+            return ORDER_QTY;
         }
 
-        public void setAMOUNT(int AMOUNT) {
-            this.AMOUNT = AMOUNT;
+        public void setORDER_QTY(int ORDER_QTY) {
+            this.ORDER_QTY = ORDER_QTY;
         }
 
         public String getZ_LAYOUT_BO() {
@@ -328,6 +346,27 @@ public class TailorInfoBo {
 
         public void setOPER_DESC(String OPER_DESC) {
             this.OPER_DESC = OPER_DESC;
+        }
+    }
+
+    public static class ResultInfo {
+        private String RESOURCE_BO;
+        private String RESOURCE;
+
+        public String getRESOURCE_BO() {
+            return RESOURCE_BO;
+        }
+
+        public void setRESOURCE_BO(String RESOURCE_BO) {
+            this.RESOURCE_BO = RESOURCE_BO;
+        }
+
+        public String getRESOURCE() {
+            return RESOURCE;
+        }
+
+        public void setRESOURCE(String RESOURCE) {
+            this.RESOURCE = RESOURCE;
         }
     }
 }

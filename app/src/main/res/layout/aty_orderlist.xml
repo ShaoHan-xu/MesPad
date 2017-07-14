@@ -83,6 +83,7 @@
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/btn_orderList_search"
             android:background="@null"
+            android:imeOptions="actionDone"
             android:maxLines="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp" />

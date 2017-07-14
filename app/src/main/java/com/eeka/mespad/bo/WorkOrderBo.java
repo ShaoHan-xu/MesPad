@@ -7,67 +7,67 @@ package com.eeka.mespad.bo;
 
 public class WorkOrderBo {
 
-    private String orderNum;
-    private String styleNum;
-    private String startTime;
-    private String endTime;
-    private int amount;
-    private int returnStatus;//0=未退料，1=已退料
-    private int addStatus;//0=未补料，1=已补料
+    private String shopOrder;
+    private String plannedItem;
+    private String plannedStartDate;
+    private String plannedCompDate;
+    private int qtyToBuild;
+    private int status;//10:未调度 20:已调度未制卡 30:已制卡未完成 40:生产完成
+    private int priority;//
 
-    public String getOrderNum() {
-        return orderNum;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setOrderNum(String orderNum) {
-        this.orderNum = orderNum;
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
-    public String getStyleNum() {
-        return styleNum;
+    public String getShopOrder() {
+        return shopOrder;
     }
 
-    public void setStyleNum(String styleNum) {
-        this.styleNum = styleNum;
+    public void setShopOrder(String shopOrder) {
+        this.shopOrder = shopOrder;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getPlannedItem() {
+        return plannedItem;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setPlannedItem(String plannedItem) {
+        this.plannedItem = plannedItem;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getPlannedStartDate() {
+        return plannedStartDate;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setPlannedStartDate(String plannedStartDate) {
+        this.plannedStartDate = plannedStartDate;
     }
 
-    public int getAmount() {
-        return amount;
+    public String getPlannedCompDate() {
+        return plannedCompDate;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setPlannedCompDate(String plannedCompDate) {
+        this.plannedCompDate = plannedCompDate;
     }
 
-    public int getReturnStatus() {
-        return returnStatus;
+    public int getQtyToBuild() {
+        return qtyToBuild;
     }
 
-    public void setReturnStatus(int returnStatus) {
-        this.returnStatus = returnStatus;
+    public void setQtyToBuild(int qtyToBuild) {
+        this.qtyToBuild = qtyToBuild;
     }
 
-    public int getAddStatus() {
-        return addStatus;
+    public int getStatus() {
+        return status;
     }
 
-    public void setAddStatus(int addStatus) {
-        this.addStatus = addStatus;
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

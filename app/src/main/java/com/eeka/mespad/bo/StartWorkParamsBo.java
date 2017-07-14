@@ -12,8 +12,7 @@ public class StartWorkParamsBo {
     private String PAD_ID;
     private String SHOP_ORDER;
     private String SHOP_ORDER_BO;
-    private String PROCESS_LOT;
-    private String PROCESS_LOT_BO;
+    private List<String> PROCESS_LOTS;
     private String RESOURCE_BO;
     private List<String> OPERATIONS;
 
@@ -63,20 +62,12 @@ public class StartWorkParamsBo {
         this.SHOP_ORDER_BO = SHOP_ORDER_BO;
     }
 
-    public String getPROCESS_LOT() {
-        return PROCESS_LOT;
+    public List<String> getPROCESS_LOTS() {
+        return PROCESS_LOTS;
     }
 
-    public void setPROCESS_LOT(String PROCESS_LOT) {
-        this.PROCESS_LOT = PROCESS_LOT;
-    }
-
-    public String getPROCESS_LOT_BO() {
-        return PROCESS_LOT_BO;
-    }
-
-    public void setPROCESS_LOT_BO(String PROCESS_LOT_BO) {
-        this.PROCESS_LOT_BO = PROCESS_LOT_BO;
+    public void setPROCESS_LOTS(List<String> PROCESS_LOTS) {
+        this.PROCESS_LOTS = PROCESS_LOTS;
     }
 
     public String getRESOURCE_BO() {

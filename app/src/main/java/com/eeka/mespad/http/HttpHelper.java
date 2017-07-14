@@ -27,7 +27,7 @@ import okhttp3.Response;
 
 public class HttpHelper {
     private static final String STATE = "status";
-    private static final String PAD_ID = "P00003";
+    public static final String PAD_ID = "P00001";
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
 
@@ -35,12 +35,11 @@ public class HttpHelper {
     public static final String LOGIN_URL = "http://10.7.121.54:50000/manufacturing/index.jsp?";//网页方式登录
     public static final String findProcessWithPadId_url = BASE_URL + "cutpad/findPadBindOperations?";
     public static final String viewCutPadInfo_url = BASE_URL + "cutpad/viewCutPadInfor?";
-    public static final String startBatchWorkWithLabu_url = BASE_URL + "cutpad/startByProcessLot?";
     public static final String startBatchWork_url = BASE_URL + "product/startByProcessLot?";
-    public static final String startCustomWorkWithLabu_url = BASE_URL + "cutpad/releaseAndStartByShopOrder?";
     public static final String startCustomWork_url = BASE_URL + "product/startByShopOrder?";
     public static final String completeBatchWork_url = BASE_URL + "product/completeByProcessLot?";
     public static final String completeCustomWork_url = BASE_URL + "product/completeByShopOrder?";
+    public static final String getWorkOrderList_url = BASE_URL + "cutpad/viewJobOrderList?";
 
     private static Context mContext;
 
@@ -85,8 +84,8 @@ public class HttpHelper {
      */
     public static void viewCutPadInfo(String processLot, HttpCallback callback) {
         JSONObject json = new JSONObject();
-//        json.put("RFID", "RFID00000007");//批量订单
-        json.put("SHOP_ORDER", "GC-SO-DZ-001");//定制订单
+        json.put("RFID", "RFID00000013");//批量订单
+//        json.put("SHOP_ORDER", "GC-SO-DZ-003");//定制订单
         json.put("PAD_ID", PAD_ID);
         RequestParams params = getBaseParams();
         params.put("site", "TEST");
@@ -95,19 +94,7 @@ public class HttpHelper {
     }
 
     /**
-     * 批量订单开始(拉布工序)
-     *
-     * @param paramsBo 参数
-     */
-    public static void startBatchWorkWithLabu(StartWorkParamsBo paramsBo, HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        params.put("site", "TEST");
-        params.put("params", JSON.toJSONString(paramsBo));
-        HttpRequest.post(startBatchWorkWithLabu_url, params, getResponseHandler(startBatchWorkWithLabu_url, callback));
-    }
-
-    /**
-     * 批量订单开始(非拉布工序)
+     * 批量订单开始
      *
      * @param paramsBo 参数
      */
@@ -119,19 +106,7 @@ public class HttpHelper {
     }
 
     /**
-     * 定制订单开始(拉布工序)
-     *
-     * @param paramsBo 参数
-     */
-    public static void startCustomWorkWithLabu(StartWorkParamsBo paramsBo, HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        params.put("site", "TEST");
-        params.put("params", JSON.toJSONString(paramsBo));
-        HttpRequest.post(startCustomWorkWithLabu_url, params, getResponseHandler(startCustomWorkWithLabu_url, callback));
-    }
-
-    /**
-     * 定制订单开始(非拉布工序)
+     * 定制订单开始
      *
      * @param paramsBo 参数
      */
@@ -167,6 +142,18 @@ public class HttpHelper {
     }
 
     /**
+     * 获取作业订单列表
+     */
+    public static void getWorkOrderList(HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", "192.168.1.2");
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getWorkOrderList_url, params, getResponseHandler(getWorkOrderList_url, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      *
      * @return
@@ -178,6 +165,10 @@ public class HttpHelper {
             params.addHeader("Cookie", cookie);
         }
         return params;
+    }
+
+    public static boolean isSuccess(JSONObject json) {
+        return "Y".equals(json.getString(STATE));
     }
 
     /**
