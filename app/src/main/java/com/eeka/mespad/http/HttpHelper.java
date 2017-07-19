@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.bo.StartWorkParamsBo;
+import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
@@ -40,6 +41,8 @@ public class HttpHelper {
     public static final String completeBatchWork_url = BASE_URL + "product/completeByProcessLot?";
     public static final String completeCustomWork_url = BASE_URL + "product/completeByShopOrder?";
     public static final String getWorkOrderList_url = BASE_URL + "cutpad/viewJobOrderList?";
+    public static final String saveLabuData = BASE_URL + "cutpad/saveRabData?";
+    public static final String saveLabuDataAndComplete = BASE_URL + "cutpad/saveRabDataAndComplete?";
 
     private static Context mContext;
 
@@ -79,14 +82,14 @@ public class HttpHelper {
     /**
      * 获取拉布、裁剪数据
      *
-     * @param processLot
      * @param callback
      */
-    public static void viewCutPadInfo(String processLot, HttpCallback callback) {
+    public static void viewCutPadInfo(String resourceBO, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("RFID", "RFID00000013");//批量订单
 //        json.put("SHOP_ORDER", "GC-SO-DZ-003");//定制订单
         json.put("PAD_ID", PAD_ID);
+        json.put("RESOURCE_BO", resourceBO);
         RequestParams params = getBaseParams();
         params.put("site", "TEST");
         params.put("params", json.toJSONString());
@@ -151,6 +154,26 @@ public class HttpHelper {
         params.put("site", "TEST");
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(getWorkOrderList_url, params, getResponseHandler(getWorkOrderList_url, callback));
+    }
+
+    /**
+     * 记录拉布数据
+     */
+    public static void saveLabuData(UpdateLabuBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveLabuData, params, getResponseHandler(saveLabuData, callback));
+    }
+
+    /**
+     * 记录拉布数据并完成
+     */
+    public static void saveLabuDataAndComplete(UpdateLabuBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveLabuDataAndComplete, params, getResponseHandler(saveLabuDataAndComplete, callback));
     }
 
     /**

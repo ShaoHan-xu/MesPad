@@ -14,7 +14,6 @@ import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.RecordLabuMaterialInfoBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -23,7 +22,6 @@ import com.eeka.mespad.fragment.MainFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
 
     private LinearLayout mLayout_controlPanel;
 
-    private List<RecordLabuMaterialInfoBo> mList_materialInfo;
     private ReturnMaterialInfoBo mReturnMaterialInfo;//退料
     private ReturnMaterialInfoBo mAddMaterialInfo;//补料
 
@@ -70,6 +67,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
         findViewById(R.id.btn_getMaterials).setOnClickListener(this);
         findViewById(R.id.btn_recordLabu).setOnClickListener(this);
         findViewById(R.id.btn_orderList).setOnClickListener(this);
+        findViewById(R.id.btn_recordBad).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.btn_pause).setOnClickListener(this);
         findViewById(R.id.btn_quit).setOnClickListener(this);
@@ -146,15 +144,13 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
                 new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, mAddMaterialInfo).show();
                 break;
             case R.id.btn_recordLabu:
-                new RecordLabuDialog(mContext, mList_materialInfo, new RecordLabuDialog.OnRecordLabuCallback() {
-                    @Override
-                    public void recordLabuCallback(List<RecordLabuMaterialInfoBo> list_materialInfo, boolean done) {
-                        mList_materialInfo = list_materialInfo;
-                    }
-                }).show();
+                mMainFragment.showRecordLabuDialog();
                 break;
             case R.id.btn_orderList:
                 startActivity(new Intent(mContext, WorkOrderListActivity.class));
+                break;
+            case R.id.btn_recordBad:
+                startActivity(new Intent(mContext, RecordBadActivity.class));
                 break;
             case R.id.btn_login:
                 showLoginDialog();

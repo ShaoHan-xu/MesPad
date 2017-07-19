@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
-import com.eeka.mespad.bo.RecordLabuMaterialInfoBo;
+import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.WorkOrderBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SystemUtils;
@@ -152,14 +152,15 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
 
             TextView tv_status = holder.getView(R.id.tv_item_orderList_status);
             if (mType == TYPE_DONE) {
-                tv_status.setText("拉布记录");
-                tv_status.setTextColor(getResources().getColor(R.color.colorPrimary));
-                tv_status.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new RecordLabuDialog(mContext, null, WorkOrderListActivity.this).show();
-                    }
-                });
+                tv_status.setVisibility(View.INVISIBLE);
+//                tv_status.setText("拉布记录");
+//                tv_status.setTextColor(getResources().getColor(R.color.colorPrimary));
+//                tv_status.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        new RecordLabuDialog(mContext, null, null, WorkOrderListActivity.this).show();
+//                    }
+//                });
             } else {
                 switch (item.getStatus()) {
                     case 10:
@@ -206,7 +207,7 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
     }
 
     @Override
-    public void recordLabuCallback(List<RecordLabuMaterialInfoBo> list_materialInfo, boolean done) {
+    public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
 
     }
 }

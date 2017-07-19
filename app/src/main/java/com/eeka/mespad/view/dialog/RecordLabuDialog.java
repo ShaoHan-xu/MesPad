@@ -3,13 +3,12 @@ package com.eeka.mespad.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,12 +19,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
-import com.eeka.mespad.bo.RecordLabuMaterialInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
+import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.utils.SystemUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 记录拉布数据弹框
@@ -40,29 +41,18 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
     private LinearLayout mLayout_material;
 
     private ScrollView mScrollView_material;
-    private List<RecordLabuMaterialInfoBo> mList_materialInfo;
+    private List<UpdateLabuBo.MatItem> mList_matItem;
+    private List<TailorInfoBo.MatInfoBean> mList_matInfo;
     private OnRecordLabuCallback mRecordLabuCallback;
+    private TailorInfoBo mTailorInfo;//主数据
 
-    public RecordLabuDialog(@NonNull Context context, OnRecordLabuCallback recordLabuCallback) {
+    private UpdateLabuBo mLabuData;//拉布主数据
+
+    public RecordLabuDialog(@NonNull Context context, @NonNull TailorInfoBo tailorInfo, UpdateLabuBo labuData, @NonNull OnRecordLabuCallback recordLabuCallback) {
         super(context);
+        mTailorInfo = tailorInfo;
+        mLabuData = labuData;
         mRecordLabuCallback = recordLabuCallback;
-        init(context);
-    }
-
-    public RecordLabuDialog(@NonNull Context context, List<RecordLabuMaterialInfoBo> list_materialInfo, OnRecordLabuCallback recordLabuCallback) {
-        super(context);
-        mList_materialInfo = list_materialInfo;
-        mRecordLabuCallback = recordLabuCallback;
-        init(context);
-    }
-
-    public RecordLabuDialog(@NonNull Context context, @StyleRes int themeResId) {
-        super(context, themeResId);
-        init(context);
-    }
-
-    protected RecordLabuDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
         init(context);
     }
 
@@ -71,6 +61,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         mView = LayoutInflater.from(context).inflate(R.layout.dlg_record_labudata, null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(mView);
+        setCanceledOnTouchOutside(false);
 
         initView();
         initData();
@@ -86,15 +77,40 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         mView.findViewById(R.id.btn_recordLabu_saveAndDone).setOnClickListener(this);
         View btn_addMaterial = mView.findViewById(R.id.btn_recordLabu_addMaterial);
         btn_addMaterial.setOnClickListener(this);
-
-        mLayout_materialImg.addView(getMaterialsView(new TailorInfoBo.MatInfoBean(), 0));
-        mLayout_materialImg.addView(getMaterialsView(new TailorInfoBo.MatInfoBean(), 1));
-        mLayout_materialImg.addView(getMaterialsView(new TailorInfoBo.MatInfoBean(), 2));
     }
 
     private void initData() {
-        if (mList_materialInfo != null) {
-            for (RecordLabuMaterialInfoBo materialInfo : mList_materialInfo) {
+        if (mTailorInfo == null) {
+            Toast.makeText(mContext, "数据错误", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mList_matInfo = mTailorInfo.getMAT_INFOR();
+        if (mLabuData != null) {
+            mList_matItem = mLabuData.getDETAILS();
+        }
+        if (mList_matInfo != null) {
+            for (int i = 0; i < mList_matInfo.size(); i++) {
+                TailorInfoBo.MatInfoBean matInfo = mList_matInfo.get(i);
+                mLayout_materialImg.addView(getMaterialsView(matInfo, i));
+            }
+
+            if (mList_matItem == null) {
+                mList_matItem = new ArrayList<>();
+                boolean isCustom = mTailorInfo.isIS_CUSTOM();
+                for (int i = 0; i < mList_matInfo.size(); i++) {
+                    TailorInfoBo.MatInfoBean matInfo = mList_matInfo.get(i);
+                    UpdateLabuBo.MatItem matItem = new UpdateLabuBo.MatItem();
+                    matItem.setMAT_NO(matInfo.getMAT_NO());
+                    if (isCustom) {
+                        matItem.setLAYERS("1");
+                    } else {
+                        matItem.setLAYERS(matInfo.getLAYERS() + "");
+                    }
+                    mList_matItem.add(matItem);
+                }
+            }
+
+            for (UpdateLabuBo.MatItem materialInfo : mList_matItem) {
                 mLayout_material.addView(getMaterialInfoView(materialInfo), mLayout_material.getChildCount() - 1);
             }
         }
@@ -119,20 +135,8 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
                 save(false);
                 break;
             case R.id.btn_recordLabu_saveAndDone:
-                saveAndDone();
+                save(true);
                 break;
-        }
-    }
-
-    /**
-     * 保存并完工
-     */
-    private void saveAndDone() {
-        if (save(true)) {
-            if (mRecordLabuCallback != null) {
-                mRecordLabuCallback.recordLabuCallback(mList_materialInfo, true);
-            }
-            dismiss();
         }
     }
 
@@ -141,8 +145,9 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
      *
      * @param withDone true=保存并完工，false=保存
      */
-    private boolean save(boolean withDone) {
-        mList_materialInfo = new ArrayList<>();
+    private void save(boolean withDone) {
+        mList_matItem = new ArrayList<>();
+        Map<String, Integer> layersMap = new HashMap<>();
         int childCount = mLayout_material.getChildCount() - 1;
         for (int i = 0; i < childCount; i++) {
             View childView = mLayout_material.getChildAt(i);
@@ -154,33 +159,78 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
             EditText et_remark = (EditText) childView.findViewById(R.id.et_recordLabu_remark);
 
             String num = tv_num.getText().toString();
-            String juanHap = et_juanHao.getText().toString();
+            String juanHao = et_juanHao.getText().toString();
             String layers = et_layers.getText().toString();
             String left = et_left.getText().toString();
             String length = et_length.getText().toString();
 
-            if (!TextUtils.isEmpty(num) && !TextUtils.isEmpty(juanHap) && !TextUtils.isEmpty(layers) && !TextUtils.isEmpty(left) && !TextUtils.isEmpty(length)) {
+            if (!TextUtils.isEmpty(num) && !TextUtils.isEmpty(juanHao) && !TextUtils.isEmpty(layers) && !TextUtils.isEmpty(left) && !TextUtils.isEmpty(length)) {
+                if ("0".equals(layers)) {
+                    Toast.makeText(mContext, "物料 " + num + " 拉布层数不能为0", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String remark = et_remark.getText().toString();
-                RecordLabuMaterialInfoBo materialInfo = new RecordLabuMaterialInfoBo();
-                materialInfo.setMaterialNum(num);
-                materialInfo.setJuanHao(juanHap);
-                materialInfo.setLayers(layers);
-                materialInfo.setLength(length);
-                materialInfo.setLeft(left);
-                materialInfo.setRemark(remark);
-                mList_materialInfo.add(materialInfo);
+                UpdateLabuBo.MatItem matItem = new UpdateLabuBo.MatItem();
+                matItem.setMAT_NO(num);
+                matItem.setVOLUME(juanHao);
+                matItem.setLAYERS(layers);
+                matItem.setLENGTH(length);
+                matItem.setODDMENTS(left);
+                matItem.setREMARK(remark);
+
+                Integer itemLayers = Integer.valueOf(layers);
+                for (TailorInfoBo.MatInfoBean info : mList_matInfo) {
+                    if (num.equals(info.getMAT_NO())) {
+                        if (itemLayers > info.getLAYERS()) {
+                            Toast.makeText(mContext, "物料 " + num + " 超额拉布", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        matItem.setITEM_BO(info.getITEM_BO());
+                    }
+                }
+
+                if (!withDone) {
+                    matItem.setEditEnable(false);
+                }
+                mList_matItem.add(matItem);
+
+                if (layersMap.containsKey(num)) {
+                    Integer lay = layersMap.get(num);
+                    lay += itemLayers;
+                    layersMap.put(num, lay);
+                } else {
+                    layersMap.put(num, itemLayers);
+                }
             } else {
-                Toast.makeText(mContext, "数据未填写完整，无法保存", Toast.LENGTH_SHORT).show();
-                return false;
+                Toast.makeText(mContext, "物料 " + num + " 数据未填写完整，无法保存", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
-        if (!withDone) {
-            if (mRecordLabuCallback != null) {
-                mRecordLabuCallback.recordLabuCallback(mList_materialInfo, false);
+
+        for (TailorInfoBo.MatInfoBean info : mList_matInfo) {
+            String matNo = info.getMAT_NO();
+            if (layersMap.containsKey(matNo)) {
+                Integer itemLayers = layersMap.get(matNo);
+                if (itemLayers > info.getLAYERS()) {
+                    Toast.makeText(mContext, "物料 " + matNo + " 超额拉布", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         }
-        Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
-        return true;
+
+        mLabuData = new UpdateLabuBo();
+        mLabuData.setDETAILS(mList_matItem);
+        TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
+        mLabuData.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
+        mLabuData.setPLAN_LAYERS(orderInfo.getLAYERS() + "");
+        mLabuData.setZ_LAYOUT_BO(orderInfo.getZ_LAYOUT_BO());
+        mLabuData.setRESOURCE_BO(mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+        List<String> opList = new ArrayList<>();
+        for (TailorInfoBo.OPERINFORBean oper : mTailorInfo.getOPER_INFOR()) {
+            opList.add(oper.getOPERATION_BO());
+        }
+        mLabuData.setOPERATIONS(opList);
+        mRecordLabuCallback.recordLabuCallback(mLabuData, withDone);
     }
 
     /**
@@ -202,10 +252,9 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 ArrayList<String> urls = new ArrayList<>();
-//                List<TailorInfoBo.TailorResultBean.ItemArrayBean> list = mTailorResult.getItemArray();
-//                for (TailorInfoBo.TailorResultBean.ItemArrayBean item : list) {
-//                    urls.add(item.getMaterialUrl());
-//                }
+                for (TailorInfoBo.MatInfoBean item : mList_matInfo) {
+                    urls.add(item.getMAT_URL());
+                }
 
                 mContext.startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
             }
@@ -218,9 +267,10 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
      *
      * @return
      */
-    private View getMaterialInfoView(RecordLabuMaterialInfoBo materialInfo) {
+    private View getMaterialInfoView(UpdateLabuBo.MatItem materialInfo) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_recordlabu_materialinfo, null);
         TextView tv_num = (TextView) view.findViewById(R.id.tv_recordLabu_materialNum);
+        Button btn_del = (Button) view.findViewById(R.id.btn_recordLabu_del);
         if (materialInfo != null) {
             EditText et_juanHao = (EditText) view.findViewById(R.id.et_recordLabu_juanHao);
             EditText et_length = (EditText) view.findViewById(R.id.et_recordLabu_length);
@@ -228,37 +278,56 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
             EditText et_left = (EditText) view.findViewById(R.id.et_recordLabu_left);
             EditText et_remark = (EditText) view.findViewById(R.id.et_recordLabu_remark);
 
-            tv_num.setText(materialInfo.getMaterialNum());
-            et_juanHao.setText(materialInfo.getJuanHao());
-            et_layers.setText(materialInfo.getLayers());
-            et_length.setText(materialInfo.getLength());
-            et_left.setText(materialInfo.getLeft());
-            et_remark.setText(materialInfo.getRemark());
-        }
+            if (!materialInfo.isEditEnable()) {
+                tv_num.setBackgroundResource(0);
+                et_juanHao.setBackgroundResource(0);
+                et_length.setBackgroundResource(0);
+                et_layers.setBackgroundResource(0);
+                et_left.setBackgroundResource(0);
+                et_remark.setBackgroundResource(0);
 
+                tv_num.setEnabled(false);
+                et_juanHao.setEnabled(false);
+                et_length.setEnabled(false);
+                et_layers.setEnabled(false);
+                et_left.setEnabled(false);
+                et_remark.setEnabled(false);
+                btn_del.setVisibility(View.INVISIBLE);
+            } else {
+                if (mTailorInfo.isIS_CUSTOM()) {
+                    et_layers.setEnabled(false);
+                    et_layers.setBackgroundResource(0);
+                }
+            }
+
+            tv_num.setText(materialInfo.getMAT_NO());
+            et_juanHao.setText(materialInfo.getVOLUME());
+            et_layers.setText(materialInfo.getLAYERS());
+            et_length.setText(materialInfo.getLENGTH());
+            et_left.setText(materialInfo.getODDMENTS());
+            et_remark.setText(materialInfo.getREMARK());
+        }
         tv_num.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopWindow(v);
             }
         });
-
-        view.findViewById(R.id.btn_recordLabu_del).setOnClickListener(new View.OnClickListener() {
+        btn_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mLayout_material.removeView(view);
             }
         });
+
         return view;
     }
 
-
     private void showPopWindow(final View v) {
         final List<String> list = new ArrayList<>();
-        list.add("M1111111");
-        list.add("M2222222");
-        list.add("M3333333");
-        list.add("M4444444");
+        for (TailorInfoBo.MatInfoBean item : mList_matInfo) {
+            list.add(item.getMAT_NO());
+        }
         SelectorPopWindow<String> ppw = new SelectorPopWindow<>(mContext, list, new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -276,8 +345,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.9), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
     }
 
-
     public interface OnRecordLabuCallback {
-        void recordLabuCallback(List<RecordLabuMaterialInfoBo> list_materialInfo, boolean done);
+        void recordLabuCallback(UpdateLabuBo labuData, boolean done);
     }
 }

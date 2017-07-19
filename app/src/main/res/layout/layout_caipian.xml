@@ -12,7 +12,7 @@
         android:layout_marginTop="5dp"
         android:text="前幅" />
 
-    <com.eeka.mespad.view.widget.SquareRelativeLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/tv_caiPianName"
@@ -26,6 +26,6 @@
             android:layout_margin="0.5dp"
             android:scaleType="centerCrop"
             android:src="@drawable/libai" />
-    </com.eeka.mespad.view.widget.SquareRelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

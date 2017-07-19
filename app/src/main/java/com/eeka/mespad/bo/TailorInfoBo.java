@@ -92,6 +92,15 @@ public class TailorInfoBo {
         private int LAYERS;
         private String MAT_URL;
         private String MAT_NO;
+        private String ITEM_BO;
+
+        public String getITEM_BO() {
+            return ITEM_BO;
+        }
+
+        public void setITEM_BO(String ITEM_BO) {
+            this.ITEM_BO = ITEM_BO;
+        }
 
         public String getMAT_NO() {
             return MAT_NO;

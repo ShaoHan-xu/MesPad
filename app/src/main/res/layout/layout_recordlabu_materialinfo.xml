@@ -16,8 +16,7 @@
         android:drawableRight="@android:drawable/arrow_down_float"
         android:gravity="center"
         android:maxLines="1"
-        android:padding="5dp"
-        android:text="M1122334455" />
+        android:padding="5dp" />
 
     <EditText
         android:id="@+id/et_recordLabu_juanHao"

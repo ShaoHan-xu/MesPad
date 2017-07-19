@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
         mTv_loadingMsg = (TextView) view.findViewById(R.id.tv_loading_msg);
 
         mProDialog = new Dialog(mContext);
+        mProDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mProDialog.setContentView(view);
     }
 

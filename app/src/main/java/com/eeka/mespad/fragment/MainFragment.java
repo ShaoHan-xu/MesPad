@@ -21,13 +21,17 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
+import com.danikula.videocache.HttpProxyCacheServer;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
+import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.view.dialog.RecordLabuDialog;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,14 +41,14 @@ public class MainFragment extends BaseFragment {
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
-    private List<TailorInfoBo.OPERINFORBean> mList_processData;
+    private List<TailorInfoBo.OPERINFORBean> mList_processData;//工序列表数据
 
     private RadioGroup mRadioGroup;
 
     private LinearLayout mLayout_material;//物料图
     private LinearLayout mLayout_material2;//排料图
     private LinearLayout mLayout_sizeInfo;
-    private TailorInfoBo mTailorInfo;
+    private TailorInfoBo mTailorInfo;//主数据
 
     private ListView mLv_process;
 
@@ -54,11 +58,15 @@ public class MainFragment extends BaseFragment {
 
     private TailorInfoBo.ResultInfo mResultInfo;
 
+    public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
         initData();
+
+        HttpProxyCacheServer proxy = PadApplication.getProxy(mContext);
     }
 
     @Nullable
@@ -223,9 +231,12 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_done) {
-            if (mTailorInfo == null) {
-                HttpHelper.viewCutPadInfo("", MainFragment.this);
-                return;
+            if (!mTailorInfo.isIS_CUSTOM()) {
+                if (mLabuData == null || mLabuData.getDETAILS() == null || mLabuData.getDETAILS().size() == 0) {
+                    toast("请先记录拉布数据");
+                    showRecordLabuDialog();
+                    return;
+                }
             }
             TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
             StartWorkParamsBo params = new StartWorkParamsBo();
@@ -346,6 +357,24 @@ public class MainFragment extends BaseFragment {
         return view;
     }
 
+    private RecordLabuDialog mLabuDialog;
+
+    public void showRecordLabuDialog() {
+        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, new RecordLabuDialog.OnRecordLabuCallback() {
+            @Override
+            public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
+                mLabuData = labuData;
+                showLoading();
+                if (done) {
+                    HttpHelper.saveLabuDataAndComplete(labuData, MainFragment.this);
+                } else {
+                    HttpHelper.saveLabuData(labuData, MainFragment.this);
+                }
+            }
+        });
+        mLabuDialog.show();
+    }
+
     private class RadioChangedListener implements RadioGroup.OnCheckedChangeListener {
 
         @Override
@@ -454,21 +483,23 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
+        dismissLoading();
         String status = resultJSON.getString("status");
         if ("Y".equals(status)) {
-            JSONObject result = resultJSON.getJSONObject("result");
             switch (url) {
                 case HttpHelper.LOGIN_URL:
                     HttpHelper.findProcessWithPadId("", this);
                     break;
                 case HttpHelper.findProcessWithPadId_url:
-                    String operArray = result.getJSONArray("OPER_INFOR").toString();
-                    mList_processData = JSON.parseArray(operArray, TailorInfoBo.OPERINFORBean.class);
-                    mResultInfo = JSON.parseObject(result.getJSONArray("RESR_INFOR").get(0).toString(), TailorInfoBo.ResultInfo.class);
+                    JSONObject result = resultJSON.getJSONObject("result");
+                    mResultInfo = JSON.parseObject(result.getJSONObject("RESR_INFOR").toString(), TailorInfoBo.ResultInfo.class);
+                    HttpHelper.viewCutPadInfo(mResultInfo.getRESOURCE_BO(), MainFragment.this);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
-                    mTailorInfo = JSON.parseObject(result.toString(), TailorInfoBo.class);
-//                    mTailorInfo.setOPER_INFOR(mList_processData);
+                    JSONObject result1 = resultJSON.getJSONObject("result");
+                    mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
+                    mList_processData = mTailorInfo.getOPER_INFOR();
+                    mTailorInfo.setRESR_INFOR(mResultInfo);
                     refreshView();
                     break;
                 case HttpHelper.startBatchWork_url:
@@ -483,6 +514,15 @@ public class MainFragment extends BaseFragment {
                     mBtn_done.setBackgroundResource(R.drawable.btn_green);
                     toast("本工序已完成");
                     break;
+                case HttpHelper.saveLabuData:
+                    toast("保存成功");
+                    break;
+                case HttpHelper.saveLabuDataAndComplete:
+                    toast("保存成功");
+                    if (mLabuDialog != null && mLabuDialog.isShowing()) {
+                        mLabuDialog.dismiss();
+                    }
+                    break;
             }
         } else {
             toast(resultJSON.getString("message"));
@@ -491,6 +531,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onFailure(String url, int code, String message) {
+        dismissLoading();
         toast(message);
     }
 

@@ -38,9 +38,13 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activity.WorkOrderListActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.RecordBadActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
     </application>
