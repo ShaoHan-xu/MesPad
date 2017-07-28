@@ -2,10 +2,12 @@ package com.eeka.mespad.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 
 /**
@@ -90,5 +92,26 @@ public class SpUtil {
     public static boolean getLoginStatus() {
         return mSP.getBoolean("loginStatus", false);
     }
+
+    /**
+     * 保存上下文信息
+     */
+    public static void saveContextInfo(ContextInfoBo contextInfo) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putString("contextInfo", JSON.toJSONString(contextInfo));
+        edit.apply();
+    }
+
+    /**
+     * 获取上下文信息
+     */
+    public static ContextInfoBo getContextInfo() {
+        String contextInfo = mSP.getString("contextInfo", null);
+        if (!TextUtils.isEmpty(contextInfo)) {
+            return JSON.parseObject(contextInfo, ContextInfoBo.class);
+        }
+        return null;
+    }
+
 
 }

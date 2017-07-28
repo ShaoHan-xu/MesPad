@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_sewOrderInfo"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="工单号" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="上一工序：" />
+
+                <ListView
+                    android:id="@+id/lv_sew_lastProcess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="当前工序：" />
+
+                <ListView
+                    android:id="@+id/lv_sew_curProcess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:text="订单号：" />
+
+                <TextView
+                    android:id="@+id/tv_orderNum"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:text="床次：" />
+
+                <TextView
+                    android:id="@+id/tv_cutNum"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:text="订单类型：" />
+
+                <TextView
+                    android:id="@+id/tv_orderType"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="批次号：" />
+
+                <TextView
+                    android:id="@+id/tv_batchNum"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:text="款号：" />
+
+                <TextView
+                    android:id="@+id/tv_style"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:text="数量：" />
+
+                <TextView
+                    android:id="@+id/tv_qty"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/efficiency_s" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_sewDescInfo"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="工艺描述："
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_sew_desc"
+                style="@style/textStyle_default"
+                android:text="1、工艺描述" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="品质要求："
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_sew_quality"
+                style="@style/textStyle_default"
+                android:text="1、品质要求" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="特殊要求："
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_sew_special"
+                style="@style/textStyle_default"
+                android:text="1、特殊要求" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/layout_sewDescInfo"
+        android:layout_toRightOf="@id/layout_sewOrderInfo"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_grid_vertical"
+                android:orientation="horizontal"
+                android:showDividers="middle|end">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:padding="10dp"
+                    android:text="袖领口" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:padding="10dp"
+                    android:text="袖领口" />
+
+            </LinearLayout>
+
+            <View style="@style/line" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_sew_sop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.8"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_material" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

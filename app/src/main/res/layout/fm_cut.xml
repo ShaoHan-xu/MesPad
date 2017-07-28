@@ -8,19 +8,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="5dp"
-        android:layout_weight="5"
+        android:layout_weight="4"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/layout_processTab"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/white"
-            android:divider="@drawable/divider_grid_vertical"
-            android:orientation="horizontal"
-            android:showDividers="middle|end" />
-
-        <View style="@style/line" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,36 +17,63 @@
             android:layout_weight="3"
             android:orientation="horizontal">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"
-                android:layout_weight="4"
-                android:background="@color/white">
+                android:layout_weight="3"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_startWork"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="请刷卡开始作业"
-                    android:textColor="@color/text_black_default"
-                    android:textSize="@dimen/textSize_itemTitle" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewPager_main_processBmp"
+                    <LinearLayout
+                        android:id="@+id/layout_matTab"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:divider="@drawable/divider_grid_vertical"
+                        android:orientation="horizontal"
+                        android:showDividers="middle|end" />
+
+                    <View style="@style/line" />
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/vp_main_matInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="2"
+                    android:background="@color/white"
+                    android:orientation="vertical">
 
-                <RadioGroup
-                    android:id="@+id/rg_main_indication"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:orientation="horizontal" />
+                    <LinearLayout
+                        android:id="@+id/layout_processTab"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:divider="@drawable/divider_grid_vertical"
+                        android:orientation="horizontal"
+                        android:showDividers="middle|end" />
 
-            </RelativeLayout>
+                    <View style="@style/line" />
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/vp_main_processDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <ScrollView
                 android:layout_width="0dp"
@@ -74,14 +90,14 @@
                     android:padding="5dp"
                     android:visibility="gone">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="工艺说明："
-                        android:textStyle="bold" />
+                    <!--<TextView-->
+                        <!--style="@style/textStyle_default"-->
+                        <!--android:text="工艺说明："-->
+                        <!--android:textStyle="bold" />-->
 
-                    <TextView
-                        android:id="@+id/tv_craftDescribe"
-                        style="@style/textStyle_default" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/tv_craftDescribe"-->
+                        <!--style="@style/textStyle_default" />-->
 
                     <TextView
                         style="@style/textStyle_default"
@@ -139,7 +155,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/layout_describe"
         android:layout_width="0dp"
@@ -148,19 +163,50 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_user"
-            style="@style/textStyle_default"
+        <LinearLayout
+            android:id="@+id/layout_loginUsers"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="林宛瑜" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_black"
+            android:divider="@drawable/divider_grid"
+            android:orientation="vertical"
+            android:padding="0.5dp"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="用户" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/text_gray_default" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="工号" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <ScrollView
@@ -198,8 +244,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:gravity="center_vertical"
-                        android:visibility="gone"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/textStyle_default"
@@ -312,10 +358,11 @@
                 android:id="@+id/btn_done"
                 style="@style/btnStyle_green"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:text="开始" />
+                android:text="完成"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

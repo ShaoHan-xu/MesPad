@@ -170,14 +170,14 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_horizontal">
 
                     <EditText
                         android:id="@+id/et_searchPart"
                         style="@style/textStyle_default"
                         android:layout_width="300dp"
-                        android:layout_height="30dp"
+                        android:layout_height="match_parent"
                         android:background="@drawable/border_black"
                         android:gravity="center"
                         android:imeOptions="actionDone"
@@ -244,7 +244,7 @@
 
         <RelativeLayout
             android:id="@+id/layout_processList"
-            android:layout_width="170dp"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"

@@ -93,11 +93,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-
+        dismissLoading();
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
-
+        dismissLoading();
     }
 }

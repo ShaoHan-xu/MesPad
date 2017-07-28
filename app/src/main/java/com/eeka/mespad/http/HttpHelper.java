@@ -1,6 +1,7 @@
 package com.eeka.mespad.http;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -29,11 +30,18 @@ import okhttp3.Response;
 public class HttpHelper {
     private static final String STATE = "status";
     public static final String PAD_ID = "P00001";
+    //    public static final String PAD_IP = "192.168.0.7";
+    public static final String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
 
-    //    public static final String LOGIN_URL = BASE_URL + "com/eeka/web/LogicServlet?method=login&";
-    public static final String LOGIN_URL = "http://10.7.121.54:50000/manufacturing/index.jsp?";//网页方式登录
+    public static final String login_url = BASE_URL + "login?";
+    public static final String logout_url = BASE_URL + "logout?";
+    public static final String loginByCard_url = BASE_URL + "loginByCard?";
+    public static final String positionLogin_url = BASE_URL + "position/positionLogin?";
+    public static final String positionLogout_url = BASE_URL + "position/positionLogout?";
+    //    public static final String login_url = "http://10.7.121.54:50000/manufacturing/index.jsp?";//网页方式登录
+    public static final String queryPositionByPadIp_url = BASE_URL + "queryPositionByPadIp?";
     public static final String findProcessWithPadId_url = BASE_URL + "cutpad/findPadBindOperations?";
     public static final String viewCutPadInfo_url = BASE_URL + "cutpad/viewCutPadInfor?";
     public static final String startBatchWork_url = BASE_URL + "product/startByProcessLot?";
@@ -43,11 +51,24 @@ public class HttpHelper {
     public static final String getWorkOrderList_url = BASE_URL + "cutpad/viewJobOrderList?";
     public static final String saveLabuData = BASE_URL + "cutpad/saveRabData?";
     public static final String saveLabuDataAndComplete = BASE_URL + "cutpad/saveRabDataAndComplete?";
+    public static final String getBadList = BASE_URL + "logNcPad/listNcCodesOnOperation?";
+    public static final String saveBadRecord = BASE_URL + "logNcPad/logNc?";
 
     private static Context mContext;
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 根据PAD的IP地址查询站点的相关信息
+     *
+     * @param callback 回调
+     */
+    public static void queryPositionByPadIp(HttpCallback callback) {
+        RequestParams params = new RequestParams();
+        params.put("padIp", PAD_IP);
+        HttpRequest.post(queryPositionByPadIp_url, params, getResponseHandler(queryPositionByPadIp_url, callback));
     }
 
     /**
@@ -61,7 +82,53 @@ public class HttpHelper {
         RequestParams params = new RequestParams();
         params.put("j_username", user);
         params.put("j_password", pwd);
-        HttpRequest.post(LOGIN_URL, params, getResponseHandler(LOGIN_URL, callback));
+        HttpRequest.post(login_url, params, getResponseHandler(login_url, callback));
+    }
+
+    /**
+     * 卡号密码登录
+     *
+     * @param cardId   卡号
+     * @param pwd      密码
+     * @param callback 回调
+     */
+    public static void loginByCard(String cardId, String pwd, HttpCallback callback) {
+        RequestParams params = new RequestParams();
+        params.put("cardId", cardId);
+        params.put("passwd", pwd);
+        HttpRequest.post(loginByCard_url, params, getResponseHandler(loginByCard_url, callback));
+    }
+
+    /**
+     * 站位登录
+     *
+     * @param cardId   卡号
+     * @param callback 回调
+     */
+    public static void positionLogin(String cardId, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("PAD_IP", PAD_IP);
+        json.put("CARD_ID", cardId);
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        params.put("params", json.toJSONString());
+        HttpRequest.post(positionLogin_url, params, getResponseHandler(positionLogin_url, callback));
+    }
+
+    /**
+     * 站点登出
+     *
+     * @param cardId   卡号
+     * @param callback 回调
+     */
+    public static void positionLogout(String cardId, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        JSONObject json = new JSONObject();
+        json.put("PAD_IP", PAD_IP);
+        json.put("CARD_ID", cardId);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(positionLogout_url, params, getResponseHandler(positionLogout_url, callback));
     }
 
     /**
@@ -177,6 +244,30 @@ public class HttpHelper {
     }
 
     /**
+     * 获取不良数据列表
+     */
+    public static void getBadList(HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_ID);
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getBadList, params, getResponseHandler(getBadList, callback));
+    }
+
+    /**
+     * 保存不良数据
+     */
+    public static void saveBadRecord(@NonNull JSONObject json, HttpCallback callback) {
+        json.put("PAD_ID", PAD_ID);
+        json.put("RFID", "RFID00000013");
+        RequestParams params = getBaseParams();
+        params.put("site", "TEST");
+        params.put("params", json.toJSONString());
+        HttpRequest.post(saveBadRecord, params, getResponseHandler(saveBadRecord, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      *
      * @return
@@ -217,7 +308,7 @@ public class HttpHelper {
                     return;
                 }
                 //登录的时候保存cookie
-                if (LOGIN_URL.contains(url)) {
+                if (login_url.contains(url)) {
                     if (headers != null) {
                         StringBuilder cookies = new StringBuilder();
                         List<String> values = headers.values("set-cookie");
@@ -246,7 +337,7 @@ public class HttpHelper {
                 Logger.d(response);
 
                 //网页方式登录测试用
-                if (LOGIN_URL.equals(url)) {
+                if (login_url.equals(url)) {
                     if (!response.contains("Error")) {
                         if (headers != null) {
                             StringBuilder cookies = new StringBuilder();

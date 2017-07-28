@@ -3,7 +3,6 @@ package com.eeka.mespad.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,14 +14,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
-import com.danikula.videocache.HttpProxyCacheServer;
-import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
@@ -30,6 +26,7 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 
@@ -37,24 +34,30 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainFragment extends BaseFragment {
+/**
+ * 裁剪/拉布界面
+ */
+public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCallback {
 
-    private ViewPager mViewPager;
-    private ViewPagerAdapter mViewPagerAdapter;
+    private ViewPager mVP_process;
+    private VPAdapter mVPAdapter_process;
+    private ViewPager mVP_matInfo;
+    private VPAdapter mVPAdapter_matInfo;
     private List<TailorInfoBo.OPERINFORBean> mList_processData;//工序列表数据
 
-    private RadioGroup mRadioGroup;
-
-    private LinearLayout mLayout_material;//物料图
-    private LinearLayout mLayout_material2;//排料图
+    private LinearLayout mLayout_material1;//排料图
+    private LinearLayout mLayout_material2;//粘朴图
     private LinearLayout mLayout_sizeInfo;
     private TailorInfoBo mTailorInfo;//主数据
 
     private ListView mLv_process;
 
-    private LinearLayout mLayout_processTab;
+    private LinearLayout mLayout_processTab;//工序页签
+    private LinearLayout mLayout_matTab;//物料图页签
     private TextView mTv_nextProcess;
     private Button mBtn_done;
+
+    private LinearLayout mLayout_loginUser;
 
     private TailorInfoBo.ResultInfo mResultInfo;
 
@@ -66,59 +69,78 @@ public class MainFragment extends BaseFragment {
         initView();
         initData();
 
-        HttpProxyCacheServer proxy = PadApplication.getProxy(mContext);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fm_main, null);
+        mView = inflater.inflate(R.layout.fm_cut, null);
         return mView;
     }
 
     protected void initView() {
-        mViewPager = (ViewPager) mView.findViewById(R.id.viewPager_main_processBmp);
+        mVP_process = (ViewPager) mView.findViewById(R.id.vp_main_processDesc);
+        mVP_matInfo = (ViewPager) mView.findViewById(R.id.vp_main_matInfo);
 
-        mRadioGroup = (RadioGroup) mView.findViewById(R.id.rg_main_indication);
-        mRadioGroup.setOnCheckedChangeListener(new RadioChangedListener());
-
-        mLayout_material = (LinearLayout) mView.findViewById(R.id.layout_material1);
+        mLayout_material1 = (LinearLayout) mView.findViewById(R.id.layout_material1);
         mLayout_material2 = (LinearLayout) mView.findViewById(R.id.layout_material2);
         mLayout_sizeInfo = (LinearLayout) mView.findViewById(R.id.layout_sizeInfo);
         mLayout_processTab = (LinearLayout) mView.findViewById(R.id.layout_processTab);
+        mLayout_matTab = (LinearLayout) mView.findViewById(R.id.layout_matTab);
         mTv_nextProcess = (TextView) mView.findViewById(R.id.tv_nextProcess);
+
+        mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
 
         mLv_process = (ListView) mView.findViewById(R.id.lv_processList);
         mLv_process.setOnItemClickListener(new ProcessClickListener());
 
         mBtn_done = (Button) mView.findViewById(R.id.btn_done);
         mBtn_done.setOnClickListener(this);
-    }
 
-    protected void initData() {
-        HttpHelper.login("shawn", "sap12345", this);
-        mViewPagerAdapter = new ViewPagerAdapter();
-        mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPagerChangedListener());
     }
 
     public void refreshView() {
-        mView.findViewById(R.id.tv_startWork).setVisibility(View.GONE);
         mView.findViewById(R.id.layout_processDescription).setVisibility(View.VISIBLE);
         mView.findViewById(R.id.layout_orderInfo).setVisibility(View.VISIBLE);
-        mLayout_material.removeAllViews();
-        List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
+
+        //物料数据
+        mLayout_material1.removeAllViews();
+        mLayout_matTab.removeAllViews();
+        final List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
         if (itemArray != null) {
+            itemArray.add(itemArray.get(0));//测试用，用完即删
             for (int i = 0; i < itemArray.size(); i++) {
-                mLayout_material.addView(getMaterialsView(itemArray.get(i), i));
+                TailorInfoBo.MatInfoBean matInfoBean = itemArray.get(i);
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
+                TextView textView = (TextView) view.findViewById(R.id.text);
+                textView.setText(matInfoBean.getMAT_NO());
+                textView.setPadding(10, 10, 10, 10);
+                textView.setTag(i);
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> urls = new ArrayList<>();
+                        for (TailorInfoBo.MatInfoBean mat : itemArray) {
+                            urls.add(mat.getMAT_URL());
+                        }
+                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
+                    }
+                });
+                mLayout_matTab.addView(view);
             }
+            refreshMatTab(0);
         }
 
-        mLayout_material2.removeAllViews();
+        mVPAdapter_matInfo = new VPAdapter<>(itemArray);
+        mVP_matInfo.setAdapter(mVPAdapter_matInfo);
+        mVP_matInfo.addOnPageChangeListener(new ViewPagerChangedListener(ViewPagerChangedListener.TYPE_MAT));
+
+        //排料图数据
+        mLayout_material1.removeAllViews();
         List<TailorInfoBo.LayoutInfoBean> layoutArray = mTailorInfo.getLAYOUT_INFOR();
         if (layoutArray != null) {
             for (int i = 0; i < layoutArray.size(); i++) {
-                mLayout_material2.addView(getLayoutView(layoutArray.get(i), i));
+                mLayout_material1.addView(getLayoutView(layoutArray.get(i), i));
             }
         }
 
@@ -136,21 +158,12 @@ public class MainFragment extends BaseFragment {
             }
         }
 
-//        mRadioGroup.removeAllViews();
-        mViewPagerAdapter.notifyDataSetChanged();
-//        if (mList_processData.size() > 1) {
-//            for (int i = 0; i < mList_processData.size(); i++) {
-//                RadioButton rb = new RadioButton(mContext);
-//                rb.setEnabled(false);
-//                mRadioGroup.addView(rb);
-//                if (i == 0) {
-//                    rb.setChecked(true);
-//                }
-//            }
-//            mHandler.sendEmptyMessageDelayed(0, 3000);
-//        }
+        List<TailorInfoBo.OPERINFORBean> list = mTailorInfo.getOPER_INFOR();
+        mVPAdapter_process = new VPAdapter<>(list);
+        mVP_process.setAdapter(mVPAdapter_process);
+        mVP_process.addOnPageChangeListener(new ViewPagerChangedListener(ViewPagerChangedListener.TYPE_PROCESS));
 
-        mLv_process.setAdapter(new CommonAdapter<TailorInfoBo.OPERINFORBean>(mContext, mList_processData, R.layout.item_textview) {
+        mLv_process.setAdapter(new CommonAdapter<TailorInfoBo.OPERINFORBean>(mContext, list, R.layout.item_textview) {
             @Override
             public void convert(ViewHolder holder, TailorInfoBo.OPERINFORBean item, int position) {
                 TextView textView = holder.getView(R.id.text);
@@ -160,23 +173,24 @@ public class MainFragment extends BaseFragment {
         });
         mLv_process.setItemChecked(0, true);
 
+        //工序数据
         mLayout_processTab.removeAllViews();
-        if (mList_processData != null) {
-            for (int i = 0; i < mList_processData.size(); i++) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-                TextView textView = (TextView) view.findViewById(R.id.text);
-                textView.setTag(i);
-                TailorInfoBo.OPERINFORBean item1 = mList_processData.get(i);
-                textView.setOnClickListener(new View.OnClickListener() {
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
+                View processTabView = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
+                TextView tv_processTab = (TextView) processTabView.findViewById(R.id.text);
+                tv_processTab.setTag(i);
+                TailorInfoBo.OPERINFORBean item1 = list.get(i);
+                tv_processTab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewPager.setCurrentItem((Integer) v.getTag());
+                        mVP_process.setCurrentItem((Integer) v.getTag());
                     }
                 });
-                textView.setText(item1.getDESCRIPTION());
-                mLayout_processTab.addView(view);
+                tv_processTab.setText(item1.getDESCRIPTION());
+                mLayout_processTab.addView(processTabView);
             }
-            if (mList_processData.size() != 0) {
+            if (list.size() != 0) {
                 refreshProcessView(0);
             }
         }
@@ -205,11 +219,11 @@ public class MainFragment extends BaseFragment {
     private void refreshProcessView(int position) {
         TailorInfoBo.OPERINFORBean item = mList_processData.get(position);
 
-        TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_craftDescribe);
+//        TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_craftDescribe);
         TextView tv_qualityDes = (TextView) mView.findViewById(R.id.tv_qualityDescribe);
-        String craftDesc = item.getOPERATION_INSTRUCTION();
-        if (!isEmpty(craftDesc))
-            tv_craftDesc.setText(craftDesc.replace("\\n", "\n"));
+//        String craftDesc = item.getOPERATION_INSTRUCTION();
+//        if (!isEmpty(craftDesc))
+//            tv_craftDesc.setText(craftDesc.replace("\\n", "\n"));
         String qualityDesc = item.getQUALITY_REQUIREMENT();
         if (!isEmpty(qualityDesc))
             tv_qualityDes.setText(qualityDesc.replace("\\n", "\n"));
@@ -222,15 +236,27 @@ public class MainFragment extends BaseFragment {
         mLayout_processTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mHandler.removeMessages(0);
+    /**
+     * 刷新物料标签视图
+     *
+     * @param position
+     */
+    private void refreshMatTab(int position) {
+        int childCount = mLayout_matTab.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = mLayout_matTab.getChildAt(i);
+            childAt.setBackgroundResource(R.color.white);
+        }
+        mLayout_matTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_done) {
+            if (mTailorInfo == null) {
+                toast("请先开始作业");
+                return;
+            }
             if (!mTailorInfo.isIS_CUSTOM()) {
                 if (mLabuData == null || mLabuData.getDETAILS() == null || mLabuData.getDETAILS().size() == 0) {
                     toast("请先记录拉布数据");
@@ -277,7 +303,7 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mViewPager.setCurrentItem(position);
+            mVP_process.setCurrentItem(position);
         }
     }
 
@@ -366,23 +392,28 @@ public class MainFragment extends BaseFragment {
                 mLabuData = labuData;
                 showLoading();
                 if (done) {
-                    HttpHelper.saveLabuDataAndComplete(labuData, MainFragment.this);
+                    HttpHelper.saveLabuDataAndComplete(labuData, CutFragment.this);
                 } else {
-                    HttpHelper.saveLabuData(labuData, MainFragment.this);
+                    HttpHelper.saveLabuData(labuData, CutFragment.this);
                 }
             }
         });
         mLabuDialog.show();
     }
 
-    private class RadioChangedListener implements RadioGroup.OnCheckedChangeListener {
-
-        @Override
-        public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-        }
+    public void showCompleteButton() {
+        mBtn_done.setVisibility(View.VISIBLE);
     }
 
     private class ViewPagerChangedListener implements ViewPager.OnPageChangeListener {
+
+        static final int TYPE_MAT = 0;
+        static final int TYPE_PROCESS = 1;
+        int TYPE;
+
+        public ViewPagerChangedListener(int TYPE) {
+            this.TYPE = TYPE;
+        }
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -391,14 +422,12 @@ public class MainFragment extends BaseFragment {
 
         @Override
         public void onPageSelected(int position) {
-//            View childAt = mRadioGroup.getChildAt(position);
-//            if (childAt != null) {
-//                ((RadioButton) childAt).setChecked(true);
-//            }
-//            mHandler.removeMessages(0);
-//            mHandler.sendEmptyMessageDelayed(0, 3000);
+            if (TYPE == TYPE_MAT) {
+                refreshMatTab(position);
+            } else {
+                refreshProcessView(position);
+            }
 
-            refreshProcessView(position);
         }
 
         @Override
@@ -407,32 +436,32 @@ public class MainFragment extends BaseFragment {
         }
     }
 
-    private class ViewPagerAdapter extends PagerAdapter {
+    private class VPAdapter<T> extends PagerAdapter {
+
+        private List<T> data;
+
+        VPAdapter(List<T> data) {
+            this.data = data;
+        }
 
         @Override
         public int getCount() {
-            return mList_processData == null ? 0 : mList_processData.size();
+            return data == null ? 0 : data.size();
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            final View view = LayoutInflater.from(mContext).inflate(R.layout.vp_item_main_processbmp, null);
-            final ImageView imageView = (ImageView) view.findViewById(R.id.iv_item_main_processBmp);
-
-            TailorInfoBo.OPERINFORBean operinforBean = mList_processData.get(position);
-            Glide.with(mContext).load(operinforBean.getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> urls = new ArrayList<>();
-                    for (TailorInfoBo.OPERINFORBean item : mList_processData) {
-                        urls.add(item.getSOP_URL());
-                    }
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
-                }
-            });
-
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
+            TextView textView = (TextView) view.findViewById(R.id.text);
+            Object object = data.get(position);
+            if (object instanceof TailorInfoBo.MatInfoBean) {
+                textView.setText(((TailorInfoBo.MatInfoBean) object).getITEM_BO());
+            } else if (object instanceof TailorInfoBo.OPERINFORBean) {
+                TailorInfoBo.OPERINFORBean operInfo = (TailorInfoBo.OPERINFORBean) object;
+                String quality = operInfo.getOPERATION_INSTRUCTION();
+                if (!isEmpty(quality))
+                    textView.setText(quality.replace("\\n", "\n"));
+            }
             container.addView(view);
             return view;
         }
@@ -455,30 +484,45 @@ public class MainFragment extends BaseFragment {
 
     private static class MyHandler extends Handler {
 
-        private WeakReference<MainFragment> mWeakActivity;
+        private WeakReference<CutFragment> mWeakActivity;
 
-        public MyHandler(MainFragment activity) {
+        MyHandler(CutFragment activity) {
             this.mWeakActivity = new WeakReference<>(activity);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            MainFragment activity = mWeakActivity.get();
+            CutFragment activity = mWeakActivity.get();
             if (activity == null) {
                 return;
             }
             switch (msg.what) {
                 case 0:
-                    int currentItem = activity.mViewPager.getCurrentItem();
+                    int currentItem = activity.mVP_process.getCurrentItem();
                     if (currentItem >= activity.mList_processData.size() - 1) {
                         currentItem = -1;
                     }
-                    activity.mViewPager.setCurrentItem(currentItem + 1);
+                    activity.mVP_process.setCurrentItem(currentItem + 1);
                     sendEmptyMessageDelayed(0, 3000);
                     break;
             }
         }
+    }
+
+    private View getUserInfoView(UserInfoBo userInfo) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
+        TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
+        TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
+        tv_userName.setText("shawn");
+        tv_userId.setText("109457");
+        return view;
+    }
+
+    @Override
+    public void loginCallback(boolean success, UserInfoBo userInfo) {
+        mLayout_loginUser.addView(getUserInfoView(null));
+        HttpHelper.findProcessWithPadId("", this);
     }
 
     @Override
@@ -487,18 +531,24 @@ public class MainFragment extends BaseFragment {
         String status = resultJSON.getString("status");
         if ("Y".equals(status)) {
             switch (url) {
-                case HttpHelper.LOGIN_URL:
-                    HttpHelper.findProcessWithPadId("", this);
+                case HttpHelper.login_url:
+                    mLayout_loginUser.addView(getUserInfoView(null));
                     break;
                 case HttpHelper.findProcessWithPadId_url:
                     JSONObject result = resultJSON.getJSONObject("result");
                     mResultInfo = JSON.parseObject(result.getJSONObject("RESR_INFOR").toString(), TailorInfoBo.ResultInfo.class);
-                    HttpHelper.viewCutPadInfo(mResultInfo.getRESOURCE_BO(), MainFragment.this);
+                    mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
+                    HttpHelper.viewCutPadInfo(mResultInfo.getRESOURCE_BO(), CutFragment.this);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
                     JSONObject result1 = resultJSON.getJSONObject("result");
                     mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
-                    mList_processData = mTailorInfo.getOPER_INFOR();
+                    if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
+                        mBtn_done.setEnabled(false);
+                        mTailorInfo.setOPER_INFOR(mList_processData);
+                    } else {
+                        mBtn_done.setEnabled(true);
+                    }
                     mTailorInfo.setRESR_INFOR(mResultInfo);
                     refreshView();
                     break;

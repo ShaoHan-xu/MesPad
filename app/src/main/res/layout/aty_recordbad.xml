@@ -19,7 +19,6 @@
         <TextView
             android:id="@+id/tv_recordBad_orderNum"
             style="@style/textStyle_default"
-            android:text="N215455646454"
             android:textColor="@color/white" />
     </LinearLayout>
 
@@ -34,11 +33,13 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btn_recordBad_save"
             style="@style/btnStyle_primary"
             android:layout_marginRight="10dp"
             android:text="保存" />
 
         <Button
+            android:id="@+id/btn_recordBad_cancel"
             style="@style/btnStyle_primary"
             android:text="取消" />
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:layout_height="120dp">
 
     <LinearLayout
@@ -12,16 +13,17 @@
         android:padding="0.5dp">
 
         <TextView
-            android:id="@+id/tv_item_recordBad_type"
+            android:id="@+id/tv_recordBad_type"
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:background="@drawable/btn_normal"
             android:gravity="center"
             android:text="面料太薄" />
 
         <Button
-            android:id="@+id/btn_item_recordBad_sub"
+            android:id="@+id/btn_recordBad_sub"
             style="@style/btnStyle_primary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -30,6 +32,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_recordBad_count"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@drawable/circle_red"

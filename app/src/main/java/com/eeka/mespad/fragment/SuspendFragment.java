@@ -93,10 +93,10 @@ public class SuspendFragment extends BaseFragment {
 
     private class OrderAdapter extends BaseExpandableListAdapter {
 
-        private List<String> list_group;
-        private List<List<String>> list_child;
+        List<String> list_group;
+        List<List<String>> list_child;
 
-        public OrderAdapter(List<String> list_group, List<List<String>> list_child) {
+        OrderAdapter(List<String> list_group, List<List<String>> list_child) {
             this.list_group = list_group;
             this.list_child = list_child;
         }

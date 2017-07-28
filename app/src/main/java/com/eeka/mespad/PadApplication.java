@@ -41,7 +41,7 @@ public class PadApplication extends Application {
 
     private HttpProxyCacheServer newProxy() {
         return new HttpProxyCacheServer.Builder(this)
-                .maxCacheSize(1024 * 1024 * 1024)
+                .maxCacheSize(1024 * 1024 * 1024)//1G缓存
                 .build();
     }
 

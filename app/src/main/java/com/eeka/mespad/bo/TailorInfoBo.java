@@ -1,12 +1,13 @@
 package com.eeka.mespad.bo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Lenovo on 2017/6/28.
  */
 
-public class TailorInfoBo {
+public class TailorInfoBo implements Serializable {
 
     /**
      * OPER_INFOR : {"SOP_URL":"http://10.8.41.187/裁片.jpg","OPERATION_BO":"OperationBO:TEST,OP002,A"}
@@ -88,7 +89,7 @@ public class TailorInfoBo {
         this.CUT_SIZES = CUT_SIZES;
     }
 
-    public static class MatInfoBean {
+    public static class MatInfoBean implements Serializable{
         private int LAYERS;
         private String MAT_URL;
         private String MAT_NO;
@@ -127,7 +128,7 @@ public class TailorInfoBo {
         }
     }
 
-    public static class OPERINFORBean {
+    public static class OPERINFORBean implements Serializable {
         /**
          * SOP_URL : http://10.8.41.187/裁片.jpg
          * OPERATION_BO : OperationBO:TEST,OP002,A
@@ -189,7 +190,7 @@ public class TailorInfoBo {
         }
     }
 
-    public static class SHOPORDERINFORBean {
+    public static class SHOPORDERINFORBean implements Serializable {
         /**
          * SHOP_ORDER : MODA-SO-01
          * PROCESS_LOT : 201708031960292
@@ -272,7 +273,7 @@ public class TailorInfoBo {
         }
     }
 
-    public static class CUTSIZESBean {
+    public static class CUTSIZESBean implements Serializable {
         /**
          * SIZE : 39
          * SIZE_AMOUNT : 4
@@ -298,7 +299,7 @@ public class TailorInfoBo {
         }
     }
 
-    public static class LayoutInfoBean {
+    public static class LayoutInfoBean implements Serializable {
         private String PICTURE_URL;
         private String LAYOUT;
 
@@ -319,7 +320,7 @@ public class TailorInfoBo {
         }
     }
 
-    public static class NextOrderInfo {
+    public static class NextOrderInfo implements Serializable {
         private String ROUTER_STEP_BO;
         private String NEXT_STEP_BO;
         private String OPERATION;
@@ -358,7 +359,7 @@ public class TailorInfoBo {
         }
     }
 
-    public static class ResultInfo {
+    public static class ResultInfo implements Serializable {
         private String RESOURCE_BO;
         private String RESOURCE;
 

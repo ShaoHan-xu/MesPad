@@ -5,4 +5,18 @@
     <item name="radioButton3" type="id" />
     <item name="radioButton4" type="id" />
     <item name="radioButton5" type="id" />
+
+    <!-- 主页底部按钮ID -->
+    <item name="btn_materialReturn" type="id" />
+    <item name="btn_materialFeeding" type="id" />
+    <item name="btn_jobList" type="id" />
+    <item name="btn_dataCollect" type="id" />
+    <item name="btn_resState" type="id" />
+    <item name="btn_signOff" type="id" />
+    <item name="btn_video" type="id" />
+    <item name="btn_login" type="id" />
+    <item name="btn_logout" type="id" />
+    <item name="btn_start" type="id" />
+    <item name="btn_NcRecord" type="id" />
+    <item name="btn_unbind" type="id" />
 </resources>

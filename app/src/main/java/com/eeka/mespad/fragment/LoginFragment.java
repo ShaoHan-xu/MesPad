@@ -26,7 +26,7 @@ public class LoginFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_login, null);
+        mView = inflater.inflate(R.layout.fm_login, null);
         return mView;
     }
 
@@ -79,7 +79,7 @@ public class LoginFragment extends BaseFragment {
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         dismissLoading();
-        if (url.contains(HttpHelper.LOGIN_URL)) {
+        if (url.contains(HttpHelper.login_url)) {
             String status = resultJSON.getString("status");
             if ("Y".equals(status)) {
                 String user = mEt_user.getText().toString();
