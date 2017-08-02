@@ -1,5 +1,7 @@
 package com.eeka.mespad.bo;
 
+import java.util.List;
+
 /**
  * 应用上下文信息
  * Created by Lenovo on 2017/7/28.
@@ -30,6 +32,15 @@ public class ContextInfoBo {
     private String SITE;
     private String STATUS;
     private String WORK_CENTER;
+    private List<UserInfoBo> LOGIN_USER_LIST;
+
+    public List<UserInfoBo> getLOGIN_USER_LIST() {
+        return LOGIN_USER_LIST;
+    }
+
+    public void setLOGIN_USER_LIST(List<UserInfoBo> LOGIN_USER_LIST) {
+        this.LOGIN_USER_LIST = LOGIN_USER_LIST;
+    }
 
     public String getHANDLE() {
         return HANDLE;

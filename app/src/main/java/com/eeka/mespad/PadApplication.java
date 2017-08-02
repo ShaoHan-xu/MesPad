@@ -16,6 +16,8 @@ import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
 public class PadApplication extends Application {
 
     public static Context mContext;
+    public static boolean IS_COOKIE_OUT;
+    public static String MQTT_IP = "10.7.121.40";
 
     @Override
     public void onCreate() {
@@ -23,7 +25,7 @@ public class PadApplication extends Application {
 
         mContext = this;
         initOkHttp();
-        TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonStrong时首字母自动变小写的问题
+        TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
     }
 
     private void initOkHttp() {

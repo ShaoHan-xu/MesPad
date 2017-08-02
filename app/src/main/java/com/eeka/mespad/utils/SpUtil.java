@@ -10,6 +10,8 @@ import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 
+import java.util.List;
+
 /**
  * 单例SharedPreference类
  * Created by Lenovo on 2017/6/28.
@@ -45,22 +47,41 @@ public class SpUtil {
      *
      * @param userInfo
      */
-    public static void saveUserInfo(UserInfoBo userInfo) {
+    public static void saveLoginUser(UserInfoBo userInfo) {
         SharedPreferences.Editor edit = mSP.edit();
-        edit.putString("userInfo", JSON.toJSONString(userInfo));
+        edit.putString("loginUser", JSON.toJSONString(userInfo));
         edit.apply();
     }
 
     /**
-     * 获取登录用户信息
+     * 获取已登录用户信息
      *
      * @return
      */
-    public static UserInfoBo getUserInfo() {
-        String infoStr = mSP.getString("userInfo", null);
-        if (infoStr == null)
-            return null;
+    public static UserInfoBo getLoginUser() {
+        String infoStr = mSP.getString("loginUser", null);
         return JSONObject.parseObject(infoStr, UserInfoBo.class);
+    }
+
+    /**
+     * 保存站位登录用户信息
+     *
+     * @param userInfo
+     */
+    public static void savePositionUsers(List<UserInfoBo> userInfo) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putString("positionUsers", JSON.toJSONString(userInfo));
+        edit.apply();
+    }
+
+    /**
+     * 获取站位登录用户信息
+     *
+     * @return
+     */
+    public static List<UserInfoBo> getPositionUsers() {
+        String infoStr = mSP.getString("positionUsers", null);
+        return JSONObject.parseArray(infoStr, UserInfoBo.class);
     }
 
     /**
@@ -112,6 +133,5 @@ public class SpUtil {
         }
         return null;
     }
-
 
 }

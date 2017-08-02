@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.manager.Logger;
@@ -29,9 +30,9 @@ import okhttp3.Response;
 
 public class HttpHelper {
     private static final String STATE = "status";
-    public static final String PAD_ID = "P00001";
-    //    public static final String PAD_IP = "192.168.0.7";
-    public static final String PAD_IP = NetUtil.getHostIP();
+    public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
+    public static final String PAD_IP = "192.168.0.1";
+//    public static final String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
 
@@ -41,7 +42,7 @@ public class HttpHelper {
     public static final String positionLogin_url = BASE_URL + "position/positionLogin?";
     public static final String positionLogout_url = BASE_URL + "position/positionLogout?";
     //    public static final String login_url = "http://10.7.121.54:50000/manufacturing/index.jsp?";//网页方式登录
-    public static final String queryPositionByPadIp_url = BASE_URL + "queryPositionByPadIp?";
+    public static final String queryPositionByPadIp_url = BASE_URL + "position/queryPositionByPadIp?";
     public static final String findProcessWithPadId_url = BASE_URL + "cutpad/findPadBindOperations?";
     public static final String viewCutPadInfo_url = BASE_URL + "cutpad/viewCutPadInfor?";
     public static final String startBatchWork_url = BASE_URL + "product/startByProcessLot?";
@@ -55,6 +56,8 @@ public class HttpHelper {
     public static final String saveBadRecord = BASE_URL + "logNcPad/logNc?";
 
     private static Context mContext;
+
+//    private static Pair<Request, HttpCallback> mFailRequest;
 
     static {
         mContext = PadApplication.mContext;
@@ -100,6 +103,14 @@ public class HttpHelper {
     }
 
     /**
+     * 登出
+     */
+    public static void logout(HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        HttpRequest.post(logout_url, params, getResponseHandler(logout_url, callback));
+    }
+
+    /**
      * 站位登录
      *
      * @param cardId   卡号
@@ -110,7 +121,6 @@ public class HttpHelper {
         json.put("PAD_IP", PAD_IP);
         json.put("CARD_ID", cardId);
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", json.toJSONString());
         HttpRequest.post(positionLogin_url, params, getResponseHandler(positionLogin_url, callback));
     }
@@ -123,7 +133,6 @@ public class HttpHelper {
      */
     public static void positionLogout(String cardId, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         JSONObject json = new JSONObject();
         json.put("PAD_IP", PAD_IP);
         json.put("CARD_ID", cardId);
@@ -139,9 +148,11 @@ public class HttpHelper {
      */
     public static void findProcessWithPadId(String padId, HttpCallback callback) {
         JSONObject json = new JSONObject();
-        json.put("PAD_ID", PAD_ID);
+        if (TextUtils.isEmpty(padId)) {
+            padId = PAD_IP;
+        }
+        json.put("PAD_ID", padId);
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", json.toJSONString());
         HttpRequest.post(findProcessWithPadId_url, params, getResponseHandler(findProcessWithPadId_url, callback));
     }
@@ -151,14 +162,15 @@ public class HttpHelper {
      *
      * @param callback
      */
-    public static void viewCutPadInfo(String resourceBO, HttpCallback callback) {
+    public static void viewCutPadInfo(String RFID, String shopOrder, String resourceBO, HttpCallback callback) {
         JSONObject json = new JSONObject();
-        json.put("RFID", "RFID00000013");//批量订单
-//        json.put("SHOP_ORDER", "GC-SO-DZ-003");//定制订单
-        json.put("PAD_ID", PAD_ID);
+        if (!TextUtils.isEmpty(RFID))
+            json.put("RFID", RFID);//批量订单
+        if (!TextUtils.isEmpty(shopOrder))
+            json.put("SHOP_ORDER", shopOrder);//定制订单
+        json.put("PAD_ID", PAD_IP);
         json.put("RESOURCE_BO", resourceBO);
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", json.toJSONString());
         HttpRequest.post(viewCutPadInfo_url, params, getResponseHandler(viewCutPadInfo_url, callback));
     }
@@ -170,7 +182,6 @@ public class HttpHelper {
      */
     public static void startBatchWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(paramsBo));
         HttpRequest.post(startBatchWork_url, params, getResponseHandler(startBatchWork_url, callback));
     }
@@ -182,7 +193,6 @@ public class HttpHelper {
      */
     public static void startCustomWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(paramsBo));
         HttpRequest.post(startCustomWork_url, params, getResponseHandler(startCustomWork_url, callback));
     }
@@ -194,7 +204,6 @@ public class HttpHelper {
      */
     public static void completeCustomWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(paramsBo));
         HttpRequest.post(completeCustomWork_url, params, getResponseHandler(completeCustomWork_url, callback));
     }
@@ -206,7 +215,6 @@ public class HttpHelper {
      */
     public static void completeBatchWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(paramsBo));
         HttpRequest.post(completeBatchWork_url, params, getResponseHandler(completeBatchWork_url, callback));
     }
@@ -216,9 +224,8 @@ public class HttpHelper {
      */
     public static void getWorkOrderList(HttpCallback callback) {
         JSONObject json = new JSONObject();
-        json.put("PAD_ID", "192.168.1.2");
+        json.put("PAD_ID", PAD_IP);
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(getWorkOrderList_url, params, getResponseHandler(getWorkOrderList_url, callback));
     }
@@ -228,7 +235,6 @@ public class HttpHelper {
      */
     public static void saveLabuData(UpdateLabuBo data, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(data));
         HttpRequest.post(saveLabuData, params, getResponseHandler(saveLabuData, callback));
     }
@@ -238,7 +244,6 @@ public class HttpHelper {
      */
     public static void saveLabuDataAndComplete(UpdateLabuBo data, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", JSON.toJSONString(data));
         HttpRequest.post(saveLabuDataAndComplete, params, getResponseHandler(saveLabuDataAndComplete, callback));
     }
@@ -248,9 +253,8 @@ public class HttpHelper {
      */
     public static void getBadList(HttpCallback callback) {
         JSONObject json = new JSONObject();
-        json.put("PAD_ID", PAD_ID);
+        json.put("PAD_ID", PAD_IP);
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", json.toJSONString());
         HttpRequest.post(getBadList, params, getResponseHandler(getBadList, callback));
     }
@@ -259,10 +263,9 @@ public class HttpHelper {
      * 保存不良数据
      */
     public static void saveBadRecord(@NonNull JSONObject json, HttpCallback callback) {
-        json.put("PAD_ID", PAD_ID);
+        json.put("PAD_ID", PAD_IP);
         json.put("RFID", "RFID00000013");
         RequestParams params = getBaseParams();
-        params.put("site", "TEST");
         params.put("params", json.toJSONString());
         HttpRequest.post(saveBadRecord, params, getResponseHandler(saveBadRecord, callback));
     }
@@ -274,6 +277,10 @@ public class HttpHelper {
      */
     public static RequestParams getBaseParams() {
         RequestParams params = new RequestParams();
+        ContextInfoBo info = SpUtil.getContextInfo();
+        if (info != null) {
+            params.put("site", info.getSITE());
+        }
         String cookie = SpUtil.getCookie();
         if (!TextUtils.isEmpty(cookie)) {
             params.addHeader("Cookie", cookie);
@@ -304,9 +311,6 @@ public class HttpHelper {
             @Override
             protected void onSuccess(Headers headers, JSONObject jsonObject) {
                 super.onSuccess(headers, jsonObject);
-                if (!NetUtil.isNetworkAvalible(mContext)) {
-                    return;
-                }
                 //登录的时候保存cookie
                 if (login_url.contains(url)) {
                     if (headers != null) {
@@ -319,6 +323,14 @@ public class HttpHelper {
                             SpUtil.saveCookie(cookies.substring(0, cookies.lastIndexOf(";")));
                         }
                     }
+//                } else if (!isSuccess(jsonObject)) {
+//                    String message = jsonObject.getString("message");
+//                    if (COOKIE_OUT.equals(message)) {//cookie失效，重新登录获取新的cookie
+//                        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+//                        UserInfoBo userInfo = loginUsers.get(0);
+//                        login(userInfo.getUSER(), userInfo.getPassword(), null);
+//                        return;
+//                    }
                 }
 
                 callback.onSuccess(url, jsonObject);
@@ -337,26 +349,27 @@ public class HttpHelper {
                 Logger.d(response);
 
                 //网页方式登录测试用
-                if (login_url.equals(url)) {
-                    if (!response.contains("Error")) {
-                        if (headers != null) {
-                            StringBuilder cookies = new StringBuilder();
-                            List<String> values = headers.values("set-cookie");
-                            for (String cookie : values) {
-                                cookies.append(cookie).append(";");
-                            }
-                            if (!TextUtils.isEmpty(cookies)) {
-                                SpUtil.saveCookie(cookies.substring(0, cookies.lastIndexOf(";")));
-                            }
-                        }
-                        JSONObject json = new JSONObject();
-                        json.put(STATE, "Y");
-                        callback.onSuccess(url, json);
-                    } else {
-                        callback.onFailure(url, 0, "登录失败");
-                    }
+//                if (login_url.equals(url)) {
+//                    if (!response.contains("Error")) {
+//                        if (headers != null) {
+//                            StringBuilder cookies = new StringBuilder();
+//                            List<String> values = headers.values("set-cookie");
+//                            for (String cookie : values) {
+//                                cookies.append(cookie).append(";");
+//                            }
+//                            if (!TextUtils.isEmpty(cookies)) {
+//                                SpUtil.saveCookie(cookies.substring(0, cookies.lastIndexOf(";")));
+//                            }
+//                        }
+//                        JSONObject json = new JSONObject();
+//                        json.put(STATE, "Y");
+//                        callback.onSuccess(url, json);
+//                    } else {
+//                        callback.onFailure(url, 0, "登录失败");
+//                    }
+//
+//                }
 
-                }
                 //webService数据解析，因为xml数据无法格式化成json数据，所以不会调用onSuccess方法，所以需要在此处做回调处理
 //                int firstIndex = response.indexOf("{");
 //                int lastIndex = response.lastIndexOf("}");

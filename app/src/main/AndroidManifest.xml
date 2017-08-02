@@ -22,8 +22,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name=".service.MQTTService" />
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
+
         <activity
             android:name=".activity.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>
@@ -51,6 +56,7 @@
             android:name=".activity.VideoPlayerActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
+
     </application>
 
 </manifest>

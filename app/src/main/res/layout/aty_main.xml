@@ -13,6 +13,7 @@
         android:background="@color/white">
 
         <LinearLayout
+            android:id="@+id/layout_RFID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -22,16 +23,54 @@
             android:background="@drawable/border_black"
             android:padding="0.5dp">
 
+            <CheckBox
+                android:id="@+id/ckb_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="定制" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/text_gray_default" />
+
             <EditText
+                android:id="@+id/et_orderNum"
                 style="@style/textStyle_default"
                 android:layout_width="150dp"
                 android:background="@color/white"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="PC1011010" />
+                android:text="RFID00000013" />
 
             <Button
-                android:id="@+id/btn_search"
+                android:id="@+id/btn_searchOrderNum"
+                style="@style/btnStyle_green"
+                android:text="搜索" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/layout_RFID"
+            android:background="@drawable/border_black"
+            android:padding="0.5dp">
+
+            <EditText
+                android:id="@+id/et_position"
+                style="@style/textStyle_default"
+                android:layout_width="120dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="192.168.0.1" />
+
+            <Button
+                android:id="@+id/btn_searchPosition"
                 style="@style/btnStyle_green"
                 android:text="搜索" />
 

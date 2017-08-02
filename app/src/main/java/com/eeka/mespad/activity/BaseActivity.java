@@ -2,6 +2,7 @@ package com.eeka.mespad.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.http.HttpCallback;
+import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 
 /**
  * Created by Lenovo on 2017/5/13.
@@ -91,9 +95,25 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
     }
 
+    public void logout() {
+        SpUtil.saveLoginStatus(false);
+        startActivity(new Intent(mContext, LoginActivity.class));
+        finish();
+    }
+
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
+        if (!HttpHelper.isSuccess(resultJSON)) {
+            String message = resultJSON.getString("message");
+            if (!isEmpty(message) && message.contains(HttpHelper.COOKIE_OUT)) {
+                PadApplication.IS_COOKIE_OUT = true;
+                toast("由于您长时间未操作，指令已过期，请重新登录");
+                logout();
+            } else {
+                PadApplication.IS_COOKIE_OUT = false;
+            }
+        }
     }
 
     @Override

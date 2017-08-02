@@ -77,7 +77,7 @@
             android:id="@+id/layout_returnMaterial_material"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@drawable/divider_grid"
+            android:divider="@drawable/divider_gray"
             android:background="@color/white"
             android:orientation="vertical"
             android:paddingLeft="10dp"

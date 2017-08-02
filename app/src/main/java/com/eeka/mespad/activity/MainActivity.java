@@ -8,17 +8,23 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.adapter.CommonRecyclerAdapter;
+import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordBadBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
@@ -28,7 +34,9 @@ import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 
 import java.util.ArrayList;
@@ -43,7 +51,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
     private DrawerLayout mDrawerLayout;
 
     private FragmentManager mFragmentManager;
-    private CutFragment mMainFragment;
+    private CutFragment mCutFragment;
     private SuspendFragment mSuspendFragment;
 
     private LinearLayout mLayout_controlPanel;
@@ -56,6 +64,9 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
 
     private Dialog mLoginDialog;
 
+    private EditText mEt_orderNum;
+    private EditText mEt_position;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +74,8 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
 
         initView();
         initData();
+
+        MQTTService.actionStart(mContext);
     }
 
     @Override
@@ -74,23 +87,37 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
         findViewById(R.id.tv_caijian).setOnClickListener(this);
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
 
+        findViewById(R.id.btn_searchOrderNum).setOnClickListener(this);
+        findViewById(R.id.btn_searchPosition).setOnClickListener(this);
+
+        mEt_orderNum = (EditText) findViewById(R.id.et_orderNum);
+        mEt_position = (EditText) findViewById(R.id.et_position);
+        CheckBox checkBox = (CheckBox) findViewById(R.id.ckb_custom);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mEt_orderNum.setText("GR_SO_MTM_01");
+                } else {
+                    mEt_orderNum.setText("RFID00000013");
+                }
+            }
+        });
+
     }
 
     @Override
     protected void initData() {
         super.initData();
-        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-        if (contextInfo == null) {
-            showLoading();
-            HttpHelper.queryPositionByPadIp(this);
-        }
         mFragmentManager = getSupportFragmentManager();
-        mMainFragment = new CutFragment();
+        mCutFragment = new CutFragment();
         mSuspendFragment = new SuspendFragment();
 
         FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.add(R.id.layout_content, mMainFragment);
+        ft.add(R.id.layout_content, mCutFragment);
         ft.commit();
+
+        HttpHelper.findProcessWithPadId(null, this);
     }
 
     private void initButton(List<PositionInfoBo.BUTTONINFORBean> buttons) {
@@ -148,7 +175,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
                     button.setId(R.id.btn_unbind);
                     break;
                 case "COMPLETE":
-                    mMainFragment.showCompleteButton();
+                    mCutFragment.showCompleteButton();
                     continue;
             }
             mLayout_controlPanel.addView(button);
@@ -158,6 +185,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
     @Override
     public void onClick(View v) {
         super.onClick(v);
+        SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
             case R.id.tv_caijian:
                 changeFragment(0);
@@ -172,7 +200,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
             case R.id.btn_materialReturn:
                 if (mReturnMaterialInfo == null) {
                     mReturnMaterialInfo = new ReturnMaterialInfoBo();
-                    TailorInfoBo materialData = mMainFragment.getMaterialData();
+                    TailorInfoBo materialData = mCutFragment.getMaterialData();
                     if (materialData == null) {
                         toast("获取数据失败，请重新获取数据");
                         return;
@@ -193,7 +221,7 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
             case R.id.btn_materialFeeding:
                 if (mAddMaterialInfo == null) {
                     mAddMaterialInfo = new ReturnMaterialInfoBo();
-                    TailorInfoBo materialData = mMainFragment.getMaterialData();
+                    TailorInfoBo materialData = mCutFragment.getMaterialData();
                     if (materialData == null) {
                         toast("获取数据失败，请重新获取数据");
                         return;
@@ -212,17 +240,17 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
                 new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, mAddMaterialInfo).show();
                 break;
             case R.id.btn_dataCollect:
-                mMainFragment.showRecordLabuDialog();
+                mCutFragment.showRecordLabuDialog();
                 break;
             case R.id.btn_jobList:
                 startActivity(new Intent(mContext, WorkOrderListActivity.class));
                 break;
             case R.id.btn_NcRecord:
-                startActivityForResult(RecordBadActivity.getIntent(mContext, mMainFragment.getMaterialData(), mList_badData), 0);
+                startActivityForResult(RecordBadActivity.getIntent(mContext, mCutFragment.getMaterialData(), mList_badData), 0);
                 break;
             case R.id.btn_video:
                 //自定义播放器，可缓存视频到本地
-                startActivity(VideoPlayerActivity.getIntent(mContext, "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
+                startActivity(VideoPlayerActivity.getIntent(mContext, "http://10.7.121.75/gst/test.MP4"));
 
                 //系统自带视频播放，无缓存
 //                Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -233,9 +261,45 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
                 showLoginDialog();
                 break;
             case R.id.btn_logout:
-                startActivity(new Intent(mContext, LoginActivity.class));
-                SpUtil.saveLoginStatus(false);
-                finish();
+                List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+                if (loginUsers != null && loginUsers.size() != 0) {
+                    if (loginUsers.size() == 1) {
+                        UserInfoBo userInfo = loginUsers.get(0);
+                        mLogoutIndex = 0;
+                        HttpHelper.positionLogout(userInfo.getCARD_NUMBER(), this);
+                    } else {
+                        showLogoutDialog();
+                    }
+                } else {
+                    //数据异常的情况，直接退回登录界面
+                    logout();
+                }
+                break;
+            case R.id.btn_signOff:
+                startActivity(VideoPlayerActivity.getIntent(mContext, "http://10.7.121.75/gst/test.MP4"));
+                break;
+            case R.id.btn_searchOrderNum:
+                if (mPositionInfo == null) {
+                    toast("请先获取站位数据");
+                    return;
+                }
+                EditText et_orderNum = (EditText) findViewById(R.id.et_orderNum);
+                String searchKey = et_orderNum.getText().toString();
+                CheckBox checkBox = (CheckBox) findViewById(R.id.ckb_custom);
+                if (!isEmpty(searchKey)) {
+                    if (checkBox.isChecked()) {
+                        HttpHelper.viewCutPadInfo(null, searchKey, mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), this);
+                    } else {
+                        HttpHelper.viewCutPadInfo(searchKey, null, mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), this);
+                    }
+                }
+                break;
+            case R.id.btn_searchPosition:
+                EditText et_position = (EditText) findViewById(R.id.et_position);
+                String position = et_position.getText().toString();
+                if (!isEmpty(position)) {
+                    HttpHelper.findProcessWithPadId(position, this);
+                }
                 break;
         }
     }
@@ -270,12 +334,51 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
         mLoginDialog.show();
     }
 
+    private CommonRecyclerAdapter mLogoutAdapter;
+    private int mLogoutIndex;
+
+    private void showLogoutDialog() {
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+        if (loginUsers == null) {
+            toast("无登录用户");
+            return;
+        }
+
+        Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_logout, null);
+        RecyclerView listView = (RecyclerView) view.findViewById(R.id.lv_logout);
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
+        listView.setLayoutManager(manager);
+        mLogoutAdapter = new CommonRecyclerAdapter<UserInfoBo>(mContext, loginUsers, R.layout.item_logout, manager) {
+            @Override
+            public void convert(RecyclerViewHolder holder, final UserInfoBo item, final int position) {
+                holder.setText(R.id.tv_userName, item.getUSER());
+                holder.setText(R.id.tv_userNum, item.getEMPLOYEE_NUMBER());
+                holder.getView(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showLoading();
+                        mLogoutIndex = position;
+                        HttpHelper.positionLogout(item.getCARD_NUMBER(), MainActivity.this);
+                    }
+                });
+            }
+        };
+        listView.setAdapter(mLogoutAdapter);
+
+        dialog.setContentView(view);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout((int) (SystemUtils.getScreenWidth(this) * 0.5), (int) (SystemUtils.getScreenHeight(this) * 0.5));
+    }
+
     private void changeFragment(int position) {
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         if (position == 0) {
-            ft.hide(mSuspendFragment).show(mMainFragment);
+            ft.hide(mSuspendFragment).show(mCutFragment);
         } else if (position == 1) {
-            ft.hide(mMainFragment);
+            ft.hide(mCutFragment);
             if (mSuspendFragment.isAdded()) {
                 ft.show(mSuspendFragment);
             } else {
@@ -289,18 +392,30 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
-                ContextInfoBo contextInfoBo = JSON.parseObject(resultJSON.getJSONObject("result").toString(), ContextInfoBo.class);
-                SpUtil.saveContextInfo(contextInfoBo);
-            } else if (HttpHelper.login_url.equals(url)) {
-                HttpHelper.findProcessWithPadId("", this);
-            } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
+            if (HttpHelper.findProcessWithPadId_url.equals(url)) {
                 mPositionInfo = JSON.parseObject(resultJSON.getJSONObject("result").toString(), PositionInfoBo.class);
                 if (mPositionInfo.getBUTTON_INFOR() != null) {
                     initButton(mPositionInfo.getBUTTON_INFOR());
                 }
+                mCutFragment.onSuccess(url, resultJSON);
+            } else if (HttpHelper.viewCutPadInfo_url.equals(url)) {
+                mCutFragment.onSuccess(url, resultJSON);
+            } else if (HttpHelper.positionLogout_url.equals(url)) {
+                toast("用户下线成功");
+                List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+                if (loginUsers != null && loginUsers.size() > mLogoutIndex) {
+                    loginUsers.remove(mLogoutIndex);
+                    SpUtil.savePositionUsers(loginUsers);
+                    if (loginUsers.size() == 0) {
+                        logout();
+                    }
+                }
+                if (mLogoutAdapter != null) {
+                    mLogoutAdapter.removeData(mLogoutIndex);
+                }
+
+                mCutFragment.refreshLoginUsers();
             }
-            mMainFragment.onSuccess(url, resultJSON);
         } else {
             toast(resultJSON.getString("message"));
         }
@@ -313,10 +428,10 @@ public class MainActivity extends BaseActivity implements LoginFragment.OnLoginC
     }
 
     @Override
-    public void loginCallback(boolean success, UserInfoBo userInfo) {
+    public void loginCallback(boolean success) {
         if (success) {
             mLoginDialog.dismiss();
-            mMainFragment.loginCallback(true, userInfo);
+            mCutFragment.refreshLoginUsers();
         }
     }
 }

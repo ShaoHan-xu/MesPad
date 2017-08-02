@@ -15,6 +15,8 @@ import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 
+import java.util.List;
+
 /**
  * 登录界面
  * Created by Lenovo on 2017/5/15.
@@ -26,23 +28,23 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UserInfoBo userInfo = SpUtil.getUserInfo();
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         boolean loginStatus = SpUtil.getLoginStatus();
-        if (loginStatus && userInfo != null) {
+        if (loginStatus && loginUsers != null) {
             startActivity(new Intent(mContext, MainActivity.class));
             finish();
+            return;
         }
 
         setContentView(R.layout.aty_login);
 
-        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-        if (contextInfo == null) {
-            showLoading("正在初始化...", false);
-            HttpHelper.queryPositionByPadIp(this);
-        }
+        showLoading("初始化中...", false);
+        HttpHelper.queryPositionByPadIp(this);
 
         initView();
-    }
+
+//        MQTTService.actionStart(mContext);
+}
 
     @Override
     protected void initView() {
@@ -64,6 +66,8 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
                 ContextInfoBo contextInfoBo = JSON.parseObject(resultJSON.getJSONObject("result").toString(), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
             }
+        } else {
+            toast("初始化失败，" + resultJSON.getString("message"));
         }
     }
 
@@ -74,7 +78,7 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnLogin
     }
 
     @Override
-    public void loginCallback(boolean success, UserInfoBo userInfoBo) {
+    public void loginCallback(boolean success) {
         if (success) {
             startActivity(new Intent(mContext, MainActivity.class));
         }

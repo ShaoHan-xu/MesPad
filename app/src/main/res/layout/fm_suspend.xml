@@ -59,7 +59,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/border_black"
-                        android:divider="@drawable/divider_grid"
+                        android:divider="@drawable/divider_gray"
                         android:orientation="vertical"
                         android:padding="0.5dp"
                         android:showDividers="middle">
@@ -184,7 +184,7 @@
                         android:maxLines="1" />
 
                     <Button
-                        android:id="@+id/btn_search"
+                        android:id="@+id/btn_searchOrderNum"
                         style="@style/btnStyle_green"
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@id/et_searchPart"
@@ -256,7 +256,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/border_black"
-                android:divider="@drawable/divider_grid"
+                android:divider="@drawable/divider_gray"
                 android:orientation="vertical"
                 android:padding="0.5dp"
                 android:showDividers="middle">

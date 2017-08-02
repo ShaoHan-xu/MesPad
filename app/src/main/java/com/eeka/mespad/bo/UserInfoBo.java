@@ -7,24 +7,42 @@ package com.eeka.mespad.bo;
 
 public class UserInfoBo {
 
-    private String userName;
+    private String EMPLOYEE_NUMBER;
+    private String USER;
     private String password;
+    private String CARD_NUMBER;
     private String token;
 
     public UserInfoBo() {
     }
 
     public UserInfoBo(String userName, String password) {
-        this.userName = userName;
+        this.USER = userName;
         this.password = password;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getCARD_NUMBER() {
+        return CARD_NUMBER;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setCARD_NUMBER(String CARD_NUMBER) {
+        this.CARD_NUMBER = CARD_NUMBER;
+    }
+
+    public String getEMPLOYEE_NUMBER() {
+        return EMPLOYEE_NUMBER;
+    }
+
+    public void setEMPLOYEE_NUMBER(String EMPLOYEE_NUMBER) {
+        this.EMPLOYEE_NUMBER = EMPLOYEE_NUMBER;
+    }
+
+    public String getUSER() {
+        return USER;
+    }
+
+    public void setUSER(String USER) {
+        this.USER = USER;
     }
 
     public String getPassword() {

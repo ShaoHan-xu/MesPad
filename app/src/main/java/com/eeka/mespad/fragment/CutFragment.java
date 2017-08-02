@@ -28,6 +28,7 @@ import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 
 import java.lang.ref.WeakReference;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * 裁剪/拉布界面
  */
-public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCallback {
+public class CutFragment extends BaseFragment {
 
     private ViewPager mVP_process;
     private VPAdapter mVPAdapter_process;
@@ -68,7 +69,6 @@ public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCa
         super.onActivityCreated(savedInstanceState);
         initView();
         initData();
-
     }
 
     @Nullable
@@ -99,6 +99,15 @@ public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCa
 
     }
 
+    @Override
+    protected void initData() {
+        super.initData();
+        List<UserInfoBo> userInfo = SpUtil.getPositionUsers();
+        if (userInfo != null) {
+            refreshLoginUsers();
+        }
+    }
+
     public void refreshView() {
         mView.findViewById(R.id.layout_processDescription).setVisibility(View.VISIBLE);
         mView.findViewById(R.id.layout_orderInfo).setVisibility(View.VISIBLE);
@@ -107,7 +116,7 @@ public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCa
         mLayout_material1.removeAllViews();
         mLayout_matTab.removeAllViews();
         final List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
-        if (itemArray != null) {
+        if (itemArray != null && itemArray.size() != 0) {
             itemArray.add(itemArray.get(0));//测试用，用完即删
             for (int i = 0; i < itemArray.size(); i++) {
                 TailorInfoBo.MatInfoBean matInfoBean = itemArray.get(i);
@@ -266,7 +275,7 @@ public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCa
             }
             TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
             StartWorkParamsBo params = new StartWorkParamsBo();
-            params.setPAD_ID(HttpHelper.PAD_ID);
+            params.setPAD_ID(HttpHelper.PAD_IP);
             params.setPROCESS_LOTS(orderInfo.getPROCESS_LOT_BO());
             params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
             params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
@@ -510,35 +519,41 @@ public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCa
         }
     }
 
-    private View getUserInfoView(UserInfoBo userInfo) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
-        TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
-        TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
-        tv_userName.setText("shawn");
-        tv_userId.setText("109457");
-        return view;
-    }
-
-    @Override
-    public void loginCallback(boolean success, UserInfoBo userInfo) {
-        mLayout_loginUser.addView(getUserInfoView(null));
-        HttpHelper.findProcessWithPadId("", this);
+    /**
+     * 刷新登录用户、有用户登录或者登出时调用
+     */
+    public void refreshLoginUsers() {
+        mLayout_loginUser.removeAllViews();
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+        if (loginUsers != null) {
+            for (UserInfoBo userInfo : loginUsers) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
+                TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
+                TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
+                tv_userName.setText(userInfo.getUSER());
+                tv_userId.setText(userInfo.getEMPLOYEE_NUMBER() + "");
+                mLayout_loginUser.addView(view);
+            }
+        }
     }
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-        dismissLoading();
+        super.onSuccess(url, resultJSON);
         String status = resultJSON.getString("status");
         if ("Y".equals(status)) {
             switch (url) {
                 case HttpHelper.login_url:
-                    mLayout_loginUser.addView(getUserInfoView(null));
+                    HttpHelper.positionLogin("789", this);
+                    break;
+                case HttpHelper.positionLogin_url:
+                    refreshLoginUsers();
                     break;
                 case HttpHelper.findProcessWithPadId_url:
                     JSONObject result = resultJSON.getJSONObject("result");
                     mResultInfo = JSON.parseObject(result.getJSONObject("RESR_INFOR").toString(), TailorInfoBo.ResultInfo.class);
                     mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
-                    HttpHelper.viewCutPadInfo(mResultInfo.getRESOURCE_BO(), CutFragment.this);
+                    HttpHelper.viewCutPadInfo("RFID00000013", null, mResultInfo.getRESOURCE_BO(), CutFragment.this);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
                     JSONObject result1 = resultJSON.getJSONObject("result");
@@ -581,7 +596,7 @@ public class CutFragment extends BaseFragment implements LoginFragment.OnLoginCa
 
     @Override
     public void onFailure(String url, int code, String message) {
-        dismissLoading();
+        super.onFailure(url, code, message);
         toast(message);
     }
 

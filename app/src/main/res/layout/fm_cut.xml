@@ -168,7 +168,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border_black"
-            android:divider="@drawable/divider_grid"
+            android:divider="@drawable/divider_gray"
             android:orientation="vertical"
             android:padding="0.5dp"
             android:showDividers="middle">
@@ -293,7 +293,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_black"
-                        android:divider="@drawable/divider_grid"
+                        android:divider="@drawable/divider_gray"
                         android:orientation="vertical"
                         android:showDividers="middle|end"
                         android:visibility="gone">
