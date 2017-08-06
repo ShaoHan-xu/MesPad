@@ -42,10 +42,10 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="RFID00000013" />
+                android:text="RFID00000033" />
 
             <Button
-                android:id="@+id/btn_searchOrderNum"
+                android:id="@+id/btn_searchOrder"
                 style="@style/btnStyle_green"
                 android:text="搜索" />
 
@@ -94,11 +94,27 @@
         android:layout_above="@id/layout_bottomBar"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/layout_content"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp" />
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/layout_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp" />
+
+            <TextView
+                android:id="@+id/tv_startWorkAlert"
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="请刷卡开始工作"
+                android:textSize="@dimen/textSize_title"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_slide"

@@ -2,9 +2,11 @@ package com.eeka.mespad.activity;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
+import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
@@ -25,18 +28,22 @@ import com.eeka.mespad.utils.SpUtil;
  * Created by Lenovo on 2017/5/13.
  */
 
-public class BaseActivity extends AppCompatActivity implements View.OnClickListener, HttpCallback {
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener, HttpCallback, LoginFragment.OnLoginCallback, LoginFragment.OnClockCallback {
 
     protected Context mContext;
 
     private Dialog mProDialog;
     private TextView mTv_loadingMsg;
 
+    protected FragmentManager mFragmentManager;
+    protected Dialog mLoginDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mContext = this;
+        mFragmentManager = getSupportFragmentManager();
     }
 
     protected void initView() {
@@ -48,7 +55,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void initData() {
-
     }
 
     protected boolean isEmpty(String str) {
@@ -95,6 +101,26 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
     }
 
+    /**
+     * 显示登录弹框
+     */
+    public void showLoginDialog() {
+        mLoginDialog = new Dialog(mContext);
+        mLoginDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mLoginDialog.setContentView(R.layout.dlg_login);
+
+        final LoginFragment loginFragment = (LoginFragment) mFragmentManager.findFragmentById(R.id.loginFragment);
+        loginFragment.setOnClockCallback(this);
+
+        mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mFragmentManager.beginTransaction().remove(loginFragment).commit();
+            }
+        });
+        mLoginDialog.show();
+    }
+
     public void logout() {
         SpUtil.saveLoginStatus(false);
         startActivity(new Intent(mContext, LoginActivity.class));
@@ -104,20 +130,23 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
-        if (!HttpHelper.isSuccess(resultJSON)) {
-            String message = resultJSON.getString("message");
-            if (!isEmpty(message) && message.contains(HttpHelper.COOKIE_OUT)) {
-                PadApplication.IS_COOKIE_OUT = true;
-                toast("由于您长时间未操作，指令已过期，请重新登录");
-                logout();
-            } else {
-                PadApplication.IS_COOKIE_OUT = false;
-            }
-        }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
         dismissLoading();
     }
+
+    @Override
+    public void onLogin(boolean success) {
+
+    }
+
+    @Override
+    public void onClockIn(boolean success) {
+        if (success) {
+
+        }
+    }
+
 }

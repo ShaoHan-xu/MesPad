@@ -16,8 +16,6 @@ import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
 public class PadApplication extends Application {
 
     public static Context mContext;
-    public static boolean IS_COOKIE_OUT;
-    public static String MQTT_IP = "10.7.121.40";
 
     @Override
     public void onCreate() {

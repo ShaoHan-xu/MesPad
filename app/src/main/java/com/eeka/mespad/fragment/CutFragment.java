@@ -117,7 +117,6 @@ public class CutFragment extends BaseFragment {
         mLayout_matTab.removeAllViews();
         final List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
         if (itemArray != null && itemArray.size() != 0) {
-            itemArray.add(itemArray.get(0));//测试用，用完即删
             for (int i = 0; i < itemArray.size(); i++) {
                 TailorInfoBo.MatInfoBean matInfoBean = itemArray.get(i);
                 View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
@@ -143,6 +142,14 @@ public class CutFragment extends BaseFragment {
         mVPAdapter_matInfo = new VPAdapter<>(itemArray);
         mVP_matInfo.setAdapter(mVPAdapter_matInfo);
         mVP_matInfo.addOnPageChangeListener(new ViewPagerChangedListener(ViewPagerChangedListener.TYPE_MAT));
+
+        //粘朴数据
+        mLayout_material2.removeAllViews();
+        List<TailorInfoBo.StickyInfo> stickyInfo = mTailorInfo.getSTICKY_INFOR();
+        for (int i = 0; i < stickyInfo.size(); i++) {
+            TailorInfoBo.StickyInfo info = stickyInfo.get(i);
+            mLayout_material2.addView(getMaterialsView(info, i));
+        }
 
         //排料图数据
         mLayout_material1.removeAllViews();
@@ -212,12 +219,15 @@ public class CutFragment extends BaseFragment {
 //        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
         TextView tv_style = (TextView) mView.findViewById(R.id.tv_style);
         TextView tv_qty = (TextView) mView.findViewById(R.id.tv_qty);
+        TextView tv_special = (TextView) mView.findViewById(R.id.tv_special);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
 //        tv_batchNum.setText(orderInfo.getPROCESS_LOT());
         tv_style.setText(orderInfo.getITEM());
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
+        tv_special.setText(orderInfo.getSO_REMARK());
 
+        refreshLoginUsers();
     }
 
     /**
@@ -319,36 +329,48 @@ public class CutFragment extends BaseFragment {
     /**
      * 获取物料图
      *
-     * @param item
+     * @param data
      * @param position
      * @return
      */
-    private View getMaterialsView(final TailorInfoBo.MatInfoBean item, int position) {
+    private View getMaterialsView(final Object data, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         view.setTag(position);
         ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
         TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
-        TextView tv_layers = (TextView) view.findViewById(R.id.tv_matLayers);
-        Glide.with(mContext).load(item.getMAT_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
-        iv_material.setTag(position);
-        tv_material.setText(item.getMAT_NO());
-        int layers = item.getLAYERS();
-        if (layers != 0) {
-            tv_layers.setText("(" + layers + ")");
-        }
-
-        iv_material.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<String> urls = new ArrayList<>();
-                List<TailorInfoBo.MatInfoBean> list = mTailorInfo.getMAT_INFOR();
-                for (TailorInfoBo.MatInfoBean item : list) {
-                    urls.add(item.getMAT_URL());
+        if (data instanceof TailorInfoBo.LayoutInfoBean) {
+            TailorInfoBo.LayoutInfoBean item = (TailorInfoBo.LayoutInfoBean) data;
+            Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+            iv_material.setTag(position);
+            tv_material.setText(item.getLAYOUT());
+            iv_material.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> urls = new ArrayList<>();
+                    List<TailorInfoBo.LayoutInfoBean> list = mTailorInfo.getLAYOUT_INFOR();
+                    for (TailorInfoBo.LayoutInfoBean item : list) {
+                        urls.add(item.getPICTURE_URL());
+                    }
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
                 }
-
-                startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
-            }
-        });
+            });
+        } else if (data instanceof TailorInfoBo.StickyInfo) {
+            TailorInfoBo.StickyInfo item = (TailorInfoBo.StickyInfo) data;
+            Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+            iv_material.setTag(position);
+            tv_material.setText(item.getIDENTITY_INFO());
+            iv_material.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> urls = new ArrayList<>();
+                    List<TailorInfoBo.StickyInfo> list = mTailorInfo.getSTICKY_INFOR();
+                    for (TailorInfoBo.StickyInfo item : list) {
+                        urls.add(item.getPICTURE_URL());
+                    }
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
+                }
+            });
+        }
         return view;
     }
 
@@ -464,7 +486,8 @@ public class CutFragment extends BaseFragment {
             TextView textView = (TextView) view.findViewById(R.id.text);
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
-                textView.setText(((TailorInfoBo.MatInfoBean) object).getITEM_BO());
+                TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;
+                textView.setText("1、" + matInfo.getGRAND_CATEGORY() + "\n2、" + matInfo.getMID_CATEGORY());
             } else if (object instanceof TailorInfoBo.OPERINFORBean) {
                 TailorInfoBo.OPERINFORBean operInfo = (TailorInfoBo.OPERINFORBean) object;
                 String quality = operInfo.getOPERATION_INSTRUCTION();
@@ -543,9 +566,6 @@ public class CutFragment extends BaseFragment {
         String status = resultJSON.getString("status");
         if ("Y".equals(status)) {
             switch (url) {
-                case HttpHelper.login_url:
-                    HttpHelper.positionLogin("789", this);
-                    break;
                 case HttpHelper.positionLogin_url:
                     refreshLoginUsers();
                     break;
@@ -553,7 +573,7 @@ public class CutFragment extends BaseFragment {
                     JSONObject result = resultJSON.getJSONObject("result");
                     mResultInfo = JSON.parseObject(result.getJSONObject("RESR_INFOR").toString(), TailorInfoBo.ResultInfo.class);
                     mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
-                    HttpHelper.viewCutPadInfo("RFID00000013", null, mResultInfo.getRESOURCE_BO(), CutFragment.this);
+                    HttpHelper.viewCutPadInfo("RFID00000033", null, mResultInfo.getRESOURCE_BO(), CutFragment.this);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
                     JSONObject result1 = resultJSON.getJSONObject("result");
@@ -563,6 +583,7 @@ public class CutFragment extends BaseFragment {
                         mTailorInfo.setOPER_INFOR(mList_processData);
                     } else {
                         mBtn_done.setEnabled(true);
+                        mList_processData = mTailorInfo.getOPER_INFOR();
                     }
                     mTailorInfo.setRESR_INFOR(mResultInfo);
                     refreshView();

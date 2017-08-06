@@ -43,9 +43,23 @@ public class SpUtil {
 //    }
 
     /**
+     * 保存site
+     */
+    public static void saveSite(String site) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putString("site", site);
+        edit.apply();
+    }
+
+    /**
+     * 获取site
+     */
+    public static String getSite() {
+        return mSP.getString("site", null);
+    }
+
+    /**
      * 保存登录用户信息
-     *
-     * @param userInfo
      */
     public static void saveLoginUser(UserInfoBo userInfo) {
         SharedPreferences.Editor edit = mSP.edit();
@@ -55,8 +69,6 @@ public class SpUtil {
 
     /**
      * 获取已登录用户信息
-     *
-     * @return
      */
     public static UserInfoBo getLoginUser() {
         String infoStr = mSP.getString("loginUser", null);
@@ -65,8 +77,6 @@ public class SpUtil {
 
     /**
      * 保存站位登录用户信息
-     *
-     * @param userInfo
      */
     public static void savePositionUsers(List<UserInfoBo> userInfo) {
         SharedPreferences.Editor edit = mSP.edit();
@@ -76,8 +86,6 @@ public class SpUtil {
 
     /**
      * 获取站位登录用户信息
-     *
-     * @return
      */
     public static List<UserInfoBo> getPositionUsers() {
         String infoStr = mSP.getString("positionUsers", null);
@@ -86,8 +94,6 @@ public class SpUtil {
 
     /**
      * 保存cookie
-     *
-     * @param cookie
      */
     public static void saveCookie(String cookie) {
         SharedPreferences.Editor edit = mSP.edit();
@@ -101,8 +107,6 @@ public class SpUtil {
 
     /**
      * 保存登录状态
-     *
-     * @param status
      */
     public static void saveLoginStatus(boolean status) {
         SharedPreferences.Editor edit = mSP.edit();

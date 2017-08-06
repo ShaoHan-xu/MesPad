@@ -27,7 +27,7 @@
         <service android:name="org.eclipse.paho.android.service.MqttService" />
 
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
@@ -40,10 +40,6 @@
         <activity
             android:name=".activity.ImageBrowserActivity"
             android:screenOrientation="landscape" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".activity.WorkOrderListActivity"
             android:screenOrientation="landscape"

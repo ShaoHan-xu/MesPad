@@ -1,20 +1,21 @@
 package com.eeka.mespad.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.ComponentBo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,12 @@ import java.util.List;
 
 public class SuspendFragment extends BaseFragment {
 
-    private ExpandableListView mElv_process;
+    private ListView mLv_orderList;
     private OrderAdapter mOrderAdapter;
 
-    private ListView mLv_searchResult;
-    private SearchAdapter mSearchAdapter;
+    private LinearLayout mLayout_component;
+
+    private EditText mEt_search;
 
     @Nullable
     @Override
@@ -51,9 +53,11 @@ public class SuspendFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        mElv_process = (ExpandableListView) mView.findViewById(R.id.elv_orderList);
-        mLv_searchResult = (ListView) mView.findViewById(R.id.lv_suspend_caiPianSearchResult);
+        mLv_orderList = (ListView) mView.findViewById(R.id.lv_orderList);
+        mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
 
+        mEt_search = (EditText) mView.findViewById(R.id.et_searchComponent);
+        mView.findViewById(R.id.btn_searchComponent).setOnClickListener(this);
     }
 
     @Override
@@ -61,27 +65,35 @@ public class SuspendFragment extends BaseFragment {
         super.initData();
         List<String> group = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            group.add("");
+            group.add("2017008031314");
         }
-        List<List<String>> child = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            List<String> list = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
-                list.add("");
-            }
-            child.add(list);
+        mOrderAdapter = new OrderAdapter(mContext, group, R.layout.item_textview);
+        mLv_orderList.setAdapter(mOrderAdapter);
+
+        for (int i = 0; i < 4; i++) {
+            ComponentBo compon = new ComponentBo();
+            compon.setName("腰头");
+            compon.setHelpDesc("外协情况");
+            mLayout_component.addView(getComponentView(compon));
         }
-        mOrderAdapter = new OrderAdapter(group, child);
-        mElv_process.setAdapter(mOrderAdapter);
-
-        mSearchAdapter = new SearchAdapter(mContext, group, R.layout.lv_item_search_caipian);
-        mLv_searchResult.setAdapter(mSearchAdapter);
-
     }
 
-    private class SearchAdapter extends CommonAdapter<String> {
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        if (v.getId() == R.id.btn_searchComponent) {
+            String key = mEt_search.getText().toString().trim();
+            if (isEmpty(key)) {
+                toast("请输入工单号进行搜索");
+            } else {
 
-        public SearchAdapter(Context context, List<String> list, int layoutId) {
+            }
+        }
+    }
+
+    private class OrderAdapter extends CommonAdapter<String> {
+
+        public OrderAdapter(Context context, List<String> list, int layoutId) {
             super(context, list, layoutId);
         }
 
@@ -91,71 +103,21 @@ public class SuspendFragment extends BaseFragment {
         }
     }
 
-    private class OrderAdapter extends BaseExpandableListAdapter {
-
-        List<String> list_group;
-        List<List<String>> list_child;
-
-        OrderAdapter(List<String> list_group, List<List<String>> list_child) {
-            this.list_group = list_group;
-            this.list_child = list_child;
-        }
-
-        @Override
-        public int getGroupCount() {
-            return list_group == null ? 0 : list_group.size();
-        }
-
-        @Override
-        public int getChildrenCount(int groupPosition) {
-            return list_child == null ? 0 : list_child.get(groupPosition).size();
-        }
-
-        @Override
-        public Object getGroup(int groupPosition) {
-            return list_group.get(groupPosition);
-        }
-
-        @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return list_child.get(groupPosition).get(childPosition);
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.lv_item_process, null);
-            return convertView;
-        }
-
-        @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.lv_item_process, null);
-            convertView.setBackgroundColor(Color.parseColor("#C7E6F8"));
-            TextView text = (TextView) convertView.findViewById(R.id.tv_item_process_code);
-            text.setTextColor(getResources().getColor(R.color.black));
-            text.setText("第" + childPosition + "车床");
-            return convertView;
-        }
-
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
+    /**
+     * 获取部件布局
+     *
+     * @param component
+     * @return
+     */
+    private View getComponentView(ComponentBo component) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_component, null);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        layoutParams.weight = 1;
+        view.setLayoutParams(layoutParams);
+        Button btn_component = (Button) view.findViewById(R.id.btn_componentName);
+        TextView tv_helpDesc = (TextView) view.findViewById(R.id.tv_helpDesc);
+        btn_component.setText(component.getName());
+        tv_helpDesc.setText(component.getHelpDesc());
+        return view;
     }
-
 }

@@ -1,16 +1,23 @@
 package com.eeka.mespad.fragment;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
+import com.eeka.mespad.adapter.CommonAdapter;
+import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
@@ -26,8 +33,17 @@ import java.util.List;
 
 public class LoginFragment extends BaseFragment {
 
-    private EditText mEt_user, mEt_pwd;
-    private OnLoginCallback mCallback;
+    public static final int TYPE_LOGIN = 0;
+    public static final int TYPE_SET = 1;
+
+    private EditText mEt_user, mEt_pwd, mEt_site;
+    private OnLoginCallback mLoginCallback;
+    private OnClockCallback mClockCallback;
+    private int mType;
+
+    public void setType(int mType) {
+        this.mType = mType;
+    }
 
     @Nullable
     @Override
@@ -39,6 +55,7 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         initView();
     }
 
@@ -47,45 +64,102 @@ public class LoginFragment extends BaseFragment {
         super.initView();
         mEt_user = (EditText) mView.findViewById(R.id.et_login_user);
         mEt_pwd = (EditText) mView.findViewById(R.id.et_login_pwd);
+        mEt_site = (EditText) mView.findViewById(R.id.et_login_site);
 
-        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
-        if (loginUsers != null && loginUsers.size() != 0) {
-            UserInfoBo userInfo = loginUsers.get(0);
-            mEt_user.setText(userInfo.getUSER());
-            mEt_pwd.setText(userInfo.getPassword());
+        Button btn_done = (Button) mView.findViewById(R.id.btn_login);
+        btn_done.setOnClickListener(this);
+        if (mType == TYPE_SET) {
+            TextView tv_alert = (TextView) mView.findViewById(R.id.tv_login_alert);
+            TextView tv_user = (TextView) mView.findViewById(R.id.tv_login_user_tag);
+            tv_alert.setText("请设置系统登录账户");
+            tv_user.setText("账号：");
+            btn_done.setText("完成");
+        } else {
+            mView.findViewById(R.id.layout_login_pwd).setVisibility(View.GONE);
         }
 
-        mView.findViewById(R.id.btn_login).setOnClickListener(this);
+        if (mType == TYPE_SET) {
+            UserInfoBo loginUser = SpUtil.getLoginUser();
+            if (loginUser != null) {
+                mEt_user.setText(loginUser.getUSER());
+                mEt_pwd.setText(loginUser.getPassword());
+            }
+        }
+        String site = SpUtil.getSite();
+        if (!isEmpty(site)) {
+            mEt_site.setText(site);
+        }
+
+        mView.findViewById(R.id.iv_login_morePosition).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_login) {
-            ContextInfoBo contextInfo = SpUtil.getContextInfo();
-            if (contextInfo == null) {
-                showLoading("初始化中...", false);
-                HttpHelper.queryPositionByPadIp(this);
-            } else {
-                login();
-            }
+            login();
+        } else if (v.getId() == R.id.iv_login_morePosition) {
+            showSiteList(mEt_site);
         }
+    }
+
+    /**
+     * 显示site备选列表
+     */
+    private void showSiteList(View view) {
+        View ppwView = LayoutInflater.from(mContext).inflate(R.layout.ppw_selector, null);
+        ListView listView = (ListView) ppwView.findViewById(R.id.lv_ppw_selector);
+        final List<String> sites = new ArrayList<>();
+        sites.add("TEST");
+        sites.add("LongHua");
+        sites.add("YuDu");
+        listView.setAdapter(new CommonAdapter<String>(mContext, sites, R.layout.item_textview) {
+            @Override
+            public void convert(ViewHolder holder, String item, int position) {
+                holder.setText(R.id.text, item);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String site = sites.get(position);
+                mEt_site.setText(site);
+            }
+        });
+
+        PopupWindow ppw = new PopupWindow();
+        ppw.setWidth(view.getWidth());
+        ppw.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        ppw.setContentView(ppwView);
+        ppw.setBackgroundDrawable(new BitmapDrawable());
+        ppw.setOutsideTouchable(true);
+        ppw.setFocusable(true);
+        ppw.showAsDropDown(view);
     }
 
     private void login() {
         String user = mEt_user.getText().toString();
         if (isEmpty(user)) {
-            toast("请输入账户名");
+            if (mType == TYPE_SET) {
+                toast("请输入账户名");
+            } else {
+                toast("请输入卡号");
+            }
             return;
         }
-        String pwd = mEt_pwd.getText().toString();
-        if (isEmpty(pwd)) {
-            toast("请输入密码");
-            return;
+        if (mType == TYPE_SET) {
+            String pwd = mEt_pwd.getText().toString();
+            if (isEmpty(pwd)) {
+                toast("请输入密码");
+                return;
+            }
+            showLoading();
+            HttpHelper.login(user, pwd, this);
+        } else {
+            showLoading();
+            HttpHelper.positionLogin(user, this);
         }
-
-        showLoading();
-        HttpHelper.login(user, pwd, this);
     }
 
     @Override
@@ -93,39 +167,18 @@ public class LoginFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             String result = resultJSON.getJSONObject("result").toString();
-            if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
-                ContextInfoBo contextInfoBo = JSON.parseObject(result, ContextInfoBo.class);
-                List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
-                SpUtil.saveContextInfo(contextInfoBo);
-                SpUtil.savePositionUsers(loginUserList);
-                if (PadApplication.IS_COOKIE_OUT) {
-                    SpUtil.saveLoginStatus(true);
-                    if (mCallback != null) {
-                        mCallback.loginCallback(true);
-                    }
-                } else {
-                    login();
-                }
-            } else if (url.contains(HttpHelper.login_url)) {
+            if (url.contains(HttpHelper.login_url)) {
+                toast("系统登录成功");
                 UserInfoBo userInfo = JSON.parseObject(result, UserInfoBo.class);
+                String site = mEt_site.getText().toString();
+                SpUtil.saveSite(site);
                 String pwd = mEt_pwd.getText().toString();
                 userInfo.setPassword(pwd);
                 SpUtil.saveLoginUser(userInfo);
-                if (PadApplication.IS_COOKIE_OUT) {
-                    HttpHelper.queryPositionByPadIp(this);
-                } else {
-                    String cardNumber = userInfo.getCARD_NUMBER();
-                    if (isEmpty(cardNumber)) {
-                        if ("shawn".equals(userInfo.getUSER())) {
-                            cardNumber = "123";
-                        } else if ("ethan".equals(userInfo.getUSER())) {
-                            cardNumber = "789";
-                        }
-                    }
-                    HttpHelper.positionLogin(cardNumber, this);
-                }
+                if (mLoginCallback != null)
+                    mLoginCallback.onLogin(true);
             } else if (HttpHelper.positionLogin_url.equals(url)) {
-                toast("登录成功");
+                toast("用户上岗成功");
                 UserInfoBo userInfo = JSON.parseObject(result, UserInfoBo.class);
                 List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
                 if (positionUsers == null)
@@ -133,17 +186,27 @@ public class LoginFragment extends BaseFragment {
                 positionUsers.add(userInfo);
                 SpUtil.savePositionUsers(positionUsers);
                 SpUtil.saveLoginStatus(true);
-                if (mCallback != null) {
-                    mCallback.loginCallback(true);
+                if (mClockCallback != null) {
+                    mClockCallback.onClockIn(true);
                 }
+            } else if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
+                ContextInfoBo contextInfoBo = JSON.parseObject(result, ContextInfoBo.class);
+                SpUtil.saveContextInfo(contextInfoBo);
+                List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
+                SpUtil.savePositionUsers(loginUserList);
             }
         } else {
+            String message = resultJSON.getString("message");
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
-                toast("初始化失败，" + resultJSON.getString("message"));
+                toast("初始化失败，" + message);
+            } else if (HttpHelper.positionLogin_url.equals(url) && !isEmpty(message) && message.contains("用户已登录")) {
+                if (mClockCallback != null) {
+                    mClockCallback.onClockIn(true);
+                }
             } else {
-                toast("登录失败," + resultJSON.getString("message"));
-                if (mCallback != null) {
-                    mCallback.loginCallback(false);
+                toast("登录失败," + message);
+                if (mClockCallback != null) {
+                    mClockCallback.onClockIn(false);
                 }
             }
         }
@@ -154,21 +217,34 @@ public class LoginFragment extends BaseFragment {
         super.onFailure(url, code, message);
         dismissLoading();
         toast("登录失败");
-        if (mCallback != null) {
-            mCallback.loginCallback(false);
+        if (mClockCallback != null) {
+            mClockCallback.onClockIn(false);
         }
     }
 
-    public void setCallback(OnLoginCallback callback) {
-        mCallback = callback;
+    public void setOnLoginCallback(OnLoginCallback callback) {
+        mLoginCallback = callback;
     }
 
     public interface OnLoginCallback {
         /**
-         * 登录回调
+         * 上班打卡回调
          *
-         * @param success 是否登录成功
+         * @param success 是否打卡成功
          */
-        void loginCallback(boolean success);
+        void onLogin(boolean success);
+    }
+
+    public void setOnClockCallback(OnClockCallback callback) {
+        mClockCallback = callback;
+    }
+
+    public interface OnClockCallback {
+        /**
+         * 上下班打卡回调
+         *
+         * @param success 是否打卡成功
+         */
+        void onClockIn(boolean success);
     }
 }

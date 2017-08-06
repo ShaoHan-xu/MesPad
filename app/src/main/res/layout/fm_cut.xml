@@ -91,13 +91,13 @@
                     android:visibility="gone">
 
                     <!--<TextView-->
-                        <!--style="@style/textStyle_default"-->
-                        <!--android:text="工艺说明："-->
-                        <!--android:textStyle="bold" />-->
+                    <!--style="@style/textStyle_default"-->
+                    <!--android:text="工艺说明："-->
+                    <!--android:textStyle="bold" />-->
 
                     <!--<TextView-->
-                        <!--android:id="@+id/tv_craftDescribe"-->
-                        <!--style="@style/textStyle_default" />-->
+                    <!--android:id="@+id/tv_craftDescribe"-->
+                    <!--style="@style/textStyle_default" />-->
 
                     <TextView
                         style="@style/textStyle_default"
@@ -164,14 +164,11 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_loginUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border_black"
-            android:divider="@drawable/divider_gray"
             android:orientation="vertical"
-            android:padding="0.5dp"
-            android:showDividers="middle">
+            android:padding="0.5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -201,6 +198,18 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@drawable/divider_gray" />
+
+            <LinearLayout
+                android:id="@+id/layout_loginUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_gray"
+                android:orientation="vertical"
+                android:showDividers="middle" />
         </LinearLayout>
 
         <LinearLayout

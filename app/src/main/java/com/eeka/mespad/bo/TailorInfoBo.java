@@ -24,6 +24,15 @@ public class TailorInfoBo implements Serializable {
     private List<LayoutInfoBean> LAYOUT_INFOR;
     private NextOrderInfo NEXT_OPER_INFOR;
     private ResultInfo RESR_INFOR;
+    private List<StickyInfo> STICKY_INFOR;
+
+    public List<StickyInfo> getSTICKY_INFOR() {
+        return STICKY_INFOR;
+    }
+
+    public void setSTICKY_INFOR(List<StickyInfo> STICKY_INFOR) {
+        this.STICKY_INFOR = STICKY_INFOR;
+    }
 
     public ResultInfo getRESR_INFOR() {
         return RESR_INFOR;
@@ -89,11 +98,29 @@ public class TailorInfoBo implements Serializable {
         this.CUT_SIZES = CUT_SIZES;
     }
 
-    public static class MatInfoBean implements Serializable{
+    public static class MatInfoBean implements Serializable {
         private int LAYERS;
         private String MAT_URL;
         private String MAT_NO;
         private String ITEM_BO;
+        private String GRAND_CATEGORY;
+        private String MID_CATEGORY;
+
+        public String getGRAND_CATEGORY() {
+            return GRAND_CATEGORY;
+        }
+
+        public void setGRAND_CATEGORY(String GRAND_CATEGORY) {
+            this.GRAND_CATEGORY = GRAND_CATEGORY;
+        }
+
+        public String getMID_CATEGORY() {
+            return MID_CATEGORY;
+        }
+
+        public void setMID_CATEGORY(String MID_CATEGORY) {
+            this.MID_CATEGORY = MID_CATEGORY;
+        }
 
         public String getITEM_BO() {
             return ITEM_BO;
@@ -203,10 +230,19 @@ public class TailorInfoBo implements Serializable {
         private String SHOP_ORDER_BO;
         private List<String> PROCESS_LOT_BO;
         private String ITEM;
+        private String SO_REMARK;
         private String SALE_ORDER;
         private int ORDER_QTY;
         private int LAYERS;
         private String Z_LAYOUT_BO;
+
+        public String getSO_REMARK() {
+            return SO_REMARK;
+        }
+
+        public void setSO_REMARK(String SO_REMARK) {
+            this.SO_REMARK = SO_REMARK;
+        }
 
         public String getSALE_ORDER() {
             return SALE_ORDER;
@@ -377,6 +413,63 @@ public class TailorInfoBo implements Serializable {
 
         public void setRESOURCE(String RESOURCE) {
             this.RESOURCE = RESOURCE;
+        }
+    }
+
+    public static class StickyInfo {
+
+        /**
+         * ORDER_NO : 123456789
+         * ORDER_TYPE : S
+         * PICTURE_TYPE : NP
+         * IDENTITY_INFO : QF
+         * PICTURE_URL : http://10.7.121.75/gst/20170802151515.jpg
+         */
+
+        private String ORDER_NO;
+        private String ORDER_TYPE;
+        private String PICTURE_TYPE;
+        private String IDENTITY_INFO;
+        private String PICTURE_URL;
+
+        public String getORDER_NO() {
+            return ORDER_NO;
+        }
+
+        public void setORDER_NO(String ORDER_NO) {
+            this.ORDER_NO = ORDER_NO;
+        }
+
+        public String getORDER_TYPE() {
+            return ORDER_TYPE;
+        }
+
+        public void setORDER_TYPE(String ORDER_TYPE) {
+            this.ORDER_TYPE = ORDER_TYPE;
+        }
+
+        public String getPICTURE_TYPE() {
+            return PICTURE_TYPE;
+        }
+
+        public void setPICTURE_TYPE(String PICTURE_TYPE) {
+            this.PICTURE_TYPE = PICTURE_TYPE;
+        }
+
+        public String getIDENTITY_INFO() {
+            return IDENTITY_INFO;
+        }
+
+        public void setIDENTITY_INFO(String IDENTITY_INFO) {
+            this.IDENTITY_INFO = IDENTITY_INFO;
+        }
+
+        public String getPICTURE_URL() {
+            return PICTURE_URL;
+        }
+
+        public void setPICTURE_URL(String PICTURE_URL) {
+            this.PICTURE_URL = PICTURE_URL;
         }
     }
 }

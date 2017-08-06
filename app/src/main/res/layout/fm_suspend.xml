@@ -1,161 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:layout_weight="4"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/white"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <EditText
+                    android:id="@+id/et_searchComponent"
+                    style="@style/textStyle_default"
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/border_black"
+                    android:gravity="center"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1" />
+
+                <Button
+                    android:id="@+id/btn_searchComponent"
+                    style="@style/btnStyle_green"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/et_searchComponent"
+                    android:text="搜索" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="2"
-                android:orientation="vertical">
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:background="@color/white"
-                    android:paddingLeft="5dp"
-                    android:paddingTop="5dp"
-                    android:text="裁片上吊挂"
-                    android:textSize="@dimen/textSize_itemTitle"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/iv_componentImg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/libai" />
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/libai" />
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/border_black"
-                        android:divider="@drawable/divider_gray"
-                        android:orientation="vertical"
-                        android:padding="0.5dp"
-                        android:showDividers="middle">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:background="@drawable/btn_green"
-                                android:text="前幅" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="外协状况" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:background="@drawable/btn_green"
-                                android:text="后幅" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="外协状况" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <Button
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:background="@drawable/btn_green"
-                                android:text="腰头" />
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="外协状况" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
+                    android:id="@+id/layout_component"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@drawable/border_black"
+                    android:divider="@drawable/divider_gray"
                     android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="工艺说明："
-                        android:textStyle="bold" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="1、工艺说明" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="2、工艺说明" />
-                </LinearLayout>
+                    android:padding="0.5dp"
+                    android:showDividers="middle" />
 
             </LinearLayout>
 
@@ -168,184 +88,122 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center_horizontal">
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="工艺说明："
+                    android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/et_searchPart"
-                        style="@style/textStyle_default"
-                        android:layout_width="300dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border_black"
-                        android:gravity="center"
-                        android:imeOptions="actionDone"
-                        android:maxLines="1" />
-
-                    <Button
-                        android:id="@+id/btn_searchOrderNum"
-                        style="@style/btnStyle_green"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/et_searchPart"
-                        android:text="确定" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#DEF0FA"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="center"
-                        android:text="衣架RFID卡号"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="部件类型"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="3"
-                        android:gravity="center"
-                        android:text="订单号"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
-
-                <ListView
-                    android:id="@+id/lv_suspend_caiPianSearchResult"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
+                <TextView
+                    android:id="@+id/tv_craftDesc"
+                    style="@style/textStyle_default"
+                    android:text="1、工艺说明" />
             </LinearLayout>
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/layout_processList"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical">
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_processList"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_loginUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/border_black"
+            android:divider="@drawable/divider_gray"
+            android:orientation="vertical"
+            android:padding="0.5dp"
+            android:showDividers="middle">
 
             <LinearLayout
-                android:id="@+id/layout_loginUsers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/border_black"
-                android:divider="@drawable/divider_gray"
-                android:orientation="vertical"
-                android:padding="0.5dp"
-                android:showDividers="middle">
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="用户" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="用户" />
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/text_gray_default" />
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/text_gray_default" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="工号" />
-
-                </LinearLayout>
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="工号" />
 
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/layout_curProcess"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/white">
+        </LinearLayout>
+        0DEA1A4B
 
-                <LinearLayout
-                    android:id="@+id/layout_nextProcess"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+        <RelativeLayout
+            android:id="@+id/layout_curProcess"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white">
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="下一工序：" />
-
-                    <TextView
-                        android:id="@+id/tv_nextProcess"
-                        style="@style/textStyle_default"
-                        android:layout_width="match_parent" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@id/layout_nextProcess"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="当前工序：" />
-
-                    <ListView
-                        android:id="@+id/lv_processList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/white"
-                        android:choiceMode="singleChoice" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <ExpandableListView
-                android:id="@+id/elv_orderList"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/layout_curProcess"
-                android:layout_below="@id/layout_loginUsers"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="#DEF0FA"
-                android:groupIndicator="@null" />
+                android:layout_above="@id/layout_nextProcess"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="当前工序：" />
+
+                <ListView
+                    android:id="@+id/lv_processList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:choiceMode="singleChoice" />
+            </LinearLayout>
+
         </RelativeLayout>
-    </LinearLayout>
-</RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layout_curProcess"
+            android:layout_below="@id/layout_loginUsers"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="待作业工单" />
+
+            <ListView
+                android:id="@+id/lv_orderList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#DEF0FA" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

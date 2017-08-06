@@ -2,15 +2,16 @@ package com.eeka.mespad.http;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
-import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
@@ -21,6 +22,7 @@ import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
 import cn.finalteam.okhttpfinal.HttpRequest;
 import cn.finalteam.okhttpfinal.RequestParams;
 import okhttp3.Headers;
+import okhttp3.Request;
 import okhttp3.Response;
 
 /**
@@ -30,6 +32,7 @@ import okhttp3.Response;
 
 public class HttpHelper {
     private static final String STATE = "status";
+    public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
     public static final String PAD_IP = "192.168.0.1";
 //    public static final String PAD_IP = NetUtil.getHostIP();
@@ -57,7 +60,7 @@ public class HttpHelper {
 
     private static Context mContext;
 
-//    private static Pair<Request, HttpCallback> mFailRequest;
+    private static Pair<Request, HttpCallback> mFailRequest;
 
     static {
         mContext = PadApplication.mContext;
@@ -277,9 +280,9 @@ public class HttpHelper {
      */
     public static RequestParams getBaseParams() {
         RequestParams params = new RequestParams();
-        ContextInfoBo info = SpUtil.getContextInfo();
-        if (info != null) {
-            params.put("site", info.getSITE());
+        String site = SpUtil.getSite();
+        if (!TextUtils.isEmpty(site)) {
+            params.put("site", site);
         }
         String cookie = SpUtil.getCookie();
         if (!TextUtils.isEmpty(cookie)) {
@@ -323,16 +326,20 @@ public class HttpHelper {
                             SpUtil.saveCookie(cookies.substring(0, cookies.lastIndexOf(";")));
                         }
                     }
-//                } else if (!isSuccess(jsonObject)) {
-//                    String message = jsonObject.getString("message");
-//                    if (COOKIE_OUT.equals(message)) {//cookie失效，重新登录获取新的cookie
-//                        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
-//                        UserInfoBo userInfo = loginUsers.get(0);
-//                        login(userInfo.getUSER(), userInfo.getPassword(), null);
-//                        return;
-//                    }
+                    if (IS_COOKIE_OUT) {
+                        Toast.makeText(mContext, "系统登录成功，可继续操作", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (!isSuccess(jsonObject)) {
+                    String message = jsonObject.getString("message");
+                    if (COOKIE_OUT.equals(message)) {//cookie失效，重新登录获取新的cookie
+                        IS_COOKIE_OUT = true;
+                        Toast.makeText(mContext, "由于您长时间未操作，正在重新登录系统...", Toast.LENGTH_SHORT).show();
+                        UserInfoBo loginUser = SpUtil.getLoginUser();
+                        login(loginUser.getUSER(), loginUser.getPassword(), null);
+                        return;
+                    }
                 }
-
+                IS_COOKIE_OUT = false;
                 callback.onSuccess(url, jsonObject);
             }
 
@@ -347,7 +354,6 @@ public class HttpHelper {
                     return;
                 }
                 Logger.d(response);
-
                 //网页方式登录测试用
 //                if (login_url.equals(url)) {
 //                    if (!response.contains("Error")) {
