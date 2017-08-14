@@ -23,26 +23,13 @@
             android:background="@drawable/border_black"
             android:padding="0.5dp">
 
-            <CheckBox
-                android:id="@+id/ckb_custom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="定制" />
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:background="@color/text_gray_default" />
-
             <EditText
                 android:id="@+id/et_orderNum"
                 style="@style/textStyle_default"
                 android:layout_width="150dp"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="5dp"
-                android:text="RFID00000033" />
+                android:padding="5dp" />
 
             <Button
                 android:id="@+id/btn_searchOrder"
@@ -52,6 +39,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_searchPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -76,15 +64,21 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_controlPanel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:orientation="horizontal" />
+            android:layout_toRightOf="@id/layout_searchPosition">
 
+            <LinearLayout
+                android:id="@+id/layout_controlPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
     </RelativeLayout>
 
     <android.support.v4.widget.DrawerLayout
@@ -116,39 +110,69 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/layout_slide"
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@color/colorPrimary"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
             android:padding="10dp">
 
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/hanxin" />
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="韩信" />
-
-            <TextView
-                android:id="@+id/tv_caijian"
+                android:id="@+id/tv_setLoginUser"
                 style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
                 android:padding="10dp"
-                android:text="裁剪作业界面" />
+                android:text="设置系统账户"
+                android:textColor="@color/white" />
 
-            <TextView
-                android:id="@+id/tv_diaogua"
-                style="@style/textStyle_default"
-                android:padding="10dp"
-                android:text="吊挂作业界面" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/hanxin" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="韩信"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_caijian"
+                    style="@style/textStyle_default"
+                    android:padding="10dp"
+                    android:text="裁剪作业界面"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_diaogua"
+                    style="@style/textStyle_default"
+                    android:padding="10dp"
+                    android:text="吊挂作业界面"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_sew"
+                    style="@style/textStyle_default"
+                    android:padding="10dp"
+                    android:text="缝制作业界面"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tv_sewQC"
+                    style="@style/textStyle_default"
+                    android:padding="10dp"
+                    android:text="缝制质检作业界面"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </RelativeLayout>
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

@@ -3,8 +3,6 @@ package com.eeka.mespad.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StyleRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -14,10 +12,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
+import com.eeka.mespad.http.HttpCallback;
+import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SystemUtils;
 
 import java.util.ArrayList;
@@ -28,10 +31,10 @@ import java.util.List;
  * Created by Lenovo on 2017/7/4.
  */
 
-public class ReturnMaterialDialog extends Dialog implements View.OnClickListener {
+public class ReturnMaterialDialog extends Dialog implements View.OnClickListener, HttpCallback {
 
-    public static final int TYPE_RETURN = 0;//退料
-    public static final int TYPE_ADD = 1;//补料
+    public static final int TYPE_RETURN = 3;//退料
+    public static final int TYPE_ADD = 2;//补料
 
     private Context mContext;
     private View mView;
@@ -42,24 +45,11 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     private LinearLayout mLayout_material;
 
-    private OnReturnMaterialCallback mCallback;
-
     public ReturnMaterialDialog(@NonNull Context context, int type, @NonNull ReturnMaterialInfoBo returnMaterialInfo) {
         super(context);
         mType = type;
         mReturnMaterialInfo = returnMaterialInfo;
         mReturnMaterialInfo.setType(type);
-//        mCallback = callback;
-        init(context);
-    }
-
-    public ReturnMaterialDialog(@NonNull Context context, @StyleRes int themeResId) {
-        super(context, themeResId);
-        init(context);
-    }
-
-    protected ReturnMaterialDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
         init(context);
     }
 
@@ -121,6 +111,14 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     private void submit() {
         generateData();
+
+        JSONObject params = new JSONObject();
+        params.put("TYPE", mType);
+        params.put("SHOP_ORDER", mReturnMaterialInfo.getOrderNum());
+        params.put("ITEM_INFOS", JSON.toJSONString(mReturnMaterialInfo.getMaterialInfoList()));
+
+        LoadingDialog.show(mContext);
+        HttpHelper.cutMaterialReturnOrFeeding(params, this);
     }
 
     private void generateData() {
@@ -129,29 +127,22 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
         for (int i = 0; i < childCount; i++) {
             View childView = mLayout_material.getChildAt(i);
 
-            EditText et_planUse = (EditText) childView.findViewById(R.id.et_returnMaterial_planUse);
-            EditText et_realUse = (EditText) childView.findViewById(R.id.et_returnMaterial_realUse);
             EditText et_value = (EditText) childView.findViewById(R.id.et_returnMaterial_value);
             TextView tv_reason = (TextView) childView.findViewById(R.id.tv_returnMaterial_reason);
 
             String reason = tv_reason.getText().toString();
-            String planUse = et_planUse.getText().toString();
-            String realUse = et_realUse.getText().toString();
             String value = et_value.getText().toString();
 
             ReturnMaterialInfoBo.MaterialInfoBo material = list_materialInfo.get(i);
             material.setReason(reason);
-            material.setPlanUse(planUse);
-            material.setRealUse(realUse);
-            material.setValue(value);
+            material.setQTY(value);
             list_materialInfo.set(i, material);
         }
+
     }
 
     /**
      * 获取物料信息布局
-     *
-     * @return
      */
     private View getMaterialInfoView(@NonNull ReturnMaterialInfoBo.MaterialInfoBo materialInfo) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_return_material, null);
@@ -167,17 +158,13 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
             tv_reasonSubTitle.setText("补料原因");
         }
 
-        tv_num.setText(materialInfo.getNum());
-        EditText et_planUse = (EditText) view.findViewById(R.id.et_returnMaterial_planUse);
-        EditText et_realUse = (EditText) view.findViewById(R.id.et_returnMaterial_realUse);
+        tv_num.setText(materialInfo.getITEM());
         EditText et_value = (EditText) view.findViewById(R.id.et_returnMaterial_value);
         Glide.with(mContext).load(materialInfo.getPicUrl()).into(iv_materialImg);
         TextView tv_reason = (TextView) view.findViewById(R.id.tv_returnMaterial_reason);
 
         tv_reason.setText(materialInfo.getReason());
-        et_planUse.setText(materialInfo.getPlanUse());
-        et_realUse.setText(materialInfo.getRealUse());
-        et_value.setText(materialInfo.getValue());
+        et_value.setText(materialInfo.getQTY());
 
         tv_reason.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +196,21 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
     public void show() {
         super.show();
         getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.8), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+    }
+
+    @Override
+    public void onSuccess(String url, JSONObject resultJSON) {
+        if (HttpHelper.isSuccess(resultJSON)) {
+            Toast.makeText(mContext, "操作成功", Toast.LENGTH_SHORT).show();
+            dismiss();
+        } else {
+            Toast.makeText(mContext, resultJSON.getString("message"), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onFailure(String url, int code, String message) {
+
     }
 
     public interface OnReturnMaterialCallback {

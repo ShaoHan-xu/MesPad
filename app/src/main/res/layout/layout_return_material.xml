@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/iv_returnMaterial_img"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
@@ -30,53 +30,6 @@
         android:minHeight="120dp"
         android:orientation="vertical"
         android:paddingRight="10dp">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="100dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="right"
-                    android:text="计划用料/米" />
-
-                <EditText
-                    android:id="@+id/et_returnMaterial_planUse"
-                    style="@style/textStyle_default"
-                    android:background="@drawable/border_black"
-                    android:inputType="numberDecimal"
-                    android:minWidth="100dp"
-                    android:padding="5dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_marginRight="10dp"
-                    android:text="实际用料/米" />
-
-                <EditText
-                    android:id="@+id/et_returnMaterial_realUse"
-                    style="@style/textStyle_default"
-                    android:background="@drawable/border_black"
-                    android:inputType="numberDecimal"
-                    android:minWidth="100dp"
-                    android:padding="5dp" />
-            </LinearLayout>
-
-        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

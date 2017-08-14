@@ -38,28 +38,10 @@ public class ReturnMaterialInfoBo {
 
     public static class MaterialInfoBo {
         private String picUrl;
-        private String num;
+        private String ITEM;
         private String reason;//退/补料原因
-        private String planUse;//计划用料/米
-        private String realUse;//实际用料/米
-        private String value;//退/补料的值
-        private int type;//类型，退|补
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public String getNum() {
-            return num;
-        }
-
-        public void setNum(String num) {
-            this.num = num;
-        }
+        private String REASON_CODE;//退/补料原因
+        private String QTY;//退/补料的值
 
         public String getReason() {
             return reason;
@@ -69,28 +51,28 @@ public class ReturnMaterialInfoBo {
             this.reason = reason;
         }
 
-        public String getPlanUse() {
-            return planUse;
+        public String getITEM() {
+            return ITEM;
         }
 
-        public void setPlanUse(String planUse) {
-            this.planUse = planUse;
+        public void setITEM(String ITEM) {
+            this.ITEM = ITEM;
         }
 
-        public String getRealUse() {
-            return realUse;
+        public String getREASON_CODE() {
+            return REASON_CODE;
         }
 
-        public void setRealUse(String realUse) {
-            this.realUse = realUse;
+        public void setREASON_CODE(String REASON_CODE) {
+            this.REASON_CODE = REASON_CODE;
         }
 
-        public String getValue() {
-            return value;
+        public String getQTY() {
+            return QTY;
         }
 
-        public void setValue(String value) {
-            this.value = value;
+        public void setQTY(String QTY) {
+            this.QTY = QTY;
         }
 
         public String getPicUrl() {

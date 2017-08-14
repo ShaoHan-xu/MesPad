@@ -5,4 +5,6 @@
         android:width="0.5dp"
         android:color="@color/text_gray_default" />
 
+    <solid android:color="@color/white" />
+
 </shape>

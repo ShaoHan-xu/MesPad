@@ -33,8 +33,8 @@ import java.util.List;
 
 public class LoginFragment extends BaseFragment {
 
-    public static final int TYPE_LOGIN = 0;
-    public static final int TYPE_SET = 1;
+    public static final int TYPE_CLOCK = 0;
+    public static final int TYPE_LOGIN = 1;
 
     private EditText mEt_user, mEt_pwd, mEt_site;
     private OnLoginCallback mLoginCallback;
@@ -68,7 +68,7 @@ public class LoginFragment extends BaseFragment {
 
         Button btn_done = (Button) mView.findViewById(R.id.btn_login);
         btn_done.setOnClickListener(this);
-        if (mType == TYPE_SET) {
+        if (mType == TYPE_LOGIN) {
             TextView tv_alert = (TextView) mView.findViewById(R.id.tv_login_alert);
             TextView tv_user = (TextView) mView.findViewById(R.id.tv_login_user_tag);
             tv_alert.setText("请设置系统登录账户");
@@ -78,7 +78,7 @@ public class LoginFragment extends BaseFragment {
             mView.findViewById(R.id.layout_login_pwd).setVisibility(View.GONE);
         }
 
-        if (mType == TYPE_SET) {
+        if (mType == TYPE_LOGIN) {
             UserInfoBo loginUser = SpUtil.getLoginUser();
             if (loginUser != null) {
                 mEt_user.setText(loginUser.getUSER());
@@ -141,14 +141,14 @@ public class LoginFragment extends BaseFragment {
     private void login() {
         String user = mEt_user.getText().toString();
         if (isEmpty(user)) {
-            if (mType == TYPE_SET) {
+            if (mType == TYPE_LOGIN) {
                 toast("请输入账户名");
             } else {
                 toast("请输入卡号");
             }
             return;
         }
-        if (mType == TYPE_SET) {
+        if (mType == TYPE_LOGIN) {
             String pwd = mEt_pwd.getText().toString();
             if (isEmpty(pwd)) {
                 toast("请输入密码");
@@ -199,10 +199,6 @@ public class LoginFragment extends BaseFragment {
             String message = resultJSON.getString("message");
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 toast("初始化失败，" + message);
-            } else if (HttpHelper.positionLogin_url.equals(url) && !isEmpty(message) && message.contains("用户已登录")) {
-                if (mClockCallback != null) {
-                    mClockCallback.onClockIn(true);
-                }
             } else {
                 toast("登录失败," + message);
                 if (mClockCallback != null) {

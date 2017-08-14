@@ -51,7 +51,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     }
 
     protected void showLoading() {
-        showLoading(getString(R.string.loading), false);
+        showLoading(getString(R.string.loading), true);
     }
 
     protected void showLoading(String msg, boolean cancelAble) {
@@ -79,7 +79,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     }
 
     protected void toast(String msg) {
-        toast(msg, Toast.LENGTH_SHORT);
+        toast(msg, Toast.LENGTH_LONG);
     }
 
     protected void toast(String msg, int duration) {

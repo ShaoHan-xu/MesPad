@@ -3,7 +3,6 @@ package com.eeka.mespad.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -17,12 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
-import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.utils.SpUtil;
 
 /**
  * Created by Lenovo on 2017/5/13.
@@ -57,12 +54,26 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     protected void initData() {
     }
 
+    /**
+     * 刷卡获取卡信息
+     */
+    public void getCardInfo(String orderNum) {
+        HttpHelper.getCardInfo(orderNum, this);
+    }
+
+    /**
+     * 刷卡上岗
+     */
+    public void clockIn(String cardNum) {
+        HttpHelper.positionLogin(cardNum, this);
+    }
+
     protected boolean isEmpty(String str) {
         return TextUtils.isEmpty(str);
     }
 
     protected void showLoading() {
-        showLoading(getString(R.string.loading), false);
+        showLoading(getString(R.string.loading), true);
     }
 
     protected void showLoading(String msg, boolean cancelAble) {
@@ -90,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void toast(String msg) {
-        toast(msg, Toast.LENGTH_SHORT);
+        toast(msg, Toast.LENGTH_LONG);
     }
 
     protected void toast(String msg, int duration) {
@@ -119,12 +130,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         mLoginDialog.show();
-    }
-
-    public void logout() {
-        SpUtil.saveLoginStatus(false);
-        startActivity(new Intent(mContext, LoginActivity.class));
-        finish();
     }
 
     @Override

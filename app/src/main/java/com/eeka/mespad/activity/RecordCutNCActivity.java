@@ -22,11 +22,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 记录不良界面
+ * 记录裁剪不良界面
  * Created by Lenovo on 2017/7/19.
  */
 
-public class RecordBadActivity extends BaseActivity {
+public class RecordCutNCActivity extends BaseActivity {
 
     private TailorInfoBo mTailorInfo;
     private List<RecordBadBo> mList_badRecord;
@@ -35,7 +35,7 @@ public class RecordBadActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aty_recordbad);
+        setContentView(R.layout.aty_record_cutnc);
 
         mTailorInfo = (TailorInfoBo) getIntent().getSerializableExtra("data");
         if (mTailorInfo == null) {
@@ -150,7 +150,7 @@ public class RecordBadActivity extends BaseActivity {
     }
 
     public static Intent getIntent(Context context, TailorInfoBo data, List<RecordBadBo> badList) {
-        Intent intent = new Intent(context, RecordBadActivity.class);
+        Intent intent = new Intent(context, RecordCutNCActivity.class);
         intent.putExtra("data", data);
         intent.putExtra("badList", (Serializable) badList);
         return intent;

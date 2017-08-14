@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:divider="@drawable/divider_gray"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="middle">
+
+    <TextView
+        android:id="@+id/tv_sewQc_sizeAttr"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:id="@+id/tv_sewQc_refSize"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+
+    <EditText
+        android:id="@+id/et_sewQc_clothingSize"
+        style="@style/textStyle_default"
+        android:background="@color/white"
+        android:gravity="center"
+        android:hint="点击录入"
+        android:inputType="numberDecimal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:id="@+id/tv_sewQc_refTolerance"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:id="@+id/tv_sewQc_realTolerance"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+</LinearLayout>

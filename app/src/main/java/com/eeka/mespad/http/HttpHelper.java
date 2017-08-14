@@ -34,7 +34,7 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    public static final String PAD_IP = "192.168.0.1";
+    public static String PAD_IP = "192.168.0.1";
 //    public static final String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
@@ -57,6 +57,12 @@ public class HttpHelper {
     public static final String saveLabuDataAndComplete = BASE_URL + "cutpad/saveRabDataAndComplete?";
     public static final String getBadList = BASE_URL + "logNcPad/listNcCodesOnOperation?";
     public static final String saveBadRecord = BASE_URL + "logNcPad/logNc?";
+    public static final String signoffByShopOrder = BASE_URL + "product/signoffByShopOrder?";
+    public static final String signoffByProcessLot = BASE_URL + "product/signoffByProcessLot?";
+    public static final String getSewData = BASE_URL + "sweing/findPadKeyData?";
+    public static final String getCardInfo = BASE_URL + "cutpad/cardRecognition?";
+    public static final String cutMaterialReturnOrFeeding = BASE_URL + "cutpad/cutMaterialReturnOrFeeding?";
+    public static final String hangerUnbind = BASE_URL + "hanger/unbind?";
 
     private static Context mContext;
 
@@ -146,36 +152,61 @@ public class HttpHelper {
     /**
      * 查询当前平板绑定的工序
      *
-     * @param padId
-     * @param callback
+     * @param padId 站位IP
      */
     public static void findProcessWithPadId(String padId, HttpCallback callback) {
         JSONObject json = new JSONObject();
-        if (TextUtils.isEmpty(padId)) {
-            padId = PAD_IP;
+        if (!TextUtils.isEmpty(padId)) {
+            PAD_IP = padId;
         }
-        json.put("PAD_ID", padId);
+        json.put("PAD_ID", PAD_IP);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
         HttpRequest.post(findProcessWithPadId_url, params, getResponseHandler(findProcessWithPadId_url, callback));
     }
 
     /**
+     * 根据RFID卡号获取信息、定制订单/批量订单/员工
+     *
+     * @param cardId 卡号
+     */
+    public static void getCardInfo(String cardId, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_IP);
+        json.put("RFID", cardId);
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getCardInfo, params, getResponseHandler(getCardInfo, callback));
+    }
+
+    /**
      * 获取拉布、裁剪数据
      *
-     * @param callback
+     * @param orderType 订单类型 P=批量、S=定制
      */
-    public static void viewCutPadInfo(String RFID, String shopOrder, String resourceBO, HttpCallback callback) {
+    public static void viewCutPadInfo(String orderType, String orderNum, String resourceBO, String processLotBo, HttpCallback callback) {
         JSONObject json = new JSONObject();
-        if (!TextUtils.isEmpty(RFID))
-            json.put("RFID", RFID);//批量订单
-        if (!TextUtils.isEmpty(shopOrder))
-            json.put("SHOP_ORDER", shopOrder);//定制订单
+        json.put("RFID", orderNum);
+        json.put("ORDER_TYPE", orderType);
         json.put("PAD_ID", PAD_IP);
+        json.put("PROCESS_LOT_BO", processLotBo);
         json.put("RESOURCE_BO", resourceBO);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
         HttpRequest.post(viewCutPadInfo_url, params, getResponseHandler(viewCutPadInfo_url, callback));
+    }
+
+    /**
+     * 退料/补料接口
+     *
+     * @param json TYPE:2=补料,3=退料
+     *             SHOP_ORDER = 订单号
+     *             ITEM_INFOS = 退/补料对象列表，对象：ITEM = 物料号，QTY = 数量，REASON_CODE = 原因代码
+     */
+    public static void cutMaterialReturnOrFeeding(JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(cutMaterialReturnOrFeeding, getResponseHandler(cutMaterialReturnOrFeeding, callback));
     }
 
     /**
@@ -274,9 +305,56 @@ public class HttpHelper {
     }
 
     /**
-     * 获取固定请求参数<br>
+     * 注销在制品-定制订单
      *
-     * @return
+     * @param json json包含参数：SHOP_ORDER_BO、RESOURCE_BO、OPERATION_BO
+     */
+    public static void signoffByShopOrder(@NonNull JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(signoffByShopOrder, params, getResponseHandler(signoffByShopOrder, callback));
+    }
+
+    /**
+     * 注销在制品-批量订单
+     *
+     * @param json json包含参数：{'PROCESS_LOTS':[""],'OPERATION_BO':'','RESOURCE_BO':'','SHOP_ORDER_BO':''}
+     */
+    public static void signoffByProcessLot(@NonNull JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(signoffByProcessLot, params, getResponseHandler(signoffByProcessLot, callback));
+    }
+
+    /**
+     * 衣架解绑
+     *
+     * @param json {"HANGER_ID":"E34A3499","SFC":"19357930010001","PART_ID":"ZH"}
+     *             HANGER_ID:衣架ID；
+     *             SFC：工票号；
+     *             PART_ID：生产部件编码
+     *             参数输入(HANGER_ID) 或 (SFC与PART_ID) 必须输入其一
+     */
+    public static void hangerUnbind(JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(hangerUnbind, params, getResponseHandler(hangerUnbind, callback));
+    }
+
+    /**
+     * 获取缝制数据
+     *
+     * @param rfid 卡号
+     */
+    public static void getSewData(String rfid, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("rfId", rfid);
+        params.put("padIp", PAD_IP);
+        HttpRequest.post(getSewData, params, getResponseHandler(getSewData, callback));
+    }
+
+    /**
+     * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
         RequestParams params = new RequestParams();
@@ -295,11 +373,15 @@ public class HttpHelper {
         return "Y".equals(json.getString(STATE));
     }
 
+    public static String getResultStr(JSONObject json) {
+        JSONObject result = json.getJSONObject("result");
+        if (result != null)
+            return result.toString();
+        return null;
+    }
+
     /**
      * 获取请求响应Handler
-     *
-     * @param callback
-     * @return
      */
     public static BaseHttpRequestCallback getResponseHandler(final String url, final HttpCallback callback) {
         BaseHttpRequestCallback response = new BaseHttpRequestCallback<JSONObject>() {
@@ -308,7 +390,8 @@ public class HttpHelper {
             public void onFailure(int errorCode, String msg) {
                 super.onFailure(errorCode, msg);
                 //无网络或者后台出错
-                callback.onFailure(url, errorCode, msg);
+                if (callback != null)
+                    callback.onFailure(url, errorCode, msg);
             }
 
             @Override
@@ -327,20 +410,23 @@ public class HttpHelper {
                         }
                     }
                     if (IS_COOKIE_OUT) {
-                        Toast.makeText(mContext, "系统登录成功，可继续操作", Toast.LENGTH_SHORT).show();
+                        if (callback != null) {
+                            callback.onFailure(url, 0, "系统登录成功，请继续操作");
+                        }
                     }
                 } else if (!isSuccess(jsonObject)) {
                     String message = jsonObject.getString("message");
-                    if (COOKIE_OUT.equals(message)) {//cookie失效，重新登录获取新的cookie
+                    if (message.contains(COOKIE_OUT)) {//cookie失效，重新登录获取新的cookie
                         IS_COOKIE_OUT = true;
-                        Toast.makeText(mContext, "由于您长时间未操作，正在重新登录系统...", Toast.LENGTH_SHORT).show();
                         UserInfoBo loginUser = SpUtil.getLoginUser();
-                        login(loginUser.getUSER(), loginUser.getPassword(), null);
+                        login(loginUser.getUSER(), loginUser.getPassword(), callback);
+                        Toast.makeText(mContext, "由于您长时间未操作，正在重新登录系统...", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
                 IS_COOKIE_OUT = false;
-                callback.onSuccess(url, jsonObject);
+                if (callback != null)
+                    callback.onSuccess(url, jsonObject);
             }
 
             @Override

@@ -187,12 +187,17 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
         super.onSuccess(url, resultJSON);
         dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
-            mList_done = JSON.parseArray(resultJSON.getJSONObject("result").getJSONArray("shopOrderCompInfos").toString(), WorkOrderBo.class);
-            mList_undo = JSON.parseArray(resultJSON.getJSONObject("result").getJSONArray("shopOrderWaitInfos").toString(), WorkOrderBo.class);
-            if (mType == TYPE_UNDO) {
-                mAdapter.notifyDataSetChanged(mList_undo);
+            String resultStr = HttpHelper.getResultStr(resultJSON);
+            if (!isEmpty(resultStr)) {
+                mList_done = JSON.parseArray(resultJSON.getJSONObject("result").getJSONArray("shopOrderCompInfos").toString(), WorkOrderBo.class);
+                mList_undo = JSON.parseArray(resultJSON.getJSONObject("result").getJSONArray("shopOrderWaitInfos").toString(), WorkOrderBo.class);
+                if (mType == TYPE_UNDO) {
+                    mAdapter.notifyDataSetChanged(mList_undo);
+                } else {
+                    mAdapter.notifyDataSetChanged(mList_done);
+                }
             } else {
-                mAdapter.notifyDataSetChanged(mList_done);
+                toast("获取数据为空");
             }
         } else {
             toast(resultJSON.getString("message"));

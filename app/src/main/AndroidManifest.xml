@@ -38,6 +38,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".activity.ImageBrowserActivity"
             android:screenOrientation="landscape" />
         <activity
@@ -45,7 +48,7 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activity.RecordBadActivity"
+            android:name=".activity.RecordCutNCActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
         <activity

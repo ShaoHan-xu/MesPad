@@ -4,17 +4,17 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
+import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordBadBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
@@ -32,11 +33,12 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.fragment.SewFragment;
+import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 
 import java.util.ArrayList;
@@ -48,13 +50,17 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
+    private static final int REQUEST_RECORD_NC = 0;
+    private static final int REQUEST_LOGIN = 1;
+
     private DrawerLayout mDrawerLayout;
     private TextView mTv_startWorkAlert;
 
     private LoginFragment mLoginFragment;
     private CutFragment mCutFragment;
-    private SewFragment mSewFragment;
     private SuspendFragment mSuspendFragment;
+    private SewFragment mSewFragment;
+    private SewQCFragment mSewQCFragment;
 
     private LinearLayout mLayout_controlPanel;
 
@@ -66,6 +72,8 @@ public class MainActivity extends BaseActivity {
 
     private EditText mEt_orderNum;
     private EditText mEt_position;
+    private String mTopic;
+    private CardInfoBo mCardInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +83,7 @@ public class MainActivity extends BaseActivity {
         initView();
         initData();
 
-        MQTTService.actionStart(mContext);
+//        MQTTService.actionStart(mContext);
     }
 
     @Override
@@ -88,41 +96,51 @@ public class MainActivity extends BaseActivity {
 
         findViewById(R.id.tv_caijian).setOnClickListener(this);
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
+        findViewById(R.id.tv_sew).setOnClickListener(this);
+        findViewById(R.id.tv_sewQC).setOnClickListener(this);
+        findViewById(R.id.tv_setLoginUser).setOnClickListener(this);
 
         findViewById(R.id.btn_searchOrder).setOnClickListener(this);
         findViewById(R.id.btn_searchPosition).setOnClickListener(this);
 
         mEt_orderNum = (EditText) findViewById(R.id.et_orderNum);
         mEt_position = (EditText) findViewById(R.id.et_position);
-        CheckBox checkBox = (CheckBox) findViewById(R.id.ckb_custom);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    mEt_orderNum.setText("GR_SO_MTM_01");
-                } else {
-                    mEt_orderNum.setText("RFID00000033");
-                }
-            }
-        });
-
     }
 
     @Override
     protected void initData() {
         super.initData();
+        mCardInfo = new CardInfoBo();
 
         UserInfoBo loginUser = SpUtil.getLoginUser();
-        if (loginUser == null) {
-            mLoginFragment = new LoginFragment();
-            mLoginFragment.setOnLoginCallback(this);
-            mLoginFragment.setType(LoginFragment.TYPE_SET);
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        if (loginUser == null || positionUsers == null || positionUsers.size() == 0) {
+            if (mLoginFragment == null) {
+                initLoginFragment();
+            }
+            if (loginUser == null) {
+                mLoginFragment.setType(LoginFragment.TYPE_LOGIN);
+            } else {
+                mLoginFragment.setType(LoginFragment.TYPE_CLOCK);
+            }
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.layout_content, mLoginFragment);
             ft.commit();
         } else {
+            showLoading();
             HttpHelper.findProcessWithPadId(HttpHelper.PAD_IP, this);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
+    }
+
+    private void initLoginFragment() {
+        mLoginFragment = new LoginFragment();
+        mLoginFragment.setOnLoginCallback(this);
+        mLoginFragment.setOnClockCallback(this);
     }
 
     private void initButton(List<PositionInfoBo.BUTTONINFORBean> buttons) {
@@ -180,39 +198,77 @@ public class MainActivity extends BaseActivity {
                     button.setId(R.id.btn_unbind);
                     break;
                 case "COMPLETE":
-                    mCutFragment.showCompleteButton();
+                    if (mCutFragment != null)
+                        mCutFragment.showCompleteButton();
                     continue;
             }
             mLayout_controlPanel.addView(button);
         }
     }
 
-    private void initFragment(String topic) {
+    private void changeFragment() {
+        if (mPositionInfo == null) {
+            toast("请先获取站位数据");
+            return;
+        }
         FragmentTransaction ft = mFragmentManager.beginTransaction();
-        switch (topic) {
-            case "UI010":
-                mCutFragment = new CutFragment();
-                ft.replace(R.id.layout_content, mCutFragment);
+        List<Fragment> fragments = mFragmentManager.getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isAdded())
+                    ft.hide(fragment);
+            }
+        }
+        switch (mTopic) {
+            case TopicUtil.TOPIC_CUT:
+                if (mCutFragment == null) {
+                    mCutFragment = new CutFragment();
+                } else {
+                    mCutFragment.refreshLoginUsers();
+                }
+                if (mCutFragment.isAdded()) {
+                    ft.show(mCutFragment);
+                } else {
+                    ft.add(R.id.layout_content, mCutFragment);
+                }
                 ft.commit();
                 break;
-            case "UI020":
-                mSewFragment = new SewFragment();
-                ft.replace(R.id.layout_content, mSewFragment);
+            case TopicUtil.TOPIC_SEW:
+                if (mSewFragment == null)
+                    mSewFragment = new SewFragment();
+                if (mSewFragment.isAdded()) {
+                    ft.show(mSewFragment);
+                } else {
+                    ft.add(R.id.layout_content, mSewFragment);
+                }
                 ft.commit();
                 break;
-            case "UI030":
-                mSuspendFragment = new SuspendFragment();
-                ft.replace(R.id.layout_content, mSuspendFragment);
+            case TopicUtil.TOPIC_SUSPEND:
+                if (mSuspendFragment == null)
+                    mSuspendFragment = new SuspendFragment();
+                if (mSuspendFragment.isAdded()) {
+                    ft.show(mSuspendFragment);
+                } else {
+                    ft.add(R.id.layout_content, mSuspendFragment);
+                }
                 ft.commit();
                 break;
-            case "UI040":
-
+            case TopicUtil.TOPIC_QC:
+                if (mSewQCFragment == null)
+                    mSewQCFragment = new SewQCFragment();
+                if (mSewQCFragment.isAdded()) {
+                    ft.show(mSewQCFragment);
+                } else {
+                    ft.add(R.id.layout_content, mSewQCFragment);
+                }
+                ft.commit();
                 break;
-            case "UI050":
+            case TopicUtil.TOPIC_PACKING:
 
                 break;
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -220,12 +276,28 @@ public class MainActivity extends BaseActivity {
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
             case R.id.tv_caijian:
-                changeFragment(0);
+                mTopic = TopicUtil.TOPIC_CUT;
+                changeFragment();
                 mDrawerLayout.closeDrawer(Gravity.START);
                 break;
             case R.id.tv_diaogua:
-                changeFragment(1);
+                mTopic = TopicUtil.TOPIC_SUSPEND;
+                changeFragment();
                 mDrawerLayout.closeDrawer(Gravity.START);
+                break;
+            case R.id.tv_sew:
+                mTopic = TopicUtil.TOPIC_SEW;
+                changeFragment();
+                mDrawerLayout.closeDrawer(Gravity.START);
+                break;
+            case R.id.tv_sewQC:
+                mTopic = TopicUtil.TOPIC_QC;
+                changeFragment();
+                mDrawerLayout.closeDrawer(Gravity.START);
+                break;
+            case R.id.tv_setLoginUser:
+                mDrawerLayout.closeDrawer(Gravity.START);
+                startActivityForResult(new Intent(mContext, LoginActivity.class), REQUEST_LOGIN);
                 break;
             case R.id.btn_materialReturn:
                 if (mReturnMaterialInfo == null) {
@@ -241,7 +313,7 @@ public class MainActivity extends BaseActivity {
                     for (TailorInfoBo.MatInfoBean item : itemArray) {
                         ReturnMaterialInfoBo.MaterialInfoBo material = new ReturnMaterialInfoBo.MaterialInfoBo();
                         material.setPicUrl(item.getMAT_URL());
-                        material.setNum(item.getMAT_NO());
+                        material.setITEM(item.getMAT_NO());
                         materialList.add(material);
                     }
                     mReturnMaterialInfo.setMaterialInfoList(materialList);
@@ -262,7 +334,7 @@ public class MainActivity extends BaseActivity {
                     for (TailorInfoBo.MatInfoBean item : itemArray) {
                         ReturnMaterialInfoBo.MaterialInfoBo material = new ReturnMaterialInfoBo.MaterialInfoBo();
                         material.setPicUrl(item.getMAT_URL());
-                        material.setNum(item.getMAT_NO());
+                        material.setITEM(item.getMAT_NO());
                         materialList.add(material);
                     }
                     mAddMaterialInfo.setMaterialInfoList(materialList);
@@ -276,7 +348,7 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(mContext, WorkOrderListActivity.class));
                 break;
             case R.id.btn_NcRecord:
-                startActivityForResult(RecordBadActivity.getIntent(mContext, mCutFragment.getMaterialData(), mList_badData), 0);
+                startActivityForResult(RecordCutNCActivity.getIntent(mContext, mCutFragment.getMaterialData(), mList_badData), REQUEST_RECORD_NC);
                 break;
             case R.id.btn_video:
                 //自定义播放器，可缓存视频到本地
@@ -302,12 +374,57 @@ public class MainActivity extends BaseActivity {
                         showLogoutDialog();
                     }
                 } else {
-                    //数据异常的情况，直接退回登录界面
+                    //数据异常的情况
                     logout();
                 }
                 break;
             case R.id.btn_signOff:
-                startActivity(VideoPlayerActivity.getIntent(mContext, "http://10.7.121.75/gst/test.MP4"));
+                if (isEmpty(mTopic)) {
+                    toast("请先获取站位数据");
+                    return;
+                }
+                switch (mTopic) {
+                    case TopicUtil.TOPIC_CUT:
+                        if (mCutFragment != null) {
+                            TailorInfoBo materialData = mCutFragment.getMaterialData();
+                            if (materialData == null) {
+                                toast("请获取订单信息");
+                                return;
+                            }
+                            TailorInfoBo.SHOPORDERINFORBean shopOrderInfo = materialData.getSHOP_ORDER_INFOR();
+                            List<TailorInfoBo.OPERINFORBean> operInfo = materialData.getOPER_INFOR();
+                            if (operInfo != null && operInfo.size() != 0) {
+                                showLoading();
+                                JSONObject json = new JSONObject();
+                                json.put("SHOP_ORDER_BO", shopOrderInfo.getSHOP_ORDER_BO());
+                                if (materialData.isIS_CUSTOM()) {
+                                    json.put("RESOURCE_BO", mPositionInfo.getRESR_INFOR().getRESOURCE_BO());
+                                    json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
+                                    HttpHelper.signoffByShopOrder(json, this);
+                                } else {
+                                    json.put("PROCESS_LOTS", shopOrderInfo.getPROCESS_LOT_BO());
+                                    json.put("RESOURCE_BO", mPositionInfo.getRESR_INFOR().getRESOURCE_BO());
+                                    json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
+                                    HttpHelper.signoffByProcessLot(json, this);
+                                }
+                            } else {
+                                toast("工序数据有误");
+                            }
+                        }
+                        break;
+                    case TopicUtil.TOPIC_SEW:
+
+                        break;
+                    case TopicUtil.TOPIC_SUSPEND:
+
+                        break;
+                    case TopicUtil.TOPIC_QC:
+
+                        break;
+                    case TopicUtil.TOPIC_PACKING:
+
+                        break;
+                }
                 break;
             case R.id.btn_searchOrder:
                 if (mPositionInfo == null) {
@@ -315,15 +432,19 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 EditText et_orderNum = (EditText) findViewById(R.id.et_orderNum);
-                String searchKey = et_orderNum.getText().toString();
-                CheckBox checkBox = (CheckBox) findViewById(R.id.ckb_custom);
-                if (!isEmpty(searchKey)) {
-                    showLoading();
-                    if (checkBox.isChecked()) {
-                        HttpHelper.viewCutPadInfo(null, searchKey, mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), this);
-                    } else {
-                        HttpHelper.viewCutPadInfo(searchKey, null, mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), this);
+                String cardNum = et_orderNum.getText().toString();
+                if (!isEmpty(cardNum)) {
+                    mCardInfo.setCardNum(cardNum);
+                    switch (mTopic) {
+                        case TopicUtil.TOPIC_CUT:
+                            showLoading();
+                            getCardInfo(cardNum);
+                            break;
+                        case TopicUtil.TOPIC_SEW:
+                            mSewFragment.getData(mCardInfo.getCardNum());
+                            break;
                     }
+
                 }
                 break;
             case R.id.btn_searchPosition:
@@ -334,6 +455,23 @@ public class MainActivity extends BaseActivity {
                     HttpHelper.findProcessWithPadId(position, this);
                 }
                 break;
+            case R.id.btn_start:
+                switch (mTopic) {
+                    case TopicUtil.TOPIC_CUT:
+                        mCutFragment.startWork();
+                        break;
+                    case TopicUtil.TOPIC_SEW:
+                        break;
+                    case TopicUtil.TOPIC_SUSPEND:
+
+                        break;
+                }
+                break;
+            case R.id.btn_unbind:
+                if (mSuspendFragment != null){
+                    mSuspendFragment.unBind();
+                }
+                break;
         }
     }
 
@@ -341,24 +479,27 @@ public class MainActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == 0) {
+            if (requestCode == REQUEST_RECORD_NC) {
                 mList_badData = (List<RecordBadBo>) data.getSerializableExtra("badList");
+            } else if (requestCode == REQUEST_LOGIN) {
+                HttpHelper.findProcessWithPadId(null, this);
             }
         }
     }
 
+    private Dialog mLogoutDialog;
     private CommonRecyclerAdapter mLogoutAdapter;
     private int mLogoutIndex;
 
     private void showLogoutDialog() {
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         if (loginUsers == null) {
-            toast("无登录用户");
+            logout();
             return;
         }
 
-        Dialog dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mLogoutDialog = new Dialog(mContext);
+        mLogoutDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_logout, null);
         RecyclerView listView = (RecyclerView) view.findViewById(R.id.lv_logout);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
@@ -380,60 +521,58 @@ public class MainActivity extends BaseActivity {
         };
         listView.setAdapter(mLogoutAdapter);
 
-        dialog.setContentView(view);
-        dialog.show();
-        Window window = dialog.getWindow();
+        mLogoutDialog.setContentView(view);
+        mLogoutDialog.show();
+        Window window = mLogoutDialog.getWindow();
         window.setLayout((int) (SystemUtils.getScreenWidth(this) * 0.5), (int) (SystemUtils.getScreenHeight(this) * 0.5));
-    }
-
-    private void changeFragment(int position) {
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        if (position == 0) {
-            ft.hide(mSuspendFragment).show(mCutFragment);
-        } else if (position == 1) {
-            ft.hide(mCutFragment);
-            if (mSuspendFragment.isAdded()) {
-                ft.show(mSuspendFragment);
-            } else {
-                ft.add(R.id.layout_content, mSuspendFragment);
-            }
-        }
-        ft.commit();
     }
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.findProcessWithPadId_url.equals(url)) {
-                mPositionInfo = JSON.parseObject(resultJSON.getJSONObject("result").toString(), PositionInfoBo.class);
-                if (mPositionInfo.getBUTTON_INFOR() != null) {
-                    initButton(mPositionInfo.getBUTTON_INFOR());
+            JSONObject result = resultJSON.getJSONObject("result");
+            if (HttpHelper.getCardInfo.equals(url)) {
+                if (result == null) {
+                    toast("数据有误");
+                    return;
                 }
+                String orderType = result.getString("ORDER_TYPE");
+                mCardInfo.setCardType(orderType);
+                mCardInfo.setValue(resultJSON.getString("RI"));
+                switch (mTopic) {
+                    case TopicUtil.TOPIC_CUT:
+                        if ("P".equalsIgnoreCase(orderType) || "S".equalsIgnoreCase(orderType)) {
+                            mCutFragment.getData(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
+                        } else if ("M".equals(orderType)) {
+                            clockIn(mCardInfo.getCardNum());
+                        }
+                        break;
+                    case TopicUtil.TOPIC_SUSPEND:
+
+                        break;
+                }
+            } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
+                mPositionInfo = JSON.parseObject(result.toString(), PositionInfoBo.class);
+
                 List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
                 if (operInfo != null && operInfo.size() != 0) {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
-                    String topic = bean.getTOPIC();
-                    initFragment(topic);
-                    switch (topic) {
-                        case "UI010":
-                            mCutFragment.onSuccess(url, resultJSON);
-                            break;
-                        case "UI020":
-                            break;
-                        case "UI030":
-                            break;
-                        case "UI040":
-                            break;
-                        case "UI050":
-                            break;
-                    }
+                    mTopic = bean.getTOPIC();
                 }
-            } else if (HttpHelper.viewCutPadInfo_url.equals(url)) {
-                mCutFragment.onSuccess(url, resultJSON);
+                refreshView(url, resultJSON);
+
+                if (mPositionInfo.getBUTTON_INFOR() != null) {
+                    initButton(mPositionInfo.getBUTTON_INFOR());
+                }
+            } else if (HttpHelper.positionLogin_url.equals(url)) {
+                toast("用户上岗成功");
+                onClockIn(true);
             } else if (HttpHelper.positionLogout_url.equals(url)) {
-                toast("用户下线成功");
+                toast("用户下岗成功");
                 logoutSuccess();
+            } else if (HttpHelper.signoffByShopOrder.equals(url) || HttpHelper.signoffByProcessLot.equals(url)) {
+                toast("注销在制品成功，可重新开始");
             }
         } else {
             String message = resultJSON.getString("message");
@@ -446,6 +585,24 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void refreshView(String url, JSONObject resultJSON) {
+        changeFragment();
+        switch (mTopic) {
+            case TopicUtil.TOPIC_CUT:
+                mCutFragment.onSuccess(url, resultJSON);
+                break;
+            case TopicUtil.TOPIC_SEW:
+                mSewFragment.onSuccess(url, resultJSON);
+                break;
+            case TopicUtil.TOPIC_SUSPEND:
+                break;
+            case TopicUtil.TOPIC_QC:
+                break;
+            case TopicUtil.TOPIC_PACKING:
+                break;
+        }
+    }
+
     private void logoutSuccess() {
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         if (loginUsers != null && loginUsers.size() > mLogoutIndex) {
@@ -453,12 +610,38 @@ public class MainActivity extends BaseActivity {
             SpUtil.savePositionUsers(loginUsers);
             if (loginUsers.size() == 0) {
                 logout();
+                return;
+            }
+            if (mLogoutAdapter != null) {
+                mLogoutAdapter.removeData(mLogoutIndex);
             }
         }
-        if (mLogoutAdapter != null) {
-            mLogoutAdapter.removeData(mLogoutIndex);
-        }
         mCutFragment.refreshLoginUsers();
+    }
+
+    public void logout() {
+        if (mLoginFragment == null) {
+            initLoginFragment();
+        }
+        mLoginFragment.setType(LoginFragment.TYPE_CLOCK);
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        List<Fragment> fragments = mFragmentManager.getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isAdded())
+                    ft.hide(fragment);
+            }
+        }
+        if (mLoginFragment.isAdded()) {
+            ft.show(mLoginFragment);
+        } else {
+            ft.add(R.id.layout_content, mLoginFragment);
+        }
+        ft.commit();
+        if (mLogoutDialog != null) {
+            mLogoutDialog.dismiss();
+        }
+        mLogoutDialog = null;
     }
 
     @Override
@@ -489,7 +672,7 @@ public class MainActivity extends BaseActivity {
             if (mPositionInfo == null) {
                 HttpHelper.findProcessWithPadId(null, this);
             } else {
-                mCutFragment.refreshLoginUsers();
+                changeFragment();
             }
         }
     }

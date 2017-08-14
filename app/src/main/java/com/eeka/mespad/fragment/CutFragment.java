@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -29,6 +30,7 @@ import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 
 import java.lang.ref.WeakReference;
@@ -64,6 +66,8 @@ public class CutFragment extends BaseFragment {
 
     public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
 
+    private boolean showDone;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -76,6 +80,11 @@ public class CutFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_cut, null);
         return mView;
+    }
+
+    public void getData(String orderType, String orderNum, String resourceBo, String processLotBo) {
+        showLoading();
+        HttpHelper.viewCutPadInfo(orderType, orderNum, resourceBo, processLotBo, this);
     }
 
     protected void initView() {
@@ -95,6 +104,9 @@ public class CutFragment extends BaseFragment {
         mLv_process.setOnItemClickListener(new ProcessClickListener());
 
         mBtn_done = (Button) mView.findViewById(R.id.btn_done);
+        if (showDone) {
+            mBtn_done.setVisibility(View.VISIBLE);
+        }
         mBtn_done.setOnClickListener(this);
 
     }
@@ -115,28 +127,16 @@ public class CutFragment extends BaseFragment {
         //物料数据
         mLayout_material1.removeAllViews();
         mLayout_matTab.removeAllViews();
+        if (mTailorInfo == null) {
+            return;
+        }
         final List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
         if (itemArray != null && itemArray.size() != 0) {
             for (int i = 0; i < itemArray.size(); i++) {
                 TailorInfoBo.MatInfoBean matInfoBean = itemArray.get(i);
-                View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-                TextView textView = (TextView) view.findViewById(R.id.text);
-                textView.setText(matInfoBean.getMAT_NO());
-                textView.setPadding(10, 10, 10, 10);
-                textView.setTag(i);
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ArrayList<String> urls = new ArrayList<>();
-                        for (TailorInfoBo.MatInfoBean mat : itemArray) {
-                            urls.add(mat.getMAT_URL());
-                        }
-                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
-                    }
-                });
-                mLayout_matTab.addView(view);
+                mLayout_matTab.addView(getTabView(matInfoBean, i));
             }
-            refreshMatTab(0);
+            refreshTab(mLayout_matTab, 0);
         }
 
         mVPAdapter_matInfo = new VPAdapter<>(itemArray);
@@ -193,18 +193,7 @@ public class CutFragment extends BaseFragment {
         mLayout_processTab.removeAllViews();
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
-                View processTabView = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-                TextView tv_processTab = (TextView) processTabView.findViewById(R.id.text);
-                tv_processTab.setTag(i);
-                TailorInfoBo.OPERINFORBean item1 = list.get(i);
-                tv_processTab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mVP_process.setCurrentItem((Integer) v.getTag());
-                    }
-                });
-                tv_processTab.setText(item1.getDESCRIPTION());
-                mLayout_processTab.addView(processTabView);
+                mLayout_processTab.addView(getTabView(mList_processData.get(i), i));
             }
             if (list.size() != 0) {
                 refreshProcessView(0);
@@ -215,10 +204,10 @@ public class CutFragment extends BaseFragment {
             mTv_nextProcess.setText(nextOperInfo.getOPER_DESC());
         }
 
-        TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_orderNum);
+        TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
 //        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
-        TextView tv_style = (TextView) mView.findViewById(R.id.tv_style);
-        TextView tv_qty = (TextView) mView.findViewById(R.id.tv_qty);
+        TextView tv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
+        TextView tv_qty = (TextView) mView.findViewById(R.id.tv_sew_qty);
         TextView tv_special = (TextView) mView.findViewById(R.id.tv_special);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
@@ -228,6 +217,39 @@ public class CutFragment extends BaseFragment {
         tv_special.setText(orderInfo.getSO_REMARK());
 
         refreshLoginUsers();
+    }
+
+    /**
+     * 获取导航标签布局
+     */
+    private <T> View getTabView(T data, final int position) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
+        TextView tv_tabName = (TextView) view.findViewById(R.id.text);
+        tv_tabName.setPadding(10, 10, 10, 10);
+        if (data instanceof TailorInfoBo.OPERINFORBean) {
+            TailorInfoBo.OPERINFORBean item = (TailorInfoBo.OPERINFORBean) data;
+            tv_tabName.setText(item.getDESCRIPTION());
+            tv_tabName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mVP_process.setCurrentItem(position);
+                }
+            });
+        } else if (data instanceof TailorInfoBo.MatInfoBean) {
+            TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) data;
+            tv_tabName.setText(matInfo.getMAT_NO());
+            tv_tabName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> urls = new ArrayList<>();
+                    for (TailorInfoBo.MatInfoBean mat : mTailorInfo.getMAT_INFOR()) {
+                        urls.add(mat.getMAT_URL());
+                    }
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
+                }
+            });
+        }
+        return view;
     }
 
     /**
@@ -247,26 +269,55 @@ public class CutFragment extends BaseFragment {
         if (!isEmpty(qualityDesc))
             tv_qualityDes.setText(qualityDesc.replace("\\n", "\n"));
 
-        int childCount = mLayout_processTab.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childAt = mLayout_processTab.getChildAt(i);
-            childAt.setBackgroundResource(R.color.white);
-        }
-        mLayout_processTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
+        refreshTab(mLayout_processTab, position);
+
     }
 
     /**
-     * 刷新物料标签视图
+     * 刷新标签视图
      *
      * @param position
      */
-    private void refreshMatTab(int position) {
-        int childCount = mLayout_matTab.getChildCount();
+    private void refreshTab(ViewGroup parent, int position) {
+        int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            View childAt = mLayout_matTab.getChildAt(i);
+            View childAt = parent.getChildAt(i);
             childAt.setBackgroundResource(R.color.white);
         }
-        mLayout_matTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
+        parent.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
+    }
+
+    public void startWork() {
+        if (mTailorInfo == null) {
+            toast("数据错误");
+            return;
+        }
+        showLoading();
+        if (mTailorInfo.isIS_CUSTOM()) {
+            HttpHelper.startCustomWork(getStartAndCompleteParams(), this);
+        } else {
+            HttpHelper.startBatchWork(getStartAndCompleteParams(), this);
+        }
+    }
+
+    private StartWorkParamsBo getStartAndCompleteParams() {
+        TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
+        StartWorkParamsBo params = new StartWorkParamsBo();
+        params.setPAD_ID(HttpHelper.PAD_IP);
+        params.setPROCESS_LOTS(orderInfo.getPROCESS_LOT_BO());
+        params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
+        params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
+        params.setLAYERS(orderInfo.getLAYERS());
+        params.setRESOURCE_BO(mResultInfo.getRESOURCE_BO());
+        params.setORDER_QTY(orderInfo.getORDER_QTY());
+        List<String> opList = new ArrayList<>();
+        if (mList_processData != null) {
+            for (TailorInfoBo.OPERINFORBean item : mList_processData) {
+                opList.add(item.getOPERATION_BO());
+            }
+        }
+        params.setOPERATIONS(opList);
+        return params;
     }
 
     @Override
@@ -283,34 +334,11 @@ public class CutFragment extends BaseFragment {
                     return;
                 }
             }
-            TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
-            StartWorkParamsBo params = new StartWorkParamsBo();
-            params.setPAD_ID(HttpHelper.PAD_IP);
-            params.setPROCESS_LOTS(orderInfo.getPROCESS_LOT_BO());
-            params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
-            params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
-            params.setLAYERS(orderInfo.getLAYERS());
-            params.setRESOURCE_BO(mResultInfo.getRESOURCE_BO());
-            params.setORDER_QTY(orderInfo.getORDER_QTY());
-            List<String> opList = new ArrayList<>();
-            if (mList_processData != null) {
-                for (TailorInfoBo.OPERINFORBean item : mList_processData) {
-                    opList.add(item.getOPERATION_BO());
-                }
-            }
-            params.setOPERATIONS(opList);
-            if ("开始".equals(mBtn_done.getText().toString())) {
-                if (mTailorInfo.isIS_CUSTOM()) {
-                    HttpHelper.startCustomWork(params, this);
-                } else {
-                    HttpHelper.startBatchWork(params, this);
-                }
+            showLoading();
+            if (mTailorInfo.isIS_CUSTOM()) {
+                HttpHelper.completeCustomWork(getStartAndCompleteParams(), this);
             } else {
-                if (mTailorInfo.isIS_CUSTOM()) {
-                    HttpHelper.completeCustomWork(params, this);
-                } else {
-                    HttpHelper.completeBatchWork(params, this);
-                }
+                HttpHelper.completeBatchWork(getStartAndCompleteParams(), this);
             }
         }
     }
@@ -433,7 +461,10 @@ public class CutFragment extends BaseFragment {
     }
 
     public void showCompleteButton() {
-        mBtn_done.setVisibility(View.VISIBLE);
+        showDone = true;
+        if (mBtn_done != null) {
+            mBtn_done.setVisibility(View.VISIBLE);
+        }
     }
 
     private class ViewPagerChangedListener implements ViewPager.OnPageChangeListener {
@@ -454,7 +485,7 @@ public class CutFragment extends BaseFragment {
         @Override
         public void onPageSelected(int position) {
             if (TYPE == TYPE_MAT) {
-                refreshMatTab(position);
+                refreshTab(mLayout_matTab, position);
             } else {
                 refreshProcessView(position);
             }
@@ -549,6 +580,14 @@ public class CutFragment extends BaseFragment {
         mLayout_loginUser.removeAllViews();
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         if (loginUsers != null) {
+            ScrollView scrollView = (ScrollView) mView.findViewById(R.id.scrollView_loginUsers);
+            if (loginUsers.size() >= 3) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 120));
+                scrollView.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                scrollView.setLayoutParams(params);
+            }
             for (UserInfoBo userInfo : loginUsers) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
                 TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
@@ -563,8 +602,7 @@ public class CutFragment extends BaseFragment {
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
-        String status = resultJSON.getString("status");
-        if ("Y".equals(status)) {
+        if (HttpHelper.isSuccess(resultJSON)) {
             switch (url) {
                 case HttpHelper.positionLogin_url:
                     refreshLoginUsers();
@@ -573,7 +611,6 @@ public class CutFragment extends BaseFragment {
                     JSONObject result = resultJSON.getJSONObject("result");
                     mResultInfo = JSON.parseObject(result.getJSONObject("RESR_INFOR").toString(), TailorInfoBo.ResultInfo.class);
                     mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
-                    HttpHelper.viewCutPadInfo("RFID00000033", null, mResultInfo.getRESOURCE_BO(), CutFragment.this);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
                     JSONObject result1 = resultJSON.getJSONObject("result");
@@ -590,15 +627,15 @@ public class CutFragment extends BaseFragment {
                     break;
                 case HttpHelper.startBatchWork_url:
                 case HttpHelper.startCustomWork_url:
-                    mBtn_done.setText("完成");
-                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
-                    toast("开始作业");
+//                    mBtn_done.setText("完成");
+//                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
+//                    toast("开始作业");
                     break;
                 case HttpHelper.completeBatchWork_url:
                 case HttpHelper.completeCustomWork_url:
-                    mBtn_done.setText("开始");
-                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
-                    toast("本工序已完成");
+//                    mBtn_done.setText("开始");
+//                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
+                    toast("工序已完成");
                     break;
                 case HttpHelper.saveLabuData:
                     toast("保存成功");

@@ -12,10 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ComponentBo;
+import com.eeka.mespad.http.HttpHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +91,15 @@ public class SuspendFragment extends BaseFragment {
 
             }
         }
+    }
+
+    /**
+     * 解绑
+     */
+    public void unBind() {
+        JSONObject json = new JSONObject();
+
+        HttpHelper.hangerUnbind(json, this);
     }
 
     private class OrderAdapter extends CommonAdapter<String> {

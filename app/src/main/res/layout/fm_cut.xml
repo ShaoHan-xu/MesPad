@@ -35,7 +35,7 @@
                         android:id="@+id/layout_matTab"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:divider="@drawable/divider_grid_vertical"
+                        android:divider="@drawable/divider_gray_vertical"
                         android:orientation="horizontal"
                         android:showDividers="middle|end" />
 
@@ -60,7 +60,7 @@
                         android:id="@+id/layout_processTab"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:divider="@drawable/divider_grid_vertical"
+                        android:divider="@drawable/divider_gray_vertical"
                         android:orientation="horizontal"
                         android:showDividers="middle|end" />
 
@@ -203,13 +203,20 @@
                 android:layout_height="0.5dp"
                 android:background="@drawable/divider_gray" />
 
-            <LinearLayout
-                android:id="@+id/layout_loginUsers"
+            <ScrollView
+                android:id="@+id/scrollView_loginUsers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/divider_gray"
-                android:orientation="vertical"
-                android:showDividers="middle" />
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout_loginUsers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+            </ScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -244,7 +251,7 @@
                             android:text="订单号：" />
 
                         <TextView
-                            android:id="@+id/tv_orderNum"
+                            android:id="@+id/tv_sew_orderNum"
                             style="@style/textStyle_default" />
                     </LinearLayout>
 
@@ -277,7 +284,7 @@
                             android:text="款式：" />
 
                         <TextView
-                            android:id="@+id/tv_style"
+                            android:id="@+id/tv_sew_style"
                             style="@style/textStyle_default" />
                     </LinearLayout>
 
@@ -293,7 +300,7 @@
                             android:text="数量：" />
 
                         <TextView
-                            android:id="@+id/tv_qty"
+                            android:id="@+id/tv_sew_qty"
                             style="@style/textStyle_default" />
                     </LinearLayout>
 
