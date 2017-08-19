@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 记录拉布数据弹框
@@ -47,12 +48,16 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
     private TailorInfoBo mTailorInfo;//主数据
 
     private UpdateLabuBo mLabuData;//拉布主数据
+    private boolean isCustom;
 
-    public RecordLabuDialog(@NonNull Context context, @NonNull TailorInfoBo tailorInfo, UpdateLabuBo labuData, @NonNull OnRecordLabuCallback recordLabuCallback) {
+    public RecordLabuDialog(@NonNull Context context, @NonNull TailorInfoBo tailorInfo, UpdateLabuBo labuData, String orderType, @NonNull OnRecordLabuCallback recordLabuCallback) {
         super(context);
         mTailorInfo = tailorInfo;
         mLabuData = labuData;
         mRecordLabuCallback = recordLabuCallback;
+        if ("S".equals(orderType)) {
+            isCustom = true;
+        }
         init(context);
     }
 
@@ -86,7 +91,12 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         }
         mList_matInfo = mTailorInfo.getMAT_INFOR();
         if (mLabuData != null) {
-            mList_matItem = mLabuData.getDETAILS();
+            List<UpdateLabuBo.Layouts> layouts = mLabuData.getLAYOUTS();
+            for (UpdateLabuBo.Layouts layout : layouts) {
+                if (mList_matItem == null)
+                    mList_matItem = new ArrayList<>();
+                mList_matItem.addAll(layout.getDETAILS());
+            }
         }
         if (mList_matInfo != null) {
             for (int i = 0; i < mList_matInfo.size(); i++) {
@@ -96,7 +106,6 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
 
             if (mList_matItem == null) {
                 mList_matItem = new ArrayList<>();
-                boolean isCustom = mTailorInfo.isIS_CUSTOM();
                 for (int i = 0; i < mList_matInfo.size(); i++) {
                     TailorInfoBo.MatInfoBean matInfo = mList_matInfo.get(i);
                     UpdateLabuBo.MatItem matItem = new UpdateLabuBo.MatItem();
@@ -218,12 +227,45 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
             }
         }
 
+        Map<String, List<UpdateLabuBo.Layouts>> layoutMap = new HashMap<>();
+        for (UpdateLabuBo.MatItem matItem : mList_matItem) {
+            String matNo = matItem.getMAT_NO();
+            if (layoutMap.containsKey(matNo)) {
+                List<UpdateLabuBo.Layouts> layoutList = layoutMap.get(matNo);
+                for (UpdateLabuBo.Layouts layout : layoutList) {
+                    if (matNo.equals(layout.getMAT_NO())) {
+                        List<UpdateLabuBo.MatItem> details = layout.getDETAILS();
+                        details.add(matItem);
+                    }
+                }
+            } else {
+                List<UpdateLabuBo.Layouts> layoutList = new ArrayList<>();
+                UpdateLabuBo.Layouts layout = new UpdateLabuBo.Layouts();
+                List<UpdateLabuBo.MatItem> list = new ArrayList<>();
+                layout.setMAT_NO(matNo);
+                layout.setPLAN_LAYERS(matItem.getLAYERS());
+                for (TailorInfoBo.MatInfoBean info : mList_matInfo) {
+                    if (info.getMAT_NO().equals(matNo)) {
+                        layout.setZ_LAYOUT_BO(info.getZ_LAYOUT_BO());
+                        list.add(matItem);
+                    }
+                }
+                layout.setDETAILS(list);
+                layoutList.add(layout);
+                layoutMap.put(matNo, layoutList);
+            }
+        }
+
+        List<UpdateLabuBo.Layouts> layoutList = new ArrayList<>();
+        Set<String> strings = layoutMap.keySet();
+        for (String key : strings) {
+            layoutList.addAll(layoutMap.get(key));
+        }
+
         mLabuData = new UpdateLabuBo();
-        mLabuData.setDETAILS(mList_matItem);
+        mLabuData.setLAYOUTS(layoutList);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         mLabuData.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
-        mLabuData.setPLAN_LAYERS(orderInfo.getLAYERS() + "");
-        mLabuData.setZ_LAYOUT_BO(orderInfo.getZ_LAYOUT_BO());
         mLabuData.setRESOURCE_BO(mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
         List<String> opList = new ArrayList<>();
         for (TailorInfoBo.OPERINFORBean oper : mTailorInfo.getOPER_INFOR()) {
@@ -294,7 +336,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
                 et_remark.setEnabled(false);
                 btn_del.setVisibility(View.INVISIBLE);
             } else {
-                if (mTailorInfo.isIS_CUSTOM()) {
+                if (isCustom) {
                     et_layers.setEnabled(false);
                     et_layers.setBackgroundResource(0);
                 }

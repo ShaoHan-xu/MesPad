@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.http.HttpCallback;
+import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 
 /**
  * Created by Lenovo on 2017/6/12.
@@ -78,6 +80,10 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
         mProDialog.setContentView(view);
     }
 
+    protected void showErrorDialog(String msg) {
+        ErrorDialog.showDialog(mContext, msg);
+    }
+
     protected void toast(String msg) {
         toast(msg, Toast.LENGTH_LONG);
     }
@@ -93,11 +99,15 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
+        if (!HttpHelper.isSuccess(resultJSON)) {
+            showErrorDialog(resultJSON.getString("message"));
+        }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
         dismissLoading();
+        ErrorDialog.showDialog(mContext, message);
     }
 
 }

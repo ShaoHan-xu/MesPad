@@ -11,7 +11,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.ComponentBo;
+import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.utils.SpUtil;
@@ -146,7 +146,7 @@ public class SewQCFragment extends BaseFragment {
      * @param component
      * @return
      */
-    private View getSizeInfoView(ComponentBo component) {
+    private View getSizeInfoView(SuspendComponentBo.COMPONENTSBean component) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sewqc_size, null);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         layoutParams.weight = 1;

@@ -147,7 +147,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/lv_orderList"
+        android:id="@+id/lv_sfcList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

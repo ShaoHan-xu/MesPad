@@ -164,7 +164,7 @@ public class LoginFragment extends BaseFragment {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-        super.onSuccess(url, resultJSON);
+        dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
             String result = resultJSON.getJSONObject("result").toString();
             if (url.contains(HttpHelper.login_url)) {
@@ -197,10 +197,8 @@ public class LoginFragment extends BaseFragment {
             }
         } else {
             String message = resultJSON.getString("message");
-            if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
-                toast("初始化失败，" + message);
-            } else {
-                toast("登录失败," + message);
+            showErrorDialog(message);
+            if (HttpHelper.positionLogin_url.equals(url)) {
                 if (mClockCallback != null) {
                     mClockCallback.onClockIn(false);
                 }
@@ -211,8 +209,6 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onFailure(String url, int code, String message) {
         super.onFailure(url, code, message);
-        dismissLoading();
-        toast("登录失败");
         if (mClockCallback != null) {
             mClockCallback.onClockIn(false);
         }

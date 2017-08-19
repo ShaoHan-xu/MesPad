@@ -8,7 +8,12 @@ import android.net.NetworkInfo;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.eeka.mespad.bo.PushJson;
+import com.eeka.mespad.bo.SewDataBo;
+import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.TopicUtil;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -18,6 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -42,7 +48,7 @@ public class MQTTService extends Service {
     private String host = "tcp://10.7.121.40:1883";//默认端口号1883
     private String userName = "admin";
     private String passWord = "admin";
-    private static String myTopic = "topic_xush";
+    private static String myTopic = HttpHelper.PAD_IP;
     private String clientId = "client_xush";
     // Connection log for the push service. Good for debugging.
     private static ConnectionLog mLog;
@@ -220,20 +226,16 @@ public class MQTTService extends Service {
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
             String str1 = new String(message.getPayload());
-//            Gson gson = new Gson();
-//            PushJson pushJson = gson.fromJson(str1,PushJson.class);
-//            String type = pushJson.getType();
-//            if (type.equals("0")){//缝制
-//                SewJson sewJson = gson.fromJson(pushJson.getContent(),SewJson.class);
-//                EventBus.getDefault().post(sewJson);
-//            }else if (type.equals("1")){//消息提醒
-//                EventBus.getDefault().post(pushJson);
-//            }else if(type.equals("2")){ //错误提醒
-//                ErrorMessage errorMessageJson = gson.fromJson(str1,ErrorMessage.class);
-//                EventBus.getDefault().post(errorMessageJson);
-//            } else if(type.equals("3")){
-//                EventBus.getDefault().post(pushJson.getContent());
-//            }
+            PushJson pushJson = JSON.parseObject(str1, PushJson.class);
+            if ("0".equals(pushJson.getCode())) {
+                String type = pushJson.getType();
+                if (type.equals(TopicUtil.TOPIC_SEW)) {//缝制
+                    SewDataBo sewDataBo = JSON.parseObject(pushJson.getContent(), SewDataBo.class);
+                    EventBus.getDefault().post(sewDataBo);
+                } else if (type.equals(TopicUtil.TOPIC_SUSPEND)) {//上裁
+                    EventBus.getDefault().post(pushJson.getContent());
+                }
+            }
             String str2 = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
             Logger.d("MQTT收到推送->" + str2 + ",message:" + str1);
         }

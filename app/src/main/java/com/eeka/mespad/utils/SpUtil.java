@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 
@@ -134,6 +135,26 @@ public class SpUtil {
         String contextInfo = mSP.getString("contextInfo", null);
         if (!TextUtils.isEmpty(contextInfo)) {
             return JSON.parseObject(contextInfo, ContextInfoBo.class);
+        }
+        return null;
+    }
+
+    /**
+     * 保存退补料原因
+     */
+    public static void saveBTReasons(int type, String reasons) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putString("BTReasons_" + type, reasons);
+        edit.apply();
+    }
+
+    /**
+     * 获取退补料原因
+     */
+    public static List<BTReasonBo> getBTReason(int type) {
+        String BTReason = mSP.getString("BTReasons_" + type, null);
+        if (!TextUtils.isEmpty(BTReason)) {
+            return JSON.parseArray(BTReason, BTReasonBo.class);
         }
         return null;
     }

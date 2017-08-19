@@ -7,16 +7,16 @@ import java.io.Serializable;
  * Created by Lenovo on 2017/7/20.
  */
 
-public class RecordBadBo implements Serializable {
+public class RecordNCBo implements Serializable {
     private String NC_CODE;
     private String NC_CODE_BO;
     private String DESCRIPTION;
     private int QTY;
 
-    public RecordBadBo() {
+    public RecordNCBo() {
     }
 
-    public RecordBadBo(String DESCRIPTION, int count) {
+    public RecordNCBo(String DESCRIPTION, int count) {
         this.DESCRIPTION = DESCRIPTION;
         this.QTY = count;
     }

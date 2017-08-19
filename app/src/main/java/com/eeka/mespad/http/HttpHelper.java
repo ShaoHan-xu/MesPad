@@ -2,7 +2,6 @@ package com.eeka.mespad.http;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -22,7 +21,6 @@ import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
 import cn.finalteam.okhttpfinal.HttpRequest;
 import cn.finalteam.okhttpfinal.RequestParams;
 import okhttp3.Headers;
-import okhttp3.Request;
 import okhttp3.Response;
 
 /**
@@ -34,8 +32,8 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    public static String PAD_IP = "192.168.0.1";
-//    public static final String PAD_IP = NetUtil.getHostIP();
+    public static String PAD_IP = "192.168.0.110";
+//    public static String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
 
@@ -63,10 +61,19 @@ public class HttpHelper {
     public static final String getCardInfo = BASE_URL + "cutpad/cardRecognition?";
     public static final String cutMaterialReturnOrFeeding = BASE_URL + "cutpad/cutMaterialReturnOrFeeding?";
     public static final String hangerUnbind = BASE_URL + "hanger/unbind?";
+    public static final String getBTReason = BASE_URL + "cutpad/getBTReasons?";
+    public static final String getSuspendBaseData = BASE_URL + "bandpad/initial?";
+    public static final String getSuspendUndoList = BASE_URL + "bandpad/getSfcs?";
+    public static final String getSfcComponents = BASE_URL + "bandpad/getSfcComponents?";
+    public static final String getComponentPic = BASE_URL + "bandpad/getComponentPic?";
+    public static final String getProductComponentList = BASE_URL + "logNcPad/listProdComponentsOnCompleteOpers?";
+    public static final String getDesignComponentList = BASE_URL + "logNcPad/listDesgComponentByProdComp?";
+    public static final String getSewNcCodeList = BASE_URL + "logNcPad/listNcCodesOnDesgComponent?";
+    public static final String getProcessWithNcCode = BASE_URL + "logNcPad/listOperationsOnNcCode?";
+    public static final String getRepairProcess = BASE_URL + "logNcPad/listOpersByProdComponent?";
+    public static final String saveSewNc = BASE_URL + "logNcPad/logNcOnSew?";
 
     private static Context mContext;
-
-    private static Pair<Request, HttpCallback> mFailRequest;
 
     static {
         mContext = PadApplication.mContext;
@@ -77,7 +84,7 @@ public class HttpHelper {
      *
      * @param callback 回调
      */
-    public static void queryPositionByPadIp(HttpCallback callback) {
+    public static void initData(HttpCallback callback) {
         RequestParams params = new RequestParams();
         params.put("padIp", PAD_IP);
         HttpRequest.post(queryPositionByPadIp_url, params, getResponseHandler(queryPositionByPadIp_url, callback));
@@ -151,14 +158,9 @@ public class HttpHelper {
 
     /**
      * 查询当前平板绑定的工序
-     *
-     * @param padId 站位IP
      */
-    public static void findProcessWithPadId(String padId, HttpCallback callback) {
+    public static void findProcessWithPadId(HttpCallback callback) {
         JSONObject json = new JSONObject();
-        if (!TextUtils.isEmpty(padId)) {
-            PAD_IP = padId;
-        }
         json.put("PAD_ID", PAD_IP);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
@@ -206,7 +208,7 @@ public class HttpHelper {
     public static void cutMaterialReturnOrFeeding(JSONObject json, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
-        HttpRequest.post(cutMaterialReturnOrFeeding, getResponseHandler(cutMaterialReturnOrFeeding, callback));
+        HttpRequest.post(cutMaterialReturnOrFeeding, params, getResponseHandler(cutMaterialReturnOrFeeding, callback));
     }
 
     /**
@@ -354,6 +356,177 @@ public class HttpHelper {
     }
 
     /**
+     * 获取退补料原因数据
+     *
+     * @param type 类型，2=退料，3=补料
+     */
+    public static void getBTReason(int type, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("type", type);
+        HttpRequest.post(getBTReason, params, getResponseHandler(getBTReason, callback));
+    }
+
+    /**
+     * 获取上裁工序基础数据
+     *
+     * @param positionBo 站位bo
+     */
+    public static void getSuspendBaseData(String positionBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("POSITION_BO", positionBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getSuspendBaseData, params, getResponseHandler(getSuspendBaseData, callback));
+    }
+
+    /**
+     * 获取上裁工序待作业清单
+     *
+     * @param operationBo 工序bo
+     * @param workCenter  工作中心
+     */
+    public static void getSuspendUndoList(String operationBo, String workCenter, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("OPERATION_BO", operationBo);
+        json.put("WORK_CENTER", workCenter);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getSuspendUndoList, params, getResponseHandler(getSuspendUndoList, callback));
+    }
+
+    /**
+     * 通过工票号查询出其对应的部件
+     *
+     * @param operationBo 工序bo
+     * @param positionBo  工作中心
+     * @param RFID        RFID卡号
+     */
+    public static void getSfcComponents(String operationBo, String positionBo, String RFID, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("OPERATION_BO", operationBo);
+        json.put("POSITION_BO", positionBo);
+        json.put("RFID", RFID);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getSfcComponents, params, getResponseHandler(getSfcComponents, callback));
+    }
+
+    /**
+     * 获取部件对应的图片
+     *
+     * @param sfc       工票号
+     * @param component 部件
+     */
+    public static void getComponentPic(String sfc, String component, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC", sfc);
+        json.put("COMPONENT", component);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getComponentPic, params, getResponseHandler(getComponentPic, callback));
+    }
+
+    /**
+     * 根据SFC已完成的工序带出其生产部件集合
+     *
+     * @param sfcBo
+     */
+    public static void getProductComponentList(String sfcBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC_BO", sfcBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getProductComponentList, params, getResponseHandler(getProductComponentList, callback));
+    }
+
+    /**
+     * 2.	根据生产部件查询设计部件
+     */
+    public static void getDesignComponentList(String productComponent, String sfcBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_IP);
+        json.put("PROD_COMPONENT", productComponent);
+        json.put("SFC_BO", sfcBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getDesignComponentList, params, getResponseHandler(getDesignComponentList, callback));
+    }
+
+    /**
+     * 3.	根据设计部件获取不良代码列表
+     */
+    public static void getSewNcCodeList(String designComponent, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_IP);
+        json.put("DESG_COMPONENT", designComponent);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getSewNcCodeList, params, getResponseHandler(getSewNcCodeList, callback));
+    }
+
+    /**
+     * 4.	根据不良代码获取工序列表
+     */
+    public static void getProcessWithNcCode(String designComponent, String sfcBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_IP);
+        json.put("DESG_COMPONENT", designComponent);
+        json.put("SFC_BO", sfcBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getProcessWithNcCode, params, getResponseHandler(getProcessWithNcCode, callback));
+    }
+
+    /**
+     * 5.	查询返工工序列表
+     */
+    public static void getRepairProcess(String produceComponent, String sfcBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_IP);
+        json.put("PROD_COMPONENT", produceComponent);
+        json.put("SFC_BO", sfcBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getRepairProcess, params, getResponseHandler(getRepairProcess, callback));
+    }
+
+    /**
+     * 5.	查询返工工序列表
+     *
+     * @param json {
+     *             "sfcRef": "SFCBO:TEST,TEST672",
+     *             "resourceRef": "ResourceBO:TEST,AUTO_001",
+     *             "reworkOperationList": [
+     *             {
+     *             "reworkOperation": "GC-OP-CAIJIAN",
+     *             "sequence": 1,
+     *             "operationDesc": "GC-OP-CAIJIAN"
+     *             },
+     *             {
+     *             "reworkOperation": "GC-OP-LABU",
+     *             "sequence": 2,
+     *             "operationDesc": "GC-OP-LABU"
+     *             }
+     *             ],
+     *             "ncCodeOperationList": [
+     *             {
+     *             "ncCodeRef": "NCCodeBO:TEST,GC-OP-CAIJIAN",
+     *             "operation": "GC-OP-CAIJIAN"
+     *             },
+     *             {
+     *             "ncCodeRef": "NCCodeBO:TEST,GC-OP-LABU",
+     *             "operation": "GC-OP-LABU"
+     *             }
+     *             ]
+     *             }
+     */
+    public static void saveSewNc(JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(saveSewNc, params, getResponseHandler(saveSewNc, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
@@ -375,7 +548,7 @@ public class HttpHelper {
 
     public static String getResultStr(JSONObject json) {
         JSONObject result = json.getJSONObject("result");
-        if (result != null)
+        if (result != null && !result.isEmpty())
             return result.toString();
         return null;
     }
@@ -411,7 +584,7 @@ public class HttpHelper {
                     }
                     if (IS_COOKIE_OUT) {
                         if (callback != null) {
-                            callback.onFailure(url, 0, "系统登录成功，请继续操作");
+                            callback.onFailure(url, 0, "系统登录成功");
                         }
                     }
                 } else if (!isSuccess(jsonObject)) {

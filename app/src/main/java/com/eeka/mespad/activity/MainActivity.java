@@ -25,8 +25,9 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.CardInfoBo;
+import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
-import com.eeka.mespad.bo.RecordBadBo;
+import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -36,6 +37,7 @@ import com.eeka.mespad.fragment.SewFragment;
 import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
@@ -66,7 +68,7 @@ public class MainActivity extends BaseActivity {
 
     private ReturnMaterialInfoBo mReturnMaterialInfo;//退料
     private ReturnMaterialInfoBo mAddMaterialInfo;//补料
-    private List<RecordBadBo> mList_badData;
+    private List<RecordNCBo> mList_badData;
 
     private PositionInfoBo mPositionInfo;
 
@@ -74,6 +76,9 @@ public class MainActivity extends BaseActivity {
     private EditText mEt_position;
     private String mTopic;
     private CardInfoBo mCardInfo;
+    private boolean isSearchOrder;
+
+    private boolean isInit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,9 +86,33 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.aty_main);
 
         initView();
-        initData();
+        mCardInfo = new CardInfoBo();
 
-//        MQTTService.actionStart(mContext);
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo == null) {
+            isInit = true;
+            showLoading("应用初始化中...", true);
+            HttpHelper.initData(this);
+        } else {
+            initData();
+        }
+
+        startMQTTService();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MQTTService.actionStop(mContext);
+    }
+
+    private void startMQTTService() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MQTTService.actionStart(mContext);
+            }
+        }).start();
     }
 
     @Override
@@ -105,12 +134,12 @@ public class MainActivity extends BaseActivity {
 
         mEt_orderNum = (EditText) findViewById(R.id.et_orderNum);
         mEt_position = (EditText) findViewById(R.id.et_position);
+        mEt_position.setText(HttpHelper.PAD_IP);
     }
 
     @Override
     protected void initData() {
         super.initData();
-        mCardInfo = new CardInfoBo();
 
         UserInfoBo loginUser = SpUtil.getLoginUser();
         List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
@@ -128,7 +157,7 @@ public class MainActivity extends BaseActivity {
             ft.commit();
         } else {
             showLoading();
-            HttpHelper.findProcessWithPadId(HttpHelper.PAD_IP, this);
+            HttpHelper.findProcessWithPadId(this);
         }
     }
 
@@ -244,8 +273,11 @@ public class MainActivity extends BaseActivity {
                 ft.commit();
                 break;
             case TopicUtil.TOPIC_SUSPEND:
-                if (mSuspendFragment == null)
+                if (mSuspendFragment == null) {
                     mSuspendFragment = new SuspendFragment();
+                } else {
+                    mSuspendFragment.refreshLoginUsers();
+                }
                 if (mSuspendFragment.isAdded()) {
                     ft.show(mSuspendFragment);
                 } else {
@@ -268,7 +300,6 @@ public class MainActivity extends BaseActivity {
                 break;
         }
     }
-
 
     @Override
     public void onClick(View v) {
@@ -304,7 +335,7 @@ public class MainActivity extends BaseActivity {
                     mReturnMaterialInfo = new ReturnMaterialInfoBo();
                     TailorInfoBo materialData = mCutFragment.getMaterialData();
                     if (materialData == null) {
-                        toast("获取数据失败，请重新获取数据");
+                        toast("获取订单数据失败，请重新获取数据");
                         return;
                     }
                     mReturnMaterialInfo.setOrderNum(materialData.getSHOP_ORDER_INFOR().getSHOP_ORDER());
@@ -325,7 +356,7 @@ public class MainActivity extends BaseActivity {
                     mAddMaterialInfo = new ReturnMaterialInfoBo();
                     TailorInfoBo materialData = mCutFragment.getMaterialData();
                     if (materialData == null) {
-                        toast("获取数据失败，请重新获取数据");
+                        toast("获取订单数据失败，请重新获取数据");
                         return;
                     }
                     mAddMaterialInfo.setOrderNum(materialData.getSHOP_ORDER_INFOR().getSHOP_ORDER());
@@ -386,30 +417,7 @@ public class MainActivity extends BaseActivity {
                 switch (mTopic) {
                     case TopicUtil.TOPIC_CUT:
                         if (mCutFragment != null) {
-                            TailorInfoBo materialData = mCutFragment.getMaterialData();
-                            if (materialData == null) {
-                                toast("请获取订单信息");
-                                return;
-                            }
-                            TailorInfoBo.SHOPORDERINFORBean shopOrderInfo = materialData.getSHOP_ORDER_INFOR();
-                            List<TailorInfoBo.OPERINFORBean> operInfo = materialData.getOPER_INFOR();
-                            if (operInfo != null && operInfo.size() != 0) {
-                                showLoading();
-                                JSONObject json = new JSONObject();
-                                json.put("SHOP_ORDER_BO", shopOrderInfo.getSHOP_ORDER_BO());
-                                if (materialData.isIS_CUSTOM()) {
-                                    json.put("RESOURCE_BO", mPositionInfo.getRESR_INFOR().getRESOURCE_BO());
-                                    json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
-                                    HttpHelper.signoffByShopOrder(json, this);
-                                } else {
-                                    json.put("PROCESS_LOTS", shopOrderInfo.getPROCESS_LOT_BO());
-                                    json.put("RESOURCE_BO", mPositionInfo.getRESR_INFOR().getRESOURCE_BO());
-                                    json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
-                                    HttpHelper.signoffByProcessLot(json, this);
-                                }
-                            } else {
-                                toast("工序数据有误");
-                            }
+                            mCutFragment.signOff();
                         }
                         break;
                     case TopicUtil.TOPIC_SEW:
@@ -427,38 +435,39 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case R.id.btn_searchOrder:
-                if (mPositionInfo == null) {
-                    toast("请先获取站位数据");
+                String position = mEt_position.getText().toString();
+                if (!isEmpty(position)) {
+                    HttpHelper.PAD_IP = position;
+                } else {
+                    toast("请输入完整的站位");
+                }
+                ContextInfoBo contextInfo = SpUtil.getContextInfo();
+                if (contextInfo == null) {
+                    showLoading();
+                    HttpHelper.initData(this);
+                } else if (mPositionInfo == null) {
+                    isSearchOrder = true;
+                    HttpHelper.findProcessWithPadId(this);
                     return;
                 }
-                EditText et_orderNum = (EditText) findViewById(R.id.et_orderNum);
-                String cardNum = et_orderNum.getText().toString();
-                if (!isEmpty(cardNum)) {
-                    mCardInfo.setCardNum(cardNum);
-                    switch (mTopic) {
-                        case TopicUtil.TOPIC_CUT:
-                            showLoading();
-                            getCardInfo(cardNum);
-                            break;
-                        case TopicUtil.TOPIC_SEW:
-                            mSewFragment.getData(mCardInfo.getCardNum());
-                            break;
-                    }
-
-                }
+                searchOrder();
                 break;
             case R.id.btn_searchPosition:
-                EditText et_position = (EditText) findViewById(R.id.et_position);
-                String position = et_position.getText().toString();
-                if (!isEmpty(position)) {
-                    showLoading();
-                    HttpHelper.findProcessWithPadId(position, this);
+                String position1 = mEt_position.getText().toString();
+                if (!isEmpty(position1)) {
+                    HttpHelper.PAD_IP = position1;
+                } else {
+                    toast("请输入完整的站位");
                 }
+                showLoading();
+                HttpHelper.initData(this);
                 break;
             case R.id.btn_start:
                 switch (mTopic) {
                     case TopicUtil.TOPIC_CUT:
-                        mCutFragment.startWork();
+                        if (mCardInfo != null) {
+                            mCutFragment.startWork();
+                        }
                         break;
                     case TopicUtil.TOPIC_SEW:
                         break;
@@ -468,10 +477,29 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case R.id.btn_unbind:
-                if (mSuspendFragment != null){
+                if (mSuspendFragment != null) {
                     mSuspendFragment.unBind();
                 }
                 break;
+        }
+    }
+
+    private void searchOrder() {
+        String cardNum = mEt_orderNum.getText().toString();
+        if (!isEmpty(cardNum)) {
+            mCardInfo.setCardNum(cardNum);
+            switch (mTopic) {
+                case TopicUtil.TOPIC_CUT:
+                    showLoading();
+                    getCardInfo(cardNum);
+                    break;
+                case TopicUtil.TOPIC_SEW:
+                    mSewFragment.getData(mCardInfo.getCardNum());
+                    break;
+                case TopicUtil.TOPIC_SUSPEND:
+                    mSuspendFragment.searchOrder(cardNum);
+                    break;
+            }
         }
     }
 
@@ -480,9 +508,9 @@ public class MainActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_RECORD_NC) {
-                mList_badData = (List<RecordBadBo>) data.getSerializableExtra("badList");
+                mList_badData = (List<RecordNCBo>) data.getSerializableExtra("badList");
             } else if (requestCode == REQUEST_LOGIN) {
-                HttpHelper.findProcessWithPadId(null, this);
+                HttpHelper.findProcessWithPadId(this);
             }
         }
     }
@@ -529,10 +557,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-        super.onSuccess(url, resultJSON);
+        dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
+            mTv_startWorkAlert.setVisibility(View.GONE);
             JSONObject result = resultJSON.getJSONObject("result");
-            if (HttpHelper.getCardInfo.equals(url)) {
+            if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
+                ContextInfoBo contextInfoBo = JSON.parseObject(result.toString(), ContextInfoBo.class);
+                SpUtil.saveContextInfo(contextInfoBo);
+                List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
+                SpUtil.savePositionUsers(loginUserList);
+                initData();
+            } else if (HttpHelper.getCardInfo.equals(url)) {
                 if (result == null) {
                     toast("数据有误");
                     return;
@@ -565,14 +600,17 @@ public class MainActivity extends BaseActivity {
                 if (mPositionInfo.getBUTTON_INFOR() != null) {
                     initButton(mPositionInfo.getBUTTON_INFOR());
                 }
+
+                if (isSearchOrder) {
+                    isSearchOrder = false;
+                    searchOrder();
+                }
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
                 onClockIn(true);
             } else if (HttpHelper.positionLogout_url.equals(url)) {
                 toast("用户下岗成功");
                 logoutSuccess();
-            } else if (HttpHelper.signoffByShopOrder.equals(url) || HttpHelper.signoffByProcessLot.equals(url)) {
-                toast("注销在制品成功，可重新开始");
             }
         } else {
             String message = resultJSON.getString("message");
@@ -580,7 +618,7 @@ public class MainActivity extends BaseActivity {
                 toast("用户下线成功");
                 logoutSuccess();
             } else {
-                toast(message);
+                showErrorDialog(message);
             }
         }
     }
@@ -595,6 +633,7 @@ public class MainActivity extends BaseActivity {
                 mSewFragment.onSuccess(url, resultJSON);
                 break;
             case TopicUtil.TOPIC_SUSPEND:
+                mSuspendFragment.onSuccess(url, resultJSON);
                 break;
             case TopicUtil.TOPIC_QC:
                 break;
@@ -645,12 +684,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onFailure(String url, int code, String message) {
-        super.onFailure(url, code, message);
-        toast(message);
-    }
-
-    @Override
     public void onLogin(boolean success) {
         super.onLogin(success);
         if (success) {
@@ -670,7 +703,7 @@ public class MainActivity extends BaseActivity {
             if (mLoginDialog != null)
                 mLoginDialog.dismiss();
             if (mPositionInfo == null) {
-                HttpHelper.findProcessWithPadId(null, this);
+                HttpHelper.findProcessWithPadId(this);
             } else {
                 changeFragment();
             }

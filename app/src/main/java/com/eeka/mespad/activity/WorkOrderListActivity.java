@@ -63,7 +63,7 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
         mBtn_search = (Button) findViewById(R.id.btn_orderList_search);
         mTv_statusTag = (TextView) findViewById(R.id.tv_orderList_status);
 
-        mListView = (ListView) findViewById(R.id.lv_orderList);
+        mListView = (ListView) findViewById(R.id.lv_sfcList);
 
         mBtn_undo.setOnClickListener(this);
         mBtn_done.setOnClickListener(this);
@@ -185,7 +185,6 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
-        dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
             String resultStr = HttpHelper.getResultStr(resultJSON);
             if (!isEmpty(resultStr)) {
@@ -199,8 +198,6 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
             } else {
                 toast("获取数据为空");
             }
-        } else {
-            toast(resultJSON.getString("message"));
         }
     }
 

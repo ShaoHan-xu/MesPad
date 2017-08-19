@@ -15,10 +15,8 @@ public class UpdateLabuBo implements Serializable {
     private List<String> OPERATIONS;
     private String RESOURCE_BO;
     private String SHOP_ORDER_BO;
-    @JSONField(name="Z_LAYOUT_BO")
-    private String Z_LAYOUT_BO;
-    private String PLAN_LAYERS;
-    private List<MatItem> DETAILS;
+    @JSONField(name = "LAYOUTS")
+    private List<Layouts> LAYOUTS;
 
     public List<String> getOPERATIONS() {
         return OPERATIONS;
@@ -44,28 +42,52 @@ public class UpdateLabuBo implements Serializable {
         this.SHOP_ORDER_BO = SHOP_ORDER_BO;
     }
 
-    public String getZ_LAYOUT_BO() {
-        return Z_LAYOUT_BO;
+    public List<Layouts> getLAYOUTS() {
+        return LAYOUTS;
     }
 
-    public void setZ_LAYOUT_BO(String z_LAYOUT_BO) {
-        Z_LAYOUT_BO = z_LAYOUT_BO;
+    public void setLAYOUTS(List<Layouts> LAYOUTS) {
+        this.LAYOUTS = LAYOUTS;
     }
 
-    public String getPLAN_LAYERS() {
-        return PLAN_LAYERS;
-    }
+    public static class Layouts {
+        @JSONField(name = "Z_LAYOUT_BO")
+        private String Z_LAYOUT_BO;
+        private String MAT_NO;
+        private String PLAN_LAYERS;
+        private List<MatItem> DETAILS;
 
-    public void setPLAN_LAYERS(String PLAN_LAYERS) {
-        this.PLAN_LAYERS = PLAN_LAYERS;
-    }
+        public String getMAT_NO() {
+            return MAT_NO;
+        }
 
-    public List<MatItem> getDETAILS() {
-        return DETAILS;
-    }
+        public void setMAT_NO(String MAT_NO) {
+            this.MAT_NO = MAT_NO;
+        }
 
-    public void setDETAILS(List<MatItem> DETAILS) {
-        this.DETAILS = DETAILS;
+        public String getZ_LAYOUT_BO() {
+            return Z_LAYOUT_BO;
+        }
+
+        public void setZ_LAYOUT_BO(String z_LAYOUT_BO) {
+            Z_LAYOUT_BO = z_LAYOUT_BO;
+        }
+
+        public String getPLAN_LAYERS() {
+            return PLAN_LAYERS;
+        }
+
+        public void setPLAN_LAYERS(String PLAN_LAYERS) {
+            this.PLAN_LAYERS = PLAN_LAYERS;
+        }
+
+        public List<MatItem> getDETAILS() {
+            return DETAILS;
+        }
+
+        public void setDETAILS(List<MatItem> DETAILS) {
+            this.DETAILS = DETAILS;
+        }
     }
 
     public static class MatItem {

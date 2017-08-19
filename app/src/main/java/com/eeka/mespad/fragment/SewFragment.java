@@ -23,6 +23,10 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +69,25 @@ public class SewFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        EventBus.getDefault().register(this);
         initView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * EventBus推送的消息
+     *
+     * @param sewData 缝制的数据
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(SewDataBo sewData) {
+        mSewData = sewData;
+        initData();
     }
 
     @Override
@@ -295,7 +317,9 @@ public class SewFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.findProcessWithPadId_url.equals(url)) {
-                showLoading();
+                if (isAdded()) {
+                    showLoading();
+                }
                 HttpHelper.getSewData("EB20170803", this);
             } else if (HttpHelper.getSewData.equals(url)) {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);

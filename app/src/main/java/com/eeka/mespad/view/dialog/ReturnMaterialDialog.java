@@ -3,6 +3,7 @@ package com.eeka.mespad.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -18,12 +19,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +44,7 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     private int mType;
     private ReturnMaterialInfoBo mReturnMaterialInfo;
+    private List<BTReasonBo> mList_reason;
 
     private LinearLayout mLayout_material;
 
@@ -60,7 +63,14 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
         setContentView(mView);
 
         initView();
-        initData();
+
+        mList_reason = SpUtil.getBTReason(mType);
+        if (mList_reason == null || mList_reason.size() == 0) {
+            LoadingDialog.show(mContext);
+            HttpHelper.getBTReason(mType, this);
+        } else {
+            initData();
+        }
     }
 
     private void initView() {
@@ -85,8 +95,9 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     private void initData() {
         List<ReturnMaterialInfoBo.MaterialInfoBo> infoList = mReturnMaterialInfo.getMaterialInfoList();
-        for (ReturnMaterialInfoBo.MaterialInfoBo material : infoList) {
-            mLayout_material.addView(getMaterialInfoView(material));
+        for (int i = 0; i < infoList.size(); i++) {
+            ReturnMaterialInfoBo.MaterialInfoBo material = infoList.get(i);
+            mLayout_material.addView(getMaterialInfoView(material, i));
         }
     }
 
@@ -144,7 +155,7 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
     /**
      * 获取物料信息布局
      */
-    private View getMaterialInfoView(@NonNull ReturnMaterialInfoBo.MaterialInfoBo materialInfo) {
+    private View getMaterialInfoView(@NonNull ReturnMaterialInfoBo.MaterialInfoBo materialInfo, final int position) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_return_material, null);
         ImageView iv_materialImg = (ImageView) view.findViewById(R.id.iv_returnMaterial_img);
         TextView tv_num = (TextView) view.findViewById(R.id.tv_returnMaterial_materialNum);
@@ -169,22 +180,21 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
         tv_reason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopWindow(v);
+                showPopWindow(v, position);
             }
         });
         return view;
     }
 
-    private void showPopWindow(final View v) {
-        final List<String> list = new ArrayList<>();
-        list.add("品质问题");
-        list.add("颜色差异");
-        list.add("尺寸大小差异");
-        list.add("面料破损");
-        SelectorPopWindow<String> ppw = new SelectorPopWindow<>(mContext, list, new AdapterView.OnItemClickListener() {
+    private void showPopWindow(final View v, final int index) {
+        SelectorPopWindow<BTReasonBo> ppw = new SelectorPopWindow<>(mContext, mList_reason, new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView) v).setText(list.get(position));
+                BTReasonBo reasonBo = mList_reason.get(position);
+                ReturnMaterialInfoBo.MaterialInfoBo infoBo = mReturnMaterialInfo.getMaterialInfoList().get(index);
+                infoBo.setReason(reasonBo.getREASON_DESC());
+                infoBo.setREASON_CODE(reasonBo.getREASON_CODE());
+                ((TextView) v).setText(reasonBo.getREASON_DESC());
             }
         });
         ppw.setWidth(v.getWidth());
@@ -200,17 +210,29 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
+        LoadingDialog.dismiss();
         if (HttpHelper.isSuccess(resultJSON)) {
-            Toast.makeText(mContext, "操作成功", Toast.LENGTH_SHORT).show();
-            dismiss();
+            if (HttpHelper.cutMaterialReturnOrFeeding.equals(url)) {
+                Toast.makeText(mContext, "操作成功", Toast.LENGTH_SHORT).show();
+                dismiss();
+            } else if (HttpHelper.getBTReason.equals(url)) {
+                String resultStr = HttpHelper.getResultStr(resultJSON);
+                if (!TextUtils.isEmpty(resultStr)) {
+                    String jsonArray = resultJSON.getJSONObject("result").getJSONArray("REASONS").toJSONString();
+                    SpUtil.saveBTReasons(mType, jsonArray);
+                    mList_reason = JSON.parseArray(jsonArray, BTReasonBo.class);
+                    initData();
+                }
+            }
         } else {
-            Toast.makeText(mContext, resultJSON.getString("message"), Toast.LENGTH_LONG).show();
+            ErrorDialog.showDialog(mContext, resultJSON.getString("message"));
         }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
-
+        LoadingDialog.dismiss();
+        ErrorDialog.showDialog(mContext, message);
     }
 
     public interface OnReturnMaterialCallback {

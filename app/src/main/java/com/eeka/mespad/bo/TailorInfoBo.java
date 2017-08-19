@@ -18,7 +18,6 @@ public class TailorInfoBo implements Serializable {
 
     private List<OPERINFORBean> OPER_INFOR;
     private SHOPORDERINFORBean SHOP_ORDER_INFOR;
-    private boolean IS_CUSTOM;
     private List<CUTSIZESBean> CUT_SIZES;
     private List<MatInfoBean> MAT_INFOR;
     private List<LayoutInfoBean> LAYOUT_INFOR;
@@ -82,14 +81,6 @@ public class TailorInfoBo implements Serializable {
         this.SHOP_ORDER_INFOR = SHOP_ORDER_INFOR;
     }
 
-    public boolean isIS_CUSTOM() {
-        return IS_CUSTOM;
-    }
-
-    public void setIS_CUSTOM(boolean IS_CUSTOM) {
-        this.IS_CUSTOM = IS_CUSTOM;
-    }
-
     public List<CUTSIZESBean> getCUT_SIZES() {
         return CUT_SIZES;
     }
@@ -103,8 +94,17 @@ public class TailorInfoBo implements Serializable {
         private String MAT_URL;
         private String MAT_NO;
         private String ITEM_BO;
+        private String Z_LAYOUT_BO;
         private String GRAND_CATEGORY;
         private String MID_CATEGORY;
+
+        public String getZ_LAYOUT_BO() {
+            return Z_LAYOUT_BO;
+        }
+
+        public void setZ_LAYOUT_BO(String z_LAYOUT_BO) {
+            Z_LAYOUT_BO = z_LAYOUT_BO;
+        }
 
         public String getGRAND_CATEGORY() {
             return GRAND_CATEGORY;
@@ -311,19 +311,19 @@ public class TailorInfoBo implements Serializable {
 
     public static class CUTSIZESBean implements Serializable {
         /**
-         * SIZE : 39
+         * SIZE_CODE : 39
          * SIZE_AMOUNT : 4
          */
 
-        private String SIZE;
+        private String SIZE_CODE;
         private int SIZE_AMOUNT;
 
         public String getSIZE() {
-            return SIZE;
+            return SIZE_CODE;
         }
 
         public void setSIZE(String SIZE) {
-            this.SIZE = SIZE;
+            this.SIZE_CODE = SIZE;
         }
 
         public int getSIZE_AMOUNT() {
@@ -416,7 +416,7 @@ public class TailorInfoBo implements Serializable {
         }
     }
 
-    public static class StickyInfo {
+    public static class StickyInfo implements Serializable{
 
         /**
          * ORDER_NO : 123456789

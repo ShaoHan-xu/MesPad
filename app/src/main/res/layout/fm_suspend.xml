@@ -16,34 +16,6 @@
             android:layout_weight="2"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/white"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
-
-                <EditText
-                    android:id="@+id/et_searchComponent"
-                    style="@style/textStyle_default"
-                    android:layout_width="300dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/border_black"
-                    android:gravity="center"
-                    android:imeOptions="actionDone"
-                    android:maxLines="1" />
-
-                <Button
-                    android:id="@+id/btn_searchComponent"
-                    style="@style/btnStyle_green"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/et_searchComponent"
-                    android:text="搜索" />
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -59,11 +31,10 @@
                     android:layout_weight="1">
 
                     <ImageView
-                        android:id="@+id/iv_componentImg"
+                        android:id="@+id/iv_suspend_componentImg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/libai" />
+                        android:scaleType="centerCrop" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -94,7 +65,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_craftDesc"
+                    android:id="@+id/tv_suspend_craftDesc"
                     style="@style/textStyle_default"
                     android:text="1、工艺说明" />
             </LinearLayout>
@@ -112,15 +83,12 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_loginUsers"
+            android:id="@+id/tag_layout_loginUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:background="@drawable/border_black"
-            android:divider="@drawable/divider_gray"
             android:orientation="vertical"
-            android:padding="0.5dp"
-            android:showDividers="middle">
+            android:padding="0.5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -150,8 +118,26 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@drawable/divider_gray" />
+
+            <ScrollView
+                android:id="@+id/scrollView_loginUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout_loginUsers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+            </ScrollView>
         </LinearLayout>
-        0DEA1A4B
 
         <RelativeLayout
             android:id="@+id/layout_curProcess"
@@ -170,12 +156,17 @@
                     style="@style/textStyle_default"
                     android:text="当前工序：" />
 
-                <ListView
-                    android:id="@+id/lv_processList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:choiceMode="singleChoice" />
+                <!--<ListView-->
+                <!--android:id="@+id/lv_processList"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="@color/white"-->
+                <!--android:choiceMode="singleChoice" />-->
+
+                <TextView
+                    android:id="@+id/tv_suspend_curProcess"
+                    style="@style/textStyle_default" />
+
             </LinearLayout>
 
         </RelativeLayout>
@@ -184,7 +175,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/layout_curProcess"
-            android:layout_below="@id/layout_loginUsers"
+            android:layout_below="@id/tag_layout_loginUsers"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:orientation="vertical">
@@ -198,7 +189,7 @@
                 android:text="待作业工单" />
 
             <ListView
-                android:id="@+id/lv_orderList"
+                android:id="@+id/lv_sfcList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#DEF0FA" />

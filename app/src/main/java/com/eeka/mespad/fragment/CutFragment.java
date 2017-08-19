@@ -67,6 +67,7 @@ public class CutFragment extends BaseFragment {
     public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
 
     private boolean showDone;
+    private String mOrderType;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class CutFragment extends BaseFragment {
 
     public void getData(String orderType, String orderNum, String resourceBo, String processLotBo) {
         showLoading();
+        mOrderType = orderType;
         HttpHelper.viewCutPadInfo(orderType, orderNum, resourceBo, processLotBo, this);
     }
 
@@ -245,7 +247,7 @@ public class CutFragment extends BaseFragment {
                     for (TailorInfoBo.MatInfoBean mat : mTailorInfo.getMAT_INFOR()) {
                         urls.add(mat.getMAT_URL());
                     }
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
                 }
             });
         }
@@ -293,7 +295,7 @@ public class CutFragment extends BaseFragment {
             return;
         }
         showLoading();
-        if (mTailorInfo.isIS_CUSTOM()) {
+        if ("S".equals(mOrderType)) {
             HttpHelper.startCustomWork(getStartAndCompleteParams(), this);
         } else {
             HttpHelper.startBatchWork(getStartAndCompleteParams(), this);
@@ -327,15 +329,15 @@ public class CutFragment extends BaseFragment {
                 toast("请先开始作业");
                 return;
             }
-            if (!mTailorInfo.isIS_CUSTOM()) {
-                if (mLabuData == null || mLabuData.getDETAILS() == null || mLabuData.getDETAILS().size() == 0) {
+            if ("P".equals(mOrderType)) {
+                if (mLabuData == null || mLabuData.getLAYOUTS() == null || mLabuData.getLAYOUTS().size() == 0) {
                     toast("请先记录拉布数据");
                     showRecordLabuDialog();
                     return;
                 }
             }
             showLoading();
-            if (mTailorInfo.isIS_CUSTOM()) {
+            if ("S".equals(mOrderType)) {
                 HttpHelper.completeCustomWork(getStartAndCompleteParams(), this);
             } else {
                 HttpHelper.completeBatchWork(getStartAndCompleteParams(), this);
@@ -437,7 +439,7 @@ public class CutFragment extends BaseFragment {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sizeinfo, null);
         TextView tv_yardage = (TextView) view.findViewById(R.id.tv_item_yardage);
         TextView tv_count = (TextView) view.findViewById(R.id.tv_item_count);
-        tv_yardage.setText(sizeInfo.getSIZE() + "");
+        tv_yardage.setText(sizeInfo.getSIZE());
         tv_count.setText(sizeInfo.getSIZE_AMOUNT() + "");
         return view;
     }
@@ -445,7 +447,7 @@ public class CutFragment extends BaseFragment {
     private RecordLabuDialog mLabuDialog;
 
     public void showRecordLabuDialog() {
-        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, new RecordLabuDialog.OnRecordLabuCallback() {
+        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
             @Override
             public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
                 mLabuData = labuData;
@@ -599,6 +601,30 @@ public class CutFragment extends BaseFragment {
         }
     }
 
+    public void signOff() {
+        if (mTailorInfo == null) {
+            toast("请获取订单信息");
+            return;
+        }
+        TailorInfoBo.SHOPORDERINFORBean shopOrderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
+        List<TailorInfoBo.OPERINFORBean> operInfo = mTailorInfo.getOPER_INFOR();
+        if (operInfo != null && operInfo.size() != 0) {
+            showLoading();
+            JSONObject json = new JSONObject();
+            json.put("SHOP_ORDER_BO", shopOrderInfo.getSHOP_ORDER_BO());
+            if ("S".equals(mOrderType)) {
+                json.put("RESOURCE_BO", mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+                json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
+                HttpHelper.signoffByShopOrder(json, this);
+            } else {
+                json.put("PROCESS_LOTS", shopOrderInfo.getPROCESS_LOT_BO());
+                json.put("RESOURCE_BO", mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+                json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
+                HttpHelper.signoffByProcessLot(json, this);
+            }
+        }
+    }
+
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
@@ -629,7 +655,7 @@ public class CutFragment extends BaseFragment {
                 case HttpHelper.startCustomWork_url:
 //                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
-//                    toast("开始作业");
+                    toast("开始作业");
                     break;
                 case HttpHelper.completeBatchWork_url:
                 case HttpHelper.completeCustomWork_url:
@@ -646,16 +672,12 @@ public class CutFragment extends BaseFragment {
                         mLabuDialog.dismiss();
                     }
                     break;
+                case HttpHelper.signoffByShopOrder:
+                case HttpHelper.signoffByProcessLot:
+                    toast("注销在制品成功，可重新开始");
+                    break;
             }
-        } else {
-            toast(resultJSON.getString("message"));
         }
-    }
-
-    @Override
-    public void onFailure(String url, int code, String message) {
-        super.onFailure(url, code, message);
-        toast(message);
     }
 
     public TailorInfoBo getMaterialData() {

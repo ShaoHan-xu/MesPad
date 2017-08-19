@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.BTReasonBo;
 
 import java.util.List;
 
@@ -43,7 +44,11 @@ public class SelectorPopWindow<T> extends PopupWindow {
         listView.setAdapter(new CommonAdapter<T>(mContext, mList_data, R.layout.item_textview) {
             @Override
             public void convert(ViewHolder holder, T item, int position) {
-                holder.setText(R.id.text, item.toString());
+                if (item instanceof BTReasonBo) {
+                    holder.setText(R.id.text, ((BTReasonBo) item).getREASON_DESC());
+                } else {
+                    holder.setText(R.id.text, item.toString());
+                }
             }
         });
 

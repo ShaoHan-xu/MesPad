@@ -63,6 +63,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
+        android:visibility="gone"
         android:layout_toLeftOf="@id/btn_returnMaterial_submit"
         android:text="保存" />
 

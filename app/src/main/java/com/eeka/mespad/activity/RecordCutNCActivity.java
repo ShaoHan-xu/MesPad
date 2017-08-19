@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
-import com.eeka.mespad.bo.RecordBadBo;
+import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 
@@ -29,7 +29,7 @@ import java.util.List;
 public class RecordCutNCActivity extends BaseActivity {
 
     private TailorInfoBo mTailorInfo;
-    private List<RecordBadBo> mList_badRecord;
+    private List<RecordNCBo> mList_badRecord;
     private ItemAdapter mAdapter;
 
     @Override
@@ -42,7 +42,7 @@ public class RecordCutNCActivity extends BaseActivity {
             toast("数据错误");
             return;
         }
-        mList_badRecord = (List<RecordBadBo>) getIntent().getSerializableExtra("badList");
+        mList_badRecord = (List<RecordNCBo>) getIntent().getSerializableExtra("badList");
         initView();
     }
 
@@ -53,7 +53,7 @@ public class RecordCutNCActivity extends BaseActivity {
         tv_orderNum.setText(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
-        mAdapter = new ItemAdapter(mContext, mList_badRecord, R.layout.gv_item_recordbad, layoutManager);
+        mAdapter = new ItemAdapter(mContext, mList_badRecord, R.layout.gv_item_recordnc, layoutManager);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gv_recordBad);
         recyclerView.setLayoutManager(layoutManager);
@@ -84,15 +84,15 @@ public class RecordCutNCActivity extends BaseActivity {
         }
     }
 
-    private class ItemAdapter extends CommonRecyclerAdapter<RecordBadBo> {
+    private class ItemAdapter extends CommonRecyclerAdapter<RecordNCBo> {
 
-        ItemAdapter(Context context, List<RecordBadBo> list, int layoutId, RecyclerView.LayoutManager layoutManager) {
+        ItemAdapter(Context context, List<RecordNCBo> list, int layoutId, RecyclerView.LayoutManager layoutManager) {
             super(context, list, layoutId, layoutManager);
         }
 
         @Override
-        public void convert(RecyclerViewHolder holder, final RecordBadBo item, final int position) {
-            TextView tv_count = holder.getView(R.id.tv_recordBad_count);
+        public void convert(RecyclerViewHolder holder, final RecordNCBo item, final int position) {
+            TextView tv_count = holder.getView(R.id.tv_recordNc_count);
             final int[] badCount = {item.getQTY()};
             if (badCount[0] == 0) {
                 tv_count.setVisibility(View.GONE);
@@ -101,7 +101,7 @@ public class RecordCutNCActivity extends BaseActivity {
                 tv_count.setText(String.valueOf(badCount[0]));
             }
 
-            TextView tv_type = holder.getView(R.id.tv_recordBad_type);
+            TextView tv_type = holder.getView(R.id.tv_recordNc_type);
             tv_type.setText(item.getDESCRIPTION());
             tv_type.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,7 +111,7 @@ public class RecordCutNCActivity extends BaseActivity {
                     notifyItemChanged(position);
                 }
             });
-            holder.getView(R.id.btn_recordBad_sub).setOnClickListener(new View.OnClickListener() {
+            holder.getView(R.id.btn_recordNc_sub).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (badCount[0] > 0) {
@@ -129,7 +129,7 @@ public class RecordCutNCActivity extends BaseActivity {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getBadList.equals(url)) {
-                mList_badRecord = JSON.parseArray(resultJSON.getJSONArray("result").toString(), RecordBadBo.class);
+                mList_badRecord = JSON.parseArray(resultJSON.getJSONArray("result").toString(), RecordNCBo.class);
                 mAdapter.setData(mList_badRecord);
             } else if (HttpHelper.saveBadRecord.equals(url)) {
                 toast("保存成功");
@@ -138,18 +138,10 @@ public class RecordCutNCActivity extends BaseActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             }
-        } else {
-            toast(resultJSON.getString("message"));
         }
     }
 
-    @Override
-    public void onFailure(String url, int code, String message) {
-        super.onFailure(url, code, message);
-        toast(message);
-    }
-
-    public static Intent getIntent(Context context, TailorInfoBo data, List<RecordBadBo> badList) {
+    public static Intent getIntent(Context context, TailorInfoBo data, List<RecordNCBo> badList) {
         Intent intent = new Intent(context, RecordCutNCActivity.class);
         intent.putExtra("data", data);
         intent.putExtra("badList", (Serializable) badList);
