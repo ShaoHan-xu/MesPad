@@ -80,14 +80,26 @@ public class SewFragment extends BaseFragment {
     }
 
     /**
-     * EventBus推送的消息
+     * EventBus推送的缝制数据消息
      *
      * @param sewData 缝制的数据
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(SewDataBo sewData) {
+    public void onReceiveSewData(SewDataBo sewData) {
         mSewData = sewData;
         initData();
+    }
+
+    /**
+     * EventBus推送的缝制数据消息
+     *
+     * @param json 用户信息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveLoginMsg(JSONObject json) {
+        toast("用户刷卡登录");
+        String cardNum = json.getString("EMPLOYEE_CARD");
+        HttpHelper.positionLogin(cardNum, this);
     }
 
     @Override
@@ -291,7 +303,6 @@ public class SewFragment extends BaseFragment {
         mLayout_processTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
     }
 
-
     /**
      * 顶部工序导航标签布局
      *
@@ -317,13 +328,12 @@ public class SewFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.findProcessWithPadId_url.equals(url)) {
-                if (isAdded()) {
-                    showLoading();
-                }
-                HttpHelper.getSewData("EB20170803", this);
+
             } else if (HttpHelper.getSewData.equals(url)) {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 initData();
+            } else if (HttpHelper.positionLogin_url.equals(url)) {
+                toast("登录成功");
             }
         }
     }

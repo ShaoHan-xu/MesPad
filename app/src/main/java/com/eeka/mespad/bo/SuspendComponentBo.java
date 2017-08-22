@@ -35,15 +35,25 @@ public class SuspendComponentBo {
     public static class COMPONENTSBean {
         /**
          * componentId : HF
+         * componentName : 部件名称
          * isNeedSubContract : false
          * isSubContractCompleted : false
          * operationRef : OperationBO:TEST,GR_HF_01,#
          */
 
         private String componentId;
+        private String componentName;
         private String isNeedSubContract;
         private String isSubContractCompleted;
         private String operationRef;
+
+        public String getComponentName() {
+            return componentName;
+        }
+
+        public void setComponentName(String componentName) {
+            this.componentName = componentName;
+        }
 
         public String getComponentId() {
             return componentId;

@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,9 +37,13 @@ public class RecordSewNCActivity extends BaseActivity {
     private JSONArray mList_productComponent;
     private LinearLayout mLayout_designComponent;
     private JSONArray mList_designComponent;
-    private LinearLayout mLayout_repiarProcess;
+    private LinearLayout mLayout_NcProcess;
     private List<RecordNCBo> mList_NcCode;
     private NcAdapter mNcAdapter;
+    private JSONArray mList_NcProcess;
+
+    private String mSFCBo;
+    private int mProductPosition, mDesignPosition, mNcCodePosition, mNcProcessPosition;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +60,7 @@ public class RecordSewNCActivity extends BaseActivity {
         mTv_orderNum = (TextView) findViewById(R.id.tv_recordSewNC_workNum);
         mLayout_productComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_productComponent);
         mLayout_designComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_designComponent);
-        mLayout_repiarProcess = (LinearLayout) findViewById(R.id.layout_recordSewNC_repairProcess);
+        mLayout_NcProcess = (LinearLayout) findViewById(R.id.layout_recordSewNC_NcProcess);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_NCType);
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
@@ -70,8 +75,9 @@ public class RecordSewNCActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        mSFCBo = "";
         showLoading();
-        HttpHelper.getProductComponentList("", this);
+        HttpHelper.getProductComponentList(mSFCBo, this);
     }
 
     private class NcAdapter extends CommonRecyclerAdapter<RecordNCBo> {
@@ -82,33 +88,17 @@ public class RecordSewNCActivity extends BaseActivity {
 
         @Override
         public void convert(RecyclerViewHolder holder, final RecordNCBo item, final int position) {
-            TextView tv_count = holder.getView(R.id.tv_recordNc_count);
-            final int[] badCount = {item.getQTY()};
-            if (badCount[0] == 0) {
-                tv_count.setVisibility(View.GONE);
-            } else {
-                tv_count.setVisibility(View.VISIBLE);
-                tv_count.setText(String.valueOf(badCount[0]));
-            }
-
             TextView tv_type = holder.getView(R.id.tv_recordNc_type);
             tv_type.setText(item.getDESCRIPTION());
+            holder.getView(R.id.btn_recordNc_sub).setVisibility(View.GONE);
+
             tv_type.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    badCount[0]++;
-                    item.setQTY(badCount[0]);
-                    notifyItemChanged(position);
-                }
-            });
-            holder.getView(R.id.btn_recordNc_sub).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (badCount[0] > 0) {
-                        badCount[0]--;
-                        item.setQTY(badCount[0]);
-                        notifyItemChanged(position);
-                    }
+                    mNcCodePosition = position;
+                    JSONObject designComponent = mList_designComponent.getJSONObject(mNcCodePosition);
+                    showLoading();
+                    HttpHelper.getProcessWithNcCode(designComponent.getString(KEY_DESIGN_PRODUCT_ID), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
                 }
             });
         }
@@ -119,14 +109,14 @@ public class RecordSewNCActivity extends BaseActivity {
      */
     private <T> View getTabView(T data, final int position) {
         final JSONObject item = (JSONObject) data;
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-        TextView tv_tabName = (TextView) view.findViewById(R.id.text);
-        tv_tabName.setPadding(10, 10, 10, 10);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab, null);
+        TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
         if (item.containsKey(KEY_PRODUCT_COMPONENT)) {//生产部件
             tv_tabName.setText(item.getString(KEY_PROD_COMPONENT_DESC));
             tv_tabName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mProductPosition = position;
                     showLoading();
                     HttpHelper.getDesignComponentList(item.getString(KEY_PRODUCT_COMPONENT), "", RecordSewNCActivity.this);
                 }
@@ -136,6 +126,7 @@ public class RecordSewNCActivity extends BaseActivity {
             tv_tabName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mDesignPosition = position;
                     showLoading();
                     HttpHelper.getSewNcCodeList(item.getString(KEY_DESIGN_PRODUCT_ID), RecordSewNCActivity.this);
                 }
@@ -144,6 +135,38 @@ public class RecordSewNCActivity extends BaseActivity {
         return view;
     }
 
+    /**
+     * 刷新标签视图
+     *
+     * @param position
+     */
+    private void refreshTab(ViewGroup parent, int position) {
+        int childCount = parent.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = parent.getChildAt(i);
+            childAt.setBackgroundResource(R.color.white);
+        }
+        parent.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
+    }
+
+    /**
+     * 获取不良工序布局
+     *
+     * @param item
+     * @return
+     */
+    private View getNcProcessView(JSONObject item) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.gv_item_recordnc, null);
+        TextView textView = (TextView) view.findViewById(R.id.tv_recordNc_type);
+        textView.setText(item.getString("DESCRIPTION"));
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        return view;
+    }
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
@@ -157,7 +180,7 @@ public class RecordSewNCActivity extends BaseActivity {
                 }
                 if (mList_designComponent == null && mList_productComponent != null && mList_productComponent.size() != 0) {
                     JSONObject jsonObject = mList_productComponent.getJSONObject(0);
-                    HttpHelper.getDesignComponentList(jsonObject.getString(KEY_PRODUCT_COMPONENT), "", this);
+                    HttpHelper.getDesignComponentList(jsonObject.getString(KEY_PRODUCT_COMPONENT), mSFCBo, this);
                 }
             } else if (HttpHelper.getDesignComponentList.equals(url)) {
                 mList_designComponent = resultJSON.getJSONArray("result");
@@ -172,6 +195,12 @@ public class RecordSewNCActivity extends BaseActivity {
             } else if (HttpHelper.getSewNcCodeList.equals(url)) {
                 mList_NcCode = JSON.parseArray(resultJSON.getJSONArray("result").toString(), RecordNCBo.class);
                 mNcAdapter.notifyDataSetChanged();
+            } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
+                mList_NcProcess = resultJSON.getJSONArray("result");
+                mLayout_NcProcess.removeAllViews();
+                for (int i = 0; i < mList_NcProcess.size(); i++) {
+                    mLayout_NcProcess.addView(getNcProcessView(mList_NcProcess.getJSONObject(i)));
+                }
             }
         }
     }

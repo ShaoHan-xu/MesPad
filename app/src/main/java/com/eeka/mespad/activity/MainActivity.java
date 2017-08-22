@@ -43,6 +43,8 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +224,10 @@ public class MainActivity extends BaseActivity {
                     button.setText("开始");
                     button.setId(R.id.btn_start);
                     break;
+                case "BINDING":
+                    button.setText("绑定");
+                    button.setId(R.id.btn_binding);
+                    break;
                 case "UNBIND":
                     button.setText("解绑");
                     button.setId(R.id.btn_unbind);
@@ -383,7 +389,20 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_video:
                 //自定义播放器，可缓存视频到本地
-                startActivity(VideoPlayerActivity.getIntent(mContext, "http://10.7.121.75/gst/test.MP4"));
+                try {
+                    String url = "http://10.7.121.75/gst/在.mp4";
+                    if (!isEmpty(url)) {
+                        int indexOf = url.lastIndexOf("/");
+                        if (indexOf != -1) {
+                            String host = url.substring(0, indexOf + 1);
+                            String name = url.substring(indexOf + 1, url.length());
+                            String videoPath = host + URLEncoder.encode(name, "utf-8");
+                            startActivity(VideoPlayerActivity.getIntent(mContext, videoPath));
+                        }
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
                 //系统自带视频播放，无缓存
 //                Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -476,6 +495,11 @@ public class MainActivity extends BaseActivity {
                         break;
                 }
                 break;
+            case R.id.btn_binding:
+                if (mSuspendFragment != null) {
+                    mSuspendFragment.binding();
+                }
+                break;
             case R.id.btn_unbind:
                 if (mSuspendFragment != null) {
                     mSuspendFragment.unBind();
@@ -560,18 +584,16 @@ public class MainActivity extends BaseActivity {
         dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
             mTv_startWorkAlert.setVisibility(View.GONE);
-            JSONObject result = resultJSON.getJSONObject("result");
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
-                ContextInfoBo contextInfoBo = JSON.parseObject(result.toString(), ContextInfoBo.class);
+                ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
                 List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
                 SpUtil.savePositionUsers(loginUserList);
                 initData();
+                MQTTService.actionStop(mContext);
+                startMQTTService();
             } else if (HttpHelper.getCardInfo.equals(url)) {
-                if (result == null) {
-                    toast("数据有误");
-                    return;
-                }
+                JSONObject result = resultJSON.getJSONObject("result");
                 String orderType = result.getString("ORDER_TYPE");
                 mCardInfo.setCardType(orderType);
                 mCardInfo.setValue(resultJSON.getString("RI"));
@@ -588,8 +610,7 @@ public class MainActivity extends BaseActivity {
                         break;
                 }
             } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
-                mPositionInfo = JSON.parseObject(result.toString(), PositionInfoBo.class);
-
+                mPositionInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), PositionInfoBo.class);
                 List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
                 if (operInfo != null && operInfo.size() != 0) {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);

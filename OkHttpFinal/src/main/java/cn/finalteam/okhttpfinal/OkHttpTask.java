@@ -120,7 +120,7 @@ class OkHttpTask implements Callback, ProgressCallback {
         builder.url(url).tag(srcUrl).headers(headers);
         Request request = builder.build();
         if (Constants.DEBUG) {
-            ILogger.d("url=" + srcUrl + params.toString() + "\n header=" + headers.toString());
+            ILogger.d("url=" + srcUrl + params.toString());
         }
         Call call = okHttpClient.newCall(request);
         OkHttpCallManager.getInstance().addCall(url, call);

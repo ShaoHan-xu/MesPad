@@ -32,8 +32,8 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    public static String PAD_IP = "192.168.0.110";
-//    public static String PAD_IP = NetUtil.getHostIP();
+    //    public static String PAD_IP = "192.168.0.110";
+    public static String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
 
@@ -60,6 +60,7 @@ public class HttpHelper {
     public static final String getSewData = BASE_URL + "sweing/findPadKeyData?";
     public static final String getCardInfo = BASE_URL + "cutpad/cardRecognition?";
     public static final String cutMaterialReturnOrFeeding = BASE_URL + "cutpad/cutMaterialReturnOrFeeding?";
+    public static final String hangerBinding = BASE_URL + "hanger/bind?";
     public static final String hangerUnbind = BASE_URL + "hanger/unbind?";
     public static final String getBTReason = BASE_URL + "cutpad/getBTReasons?";
     public static final String getSuspendBaseData = BASE_URL + "bandpad/initial?";
@@ -329,6 +330,19 @@ public class HttpHelper {
     }
 
     /**
+     * 衣架绑定
+     */
+    public static void hangerBinding(String partId, String subcontract, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("PART_ID", partId);
+        json.put("PAD_ID", PAD_IP);
+        json.put("SUBCONTRACT", subcontract);
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(hangerBinding, params, getResponseHandler(hangerBinding, callback));
+    }
+
+    /**
      * 衣架解绑
      *
      * @param json {"HANGER_ID":"E34A3499","SFC":"19357930010001","PART_ID":"ZH"}
@@ -467,12 +481,13 @@ public class HttpHelper {
     /**
      * 4.	根据不良代码获取工序列表
      */
-    public static void getProcessWithNcCode(String designComponent, String sfcBo, HttpCallback callback) {
+    public static void getProcessWithNcCode(String designComponent, String sfcBo, String ncCodeBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("PAD_ID", PAD_IP);
         json.put("DESG_COMPONENT", designComponent);
         json.put("SFC_BO", sfcBo);
+        json.put("NC_CODE_BO", ncCodeBo);
         params.put("params", json.toJSONString());
         HttpRequest.post(getProcessWithNcCode, params, getResponseHandler(getProcessWithNcCode, callback));
     }
@@ -491,7 +506,7 @@ public class HttpHelper {
     }
 
     /**
-     * 5.	查询返工工序列表
+     * 保存缝制质检不良数据
      *
      * @param json {
      *             "sfcRef": "SFCBO:TEST,TEST672",
@@ -557,7 +572,7 @@ public class HttpHelper {
      * 获取请求响应Handler
      */
     public static BaseHttpRequestCallback getResponseHandler(final String url, final HttpCallback callback) {
-        BaseHttpRequestCallback response = new BaseHttpRequestCallback<JSONObject>() {
+        final BaseHttpRequestCallback response = new BaseHttpRequestCallback<JSONObject>() {
 
             @Override
             public void onFailure(int errorCode, String msg) {
@@ -583,8 +598,12 @@ public class HttpHelper {
                         }
                     }
                     if (IS_COOKIE_OUT) {
-                        if (callback != null) {
-                            callback.onFailure(url, 0, "系统登录成功");
+                        if (isSuccess(jsonObject)) {
+                            IS_COOKIE_OUT = false;
+                            if (callback != null) {
+                                callback.onFailure(url, 0, "系统登录成功");
+                            }
+                            return;
                         }
                     }
                 } else if (!isSuccess(jsonObject)) {
@@ -597,7 +616,6 @@ public class HttpHelper {
                         return;
                     }
                 }
-                IS_COOKIE_OUT = false;
                 if (callback != null)
                     callback.onSuccess(url, jsonObject);
             }

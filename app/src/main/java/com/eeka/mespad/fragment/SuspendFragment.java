@@ -3,6 +3,7 @@ package com.eeka.mespad.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,7 @@ public class SuspendFragment extends BaseFragment {
     protected void initData() {
         super.initData();
         mList_sfcs = new ArrayList<>();
-        mSFCAdapter = new SFCAdapter(mContext, mList_sfcs, R.layout.item_textview);
+        mSFCAdapter = new SFCAdapter(mContext, mList_sfcs, R.layout.layout_tab);
         mLv_orderList.setAdapter(mSFCAdapter);
     }
 
@@ -101,6 +102,7 @@ public class SuspendFragment extends BaseFragment {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(String RFID) {
+        toast("收到推送消息，正在刷新数据");
         searchOrder(RFID);
     }
 
@@ -119,49 +121,66 @@ public class SuspendFragment extends BaseFragment {
      * 设置部件布局
      */
     private void setupComponentView() {
+        mLayout_component.removeAllViews();
         List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
         for (SuspendComponentBo.COMPONENTSBean component : components) {
+            mLayout_component.addView(getComponentView(component));
             if (mCurComponent == null) {
                 mCurComponent = component;
                 HttpHelper.getComponentPic(mCurSFC, mCurComponent.getComponentId(), this);
+                View childAt = mLayout_component.getChildAt(0);
+                Button btn_component = (Button) childAt.findViewById(R.id.btn_componentName);
+                btn_component.setEnabled(false);
             }
-            mLayout_component.addView(getComponentView(component));
         }
     }
 
     public void searchOrder(String orderNum) {
-        toast("收到推送消息");
         showLoading();
-        HttpHelper.getSfcComponents("OperationBO:TEST,SCBD001,#", mContextInfo.getHANDLE(), orderNum, this);
+        HttpHelper.getSfcComponents(mOperationBo, mContextInfo.getHANDLE(), orderNum, this);
+    }
+
+    /**
+     * 绑定
+     */
+    public void binding() {
+        if (mCurComponent != null) {
+            HttpHelper.hangerBinding(mCurComponent.getComponentId(), mCurComponent.getIsNeedSubContract(), this);
+        } else {
+            showErrorDialog("没有选择部件，无法执行绑定操作");
+        }
     }
 
     /**
      * 解绑
      */
     public void unBind() {
-        JSONObject json = new JSONObject();
-        json.put("SFC", mCurSFC);
-        if (mCurComponent != null)
+        if (mCurComponent != null) {
+            JSONObject json = new JSONObject();
+            json.put("SFC", mCurSFC);
             json.put("PART_ID", mCurComponent.getComponentId());
-        HttpHelper.hangerUnbind(json, this);
+            HttpHelper.hangerUnbind(json, this);
+        } else {
+            showErrorDialog("没有选择部件，无法执行解绑操作");
+        }
     }
 
     private class SFCAdapter extends CommonAdapter<String> {
 
-        public SFCAdapter(Context context, List<String> list, int layoutId) {
+        SFCAdapter(Context context, List<String> list, int layoutId) {
             super(context, list, layoutId);
         }
 
         @Override
         public void convert(ViewHolder holder, String item, int position) {
-            TextView textView = holder.getView(R.id.text);
+            TextView textView = holder.getView(R.id.textView);
+            textView.setPadding(0, 20, 0, 20);
             textView.setText(item);
             if (item.equals(mCurSFC)) {
                 textView.setBackgroundResource(R.color.text_green_default);
             } else {
                 textView.setBackgroundResource(R.color.white);
             }
-
         }
     }
 
@@ -200,8 +219,9 @@ public class SuspendFragment extends BaseFragment {
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
         Button btn_component = (Button) view.findViewById(R.id.btn_componentName);
+        btn_component.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         TextView tv_helpDesc = (TextView) view.findViewById(R.id.tv_helpDesc);
-        btn_component.setText(component.getComponentId());
+        btn_component.setText(component.getComponentName());
         String isNeedSubContract = component.getIsNeedSubContract();//是否需要外协
         String isSubContractCompleted = component.getIsSubContractCompleted();//外协是否已完成
         if ("true".equals(isNeedSubContract)) {
@@ -219,6 +239,13 @@ public class SuspendFragment extends BaseFragment {
                 mCurComponent = component;
                 showLoading();
                 HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
+                int childCount = mLayout_component.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = mLayout_component.getChildAt(i);
+                    Button button = (Button) childAt.findViewById(R.id.btn_componentName);
+                    button.setEnabled(true);
+                }
+                v.setEnabled(false);
             }
         });
         return view;
@@ -251,6 +278,7 @@ public class SuspendFragment extends BaseFragment {
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);
                 mCurSFC = mComponent.getSFC();
                 mSFCAdapter.notifyDataSetChanged();
+                mCurComponent = null;
                 setupComponentView();
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");

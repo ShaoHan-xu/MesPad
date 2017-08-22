@@ -1,5 +1,6 @@
 package com.eeka.mespad.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +33,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
+import com.eeka.mespad.zxing.EncodingHandler;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -159,6 +161,7 @@ public class CutFragment extends BaseFragment {
         if (layoutArray != null) {
             for (int i = 0; i < layoutArray.size(); i++) {
                 mLayout_material1.addView(getLayoutView(layoutArray.get(i), i));
+                mLayout_material1.addView(getLayoutBarCodeView(layoutArray.get(i), i));
             }
         }
 
@@ -432,6 +435,23 @@ public class CutFragment extends BaseFragment {
                 startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
             }
         });
+        return view;
+    }
+
+    /**
+     * 获取排料图一维码
+     */
+    private View getLayoutBarCodeView(final TailorInfoBo.LayoutInfoBean item, int position) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
+        ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
+        iv_material.setTag(position);
+        iv_material.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        try {
+            Bitmap barCode = EncodingHandler.createBarCode(item.getLAYOUT(), 400, 200);
+            iv_material.setImageBitmap(barCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
