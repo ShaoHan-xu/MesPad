@@ -10,6 +10,10 @@
         android:gravity="right" />
 
     <TextView
+        style="@style/textStyle_default"
+        android:text="：" />
+
+    <TextView
         android:id="@+id/tv_value"
         style="@style/textStyle_default" />
 </LinearLayout>

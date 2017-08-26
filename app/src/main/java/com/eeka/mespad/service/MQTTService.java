@@ -54,7 +54,7 @@ public class MQTTService extends Service {
     // Connection log for the push service. Good for debugging.
     private static ConnectionLog mLog;
 
-    public static void actionStart(Context ctx) {
+    public static void actionStart(final Context ctx) {
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.startService(intent);
     }

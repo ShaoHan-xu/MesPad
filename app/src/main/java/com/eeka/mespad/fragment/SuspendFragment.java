@@ -46,7 +46,6 @@ public class SuspendFragment extends BaseFragment {
     private SFCAdapter mSFCAdapter;
 
     private LinearLayout mLayout_component;
-    private LinearLayout mLayout_loginUser;
     private ImageView mIv_component;
 
     private ContextInfoBo mContextInfo;
@@ -83,7 +82,6 @@ public class SuspendFragment extends BaseFragment {
         super.initView();
         mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
-        mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
         mIv_component = (ImageView) mView.findViewById(R.id.iv_suspend_componentImg);
     }
 
@@ -96,14 +94,26 @@ public class SuspendFragment extends BaseFragment {
     }
 
     /**
-     * EventBus推送的消息
+     * 收到RFID卡号，拉取数据更新
      *
      * @param RFID RFID号
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(String RFID) {
-        toast("收到推送消息，正在刷新数据");
+    public void onFRIDMsg(String RFID) {
+        toast("收到工单消息，正在刷新页面");
         searchOrder(RFID);
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param json
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginMsg(JSONObject json) {
+        toast("用户刷卡登录");
+        String cardNum = json.getString("EMPLOYEE_CARD");
+        HttpHelper.positionLogin(cardNum, this);
     }
 
     /**
@@ -145,6 +155,7 @@ public class SuspendFragment extends BaseFragment {
      */
     public void binding() {
         if (mCurComponent != null) {
+            showLoading();
             HttpHelper.hangerBinding(mCurComponent.getComponentId(), mCurComponent.getIsNeedSubContract(), this);
         } else {
             showErrorDialog("没有选择部件，无法执行绑定操作");
@@ -159,6 +170,7 @@ public class SuspendFragment extends BaseFragment {
             JSONObject json = new JSONObject();
             json.put("SFC", mCurSFC);
             json.put("PART_ID", mCurComponent.getComponentId());
+            showLoading();
             HttpHelper.hangerUnbind(json, this);
         } else {
             showErrorDialog("没有选择部件，无法执行解绑操作");
@@ -180,32 +192,6 @@ public class SuspendFragment extends BaseFragment {
                 textView.setBackgroundResource(R.color.text_green_default);
             } else {
                 textView.setBackgroundResource(R.color.white);
-            }
-        }
-    }
-
-    /**
-     * 刷新登录用户、有用户登录或者登出时调用
-     */
-    public void refreshLoginUsers() {
-        mLayout_loginUser.removeAllViews();
-        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
-        if (loginUsers != null) {
-            ScrollView scrollView = (ScrollView) mView.findViewById(R.id.scrollView_loginUsers);
-            if (loginUsers.size() >= 3) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 120));
-                scrollView.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                scrollView.setLayoutParams(params);
-            }
-            for (UserInfoBo userInfo : loginUsers) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
-                TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
-                TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
-                tv_userName.setText(userInfo.getUSER());
-                tv_userId.setText(userInfo.getEMPLOYEE_NUMBER() + "");
-                mLayout_loginUser.addView(view);
             }
         }
     }
@@ -237,7 +223,7 @@ public class SuspendFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 mCurComponent = component;
-                showLoading();
+//                showLoading();
                 HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
                 int childCount = mLayout_component.getChildCount();
                 for (int i = 0; i < childCount; i++) {
@@ -280,9 +266,14 @@ public class SuspendFragment extends BaseFragment {
                 mSFCAdapter.notifyDataSetChanged();
                 mCurComponent = null;
                 setupComponentView();
+                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), this);
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 Glide.with(mContext).load(result.getString("PICTURE_URL")).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_component);
+            } else if (HttpHelper.hangerBinding.equals(url)) {
+                toast("衣架绑定成功");
+            } else if (HttpHelper.hangerUnbind.equals(url)) {
+                toast("衣架解绑成功");
             }
         }
     }

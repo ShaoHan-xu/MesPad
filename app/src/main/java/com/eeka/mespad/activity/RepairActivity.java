@@ -13,13 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
+import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.http.HttpHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,12 +31,15 @@ import java.util.List;
 
 public class RepairActivity extends BaseActivity {
 
+    private static final String KEY_SFCBO = "key_sfcBo";
+    private static final String KEY_DATA = "key_data";
+
     private LinearLayout mLayout_component;
-    private JSONArray mList_component;
+    private List<SewQCDataBo.DesignComponentBean> mList_component;
     private RecyclerView mRecyclerView;
     private List<JSONObject> mList_type;
     private NcAdapter mAdapter;
-    private int mComponentPosition;//选择的部件
+    private int mComponentPosition;//选择的部件下标
     private int mTypePosition = -1;//选择的返工工序
 
     @Override
@@ -65,13 +69,14 @@ public class RepairActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
-        mList_component = (JSONArray) getIntent().getSerializableExtra("data");
+        mList_component = (List<SewQCDataBo.DesignComponentBean>) getIntent().getSerializableExtra(KEY_DATA);
         if (mList_component != null && mList_component.size() != 0) {
-            mLayout_component.removeAllViews();
             for (int i = 0; i < mList_component.size(); i++) {
-                mLayout_component.addView(getTabView(mList_component.getJSONObject(i), i));
+                mLayout_component.addView(getTabView(mList_component.get(i), i));
             }
             refreshTab(0);
+        } else {
+            showErrorDialog("数据错误");
         }
     }
 
@@ -88,20 +93,21 @@ public class RepairActivity extends BaseActivity {
     /**
      * 获取标签布局
      */
-    private View getTabView(final JSONObject item, final int position) {
+    private View getTabView(final SewQCDataBo.DesignComponentBean component, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab, null);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
         TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
-        tv_tabName.setText(item.getString("PROD_COMPONENT_DESC"));
+        tv_tabName.setText(component.getDescription());
         tv_tabName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mComponentPosition = position;
                 mTypePosition = -1;
+                String sfcBo = getIntent().getStringExtra(KEY_DATA);
                 showLoading();
-                HttpHelper.getRepairProcess(item.getString("PROD_COMPONENT"), "", RepairActivity.this);
+                HttpHelper.getRepairProcess(component.getName(), sfcBo, RepairActivity.this);
             }
         });
         return view;
@@ -155,9 +161,9 @@ public class RepairActivity extends BaseActivity {
         }
     }
 
-    public static Intent getIntent(Context context, JSONArray components) {
+    public static Intent getIntent(Context context, String sfcBo, List<SewQCDataBo.DesignComponentBean> components) {
         Intent intent = new Intent(context, RepairActivity.class);
-        intent.putExtra("data", components);
+        intent.putExtra(KEY_DATA, (Serializable) components);
         return intent;
     }
 }

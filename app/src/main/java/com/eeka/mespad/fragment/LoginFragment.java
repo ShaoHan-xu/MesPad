@@ -166,10 +166,9 @@ public class LoginFragment extends BaseFragment {
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
-            String result = resultJSON.getJSONObject("result").toString();
             if (url.contains(HttpHelper.login_url)) {
                 toast("系统登录成功");
-                UserInfoBo userInfo = JSON.parseObject(result, UserInfoBo.class);
+                UserInfoBo userInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), UserInfoBo.class);
                 String site = mEt_site.getText().toString();
                 SpUtil.saveSite(site);
                 String pwd = mEt_pwd.getText().toString();
@@ -179,18 +178,14 @@ public class LoginFragment extends BaseFragment {
                     mLoginCallback.onLogin(true);
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
-                UserInfoBo userInfo = JSON.parseObject(result, UserInfoBo.class);
-                List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-                if (positionUsers == null)
-                    positionUsers = new ArrayList<>();
-                positionUsers.add(userInfo);
+                List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
                 SpUtil.saveLoginStatus(true);
                 if (mClockCallback != null) {
                     mClockCallback.onClockIn(true);
                 }
             } else if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
-                ContextInfoBo contextInfoBo = JSON.parseObject(result, ContextInfoBo.class);
+                ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
                 List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
                 SpUtil.savePositionUsers(loginUserList);

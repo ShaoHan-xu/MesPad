@@ -17,7 +17,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -58,8 +57,6 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_LOGIN = 1;
 
     private DrawerLayout mDrawerLayout;
-    private TextView mTv_startWorkAlert;
-
     private LoginFragment mLoginFragment;
     private CutFragment mCutFragment;
     private SuspendFragment mSuspendFragment;
@@ -80,8 +77,6 @@ public class MainActivity extends BaseActivity {
     private CardInfoBo mCardInfo;
     private boolean isSearchOrder;
 
-    private boolean isInit;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,14 +87,11 @@ public class MainActivity extends BaseActivity {
 
         ContextInfoBo contextInfo = SpUtil.getContextInfo();
         if (contextInfo == null) {
-            isInit = true;
             showLoading("应用初始化中...", true);
             HttpHelper.initData(this);
         } else {
             initData();
         }
-
-        startMQTTService();
     }
 
     @Override
@@ -108,22 +100,11 @@ public class MainActivity extends BaseActivity {
         MQTTService.actionStop(mContext);
     }
 
-    private void startMQTTService() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                MQTTService.actionStart(mContext);
-            }
-        }).start();
-    }
-
     @Override
     protected void initView() {
         super.initView();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mLayout_controlPanel = (LinearLayout) findViewById(R.id.layout_controlPanel);
-        mTv_startWorkAlert = (TextView) findViewById(R.id.tv_startWorkAlert);
-        mTv_startWorkAlert.setOnClickListener(this);
 
         findViewById(R.id.tv_caijian).setOnClickListener(this);
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
@@ -142,18 +123,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        MQTTService.actionStart(mContext);
 
         UserInfoBo loginUser = SpUtil.getLoginUser();
-        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-        if (loginUser == null || positionUsers == null || positionUsers.size() == 0) {
+        if (loginUser == null) {
             if (mLoginFragment == null) {
                 initLoginFragment();
             }
-            if (loginUser == null) {
-                mLoginFragment.setType(LoginFragment.TYPE_LOGIN);
-            } else {
-                mLoginFragment.setType(LoginFragment.TYPE_CLOCK);
-            }
+            mLoginFragment.setType(LoginFragment.TYPE_LOGIN);
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.replace(R.id.layout_content, mLoginFragment);
             ft.commit();
@@ -258,8 +235,6 @@ public class MainActivity extends BaseActivity {
             case TopicUtil.TOPIC_CUT:
                 if (mCutFragment == null) {
                     mCutFragment = new CutFragment();
-                } else {
-                    mCutFragment.refreshLoginUsers();
                 }
                 if (mCutFragment.isAdded()) {
                     ft.show(mCutFragment);
@@ -281,8 +256,6 @@ public class MainActivity extends BaseActivity {
             case TopicUtil.TOPIC_SUSPEND:
                 if (mSuspendFragment == null) {
                     mSuspendFragment = new SuspendFragment();
-                } else {
-                    mSuspendFragment.refreshLoginUsers();
                 }
                 if (mSuspendFragment.isAdded()) {
                     ft.show(mSuspendFragment);
@@ -292,8 +265,9 @@ public class MainActivity extends BaseActivity {
                 ft.commit();
                 break;
             case TopicUtil.TOPIC_QC:
-                if (mSewQCFragment == null)
+                if (mSewQCFragment == null) {
                     mSewQCFragment = new SewQCFragment();
+                }
                 if (mSewQCFragment.isAdded()) {
                     ft.show(mSewQCFragment);
                 } else {
@@ -379,13 +353,18 @@ public class MainActivity extends BaseActivity {
                 new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, mAddMaterialInfo).show();
                 break;
             case R.id.btn_dataCollect:
-                mCutFragment.showRecordLabuDialog();
+                if (TopicUtil.TOPIC_CUT.equals(mTopic))
+                    mCutFragment.showRecordLabuDialog();
                 break;
             case R.id.btn_jobList:
                 startActivity(new Intent(mContext, WorkOrderListActivity.class));
                 break;
             case R.id.btn_NcRecord:
-                startActivityForResult(RecordCutNCActivity.getIntent(mContext, mCutFragment.getMaterialData(), mList_badData), REQUEST_RECORD_NC);
+                if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+                    startActivityForResult(RecordCutNCActivity.getIntent(mContext, mCutFragment.getMaterialData(), mList_badData), REQUEST_RECORD_NC);
+                } else {
+                    mSewQCFragment.recordNc();
+                }
                 break;
             case R.id.btn_video:
                 //自定义播放器，可缓存视频到本地
@@ -416,16 +395,15 @@ public class MainActivity extends BaseActivity {
             case R.id.btn_logout:
                 List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
                 if (loginUsers != null && loginUsers.size() != 0) {
-                    if (loginUsers.size() == 1) {
-                        UserInfoBo userInfo = loginUsers.get(0);
-                        mLogoutIndex = 0;
-                        HttpHelper.positionLogout(userInfo.getCARD_NUMBER(), this);
-                    } else {
-                        showLogoutDialog();
-                    }
+//                    if (loginUsers.size() == 1) {
+//                        UserInfoBo userInfo = loginUsers.get(0);
+//                        mLogoutIndex = 0;
+//                        HttpHelper.positionLogout(userInfo.getCARD_NUMBER(), this);
+//                    } else {
+                    showLogoutDialog();
+//                    }
                 } else {
-                    //数据异常的情况
-                    logout();
+                    showErrorDialog("目前没有人在岗位登录");
                 }
                 break;
             case R.id.btn_signOff:
@@ -510,7 +488,9 @@ public class MainActivity extends BaseActivity {
 
     private void searchOrder() {
         String cardNum = mEt_orderNum.getText().toString();
-        if (!isEmpty(cardNum)) {
+        if (isEmpty(cardNum)) {
+            toast("请输入RFID卡号");
+        } else {
             mCardInfo.setCardNum(cardNum);
             switch (mTopic) {
                 case TopicUtil.TOPIC_CUT:
@@ -522,6 +502,9 @@ public class MainActivity extends BaseActivity {
                     break;
                 case TopicUtil.TOPIC_SUSPEND:
                     mSuspendFragment.searchOrder(cardNum);
+                    break;
+                case TopicUtil.TOPIC_QC:
+                    mSewQCFragment.searchOrder(cardNum);
                     break;
             }
         }
@@ -544,18 +527,13 @@ public class MainActivity extends BaseActivity {
     private int mLogoutIndex;
 
     private void showLogoutDialog() {
-        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
-        if (loginUsers == null) {
-            logout();
-            return;
-        }
-
         mLogoutDialog = new Dialog(mContext);
         mLogoutDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_logout, null);
         RecyclerView listView = (RecyclerView) view.findViewById(R.id.lv_logout);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         listView.setLayoutManager(manager);
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         mLogoutAdapter = new CommonRecyclerAdapter<UserInfoBo>(mContext, loginUsers, R.layout.item_logout, manager) {
             @Override
             public void convert(RecyclerViewHolder holder, final UserInfoBo item, final int position) {
@@ -583,15 +561,14 @@ public class MainActivity extends BaseActivity {
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
-            mTv_startWorkAlert.setVisibility(View.GONE);
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
                 List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
                 SpUtil.savePositionUsers(loginUserList);
                 initData();
-                MQTTService.actionStop(mContext);
-                startMQTTService();
+//                MQTTService.actionStop(mContext);
+                MQTTService.actionStart(mContext);
             } else if (HttpHelper.getCardInfo.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 String orderType = result.getString("ORDER_TYPE");
@@ -650,15 +627,8 @@ public class MainActivity extends BaseActivity {
             case TopicUtil.TOPIC_CUT:
                 mCutFragment.onSuccess(url, resultJSON);
                 break;
-            case TopicUtil.TOPIC_SEW:
-                mSewFragment.onSuccess(url, resultJSON);
-                break;
             case TopicUtil.TOPIC_SUSPEND:
                 mSuspendFragment.onSuccess(url, resultJSON);
-                break;
-            case TopicUtil.TOPIC_QC:
-                break;
-            case TopicUtil.TOPIC_PACKING:
                 break;
         }
     }
@@ -668,40 +638,25 @@ public class MainActivity extends BaseActivity {
         if (loginUsers != null && loginUsers.size() > mLogoutIndex) {
             loginUsers.remove(mLogoutIndex);
             SpUtil.savePositionUsers(loginUsers);
-            if (loginUsers.size() == 0) {
-                logout();
-                return;
-            }
             if (mLogoutAdapter != null) {
                 mLogoutAdapter.removeData(mLogoutIndex);
             }
-        }
-        mCutFragment.refreshLoginUsers();
-    }
-
-    public void logout() {
-        if (mLoginFragment == null) {
-            initLoginFragment();
-        }
-        mLoginFragment.setType(LoginFragment.TYPE_CLOCK);
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        List<Fragment> fragments = mFragmentManager.getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment != null && fragment.isAdded())
-                    ft.hide(fragment);
+            if (loginUsers.size() == 0) {
+                if (mLogoutDialog != null) {
+                    mLogoutDialog.dismiss();
+                }
+                mLogoutDialog = null;
             }
         }
-        if (mLoginFragment.isAdded()) {
-            ft.show(mLoginFragment);
-        } else {
-            ft.add(R.id.layout_content, mLoginFragment);
+        switch (mTopic) {
+            case TopicUtil.TOPIC_CUT:
+                mCutFragment.refreshLoginUsers();
+                break;
+            case TopicUtil.TOPIC_QC:
+                mSewQCFragment.refreshLoginUsers();
+                break;
         }
-        ft.commit();
-        if (mLogoutDialog != null) {
-            mLogoutDialog.dismiss();
-        }
-        mLogoutDialog = null;
+
     }
 
     @Override
@@ -713,20 +668,34 @@ public class MainActivity extends BaseActivity {
                 ft.remove(mLoginFragment);
                 ft.commit();
             }
-            mTv_startWorkAlert.setVisibility(View.VISIBLE);
+
+            showLoading();
+            HttpHelper.findProcessWithPadId(this);
         }
     }
 
     @Override
     public void onClockIn(boolean success) {
         if (success) {
-            mTv_startWorkAlert.setVisibility(View.GONE);
             if (mLoginDialog != null)
                 mLoginDialog.dismiss();
             if (mPositionInfo == null) {
                 HttpHelper.findProcessWithPadId(this);
             } else {
-                changeFragment();
+                switch (mTopic) {
+                    case TopicUtil.TOPIC_CUT:
+                        mCutFragment.refreshLoginUsers();
+                        break;
+                    case TopicUtil.TOPIC_SEW:
+                        mSewFragment.refreshLoginUsers();
+                        break;
+                    case TopicUtil.TOPIC_SUSPEND:
+                        mSuspendFragment.refreshLoginUsers();
+                        break;
+                    case TopicUtil.TOPIC_QC:
+                        mSewQCFragment.refreshLoginUsers();
+                        break;
+                }
             }
         }
     }

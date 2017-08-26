@@ -67,6 +67,7 @@ public class HttpHelper {
     public static final String getSuspendUndoList = BASE_URL + "bandpad/getSfcs?";
     public static final String getSfcComponents = BASE_URL + "bandpad/getSfcComponents?";
     public static final String getComponentPic = BASE_URL + "bandpad/getComponentPic?";
+    public static final String findPadKeyDataForNcUI = BASE_URL + "sweing/findPadKeyDataForNcUI?";
     public static final String getProductComponentList = BASE_URL + "logNcPad/listProdComponentsOnCompleteOpers?";
     public static final String getDesignComponentList = BASE_URL + "logNcPad/listDesgComponentByProdComp?";
     public static final String getSewNcCodeList = BASE_URL + "logNcPad/listNcCodesOnDesgComponent?";
@@ -335,7 +336,7 @@ public class HttpHelper {
     public static void hangerBinding(String partId, String subcontract, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("PART_ID", partId);
-        json.put("PAD_ID", PAD_IP);
+        json.put("PAD_IP", PAD_IP);
         json.put("SUBCONTRACT", subcontract);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
@@ -406,6 +407,20 @@ public class HttpHelper {
         json.put("WORK_CENTER", workCenter);
         params.put("params", json.toJSONString());
         HttpRequest.post(getSuspendUndoList, params, getResponseHandler(getSuspendUndoList, callback));
+    }
+
+    /**
+     * 获取缝制质检主界面数据
+     */
+    public static void findPadKeyDataForNcUI(String RFID, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("rfId", RFID);
+        params.put("padIp", PAD_IP);
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        if (positionUsers != null && positionUsers.size() != 0){
+            params.put("userId", positionUsers.get(0).getUSER());
+        }
+        HttpRequest.post(findPadKeyDataForNcUI, params, getResponseHandler(findPadKeyDataForNcUI, callback));
     }
 
     /**

@@ -79,33 +79,9 @@ public class SewFragment extends BaseFragment {
         EventBus.getDefault().unregister(this);
     }
 
-    /**
-     * EventBus推送的缝制数据消息
-     *
-     * @param sewData 缝制的数据
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSewData(SewDataBo sewData) {
-        mSewData = sewData;
-        initData();
-    }
-
-    /**
-     * EventBus推送的缝制数据消息
-     *
-     * @param json 用户信息
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveLoginMsg(JSONObject json) {
-        toast("用户刷卡登录");
-        String cardNum = json.getString("EMPLOYEE_CARD");
-        HttpHelper.positionLogin(cardNum, this);
-    }
-
     @Override
     protected void initView() {
         super.initView();
-
         mTv_SFC = (TextView) mView.findViewById(R.id.tv_sew_sfc);
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
         mTv_orderType = (TextView) mView.findViewById(R.id.tv_sew_orderType);
@@ -122,7 +98,6 @@ public class SewFragment extends BaseFragment {
         mVP_sop.addOnPageChangeListener(new ViewPagerChangedListener());
         mLv_curProcess = (ListView) mView.findViewById(R.id.lv_sew_curProcess);
         mLv_lastProcess = (ListView) mView.findViewById(R.id.lv_sew_lastProcess);
-
     }
 
     public void getData(String orderNum) {
@@ -291,8 +266,6 @@ public class SewFragment extends BaseFragment {
 
     /**
      * 刷新物料标签视图
-     *
-     * @param position
      */
     private void refreshMatTab(int position) {
         int childCount = mLayout_processTab.getChildCount();
@@ -305,9 +278,6 @@ public class SewFragment extends BaseFragment {
 
     /**
      * 顶部工序导航标签布局
-     *
-     * @param item
-     * @return
      */
     private View getProcessTabView(SewDataBo.SewAttr item, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
@@ -323,13 +293,36 @@ public class SewFragment extends BaseFragment {
         return view;
     }
 
+
+    /**
+     * EventBus推送的缝制数据消息
+     *
+     * @param sewData 缝制的数据
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSewData(SewDataBo sewData) {
+        toast("收到新信息，正在刷新界面");
+        mSewData = sewData;
+        initData();
+    }
+
+    /**
+     * EventBus推送的缝制数据消息
+     *
+     * @param json 用户信息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveLoginMsg(JSONObject json) {
+        toast("用户刷卡登录");
+        String cardNum = json.getString("EMPLOYEE_CARD");
+        HttpHelper.positionLogin(cardNum, this);
+    }
+
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.findProcessWithPadId_url.equals(url)) {
-
-            } else if (HttpHelper.getSewData.equals(url)) {
+            if (HttpHelper.getSewData.equals(url)) {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 initData();
             } else if (HttpHelper.positionLogin_url.equals(url)) {

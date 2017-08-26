@@ -62,8 +62,6 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_nextProcess;
     private Button mBtn_done;
 
-    private LinearLayout mLayout_loginUser;
-
     private TailorInfoBo.ResultInfo mResultInfo;
 
     public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
@@ -101,8 +99,6 @@ public class CutFragment extends BaseFragment {
         mLayout_processTab = (LinearLayout) mView.findViewById(R.id.layout_processTab);
         mLayout_matTab = (LinearLayout) mView.findViewById(R.id.layout_matTab);
         mTv_nextProcess = (TextView) mView.findViewById(R.id.tv_nextProcess);
-
-        mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
 
         mLv_process = (ListView) mView.findViewById(R.id.lv_processList);
         mLv_process.setOnItemClickListener(new ProcessClickListener());
@@ -361,10 +357,6 @@ public class CutFragment extends BaseFragment {
 
     /**
      * 获取物料图
-     *
-     * @param data
-     * @param position
-     * @return
      */
     private View getMaterialsView(final Object data, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
@@ -442,13 +434,12 @@ public class CutFragment extends BaseFragment {
      * 获取排料图一维码
      */
     private View getLayoutBarCodeView(final TailorInfoBo.LayoutInfoBean item, int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
-        ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
-        iv_material.setTag(position);
-        iv_material.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_imageview, null);
+        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         try {
             Bitmap barCode = EncodingHandler.createBarCode(item.getLAYOUT(), 400, 200);
-            iv_material.setImageBitmap(barCode);
+            imageView.setImageBitmap(barCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -591,32 +582,6 @@ public class CutFragment extends BaseFragment {
                     activity.mVP_process.setCurrentItem(currentItem + 1);
                     sendEmptyMessageDelayed(0, 3000);
                     break;
-            }
-        }
-    }
-
-    /**
-     * 刷新登录用户、有用户登录或者登出时调用
-     */
-    public void refreshLoginUsers() {
-        mLayout_loginUser.removeAllViews();
-        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
-        if (loginUsers != null) {
-            ScrollView scrollView = (ScrollView) mView.findViewById(R.id.scrollView_loginUsers);
-            if (loginUsers.size() >= 3) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 120));
-                scrollView.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                scrollView.setLayoutParams(params);
-            }
-            for (UserInfoBo userInfo : loginUsers) {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
-                TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
-                TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
-                tv_userName.setText(userInfo.getUSER());
-                tv_userId.setText(userInfo.getEMPLOYEE_NUMBER() + "");
-                mLayout_loginUser.addView(view);
             }
         }
     }

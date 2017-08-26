@@ -10,16 +10,16 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:padding="5dp">
 
         <LinearLayout
             android:id="@+id/layout_RFID"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
             android:background="@drawable/border_black"
             android:padding="0.5dp">
 
@@ -27,13 +27,17 @@
                 android:id="@+id/et_orderNum"
                 style="@style/textStyle_default"
                 android:layout_width="150dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="5dp" />
+                android:hint="输入RFID卡号搜索"
+                android:padding="5dp"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/btn_searchOrder"
                 style="@style/btnStyle_green"
+                android:layout_height="match_parent"
                 android:text="搜索" />
 
         </LinearLayout>
@@ -41,24 +45,29 @@
         <LinearLayout
             android:id="@+id/layout_searchPosition"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/layout_RFID"
             android:background="@drawable/border_black"
-            android:padding="0.5dp">
+            android:padding="0.5dp"
+            android:visibility="gone">
 
             <EditText
                 android:id="@+id/et_position"
                 style="@style/textStyle_default"
                 android:layout_width="130dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="5dp" />
+                android:hint="輸入站位IP切換站位"
+                android:padding="5dp"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/btn_searchPosition"
                 style="@style/btnStyle_green"
+                android:layout_height="match_parent"
                 android:text="搜索" />
 
         </LinearLayout>
@@ -76,7 +85,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:orientation="horizontal" />
+                android:divider="@drawable/divider_white"
+                android:orientation="horizontal"
+                android:showDividers="middle" />
         </HorizontalScrollView>
     </RelativeLayout>
 

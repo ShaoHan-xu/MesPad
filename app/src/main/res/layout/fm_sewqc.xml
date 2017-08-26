@@ -65,7 +65,7 @@
                 android:layout_height="match_parent"
                 android:divider="@drawable/divider_gray_vertical"
                 android:orientation="horizontal"
-                android:showDividers="middle">
+                android:showDividers="middle|end">
 
             </LinearLayout>
 
@@ -228,7 +228,7 @@
                 <LinearLayout
                     android:id="@+id/layout_sewQC_productComponent"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:divider="@drawable/divider_gray_vertical"
                     android:orientation="horizontal"
                     android:showDividers="middle">
@@ -240,7 +240,7 @@
                 <LinearLayout
                     android:id="@+id/layout_sewQC_designComponent"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:divider="@drawable/divider_gray_vertical"
                     android:orientation="horizontal"
                     android:showDividers="middle">
@@ -275,7 +275,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@color/white"
-            android:gravity="center"
             android:orientation="vertical"
             android:padding="5dp">
 
@@ -322,23 +321,6 @@
                     style="@style/textStyle_default"
                     android:layout_width="100dp"
                     android:gravity="right"
-                    android:text="面料属性：" />
-
-                <TextView
-                    android:id="@+id/tv_sewQC_matAttr"
-                    style="@style/textStyle_default" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="100dp"
-                    android:gravity="right"
                     android:text="尺码：" />
 
                 <TextView
@@ -363,19 +345,22 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_sewQC_matInfo"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:background="@color/white">
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_sewQC_matInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="5dp">
 
+            </LinearLayout>
+        </HorizontalScrollView>
     </LinearLayout>
 
 </LinearLayout>

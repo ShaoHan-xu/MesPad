@@ -8,15 +8,23 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+
+import java.util.List;
 
 /**
  * Created by Lenovo on 2017/6/12.
@@ -30,6 +38,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     private Dialog mProDialog;
     private TextView mTv_loadingMsg;
 
+    public LinearLayout mLayout_loginUser;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -37,7 +47,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     }
 
     protected void initView() {
-
+        mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
     }
 
     protected void bindListener() {
@@ -46,6 +56,35 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
 
     protected void initData() {
 
+    }
+
+    /**
+     * 刷新登录用户、有用户登录或者登出时调用
+     */
+    public void refreshLoginUsers() {
+        if (mLayout_loginUser == null) {
+            return;
+        }
+        mLayout_loginUser.removeAllViews();
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+        if (loginUsers != null) {
+            ScrollView scrollView = (ScrollView) mView.findViewById(R.id.scrollView_loginUsers);
+            if (loginUsers.size() >= 3) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 120));
+                scrollView.setLayoutParams(params);
+            } else {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                scrollView.setLayoutParams(params);
+            }
+            for (UserInfoBo userInfo : loginUsers) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
+                TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
+                TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
+                tv_userName.setText(userInfo.getUSER());
+                tv_userId.setText(userInfo.getEMPLOYEE_NUMBER() + "");
+                mLayout_loginUser.addView(view);
+            }
+        }
     }
 
     protected boolean isEmpty(String str) {

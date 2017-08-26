@@ -42,12 +42,12 @@
 
         </LinearLayout>
 
-        <View style="@style/line_vertical" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_repairType"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <View style="@style/line_vertical" />
 
     </LinearLayout>
 
