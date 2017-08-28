@@ -3,9 +3,11 @@ package com.eeka.mespad.fragment;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethod;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +23,7 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 
 import java.util.ArrayList;
@@ -62,6 +65,8 @@ public class LoginFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
+        TextView tv_IP = (TextView) mView.findViewById(R.id.tv_login_IP);
+        tv_IP.setText(NetUtil.getHostIP());
         mEt_user = (EditText) mView.findViewById(R.id.et_login_user);
         mEt_pwd = (EditText) mView.findViewById(R.id.et_login_pwd);
         mEt_site = (EditText) mView.findViewById(R.id.et_login_site);
@@ -75,6 +80,7 @@ public class LoginFragment extends BaseFragment {
             tv_user.setText("账号：");
             btn_done.setText("完成");
         } else {
+            mEt_user.setInputType(InputType.TYPE_CLASS_NUMBER);
             mView.findViewById(R.id.layout_login_pwd).setVisibility(View.GONE);
         }
 

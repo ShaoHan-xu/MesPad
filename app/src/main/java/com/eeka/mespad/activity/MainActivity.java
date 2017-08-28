@@ -85,13 +85,13 @@ public class MainActivity extends BaseActivity {
         initView();
         mCardInfo = new CardInfoBo();
 
-        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-        if (contextInfo == null) {
-            showLoading("应用初始化中...", true);
-            HttpHelper.initData(this);
-        } else {
-            initData();
-        }
+//        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+//        if (contextInfo == null) {
+        showLoading("应用初始化中...", true);
+        HttpHelper.initData(this);
+//        } else {
+//            initData();
+//        }
     }
 
     @Override
@@ -633,6 +633,26 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 刷新登录用户表，用户登录/登出时需要调用
+     */
+    private void refreshLoginUser() {
+        switch (mTopic) {
+            case TopicUtil.TOPIC_CUT:
+                mCutFragment.refreshLoginUsers();
+                break;
+            case TopicUtil.TOPIC_SEW:
+                mSewFragment.refreshLoginUsers();
+                break;
+            case TopicUtil.TOPIC_SUSPEND:
+                mSuspendFragment.refreshLoginUsers();
+                break;
+            case TopicUtil.TOPIC_QC:
+                mSewQCFragment.refreshLoginUsers();
+                break;
+        }
+    }
+
     private void logoutSuccess() {
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         if (loginUsers != null && loginUsers.size() > mLogoutIndex) {
@@ -648,15 +668,7 @@ public class MainActivity extends BaseActivity {
                 mLogoutDialog = null;
             }
         }
-        switch (mTopic) {
-            case TopicUtil.TOPIC_CUT:
-                mCutFragment.refreshLoginUsers();
-                break;
-            case TopicUtil.TOPIC_QC:
-                mSewQCFragment.refreshLoginUsers();
-                break;
-        }
-
+        refreshLoginUser();
     }
 
     @Override
@@ -669,8 +681,8 @@ public class MainActivity extends BaseActivity {
                 ft.commit();
             }
 
-            showLoading();
-            HttpHelper.findProcessWithPadId(this);
+            showLoading("应用初始化中...", true);
+            HttpHelper.initData(this);
         }
     }
 
@@ -682,20 +694,7 @@ public class MainActivity extends BaseActivity {
             if (mPositionInfo == null) {
                 HttpHelper.findProcessWithPadId(this);
             } else {
-                switch (mTopic) {
-                    case TopicUtil.TOPIC_CUT:
-                        mCutFragment.refreshLoginUsers();
-                        break;
-                    case TopicUtil.TOPIC_SEW:
-                        mSewFragment.refreshLoginUsers();
-                        break;
-                    case TopicUtil.TOPIC_SUSPEND:
-                        mSuspendFragment.refreshLoginUsers();
-                        break;
-                    case TopicUtil.TOPIC_QC:
-                        mSewQCFragment.refreshLoginUsers();
-                        break;
-                }
+                refreshLoginUser();
             }
         }
     }

@@ -108,6 +108,7 @@ public class RepairActivity extends BaseActivity {
                 String sfcBo = getIntent().getStringExtra(KEY_DATA);
                 showLoading();
                 HttpHelper.getRepairProcess(component.getName(), sfcBo, RepairActivity.this);
+                refreshTab(position);
             }
         });
         return view;

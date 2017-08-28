@@ -43,7 +43,7 @@ public class Logger {
             } else {
                 stackTraceElement = Thread.currentThread().getStackTrace()[3];
             }
-            Log.e(tag, stackTraceElement.getFileName() + " " + stackTraceElement.getLineNumber() + "  " + errorMsg);
+            Log.e(tag, stackTraceElement.getFileName() + " " + stackTraceElement.getLineNumber() + " " + errorMsg);
         }
     }
 

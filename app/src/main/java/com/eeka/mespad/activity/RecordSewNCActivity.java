@@ -107,7 +107,7 @@ public class RecordSewNCActivity extends BaseActivity {
             SewQCDataBo.DesignComponentBean component = mList_component.get(i);
             mLayout_productComponent.addView(getTabView(component, i));
             if (i == 0) {
-                refreshDesignComponentView(component);
+                refreshDesignComponentView(component, 0);
             }
         }
         if (mList_component.size() != 0) {
@@ -118,7 +118,7 @@ public class RecordSewNCActivity extends BaseActivity {
     /**
      * 刷新设计部件布局
      */
-    private void refreshDesignComponentView(SewQCDataBo.DesignComponentBean component) {
+    private void refreshDesignComponentView(SewQCDataBo.DesignComponentBean component, int position) {
         mLayout_designComponent.removeAllViews();
         List<SewQCDataBo.DesignComponentBean.DesgComponentsBean> desgComponents = component.getDesgComponents();
         if (desgComponents != null && desgComponents.size() != 0) {
@@ -131,7 +131,7 @@ public class RecordSewNCActivity extends BaseActivity {
                     HttpHelper.getSewNcCodeList(bean.getName(), RecordSewNCActivity.this);
                 }
             }
-            refreshTab(mLayout_designComponent, 0);
+            refreshTab(mLayout_designComponent, position);
         }
     }
 
@@ -164,6 +164,7 @@ public class RecordSewNCActivity extends BaseActivity {
     private <T> View getTabView(T data, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab, null);
         TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
+        tv_tabName.setPadding(10, 10, 10, 10);
         if (data instanceof SewQCDataBo.DesignComponentBean) {//生产部件
             final SewQCDataBo.DesignComponentBean item = (SewQCDataBo.DesignComponentBean) data;
             tv_tabName.setText(item.getDescription());
@@ -171,7 +172,7 @@ public class RecordSewNCActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     mProductPosition = position;
-                    refreshDesignComponentView(item);
+                    refreshDesignComponentView(item, position);
                 }
             });
         } else if (data instanceof SewQCDataBo.DesignComponentBean.DesgComponentsBean) {//设计部件
@@ -183,6 +184,7 @@ public class RecordSewNCActivity extends BaseActivity {
                     mDesignPosition = position;
                     showLoading();
                     HttpHelper.getSewNcCodeList(item.getName(), RecordSewNCActivity.this);
+                    refreshTab(mLayout_designComponent, position);
                 }
             });
         }
@@ -196,9 +198,9 @@ public class RecordSewNCActivity extends BaseActivity {
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = parent.getChildAt(i);
-            childAt.setBackgroundResource(R.color.white);
+            childAt.findViewById(R.id.textView).setEnabled(true);
         }
-        parent.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
+        parent.getChildAt(position).findViewById(R.id.textView).setEnabled(false);
     }
 
     /**
@@ -239,6 +241,8 @@ public class RecordSewNCActivity extends BaseActivity {
      */
     public static Intent getIntent(Context context, String sfc, String sfcBo, List<SewQCDataBo.DesignComponentBean> components) {
         Intent intent = new Intent(context, RecordSewNCActivity.class);
+        intent.putExtra(KEY_SFC, sfc);
+        intent.putExtra(KEY_SFCBO, sfcBo);
         intent.putExtra(KEY_DATA, (Serializable) components);
         return intent;
     }

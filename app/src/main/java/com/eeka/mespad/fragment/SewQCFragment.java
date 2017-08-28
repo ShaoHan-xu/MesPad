@@ -16,6 +16,7 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 
 import java.util.List;
 
@@ -121,7 +122,8 @@ public class SewQCFragment extends BaseFragment {
      */
     public void recordNc() {
         if (mSewQCData != null) {
-            startActivityForResult(RecordSewNCActivity.getIntent(mContext, mSewQCData.getSfc(), mSewQCData.getSfc(), mSewQCData.getDesignComponent()), REQUEST_NC);
+            String sfcBo = "SFCBO:" + SpUtil.getSite() + "," + mSewQCData.getSfc();
+            startActivityForResult(RecordSewNCActivity.getIntent(mContext, mSewQCData.getSfc(), sfcBo, mSewQCData.getDesignComponent()), REQUEST_NC);
         } else {
             showErrorDialog("请先获取工单数据");
         }
@@ -130,7 +132,11 @@ public class SewQCFragment extends BaseFragment {
     public void searchOrder(String orderNum) {
         if (isAdded())
             showLoading();
-        HttpHelper.findPadKeyDataForNcUI(orderNum, this);
+        boolean flag = HttpHelper.findPadKeyDataForNcUI(orderNum, this);
+        if (!flag) {
+            dismissLoading();
+            showErrorDialog("需要员工上岗后才能搜索工单");
+        }
     }
 
     /**
@@ -156,12 +162,13 @@ public class SewQCFragment extends BaseFragment {
                 }
             });
         } else if (data instanceof SewQCDataBo.DesignComponentBean.DesgComponentsBean) {
-            SewQCDataBo.DesignComponentBean.DesgComponentsBean item = (SewQCDataBo.DesignComponentBean.DesgComponentsBean) data;
+            final SewQCDataBo.DesignComponentBean.DesgComponentsBean item = (SewQCDataBo.DesignComponentBean.DesgComponentsBean) data;
             tv_tabName.setText(item.getDescription());
             tv_tabName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     refreshTab(mLayout_designComponent, position);
+                    mTv_componentDesc.setText(item.getDescription());
                 }
             });
         }

@@ -54,6 +54,14 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".activity.RecordSewNCActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.RepairActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".activity.VideoPlayerActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />

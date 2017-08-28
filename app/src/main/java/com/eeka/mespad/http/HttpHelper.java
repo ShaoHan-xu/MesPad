@@ -302,7 +302,6 @@ public class HttpHelper {
      */
     public static void saveBadRecord(@NonNull JSONObject json, HttpCallback callback) {
         json.put("PAD_ID", PAD_IP);
-        json.put("RFID", "RFID00000013");
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
         HttpRequest.post(saveBadRecord, params, getResponseHandler(saveBadRecord, callback));
@@ -412,15 +411,18 @@ public class HttpHelper {
     /**
      * 获取缝制质检主界面数据
      */
-    public static void findPadKeyDataForNcUI(String RFID, HttpCallback callback) {
+    public static boolean findPadKeyDataForNcUI(String RFID, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("rfId", RFID);
         params.put("padIp", PAD_IP);
         List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-        if (positionUsers != null && positionUsers.size() != 0){
+        if (positionUsers != null && positionUsers.size() != 0) {
             params.put("userId", positionUsers.get(0).getUSER());
+        } else {
+            return false;
         }
         HttpRequest.post(findPadKeyDataForNcUI, params, getResponseHandler(findPadKeyDataForNcUI, callback));
+        return true;
     }
 
     /**
@@ -623,12 +625,14 @@ public class HttpHelper {
                     }
                 } else if (!isSuccess(jsonObject)) {
                     String message = jsonObject.getString("message");
-                    if (message.contains(COOKIE_OUT)) {//cookie失效，重新登录获取新的cookie
-                        IS_COOKIE_OUT = true;
-                        UserInfoBo loginUser = SpUtil.getLoginUser();
-                        login(loginUser.getUSER(), loginUser.getPassword(), callback);
-                        Toast.makeText(mContext, "由于您长时间未操作，正在重新登录系统...", Toast.LENGTH_SHORT).show();
-                        return;
+                    if (!TextUtils.isEmpty(message)) {
+                        if (message.contains(COOKIE_OUT)) {//cookie失效，重新登录获取新的cookie
+                            IS_COOKIE_OUT = true;
+                            UserInfoBo loginUser = SpUtil.getLoginUser();
+                            login(loginUser.getUSER(), loginUser.getPassword(), callback);
+                            Toast.makeText(mContext, "由于您长时间未操作，正在重新登录系统...", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                     }
                 }
                 if (callback != null)

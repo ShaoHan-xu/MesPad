@@ -41,7 +41,7 @@ public class MQTTService extends Service {
     // to keep the connection active, even when the device goes to sleep.
     private static final long KEEP_ALIVE_INTERVAL = 1000 * 60 * 28;
 
-    private int isReconnect = 0;
+    private static boolean isConnected = false;//是否已连接
     private static MqttAndroidClient client;
     private MqttConnectOptions conOpt;
     private static boolean doConnect = true;
@@ -171,9 +171,11 @@ public class MQTTService extends Service {
             client.disconnect();
             client = null;
             doConnect = true;
-        } catch (MqttException e) {
+            isConnected = false;
+            Logger.d("MQTT 断开连接");
+        } catch (Exception e) {
             e.printStackTrace();
-            log("Exception stop connect ", e);
+            Logger.e("MQTT 断开连接异常" + e.getMessage());
         }
         if (mLog != null) {
             try {
@@ -203,14 +205,21 @@ public class MQTTService extends Service {
     private IMqttActionListener iMqttActionListener = new IMqttActionListener() {
         @Override
         public void onSuccess(IMqttToken token) {
-            Logger.d("连接成功 ");
-            isReconnect = 0;
+            Logger.d("MQTT 连接成功");
             try {
                 // 订阅myTopic话题
                 client.subscribe(myTopic, 0);
-            } catch (MqttException e) {
+                isConnected = true;
+                Logger.d("MQTT 订阅" + myTopic + "成功");
+            } catch (Exception e) {
                 e.printStackTrace();
-                log("Exception subscribe ", e);
+                Logger.e("MQTT 订阅异常\n" + e.getMessage());
+//                doClientConnection();//不能这样重连，会订阅两次
+                try {
+                    client.connect();
+                } catch (MqttException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
 

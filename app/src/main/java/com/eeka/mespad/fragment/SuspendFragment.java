@@ -103,7 +103,6 @@ public class SuspendFragment extends BaseFragment {
         toast("收到工单消息，正在刷新页面");
         searchOrder(RFID);
     }
-
     /**
      * 用户登录
      *

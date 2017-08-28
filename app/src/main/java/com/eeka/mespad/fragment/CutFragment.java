@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -31,7 +30,6 @@ import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
 
@@ -68,6 +66,7 @@ public class CutFragment extends BaseFragment {
 
     private boolean showDone;
     private String mOrderType;
+    private String mRFID;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -86,10 +85,12 @@ public class CutFragment extends BaseFragment {
     public void getData(String orderType, String orderNum, String resourceBo, String processLotBo) {
         showLoading();
         mOrderType = orderType;
+        mRFID = orderNum;
         HttpHelper.viewCutPadInfo(orderType, orderNum, resourceBo, processLotBo, this);
     }
 
     protected void initView() {
+        super.initView();
         mVP_process = (ViewPager) mView.findViewById(R.id.vp_main_processDesc);
         mVP_matInfo = (ViewPager) mView.findViewById(R.id.vp_main_matInfo);
 
@@ -634,6 +635,8 @@ public class CutFragment extends BaseFragment {
                         mList_processData = mTailorInfo.getOPER_INFOR();
                     }
                     mTailorInfo.setRESR_INFOR(mResultInfo);
+                    mTailorInfo.setOrderType(mOrderType);
+                    mTailorInfo.setRFID(mRFID);
                     refreshView();
                     break;
                 case HttpHelper.startBatchWork_url:

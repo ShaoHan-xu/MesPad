@@ -74,6 +74,10 @@ public class RecordCutNCActivity extends BaseActivity {
         if (v.getId() == R.id.btn_recordBad_save) {
             showLoading();
             JSONObject json = new JSONObject();
+            json.put("RFID", mTailorInfo.getRFID());
+            json.put("ORDER_TYPE", mTailorInfo.getOrderType());
+            json.put("SHOP_ORDER", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
+            json.put("SHOP_ORDER_BO", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());
             json.put("RESOURCE_BO", mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
             json.put("NC_CODES", mList_badRecord);
             json.put("OPERATION", mTailorInfo.getOPER_INFOR().get(0).getOPERATION());

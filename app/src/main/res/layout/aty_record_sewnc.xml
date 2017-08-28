@@ -24,7 +24,7 @@
     <LinearLayout
         android:id="@+id/layout_recordSewNC_productComponent"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:divider="@drawable/divider_gray_vertical"
         android:orientation="horizontal"
@@ -37,7 +37,7 @@
     <LinearLayout
         android:id="@+id/layout_recordSewNC_designComponent"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:divider="@drawable/divider_gray_vertical"
         android:orientation="horizontal"
@@ -63,7 +63,7 @@
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:layout_height="100dp">
 
                 <LinearLayout
                     android:id="@+id/layout_recordSewNC_NcProcess"

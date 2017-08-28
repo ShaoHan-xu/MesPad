@@ -24,6 +24,24 @@ public class TailorInfoBo implements Serializable {
     private NextOrderInfo NEXT_OPER_INFOR;
     private ResultInfo RESR_INFOR;
     private List<StickyInfo> STICKY_INFOR;
+    private String orderType;
+    private String RFID;
+
+    public String getRFID() {
+        return RFID;
+    }
+
+    public void setRFID(String RFID) {
+        this.RFID = RFID;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
 
     public List<StickyInfo> getSTICKY_INFOR() {
         return STICKY_INFOR;
@@ -416,7 +434,7 @@ public class TailorInfoBo implements Serializable {
         }
     }
 
-    public static class StickyInfo implements Serializable{
+    public static class StickyInfo implements Serializable {
 
         /**
          * ORDER_NO : 123456789
