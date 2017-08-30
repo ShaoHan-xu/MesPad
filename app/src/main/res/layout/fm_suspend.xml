@@ -188,6 +188,8 @@
                 android:padding="10dp"
                 android:text="待作业工单" />
 
+            <View style="@style/line"/>
+
             <ListView
                 android:id="@+id/lv_sfcList"
                 android:layout_width="match_parent"

@@ -22,7 +22,6 @@ public class TailorInfoBo implements Serializable {
     private List<MatInfoBean> MAT_INFOR;
     private List<LayoutInfoBean> LAYOUT_INFOR;
     private NextOrderInfo NEXT_OPER_INFOR;
-    private ResultInfo RESR_INFOR;
     private List<StickyInfo> STICKY_INFOR;
     private String orderType;
     private String RFID;
@@ -49,14 +48,6 @@ public class TailorInfoBo implements Serializable {
 
     public void setSTICKY_INFOR(List<StickyInfo> STICKY_INFOR) {
         this.STICKY_INFOR = STICKY_INFOR;
-    }
-
-    public ResultInfo getRESR_INFOR() {
-        return RESR_INFOR;
-    }
-
-    public void setRESR_INFOR(ResultInfo RESR_INFOR) {
-        this.RESR_INFOR = RESR_INFOR;
     }
 
     public NextOrderInfo getNEXT_OPER_INFOR() {
@@ -410,27 +401,6 @@ public class TailorInfoBo implements Serializable {
 
         public void setOPER_DESC(String OPER_DESC) {
             this.OPER_DESC = OPER_DESC;
-        }
-    }
-
-    public static class ResultInfo implements Serializable {
-        private String RESOURCE_BO;
-        private String RESOURCE;
-
-        public String getRESOURCE_BO() {
-            return RESOURCE_BO;
-        }
-
-        public void setRESOURCE_BO(String RESOURCE_BO) {
-            this.RESOURCE_BO = RESOURCE_BO;
-        }
-
-        public String getRESOURCE() {
-            return RESOURCE;
-        }
-
-        public void setRESOURCE(String RESOURCE) {
-            this.RESOURCE = RESOURCE;
         }
     }
 

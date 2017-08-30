@@ -17,8 +17,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
+import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +36,7 @@ public class RepairActivity extends BaseActivity {
 
     private static final String KEY_SFCBO = "key_sfcBo";
     private static final String KEY_DATA = "key_data";
+    private static final String KEY_SELECTED = "key_selected";
 
     private LinearLayout mLayout_component;
     private List<SewQCDataBo.DesignComponentBean> mList_component;
@@ -41,6 +45,8 @@ public class RepairActivity extends BaseActivity {
     private NcAdapter mAdapter;
     private int mComponentPosition;//选择的部件下标
     private int mTypePosition = -1;//选择的返工工序
+
+    private String mSFCBO;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +75,7 @@ public class RepairActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        mSFCBO = getIntent().getStringExtra(KEY_DATA);
         mList_component = (List<SewQCDataBo.DesignComponentBean>) getIntent().getSerializableExtra(KEY_DATA);
         if (mList_component != null && mList_component.size() != 0) {
             for (int i = 0; i < mList_component.size(); i++) {
@@ -84,10 +91,23 @@ public class RepairActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_done) {
-
+            done();
         } else if (v.getId() == R.id.btn_cancel) {
             finish();
         }
+    }
+
+    private void done() {
+        showLoading();
+        UpdateSewNcBo data = new UpdateSewNcBo();
+        data.setSfcRef(mSFCBO);
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        if (resource != null) {
+            data.setResourceRef(resource.getRESOURCE_BO());
+        }
+        List<UpdateSewNcBo.NcCodeOperationListBean> list = (List<UpdateSewNcBo.NcCodeOperationListBean>) getIntent().getSerializableExtra(KEY_SELECTED);
+        data.setNcCodeOperationList(list);
+        HttpHelper.recordSewNc(data, this);
     }
 
     /**
@@ -105,9 +125,8 @@ public class RepairActivity extends BaseActivity {
             public void onClick(View v) {
                 mComponentPosition = position;
                 mTypePosition = -1;
-                String sfcBo = getIntent().getStringExtra(KEY_DATA);
                 showLoading();
-                HttpHelper.getRepairProcess(component.getName(), sfcBo, RepairActivity.this);
+                HttpHelper.getRepairProcess(component.getName(), mSFCBO, RepairActivity.this);
                 refreshTab(position);
             }
         });
@@ -162,9 +181,11 @@ public class RepairActivity extends BaseActivity {
         }
     }
 
-    public static Intent getIntent(Context context, String sfcBo, List<SewQCDataBo.DesignComponentBean> components) {
+    public static Intent getIntent(Context context, String sfcBo, List<SewQCDataBo.DesignComponentBean> components, List<UpdateSewNcBo.NcCodeOperationListBean> selected) {
         Intent intent = new Intent(context, RepairActivity.class);
+        intent.putExtra(KEY_SFCBO, sfcBo);
         intent.putExtra(KEY_DATA, (Serializable) components);
+        intent.putExtra(KEY_SELECTED, (Serializable) selected);
         return intent;
     }
 }

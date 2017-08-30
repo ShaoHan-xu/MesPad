@@ -19,8 +19,10 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 
 import java.util.ArrayList;
@@ -266,7 +268,9 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         mLabuData.setLAYOUTS(layoutList);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         mLabuData.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
-        mLabuData.setRESOURCE_BO(mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        if (resource != null)
+            mLabuData.setRESOURCE_BO(resource.getRESOURCE_BO());
         List<String> opList = new ArrayList<>();
         for (TailorInfoBo.OPERINFORBean oper : mTailorInfo.getOPER_INFOR()) {
             opList.add(oper.getOPERATION_BO());
@@ -277,10 +281,6 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
 
     /**
      * 获取物料图布局
-     *
-     * @param item
-     * @param position
-     * @return
      */
     private View getMaterialsView(final TailorInfoBo.MatInfoBean item, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
@@ -306,8 +306,6 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
 
     /**
      * 获取物料信息布局
-     *
-     * @return
      */
     private View getMaterialInfoView(UpdateLabuBo.MatItem materialInfo) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_recordlabu_materialinfo, null);

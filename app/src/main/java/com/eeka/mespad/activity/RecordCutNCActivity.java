@@ -14,9 +14,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -78,7 +80,9 @@ public class RecordCutNCActivity extends BaseActivity {
             json.put("ORDER_TYPE", mTailorInfo.getOrderType());
             json.put("SHOP_ORDER", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
             json.put("SHOP_ORDER_BO", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());
-            json.put("RESOURCE_BO", mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+            PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+            if (resource != null)
+                json.put("RESOURCE_BO", resource.getRESOURCE_BO());
             json.put("NC_CODES", mList_badRecord);
             json.put("OPERATION", mTailorInfo.getOPER_INFOR().get(0).getOPERATION());
             json.put("OPERATION_BO", mTailorInfo.getOPER_INFOR().get(0).getOPERATION_BO());

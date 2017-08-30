@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -25,11 +24,6 @@ import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.utils.UnitUtil;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,15 +60,8 @@ public class SuspendFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity();
 
-        EventBus.getDefault().register(this);
         initView();
         initData();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -83,6 +70,7 @@ public class SuspendFragment extends BaseFragment {
         mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
         mIv_component = (ImageView) mView.findViewById(R.id.iv_suspend_componentImg);
+        refreshLoginUsers();
     }
 
     @Override
@@ -91,28 +79,6 @@ public class SuspendFragment extends BaseFragment {
         mList_sfcs = new ArrayList<>();
         mSFCAdapter = new SFCAdapter(mContext, mList_sfcs, R.layout.layout_tab);
         mLv_orderList.setAdapter(mSFCAdapter);
-    }
-
-    /**
-     * 收到RFID卡号，拉取数据更新
-     *
-     * @param RFID RFID号
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFRIDMsg(String RFID) {
-        toast("收到工单消息，正在刷新页面");
-        searchOrder(RFID);
-    }
-    /**
-     * 用户登录
-     *
-     * @param json
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoginMsg(JSONObject json) {
-        toast("用户刷卡登录");
-        String cardNum = json.getString("EMPLOYEE_CARD");
-        HttpHelper.positionLogin(cardNum, this);
     }
 
     /**
@@ -274,6 +240,9 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }
+        } else {
+            String message = resultJSON.getString("message");
+            showErrorDialog(message);
         }
     }
 }

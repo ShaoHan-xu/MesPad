@@ -2,6 +2,7 @@ package com.eeka.mespad.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,9 +27,8 @@ import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.RecordNCBo;
-import com.eeka.mespad.bo.ReturnMaterialInfoBo;
-import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.LoginFragment;
@@ -40,18 +40,20 @@ import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
-import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Lenovo on 2017/6/12.
  */
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends NFCActivity {
 
     private static final int REQUEST_RECORD_NC = 0;
     private static final int REQUEST_LOGIN = 1;
@@ -65,8 +67,6 @@ public class MainActivity extends BaseActivity {
 
     private LinearLayout mLayout_controlPanel;
 
-    private ReturnMaterialInfoBo mReturnMaterialInfo;//退料
-    private ReturnMaterialInfoBo mAddMaterialInfo;//补料
     private List<RecordNCBo> mList_badData;
 
     private PositionInfoBo mPositionInfo;
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity {
     private boolean isSearchOrder;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_main);
 
@@ -95,10 +95,54 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         MQTTService.actionStop(mContext);
     }
+
+    /**
+     * 收到推送消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushMsgReceive(PushJson push) {
+        String type = push.getType();
+        if ("LOGIN".equals(type)) {
+            toast("用户刷卡登录");
+            JSONObject json = JSON.parseObject(push.getContent());
+            String cardNum = json.getString("EMPLOYEE_CARD");
+            showLoading();
+            HttpHelper.positionLogin(cardNum, this);
+        } else if ("LOGOUT".equals(type)) {
+            JSONObject json = JSON.parseObject(push.getContent());
+            String cardId = json.getString("EMPLOYEE_CARD");
+            List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+            for (int i = 0; i < positionUsers.size(); i++) {
+                UserInfoBo user = positionUsers.get(i);
+                if (cardId.equals(user.getCARD_NUMBER())) {
+                    mLogoutIndex = i;
+                    break;
+                }
+            }
+            showLoading();
+            HttpHelper.positionLogout(cardId, this);
+        } else {
+            toast("收到工单消息，正在刷新页面");
+            searchOrder(push.getContent());
+        }
+    }
+
 
     @Override
     protected void initView() {
@@ -311,46 +355,14 @@ public class MainActivity extends BaseActivity {
                 startActivityForResult(new Intent(mContext, LoginActivity.class), REQUEST_LOGIN);
                 break;
             case R.id.btn_materialReturn:
-                if (mReturnMaterialInfo == null) {
-                    mReturnMaterialInfo = new ReturnMaterialInfoBo();
-                    TailorInfoBo materialData = mCutFragment.getMaterialData();
-                    if (materialData == null) {
-                        toast("获取订单数据失败，请重新获取数据");
-                        return;
-                    }
-                    mReturnMaterialInfo.setOrderNum(materialData.getSHOP_ORDER_INFOR().getSHOP_ORDER());
-                    List<TailorInfoBo.MatInfoBean> itemArray = materialData.getMAT_INFOR();
-                    List<ReturnMaterialInfoBo.MaterialInfoBo> materialList = new ArrayList<>();
-                    for (TailorInfoBo.MatInfoBean item : itemArray) {
-                        ReturnMaterialInfoBo.MaterialInfoBo material = new ReturnMaterialInfoBo.MaterialInfoBo();
-                        material.setPicUrl(item.getMAT_URL());
-                        material.setITEM(item.getMAT_NO());
-                        materialList.add(material);
-                    }
-                    mReturnMaterialInfo.setMaterialInfoList(materialList);
+                if (mCutFragment != null) {
+                    mCutFragment.returnAndFeedingMat(true);
                 }
-                new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_RETURN, mReturnMaterialInfo).show();
                 break;
             case R.id.btn_materialFeeding:
-                if (mAddMaterialInfo == null) {
-                    mAddMaterialInfo = new ReturnMaterialInfoBo();
-                    TailorInfoBo materialData = mCutFragment.getMaterialData();
-                    if (materialData == null) {
-                        toast("获取订单数据失败，请重新获取数据");
-                        return;
-                    }
-                    mAddMaterialInfo.setOrderNum(materialData.getSHOP_ORDER_INFOR().getSHOP_ORDER());
-                    List<TailorInfoBo.MatInfoBean> itemArray = materialData.getMAT_INFOR();
-                    List<ReturnMaterialInfoBo.MaterialInfoBo> materialList = new ArrayList<>();
-                    for (TailorInfoBo.MatInfoBean item : itemArray) {
-                        ReturnMaterialInfoBo.MaterialInfoBo material = new ReturnMaterialInfoBo.MaterialInfoBo();
-                        material.setPicUrl(item.getMAT_URL());
-                        material.setITEM(item.getMAT_NO());
-                        materialList.add(material);
-                    }
-                    mAddMaterialInfo.setMaterialInfoList(materialList);
+                if (mCutFragment != null) {
+                    mCutFragment.returnAndFeedingMat(false);
                 }
-                new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, mAddMaterialInfo).show();
                 break;
             case R.id.btn_dataCollect:
                 if (TopicUtil.TOPIC_CUT.equals(mTopic))
@@ -367,7 +379,7 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case R.id.btn_video:
-                //自定义播放器，可缓存视频到本地
+                String videoPath = null;
                 try {
                     String url = "http://10.7.121.75/gst/在.mp4";
                     if (!isEmpty(url)) {
@@ -375,18 +387,22 @@ public class MainActivity extends BaseActivity {
                         if (indexOf != -1) {
                             String host = url.substring(0, indexOf + 1);
                             String name = url.substring(indexOf + 1, url.length());
-                            String videoPath = host + URLEncoder.encode(name, "utf-8");
-                            startActivity(VideoPlayerActivity.getIntent(mContext, videoPath));
+                            videoPath = host + URLEncoder.encode(name, "utf-8");
                         }
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
-                //系统自带视频播放，无缓存
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setDataAndType(Uri.parse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"), "video/mp4");
-//                startActivity(intent);
+                if (isEmpty(videoPath)) {
+                    //自定义播放器，可缓存视频到本地
+//                    startActivity(VideoPlayerActivity.getIntent(mContext, videoPath));
+                    //系统自带视频播放，无缓存
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
+                    startActivity(intent);
+                } else {
+                    showErrorDialog("视频路径出错");
+                }
                 break;
             case R.id.btn_login:
             case R.id.tv_startWorkAlert:
@@ -447,7 +463,8 @@ public class MainActivity extends BaseActivity {
                     HttpHelper.findProcessWithPadId(this);
                     return;
                 }
-                searchOrder();
+                String cardNum = mEt_orderNum.getText().toString();
+                searchOrder(cardNum);
                 break;
             case R.id.btn_searchPosition:
                 String position1 = mEt_position.getText().toString();
@@ -486,19 +503,17 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void searchOrder() {
-        String cardNum = mEt_orderNum.getText().toString();
+    private void searchOrder(String cardNum) {
         if (isEmpty(cardNum)) {
             toast("请输入RFID卡号");
         } else {
             mCardInfo.setCardNum(cardNum);
             switch (mTopic) {
                 case TopicUtil.TOPIC_CUT:
-                    showLoading();
                     getCardInfo(cardNum);
                     break;
                 case TopicUtil.TOPIC_SEW:
-                    mSewFragment.getData(mCardInfo.getCardNum());
+                    mSewFragment.searchOrder(mCardInfo.getCardNum());
                     break;
                 case TopicUtil.TOPIC_SUSPEND:
                     mSuspendFragment.searchOrder(cardNum);
@@ -537,7 +552,7 @@ public class MainActivity extends BaseActivity {
         mLogoutAdapter = new CommonRecyclerAdapter<UserInfoBo>(mContext, loginUsers, R.layout.item_logout, manager) {
             @Override
             public void convert(RecyclerViewHolder holder, final UserInfoBo item, final int position) {
-                holder.setText(R.id.tv_userName, item.getUSER());
+                holder.setText(R.id.tv_userName, item.getNAME());
                 holder.setText(R.id.tv_userNum, item.getEMPLOYEE_NUMBER());
                 holder.getView(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -564,8 +579,8 @@ public class MainActivity extends BaseActivity {
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
-                List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
-                SpUtil.savePositionUsers(loginUserList);
+//                List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
+//                SpUtil.savePositionUsers(loginUserList);
                 initData();
 //                MQTTService.actionStop(mContext);
                 MQTTService.actionStart(mContext);
@@ -577,17 +592,15 @@ public class MainActivity extends BaseActivity {
                 switch (mTopic) {
                     case TopicUtil.TOPIC_CUT:
                         if ("P".equalsIgnoreCase(orderType) || "S".equalsIgnoreCase(orderType)) {
-                            mCutFragment.getData(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
+                            mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
                         } else if ("M".equals(orderType)) {
                             clockIn(mCardInfo.getCardNum());
                         }
                         break;
-                    case TopicUtil.TOPIC_SUSPEND:
-
-                        break;
                 }
             } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
                 mPositionInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), PositionInfoBo.class);
+                SpUtil.save(SpUtil.KEY_RESOURCE, JSON.toJSONString(mPositionInfo.getRESR_INFOR()));
                 List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
                 if (operInfo != null && operInfo.size() != 0) {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
@@ -601,7 +614,8 @@ public class MainActivity extends BaseActivity {
 
                 if (isSearchOrder) {
                     isSearchOrder = false;
-                    searchOrder();
+                    String cardNum = mEt_orderNum.getText().toString();
+                    searchOrder(cardNum);
                 }
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
@@ -697,5 +711,12 @@ public class MainActivity extends BaseActivity {
                 refreshLoginUser();
             }
         }
+    }
+
+    /**
+     * 获取站位相关信息
+     */
+    public PositionInfoBo getPositionInfo() {
+        return mPositionInfo;
     }
 }

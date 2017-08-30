@@ -16,7 +16,6 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.utils.SpUtil;
 
 import java.util.List;
 
@@ -80,6 +79,12 @@ public class SewQCFragment extends BaseFragment {
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
     }
 
+    @Override
+    protected void initData() {
+        super.initData();
+        refreshLoginUsers();
+    }
+
     private void setupView() {
         if (mSewQCData == null) {
             toast("数据错误");
@@ -122,8 +127,7 @@ public class SewQCFragment extends BaseFragment {
      */
     public void recordNc() {
         if (mSewQCData != null) {
-            String sfcBo = "SFCBO:" + SpUtil.getSite() + "," + mSewQCData.getSfc();
-            startActivityForResult(RecordSewNCActivity.getIntent(mContext, mSewQCData.getSfc(), sfcBo, mSewQCData.getDesignComponent()), REQUEST_NC);
+            startActivityForResult(RecordSewNCActivity.getIntent(mContext, mSewQCData.getSfc(), mSewQCData.getDesignComponent()), REQUEST_NC);
         } else {
             showErrorDialog("请先获取工单数据");
         }

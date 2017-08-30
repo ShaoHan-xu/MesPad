@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -42,7 +43,6 @@ public class HttpHelper {
     public static final String loginByCard_url = BASE_URL + "loginByCard?";
     public static final String positionLogin_url = BASE_URL + "position/positionLogin?";
     public static final String positionLogout_url = BASE_URL + "position/positionLogout?";
-    //    public static final String login_url = "http://10.7.121.54:50000/manufacturing/index.jsp?";//网页方式登录
     public static final String queryPositionByPadIp_url = BASE_URL + "position/queryPositionByPadIp?";
     public static final String findProcessWithPadId_url = BASE_URL + "cutpad/findPadBindOperations?";
     public static final String viewCutPadInfo_url = BASE_URL + "cutpad/viewCutPadInfor?";
@@ -73,7 +73,7 @@ public class HttpHelper {
     public static final String getSewNcCodeList = BASE_URL + "logNcPad/listNcCodesOnDesgComponent?";
     public static final String getProcessWithNcCode = BASE_URL + "logNcPad/listOperationsOnNcCode?";
     public static final String getRepairProcess = BASE_URL + "logNcPad/listOpersByProdComponent?";
-    public static final String saveSewNc = BASE_URL + "logNcPad/logNcOnSew?";
+    public static final String recordSewNc = BASE_URL + "logNcPad/logNcOnSew?";
 
     private static Context mContext;
 
@@ -354,6 +354,10 @@ public class HttpHelper {
     public static void hangerUnbind(JSONObject json, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        if (positionUsers != null && positionUsers.size() != 0) {
+            params.put("userid", positionUsers.get(0).getUSER());
+        }
         HttpRequest.post(hangerUnbind, params, getResponseHandler(hangerUnbind, callback));
     }
 
@@ -524,38 +528,11 @@ public class HttpHelper {
 
     /**
      * 保存缝制质检不良数据
-     *
-     * @param json {
-     *             "sfcRef": "SFCBO:TEST,TEST672",
-     *             "resourceRef": "ResourceBO:TEST,AUTO_001",
-     *             "reworkOperationList": [
-     *             {
-     *             "reworkOperation": "GC-OP-CAIJIAN",
-     *             "sequence": 1,
-     *             "operationDesc": "GC-OP-CAIJIAN"
-     *             },
-     *             {
-     *             "reworkOperation": "GC-OP-LABU",
-     *             "sequence": 2,
-     *             "operationDesc": "GC-OP-LABU"
-     *             }
-     *             ],
-     *             "ncCodeOperationList": [
-     *             {
-     *             "ncCodeRef": "NCCodeBO:TEST,GC-OP-CAIJIAN",
-     *             "operation": "GC-OP-CAIJIAN"
-     *             },
-     *             {
-     *             "ncCodeRef": "NCCodeBO:TEST,GC-OP-LABU",
-     *             "operation": "GC-OP-LABU"
-     *             }
-     *             ]
-     *             }
      */
-    public static void saveSewNc(JSONObject json, HttpCallback callback) {
+    public static void recordSewNc(UpdateSewNcBo data, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("params", json.toJSONString());
-        HttpRequest.post(saveSewNc, params, getResponseHandler(saveSewNc, callback));
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(recordSewNc, params, getResponseHandler(recordSewNc, callback));
     }
 
     /**
@@ -650,41 +627,6 @@ public class HttpHelper {
                     return;
                 }
                 Logger.d(response);
-                //网页方式登录测试用
-//                if (login_url.equals(url)) {
-//                    if (!response.contains("Error")) {
-//                        if (headers != null) {
-//                            StringBuilder cookies = new StringBuilder();
-//                            List<String> values = headers.values("set-cookie");
-//                            for (String cookie : values) {
-//                                cookies.append(cookie).append(";");
-//                            }
-//                            if (!TextUtils.isEmpty(cookies)) {
-//                                SpUtil.saveCookie(cookies.substring(0, cookies.lastIndexOf(";")));
-//                            }
-//                        }
-//                        JSONObject json = new JSONObject();
-//                        json.put(STATE, "Y");
-//                        callback.onSuccess(url, json);
-//                    } else {
-//                        callback.onFailure(url, 0, "登录失败");
-//                    }
-//
-//                }
-
-                //webService数据解析，因为xml数据无法格式化成json数据，所以不会调用onSuccess方法，所以需要在此处做回调处理
-//                int firstIndex = response.indexOf("{");
-//                int lastIndex = response.lastIndexOf("}");
-//                if (firstIndex != -1 && lastIndex != -1) {
-//                    String result = response.substring(firstIndex, lastIndex + 1);
-//                    Logger.d(result);
-//                    if (callback != null) {
-//                        JSONObject json = JSON.parseObject(result);
-//                        callback.onSuccess(url, json);
-//                    }
-//                } else {
-//                    callback.onFailure(url, -999, "数据错误");
-//                }
             }
         };
         return response;

@@ -52,4 +52,5 @@ public class RecordNCBo implements Serializable {
     public void setQTY(int QTY) {
         this.QTY = QTY;
     }
+
 }

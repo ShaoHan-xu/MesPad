@@ -80,7 +80,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
                 View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
                 TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
                 TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
-                tv_userName.setText(userInfo.getUSER());
+                tv_userName.setText(userInfo.getNAME());
                 tv_userId.setText(userInfo.getEMPLOYEE_NUMBER() + "");
                 mLayout_loginUser.addView(view);
             }

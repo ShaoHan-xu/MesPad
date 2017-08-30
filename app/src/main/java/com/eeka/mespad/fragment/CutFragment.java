@@ -2,8 +2,6 @@ package com.eeka.mespad.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -24,16 +22,19 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
+import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,13 +61,14 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_nextProcess;
     private Button mBtn_done;
 
-    private TailorInfoBo.ResultInfo mResultInfo;
-
     public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
 
     private boolean showDone;
     private String mOrderType;
     private String mRFID;
+
+    private ReturnMaterialInfoBo mReturnMaterialInfo;//退料
+    private ReturnMaterialInfoBo mAddMaterialInfo;//补料
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -82,7 +84,9 @@ public class CutFragment extends BaseFragment {
         return mView;
     }
 
-    public void getData(String orderType, String orderNum, String resourceBo, String processLotBo) {
+    public void searchOrder(String orderType, String orderNum, String resourceBo, String processLotBo) {
+        mReturnMaterialInfo = null;
+        mAddMaterialInfo = null;
         showLoading();
         mOrderType = orderType;
         mRFID = orderNum;
@@ -109,7 +113,6 @@ public class CutFragment extends BaseFragment {
             mBtn_done.setVisibility(View.VISIBLE);
         }
         mBtn_done.setOnClickListener(this);
-
     }
 
     @Override
@@ -158,7 +161,9 @@ public class CutFragment extends BaseFragment {
         if (layoutArray != null) {
             for (int i = 0; i < layoutArray.size(); i++) {
                 mLayout_material1.addView(getLayoutView(layoutArray.get(i), i));
-                mLayout_material1.addView(getLayoutBarCodeView(layoutArray.get(i), i));
+                if ("P".equals(mOrderType)) {
+                    mLayout_material1.addView(getLayoutBarCodeView(layoutArray.get(i), i));
+                }
             }
         }
 
@@ -310,7 +315,9 @@ public class CutFragment extends BaseFragment {
         params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
         params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
         params.setLAYERS(orderInfo.getLAYERS());
-        params.setRESOURCE_BO(mResultInfo.getRESOURCE_BO());
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        if (resource != null)
+            params.setRESOURCE_BO(resource.getRESOURCE_BO());
         params.setORDER_QTY(orderInfo.getORDER_QTY());
         List<String> opList = new ArrayList<>();
         if (mList_processData != null) {
@@ -474,6 +481,39 @@ public class CutFragment extends BaseFragment {
         mLabuDialog.show();
     }
 
+    /**
+     * 退补料
+     */
+    public void returnAndFeedingMat(boolean isReturn) {
+        if (mTailorInfo == null) {
+            toast("请先获取订单数据");
+            return;
+        }
+        List<TailorInfoBo.MatInfoBean> itemArray = mTailorInfo.getMAT_INFOR();
+        List<ReturnMaterialInfoBo.MaterialInfoBo> materialList = new ArrayList<>();
+        for (TailorInfoBo.MatInfoBean item : itemArray) {
+            ReturnMaterialInfoBo.MaterialInfoBo material = new ReturnMaterialInfoBo.MaterialInfoBo();
+            material.setPicUrl(item.getMAT_URL());
+            material.setITEM(item.getMAT_NO());
+            materialList.add(material);
+        }
+        if (isReturn) {
+            if (mReturnMaterialInfo == null) {
+                mReturnMaterialInfo = new ReturnMaterialInfoBo();
+                mReturnMaterialInfo.setOrderNum(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
+                mReturnMaterialInfo.setMaterialInfoList(materialList);
+            }
+            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_RETURN, mReturnMaterialInfo).show();
+        } else {
+            if (mAddMaterialInfo == null) {
+                mAddMaterialInfo = new ReturnMaterialInfoBo();
+                mAddMaterialInfo.setOrderNum(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
+                mAddMaterialInfo.setMaterialInfoList(materialList);
+            }
+            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, mAddMaterialInfo).show();
+        }
+    }
+
     public void showCompleteButton() {
         showDone = true;
         if (mBtn_done != null) {
@@ -557,36 +597,6 @@ public class CutFragment extends BaseFragment {
 
     }
 
-    private MyHandler mHandler = new MyHandler(this);
-
-    private static class MyHandler extends Handler {
-
-        private WeakReference<CutFragment> mWeakActivity;
-
-        MyHandler(CutFragment activity) {
-            this.mWeakActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            CutFragment activity = mWeakActivity.get();
-            if (activity == null) {
-                return;
-            }
-            switch (msg.what) {
-                case 0:
-                    int currentItem = activity.mVP_process.getCurrentItem();
-                    if (currentItem >= activity.mList_processData.size() - 1) {
-                        currentItem = -1;
-                    }
-                    activity.mVP_process.setCurrentItem(currentItem + 1);
-                    sendEmptyMessageDelayed(0, 3000);
-                    break;
-            }
-        }
-    }
-
     public void signOff() {
         if (mTailorInfo == null) {
             toast("请获取订单信息");
@@ -598,13 +608,14 @@ public class CutFragment extends BaseFragment {
             showLoading();
             JSONObject json = new JSONObject();
             json.put("SHOP_ORDER_BO", shopOrderInfo.getSHOP_ORDER_BO());
+            PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
             if ("S".equals(mOrderType)) {
-                json.put("RESOURCE_BO", mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+                json.put("RESOURCE_BO", resource.getRESOURCE_BO());
                 json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
                 HttpHelper.signoffByShopOrder(json, this);
             } else {
                 json.put("PROCESS_LOTS", shopOrderInfo.getPROCESS_LOT_BO());
-                json.put("RESOURCE_BO", mTailorInfo.getRESR_INFOR().getRESOURCE_BO());
+                json.put("RESOURCE_BO", resource.getRESOURCE_BO());
                 json.put("OPERATION_BO", operInfo.get(0).getOPERATION_BO());
                 HttpHelper.signoffByProcessLot(json, this);
             }
@@ -621,7 +632,6 @@ public class CutFragment extends BaseFragment {
                     break;
                 case HttpHelper.findProcessWithPadId_url:
                     JSONObject result = resultJSON.getJSONObject("result");
-                    mResultInfo = JSON.parseObject(result.getJSONObject("RESR_INFOR").toString(), TailorInfoBo.ResultInfo.class);
                     mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
                     break;
                 case HttpHelper.viewCutPadInfo_url:
@@ -634,7 +644,6 @@ public class CutFragment extends BaseFragment {
                         mBtn_done.setEnabled(true);
                         mList_processData = mTailorInfo.getOPER_INFOR();
                     }
-                    mTailorInfo.setRESR_INFOR(mResultInfo);
                     mTailorInfo.setOrderType(mOrderType);
                     mTailorInfo.setRFID(mRFID);
                     refreshView();

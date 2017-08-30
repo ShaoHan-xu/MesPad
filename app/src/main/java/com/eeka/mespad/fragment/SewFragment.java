@@ -23,10 +23,6 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +65,7 @@ public class SewFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        EventBus.getDefault().register(this);
         initView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -100,7 +89,7 @@ public class SewFragment extends BaseFragment {
         mLv_lastProcess = (ListView) mView.findViewById(R.id.lv_sew_lastProcess);
     }
 
-    public void getData(String orderNum) {
+    public void searchOrder(String orderNum) {
         showLoading();
         HttpHelper.getSewData(orderNum, this);
     }
@@ -205,10 +194,6 @@ public class SewFragment extends BaseFragment {
 
     /**
      * 获取物料布局
-     *
-     * @param item
-     * @param position
-     * @return
      */
     private View getMatView(SewDataBo.SewAttr item, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
@@ -249,8 +234,6 @@ public class SewFragment extends BaseFragment {
 
     /**
      * 刷新工序相关的界面，包括工序图、工艺说明、品质要求、
-     *
-     * @param position
      */
     private void refreshProcessView(int position) {
         SewDataBo.SewAttr item = mSewData.getCurrentOpeationInfos().get(position);
@@ -294,30 +277,6 @@ public class SewFragment extends BaseFragment {
     }
 
 
-    /**
-     * EventBus推送的缝制数据消息
-     *
-     * @param sewData 缝制的数据
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSewData(SewDataBo sewData) {
-        toast("收到新信息，正在刷新界面");
-        mSewData = sewData;
-        initData();
-    }
-
-    /**
-     * EventBus推送的缝制数据消息
-     *
-     * @param json 用户信息
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveLoginMsg(JSONObject json) {
-        toast("用户刷卡登录");
-        String cardNum = json.getString("EMPLOYEE_CARD");
-        HttpHelper.positionLogin(cardNum, this);
-    }
-
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
@@ -325,9 +284,10 @@ public class SewFragment extends BaseFragment {
             if (HttpHelper.getSewData.equals(url)) {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 initData();
-            } else if (HttpHelper.positionLogin_url.equals(url)) {
-                toast("登录成功");
             }
+        } else {
+            String message = resultJSON.getString("message");
+            showErrorDialog(message);
         }
     }
 }

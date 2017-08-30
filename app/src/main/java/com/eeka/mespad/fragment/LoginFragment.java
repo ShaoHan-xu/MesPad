@@ -186,7 +186,6 @@ public class LoginFragment extends BaseFragment {
                 toast("用户上岗成功");
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
-                SpUtil.saveLoginStatus(true);
                 if (mClockCallback != null) {
                     mClockCallback.onClockIn(true);
                 }

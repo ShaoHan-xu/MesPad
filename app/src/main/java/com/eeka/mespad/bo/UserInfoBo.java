@@ -9,6 +9,7 @@ public class UserInfoBo {
 
     private String EMPLOYEE_NUMBER;
     private String USER;
+    private String NAME;
     private String password;
     private String CARD_NUMBER;
     private String token;
@@ -19,6 +20,14 @@ public class UserInfoBo {
     public UserInfoBo(String userName, String password) {
         this.USER = userName;
         this.password = password;
+    }
+
+    public String getNAME() {
+        return NAME;
+    }
+
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
     }
 
     public String getCARD_NUMBER() {

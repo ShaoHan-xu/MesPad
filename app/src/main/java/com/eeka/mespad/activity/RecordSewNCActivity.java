@@ -20,12 +20,16 @@ import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.SewQCDataBo;
+import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 记录缝制质检部良界面
@@ -37,7 +41,6 @@ public class RecordSewNCActivity extends BaseActivity {
 
     private static final String KEY_DATA = "key_data";
     private static final String KEY_SFC = "key_sfc";
-    private static final String KEY_SFCBO = "key_sfcBo";
 
     private TextView mTv_orderNum;
     private LinearLayout mLayout_productComponent;
@@ -46,10 +49,12 @@ public class RecordSewNCActivity extends BaseActivity {
     private List<RecordNCBo> mList_NcCode;
     private NcAdapter mNcAdapter;
     private JSONArray mList_NcProcess;
+    private LinearLayout mLayout_selected;
 
     private String mSFCBo;
     private int mProductPosition, mDesignPosition;
-    private Map<Integer, Integer> mMap_ncCodePoisition;
+    private int mNcCodePosition;
+    private Map<RecordNCBo, JSONObject> mMap_ncCode;
 
     private List<SewQCDataBo.DesignComponentBean> mList_component;
 
@@ -69,6 +74,7 @@ public class RecordSewNCActivity extends BaseActivity {
         mLayout_productComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_productComponent);
         mLayout_designComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_designComponent);
         mLayout_NcProcess = (LinearLayout) findViewById(R.id.layout_recordSewNC_NcProcess);
+        mLayout_selected = (LinearLayout) findViewById(R.id.layout_recordSewNC_selected);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_NCType);
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
@@ -86,17 +92,34 @@ public class RecordSewNCActivity extends BaseActivity {
         if (v.getId() == R.id.btn_cancel) {
             finish();
         } else if (v.getId() == R.id.btn_recordSewNC_choseRepairProcess) {
-            startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component), REQUEST_REPAIR);
+            if (mMap_ncCode == null || mMap_ncCode.size() == 0) {
+                showErrorDialog("请选择不良代码及对应工序");
+                return;
+            }
+            List<UpdateSewNcBo.NcCodeOperationListBean> list = new ArrayList<>();
+            Set<Map.Entry<RecordNCBo, JSONObject>> entries = mMap_ncCode.entrySet();
+            for (Map.Entry<RecordNCBo, JSONObject> next : entries) {
+                RecordNCBo key = next.getKey();
+                JSONObject value = next.getValue();
+
+                UpdateSewNcBo.NcCodeOperationListBean item = new UpdateSewNcBo.NcCodeOperationListBean();
+                item.setNcCodeRef(key.getNC_CODE_BO());
+                item.setOperation(value.getString("OPERATION"));
+                list.add(item);
+
+            }
+            startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component, list), REQUEST_REPAIR);
         }
     }
 
     @Override
     protected void initData() {
         super.initData();
-        mMap_ncCodePoisition = new LinkedHashMap<>();
+        mNcCodePosition = -1;
+        mMap_ncCode = new LinkedHashMap<>();
         String sfc = getIntent().getStringExtra(KEY_SFC);
         mTv_orderNum.setText(sfc);
-        mSFCBo = getIntent().getStringExtra(KEY_SFCBO);
+        mSFCBo = "SFCBO:" + SpUtil.getSite() + "," + sfc;
         mList_component = (List<SewQCDataBo.DesignComponentBean>) getIntent().getSerializableExtra(KEY_DATA);
         if (mList_component == null) {
             showErrorDialog("数据异常");
@@ -146,10 +169,15 @@ public class RecordSewNCActivity extends BaseActivity {
             TextView tv_type = holder.getView(R.id.tv_recordNc_type);
             tv_type.setText(item.getDESCRIPTION());
             holder.getView(R.id.btn_recordNc_sub).setVisibility(View.GONE);
+            if (position == mNcCodePosition) {
+                tv_type.setBackgroundResource(R.color.divider_gray);
+            }
 
             tv_type.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mNcCodePosition = position;
+                    notifyItemChanged(position);
                     SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = mList_component.get(mProductPosition).getDesgComponents().get(mDesignPosition);
                     showLoading();
                     HttpHelper.getProcessWithNcCode(desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
@@ -206,17 +234,44 @@ public class RecordSewNCActivity extends BaseActivity {
     /**
      * 获取不良工序布局
      */
-    private View getNcProcessView(JSONObject item) {
+    private View getNcProcessView(final JSONObject item) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.gv_item_recordnc, null);
         TextView textView = (TextView) view.findViewById(R.id.tv_recordNc_type);
         textView.setText(item.getString("DESCRIPTION"));
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
+                mMap_ncCode.put(recordNCBo, item);
+                refreshSelectedView();
             }
         });
         return view;
+    }
+
+    /**
+     * 刷新已选择不良代码及工序的布局
+     */
+    private void refreshSelectedView() {
+        mLayout_selected.removeAllViews();
+        Set<RecordNCBo> recordNCBos = mMap_ncCode.keySet();
+        for (final RecordNCBo item : recordNCBos) {
+            JSONObject json = mMap_ncCode.get(item);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sewnc_selected, null);
+            TextView tv_code = (TextView) view.findViewById(R.id.tv_recordSewNC_selected_code);
+            TextView tv_process = (TextView) view.findViewById(R.id.tv_recordSewNC_selected_process);
+            tv_code.setText(item.getDESCRIPTION());
+            tv_process.setText(json.getString("DESCRIPTION"));
+            mLayout_selected.addView(view);
+
+            view.findViewById(R.id.btn_recordSewNC_delSelected).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mMap_ncCode.remove(item);
+                    refreshSelectedView();
+                }
+            });
+        }
     }
 
     @Override
@@ -239,10 +294,9 @@ public class RecordSewNCActivity extends BaseActivity {
     /**
      * @param components 生产部件里面，里面包含设计部件
      */
-    public static Intent getIntent(Context context, String sfc, String sfcBo, List<SewQCDataBo.DesignComponentBean> components) {
+    public static Intent getIntent(Context context, String sfc, List<SewQCDataBo.DesignComponentBean> components) {
         Intent intent = new Intent(context, RecordSewNCActivity.class);
         intent.putExtra(KEY_SFC, sfc);
-        intent.putExtra(KEY_SFCBO, sfcBo);
         intent.putExtra(KEY_DATA, (Serializable) components);
         return intent;
     }

@@ -6,15 +6,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.bo.PushJson;
-import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
-import com.eeka.mespad.utils.TopicUtil;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -73,7 +71,7 @@ public class MQTTService extends Service {
             client.publish(topic, msg.getBytes(), qos.intValue(), retained.booleanValue());
         } catch (MqttException e) {
             e.printStackTrace();
-            log("client publish failed", e);
+            Logger.d("client publish failed" + e.toString());
         }
     }
 
@@ -126,35 +124,12 @@ public class MQTTService extends Service {
             try {
                 conOpt.setWill(topic, message.getBytes(), qos.intValue(), retained.booleanValue());
             } catch (Exception e) {
-                log("Exception MqttConnectOptions Occured", e);
+                Logger.d("Exception MqttConnectOptions Occured" + e.toString());
                 doConnect = false;
             }
         }
         if (doConnect) {
             doClientConnection();
-        }
-    }
-
-    // log helper function
-    private static void log(String message) {
-        Logger.d(message, null);
-    }
-
-    private static void log(String message, Throwable e) {
-        if (e != null) {
-            Logger.e(message, e.getMessage());
-        } else {
-            Logger.d(message);
-        }
-
-        if (mLog != null) {
-            try {
-                if (e != null)
-                    mLog.println("message : " + message + " .\\nMqttException : " + e.getMessage());
-                else
-                    mLog.println("message : " + message);
-            } catch (IOException ex) {
-            }
         }
     }
 
@@ -196,7 +171,7 @@ public class MQTTService extends Service {
                 doConnect = false;
             } catch (MqttException e) {
                 e.printStackTrace();
-                log("Exception connect occured", e);
+                Logger.d("Exception connect occured" + e.toString());
             }
         }
     }
@@ -213,13 +188,8 @@ public class MQTTService extends Service {
                 Logger.d("MQTT 订阅" + myTopic + "成功");
             } catch (Exception e) {
                 e.printStackTrace();
-                Logger.e("MQTT 订阅异常\n" + e.getMessage());
-//                doClientConnection();//不能这样重连，会订阅两次
-                try {
-                    client.connect();
-                } catch (MqttException e1) {
-                    e1.printStackTrace();
-                }
+                Logger.e("MQTT 订阅异常 " + e.getMessage());
+                doClientConnection();//再次连接可以订阅成功，但是会收到两次推送
             }
         }
 
@@ -230,6 +200,9 @@ public class MQTTService extends Service {
             Logger.d("connect failure");
         }
     };//  108030002  刘小勇
+
+    private String mLastMsgType;
+    private long mLastMsgMillis;
 
     // MQTT监听并且接受消息
     private MqttCallback mqttCallback = new MqttCallback() {
@@ -242,15 +215,18 @@ public class MQTTService extends Service {
             PushJson pushJson = JSON.parseObject(str1, PushJson.class);
             if ("0".equals(pushJson.getCode())) {
                 String type = pushJson.getType();
-                if (TopicUtil.TOPIC_SEW.equals(type)) {//缝制
-                    SewDataBo sewDataBo = JSON.parseObject(pushJson.getContent(), SewDataBo.class);
-                    EventBus.getDefault().post(sewDataBo);
-                } else if (TopicUtil.TOPIC_SUSPEND.equals(type)) {//上裁
-                    EventBus.getDefault().post(pushJson.getContent());
-                } else if ("LOGIN".equals(type)) {//缝制用户上岗
-                    JSONObject json = JSON.parseObject(pushJson.getContent());
-                    EventBus.getDefault().post(json);
+                if (!TextUtils.isEmpty(mLastMsgType)) {
+                    if (mLastMsgType.equals(type)) {
+                        long curMillis = System.currentTimeMillis();
+                        if (curMillis - mLastMsgMillis < 500) {
+                            //暂时解决接收两次推送的问题
+                            return;
+                        }
+                    }
                 }
+                mLastMsgMillis = System.currentTimeMillis();
+                mLastMsgType = type;
+                EventBus.getDefault().post(pushJson);
             }
 
         }

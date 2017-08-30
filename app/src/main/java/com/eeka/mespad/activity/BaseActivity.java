@@ -42,6 +42,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mContext = this;
         mFragmentManager = getSupportFragmentManager();
+
     }
 
     protected void initView() {
@@ -59,6 +60,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
      * 刷卡获取卡信息
      */
     public void getCardInfo(String orderNum) {
+        showLoading();
         HttpHelper.getCardInfo(orderNum, this);
     }
 

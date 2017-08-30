@@ -9,7 +9,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.manager.Logger;
 
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class SpUtil {
     //    private static SpUtil mInstance;
     private static SharedPreferences mSP;
 
+    public static final String KEY_RESOURCE = "key_resource";
+
     static {
         new SpUtil();
     }
@@ -32,7 +36,7 @@ public class SpUtil {
         mSP = mContext.getSharedPreferences("eeka_mesPad", Context.MODE_PRIVATE);
     }
 
-//    public static SpUtil getInstance() {
+    //    public static SpUtil getInstance() {
 //        if (mInstance == null) {
 //            synchronized (SpUtil.class) {
 //                if (mInstance == null) {
@@ -42,6 +46,24 @@ public class SpUtil {
 //        }
 //        return mInstance;
 //    }
+
+    public static void save(String key, String value) {
+        SharedPreferences.Editor editor = mSP.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static String get(String key, String defaultValue) {
+        return mSP.getString(key, defaultValue);
+    }
+
+    /**
+     * 获取resource数据
+     */
+    public static PositionInfoBo.RESRINFORBean getResource() {
+        String infoStr = mSP.getString(KEY_RESOURCE, null);
+        return JSONObject.parseObject(infoStr, PositionInfoBo.RESRINFORBean.class);
+    }
 
     /**
      * 保存site
@@ -104,19 +126,6 @@ public class SpUtil {
 
     public static String getCookie() {
         return mSP.getString("cookie", null);
-    }
-
-    /**
-     * 保存登录状态
-     */
-    public static void saveLoginStatus(boolean status) {
-        SharedPreferences.Editor edit = mSP.edit();
-        edit.putBoolean("loginStatus", status);
-        edit.apply();
-    }
-
-    public static boolean getLoginStatus() {
-        return mSP.getBoolean("loginStatus", false);
     }
 
     /**
