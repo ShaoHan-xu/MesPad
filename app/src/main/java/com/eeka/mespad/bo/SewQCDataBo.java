@@ -158,7 +158,7 @@ public class SewQCDataBo {
             this.name = name;
         }
 
-        public static class AttributesBean {
+        public static class AttributesBean implements Serializable{
             /**
              * PART_ID : A,B
              */
@@ -175,7 +175,7 @@ public class SewQCDataBo {
         }
     }
 
-    public static class ClothingSizeBean {
+    public static class ClothingSizeBean implements Serializable{
         /**
          * attributes : {"value":"123"}
          * description :
@@ -185,6 +185,7 @@ public class SewQCDataBo {
         private AttributesBeanX attributes;
         private String description;
         private String name;
+
 
         public AttributesBeanX getAttributes() {
             return attributes;
@@ -210,19 +211,46 @@ public class SewQCDataBo {
             this.name = name;
         }
 
-        public static class AttributesBeanX {
+        public static class AttributesBeanX implements Serializable{
             /**
              * value : 123
              */
 
-            private String value;
+            private float value;
+            private float refTolerance;
+            private float realTolerance;
+            private float finishedSize;
 
-            public String getValue() {
+            public float getValue() {
                 return value;
             }
 
-            public void setValue(String value) {
+            public void setValue(float value) {
                 this.value = value;
+            }
+
+            public float getRefTolerance() {
+                return refTolerance;
+            }
+
+            public void setRefTolerance(float refTolerance) {
+                this.refTolerance = refTolerance;
+            }
+
+            public float getRealTolerance() {
+                return realTolerance;
+            }
+
+            public void setRealTolerance(float realTolerance) {
+                this.realTolerance = realTolerance;
+            }
+
+            public float getFinishedSize() {
+                return finishedSize;
+            }
+
+            public void setFinishedSize(float finishedSize) {
+                this.finishedSize = finishedSize;
             }
         }
     }

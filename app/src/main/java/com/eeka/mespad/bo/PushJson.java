@@ -5,6 +5,9 @@ package com.eeka.mespad.bo;
  */
 
 public class PushJson {
+    public static final String TYPE_RFID = "RFID";//RFID消息
+    public static final String TYPE_RELOGIN = "reLoginSuccess";//cookie过期重新登录成功消息
+
     private String content;
     private String type;    // 0 ： 缝制  1 ： 消息提醒  2:错误消息
     private String info;    //显示在状态栏的信息，负责提醒用户用，具体数据视具体情况而定

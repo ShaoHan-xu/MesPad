@@ -28,7 +28,6 @@ import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PushJson;
-import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.LoginFragment;
@@ -55,7 +54,6 @@ import java.util.List;
 
 public class MainActivity extends NFCActivity {
 
-    private static final int REQUEST_RECORD_NC = 0;
     private static final int REQUEST_LOGIN = 1;
 
     private DrawerLayout mDrawerLayout;
@@ -66,8 +64,6 @@ public class MainActivity extends NFCActivity {
     private SewQCFragment mSewQCFragment;
 
     private LinearLayout mLayout_controlPanel;
-
-    private List<RecordNCBo> mList_badData;
 
     private PositionInfoBo mPositionInfo;
 
@@ -85,13 +81,9 @@ public class MainActivity extends NFCActivity {
         initView();
         mCardInfo = new CardInfoBo();
 
-//        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-//        if (contextInfo == null) {
-        showLoading("应用初始化中...", true);
-        HttpHelper.initData(this);
-//        } else {
-//            initData();
-//        }
+        MQTTService.actionStart(mContext);
+
+        initData();
     }
 
     @Override
@@ -137,12 +129,15 @@ public class MainActivity extends NFCActivity {
             }
             showLoading();
             HttpHelper.positionLogout(cardId, this);
+        } else if (PushJson.TYPE_RELOGIN.equals(type)) {
+            dismissLoading();
+            toast("系统登录成功，请继续操作");
         } else {
             toast("收到工单消息，正在刷新页面");
-            searchOrder(push.getContent());
+            mEt_orderNum.setText(push.getContent());
+            searchOrder();
         }
     }
-
 
     @Override
     protected void initView() {
@@ -167,7 +162,6 @@ public class MainActivity extends NFCActivity {
     @Override
     protected void initData() {
         super.initData();
-        MQTTService.actionStart(mContext);
 
         UserInfoBo loginUser = SpUtil.getLoginUser();
         if (loginUser == null) {
@@ -180,7 +174,9 @@ public class MainActivity extends NFCActivity {
             ft.commit();
         } else {
             showLoading();
+            HttpHelper.initData(this);
             HttpHelper.findProcessWithPadId(this);
+            findViewById(R.id.layout_RFID).setVisibility(View.VISIBLE);
         }
     }
 
@@ -373,9 +369,9 @@ public class MainActivity extends NFCActivity {
                 break;
             case R.id.btn_NcRecord:
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
-                    startActivityForResult(RecordCutNCActivity.getIntent(mContext, mCutFragment.getMaterialData(), mList_badData), REQUEST_RECORD_NC);
-                } else {
-                    mSewQCFragment.recordNc();
+                    mCutFragment.recordNC();
+                } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                    mSewQCFragment.recordNC();
                 }
                 break;
             case R.id.btn_video:
@@ -433,38 +429,10 @@ public class MainActivity extends NFCActivity {
                             mCutFragment.signOff();
                         }
                         break;
-                    case TopicUtil.TOPIC_SEW:
-
-                        break;
-                    case TopicUtil.TOPIC_SUSPEND:
-
-                        break;
-                    case TopicUtil.TOPIC_QC:
-
-                        break;
-                    case TopicUtil.TOPIC_PACKING:
-
-                        break;
                 }
                 break;
             case R.id.btn_searchOrder:
-                String position = mEt_position.getText().toString();
-                if (!isEmpty(position)) {
-                    HttpHelper.PAD_IP = position;
-                } else {
-                    toast("请输入完整的站位");
-                }
-                ContextInfoBo contextInfo = SpUtil.getContextInfo();
-                if (contextInfo == null) {
-                    showLoading();
-                    HttpHelper.initData(this);
-                } else if (mPositionInfo == null) {
-                    isSearchOrder = true;
-                    HttpHelper.findProcessWithPadId(this);
-                    return;
-                }
-                String cardNum = mEt_orderNum.getText().toString();
-                searchOrder(cardNum);
+                searchOrder();
                 break;
             case R.id.btn_searchPosition:
                 String position1 = mEt_position.getText().toString();
@@ -503,7 +471,14 @@ public class MainActivity extends NFCActivity {
         }
     }
 
-    private void searchOrder(String cardNum) {
+    private void searchOrder() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo == null || mPositionInfo == null) {
+            isSearchOrder = true;
+            initData();
+            return;
+        }
+        String cardNum = mEt_orderNum.getText().toString();
         if (isEmpty(cardNum)) {
             toast("请输入RFID卡号");
         } else {
@@ -529,9 +504,7 @@ public class MainActivity extends NFCActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_RECORD_NC) {
-                mList_badData = (List<RecordNCBo>) data.getSerializableExtra("badList");
-            } else if (requestCode == REQUEST_LOGIN) {
+            if (requestCode == REQUEST_LOGIN) {
                 HttpHelper.findProcessWithPadId(this);
             }
         }
@@ -579,11 +552,6 @@ public class MainActivity extends NFCActivity {
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
-//                List<UserInfoBo> loginUserList = contextInfoBo.getLOGIN_USER_LIST();
-//                SpUtil.savePositionUsers(loginUserList);
-                initData();
-//                MQTTService.actionStop(mContext);
-                MQTTService.actionStart(mContext);
             } else if (HttpHelper.getCardInfo.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 String orderType = result.getString("ORDER_TYPE");
@@ -592,6 +560,7 @@ public class MainActivity extends NFCActivity {
                 switch (mTopic) {
                     case TopicUtil.TOPIC_CUT:
                         if ("P".equalsIgnoreCase(orderType) || "S".equalsIgnoreCase(orderType)) {
+                            mEt_orderNum.setText(mCardInfo.getCardNum());
                             mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
                         } else if ("M".equals(orderType)) {
                             clockIn(mCardInfo.getCardNum());
@@ -614,8 +583,7 @@ public class MainActivity extends NFCActivity {
 
                 if (isSearchOrder) {
                     isSearchOrder = false;
-                    String cardNum = mEt_orderNum.getText().toString();
-                    searchOrder(cardNum);
+                    searchOrder();
                 }
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
@@ -695,8 +663,7 @@ public class MainActivity extends NFCActivity {
                 ft.commit();
             }
 
-            showLoading("应用初始化中...", true);
-            HttpHelper.initData(this);
+            initData();
         }
     }
 

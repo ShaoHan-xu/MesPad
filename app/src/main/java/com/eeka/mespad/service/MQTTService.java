@@ -189,7 +189,7 @@ public class MQTTService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
                 Logger.e("MQTT 订阅异常 " + e.getMessage());
-                doClientConnection();//再次连接可以订阅成功，但是会收到两次推送
+                doClientConnection();//连接成功但是订阅失败时再次连接可以订阅成功，但是会收到两次推送
             }
         }
 
@@ -228,7 +228,6 @@ public class MQTTService extends Service {
                 mLastMsgType = type;
                 EventBus.getDefault().post(pushJson);
             }
-
         }
 
         @Override

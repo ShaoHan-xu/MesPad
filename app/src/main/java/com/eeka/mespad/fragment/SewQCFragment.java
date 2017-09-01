@@ -16,6 +16,9 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.FormatUtil;
+import com.eeka.mespad.utils.TabViewUtil;
 
 import java.util.List;
 
@@ -23,7 +26,6 @@ import java.util.List;
  * 缝制质检
  * Created by Lenovo on 2017/8/8.
  */
-
 public class SewQCFragment extends BaseFragment {
 
     private static final int REQUEST_NC = 0;
@@ -115,8 +117,18 @@ public class SewQCFragment extends BaseFragment {
         List<SewQCDataBo.DesignComponentBean> designComponent = mSewQCData.getDesignComponent();
         for (int i = 0; i < designComponent.size(); i++) {
             SewQCDataBo.DesignComponentBean component = designComponent.get(i);
-            mLayout_productComponent.addView(getTabView(component, i));
+            final int finalI = i;
+            mLayout_productComponent.addView(TabViewUtil.getTabView(mContext, component, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TabViewUtil.refreshTabView(mLayout_productComponent, finalI);
+                    List<SewQCDataBo.DesignComponentBean> designComponent = mSewQCData.getDesignComponent();
+                    SewQCDataBo.DesignComponentBean component = designComponent.get(finalI);
+                    refreshDesignComponentView(component);
+                }
+            }));
             if (i == 0) {
+                TabViewUtil.refreshTabView(mLayout_productComponent, 0);
                 refreshDesignComponentView(component);
             }
         }
@@ -125,7 +137,7 @@ public class SewQCFragment extends BaseFragment {
     /**
      * 记录不良
      */
-    public void recordNc() {
+    public void recordNC() {
         if (mSewQCData != null) {
             startActivityForResult(RecordSewNCActivity.getIntent(mContext, mSewQCData.getSfc(), mSewQCData.getDesignComponent()), REQUEST_NC);
         } else {
@@ -143,64 +155,24 @@ public class SewQCFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 获取导航标签布局
-     */
-    private <T> View getTabView(T data, final int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab, null);
-        TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
-        tv_tabName.setPadding(10, 10, 10, 10);
-        if (position == 0)
-            tv_tabName.setEnabled(false);
-        if (data instanceof SewQCDataBo.DesignComponentBean) {
-            SewQCDataBo.DesignComponentBean item = (SewQCDataBo.DesignComponentBean) data;
-            tv_tabName.setText(item.getDescription());
-            tv_tabName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    refreshTab(mLayout_productComponent, position);
-
-                    List<SewQCDataBo.DesignComponentBean> designComponent = mSewQCData.getDesignComponent();
-                    SewQCDataBo.DesignComponentBean component = designComponent.get(position);
-                    refreshDesignComponentView(component);
-                }
-            });
-        } else if (data instanceof SewQCDataBo.DesignComponentBean.DesgComponentsBean) {
-            final SewQCDataBo.DesignComponentBean.DesgComponentsBean item = (SewQCDataBo.DesignComponentBean.DesgComponentsBean) data;
-            tv_tabName.setText(item.getDescription());
-            tv_tabName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    refreshTab(mLayout_designComponent, position);
-                    mTv_componentDesc.setText(item.getDescription());
-                }
-            });
-        }
-        return view;
-    }
-
     private void refreshDesignComponentView(SewQCDataBo.DesignComponentBean component) {
         mLayout_designComponent.removeAllViews();
         List<SewQCDataBo.DesignComponentBean.DesgComponentsBean> desgComponents = component.getDesgComponents();
         for (int i = 0; i < desgComponents.size(); i++) {
-            SewQCDataBo.DesignComponentBean.DesgComponentsBean bean = desgComponents.get(i);
-            mLayout_designComponent.addView(getTabView(bean, i));
+            final SewQCDataBo.DesignComponentBean.DesgComponentsBean bean = desgComponents.get(i);
+            final int finalI = i;
+            mLayout_designComponent.addView(TabViewUtil.getTabView(mContext, bean, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TabViewUtil.refreshTabView(mLayout_designComponent, finalI);
+                    mTv_componentDesc.setText(bean.getDescription());
+                }
+            }));
             if (i == 0) {
-                mTv_componentDesc.setText(bean.getQualityStandard());
+                TabViewUtil.refreshTabView(mLayout_designComponent, 0);
+                mTv_componentDesc.setText(bean.getDescription());
             }
         }
-    }
-
-    /**
-     * 刷新标签视图
-     */
-    private void refreshTab(ViewGroup parent, int position) {
-        int childCount = parent.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childAt = parent.getChildAt(i);
-            childAt.findViewById(R.id.textView).setEnabled(true);
-        }
-        parent.getChildAt(position).findViewById(R.id.textView).setEnabled(false);
     }
 
     /**
@@ -215,12 +187,37 @@ public class SewQCFragment extends BaseFragment {
         TextView tv_refSize = (TextView) view.findViewById(R.id.tv_sewQc_refSize);
         TextView tv_refTolerance = (TextView) view.findViewById(R.id.tv_sewQc_refTolerance);
         TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
-        EditText et_clothingSize = (EditText) view.findViewById(R.id.et_sewQc_clothingSize);
+        EditText et_finishedSize = (EditText) view.findViewById(R.id.et_sewQc_finishedSize);
+        et_finishedSize.setTag(sizeInfo);
+        et_finishedSize.setOnFocusChangeListener(new FocusChangedListener());
 
         tv_sizeAttr.setText(sizeInfo.getName());
-        tv_refSize.setText(sizeInfo.getAttributes().getValue());
+        tv_refSize.setText(sizeInfo.getAttributes().getValue() + "");
 
         return view;
+    }
+
+    private class FocusChangedListener implements View.OnFocusChangeListener {
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            EditText editText = (EditText) v;
+            if (!hasFocus) {
+                SewQCDataBo.ClothingSizeBean sizeInfo = (SewQCDataBo.ClothingSizeBean) v.getTag();
+                SewQCDataBo.ClothingSizeBean.AttributesBeanX attributes = sizeInfo.getAttributes();
+                String text = editText.getText().toString();
+                float finishedSize = FormatUtil.strToFloat(text);
+                if (finishedSize != attributes.getFinishedSize()) {
+                    float refSize = attributes.getValue();
+                    float realTolerance = finishedSize - refSize;
+                    attributes.setFinishedSize(finishedSize);
+                    attributes.setRealTolerance(realTolerance);
+                    sizeInfo.setAttributes(attributes);
+
+                    Logger.d(JSON.toJSONString(sizeInfo));
+                }
+            }
+        }
     }
 
     /**

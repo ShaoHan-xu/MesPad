@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +19,14 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.PositionInfoBo;
-import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.SewQCDataBo;
+import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,10 +45,10 @@ public class RepairActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private List<JSONObject> mList_type;
     private NcAdapter mAdapter;
-    private int mComponentPosition;//选择的部件下标
-    private int mTypePosition = -1;//选择的返工工序
 
     private String mSFCBO;
+
+    private List<JSONObject> mList_selected;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +77,8 @@ public class RepairActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
-        mSFCBO = getIntent().getStringExtra(KEY_DATA);
+        mList_selected = new LinkedList<>();
+        mSFCBO = getIntent().getStringExtra(KEY_SFCBO);
         mList_component = (List<SewQCDataBo.DesignComponentBean>) getIntent().getSerializableExtra(KEY_DATA);
         if (mList_component != null && mList_component.size() != 0) {
             for (int i = 0; i < mList_component.size(); i++) {
@@ -107,6 +110,16 @@ public class RepairActivity extends BaseActivity {
         }
         List<UpdateSewNcBo.NcCodeOperationListBean> list = (List<UpdateSewNcBo.NcCodeOperationListBean>) getIntent().getSerializableExtra(KEY_SELECTED);
         data.setNcCodeOperationList(list);
+        List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
+        for (int i = 0; i < mList_selected.size(); i++) {
+            JSONObject json = mList_selected.get(i);
+            UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
+            item.setSequence(i + 1);
+            item.setReworkOperation(json.getString("OPERATION"));
+            item.setOperationDesc(json.getString("DESCRIPTION"));
+            process.add(item);
+        }
+        data.setReworkOperationList(process);
         HttpHelper.recordSewNc(data, this);
     }
 
@@ -119,14 +132,11 @@ public class RepairActivity extends BaseActivity {
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
         TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
+        tv_tabName.setGravity(Gravity.CENTER);
         tv_tabName.setText(component.getDescription());
         tv_tabName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mComponentPosition = position;
-                mTypePosition = -1;
-                showLoading();
-                HttpHelper.getRepairProcess(component.getName(), mSFCBO, RepairActivity.this);
                 refreshTab(position);
             }
         });
@@ -137,11 +147,14 @@ public class RepairActivity extends BaseActivity {
         int childCount = mLayout_component.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = mLayout_component.getChildAt(i);
-            childAt.findViewById(R.id.textView).setEnabled(true);
+            childAt.setBackgroundResource(R.color.white);
         }
-        mLayout_component.getChildAt(position).findViewById(R.id.textView).setEnabled(false);
-    }
+        mLayout_component.getChildAt(position).setBackgroundResource(R.color.divider_gray);
 
+        showLoading();
+        SewQCDataBo.DesignComponentBean component = mList_component.get(position);
+        HttpHelper.getRepairProcess(component.getName(), mSFCBO, RepairActivity.this);
+    }
 
     private class NcAdapter extends CommonRecyclerAdapter<JSONObject> {
 
@@ -151,20 +164,37 @@ public class RepairActivity extends BaseActivity {
 
         @Override
         public void convert(RecyclerViewHolder holder, final JSONObject item, final int position) {
-            TextView tv_type = holder.getView(R.id.tv_recordNc_type);
-            tv_type.setText(item.getString("DESCRIPTION"));
-            if (position == mTypePosition) {
-                tv_type.setBackgroundResource(R.color.text_gray_default);
-            } else {
-                tv_type.setBackgroundResource(R.color.white);
-            }
             holder.getView(R.id.btn_recordNc_sub).setVisibility(View.GONE);
+            TextView tv_type = holder.getView(R.id.tv_recordNc_type);
+            TextView tv_index = holder.getView(R.id.tv_recordNc_index);
+            tv_index.setVisibility(View.GONE);
+            tv_type.setText(item.getString("DESCRIPTION"));
+            String itemBo = item.getString("OPERATION_BO");
+            if (!isEmpty(itemBo)) {
+                for (int i = 0; i < mList_selected.size(); i++) {
+                    JSONObject json = mList_selected.get(i);
+                    if (itemBo.equals(json.getString("OPERATION_BO"))) {
+                        tv_index.setVisibility(View.VISIBLE);
+                        tv_index.setText(String.valueOf(i + 1));
+                    }
+                }
+            }
 
             tv_type.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mTypePosition = position;
-                    mAdapter.notifyItemChanged(mTypePosition);
+                    String itemBo = item.getString("OPERATION_BO");
+                    if (!isEmpty(itemBo)) {
+                        for (JSONObject json : mList_selected) {
+                            if (itemBo.equals(json.getString("OPERATION_BO"))) {
+                                mList_selected.remove(item);
+                                mAdapter.notifyDataSetChanged();
+                                return;
+                            }
+                        }
+                        mList_selected.add(item);
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
             });
         }
@@ -176,6 +206,7 @@ public class RepairActivity extends BaseActivity {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getRepairProcess.equals(url)) {
                 mList_type = JSON.parseArray(resultJSON.getJSONArray("result").toString(), JSONObject.class);
+                mAdapter.setData(mList_type);
                 mAdapter.notifyDataSetChanged();
             }
         }

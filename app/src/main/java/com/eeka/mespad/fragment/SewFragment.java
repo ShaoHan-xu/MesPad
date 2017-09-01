@@ -263,7 +263,7 @@ public class SewFragment extends BaseFragment {
      * 顶部工序导航标签布局
      */
     private View getProcessTabView(SewDataBo.SewAttr item, final int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab, null);
         TextView textView = (TextView) view.findViewById(R.id.text);
         textView.setText(item.getDescription());
         textView.setPadding(20, 20, 20, 20);
@@ -275,7 +275,6 @@ public class SewFragment extends BaseFragment {
         });
         return view;
     }
-
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {

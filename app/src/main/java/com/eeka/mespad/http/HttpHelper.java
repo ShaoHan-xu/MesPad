@@ -8,9 +8,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
-import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
+import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
@@ -419,12 +419,13 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("rfId", RFID);
         params.put("padIp", PAD_IP);
-        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-        if (positionUsers != null && positionUsers.size() != 0) {
-            params.put("userId", positionUsers.get(0).getUSER());
-        } else {
-            return false;
-        }
+        params.put("userId", "REX");
+//        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+//        if (positionUsers != null && positionUsers.size() != 0) {
+//            params.put("userId", positionUsers.get(0).getUSER());
+//        } else {
+//            return false;
+//        }
         HttpRequest.post(findPadKeyDataForNcUI, params, getResponseHandler(findPadKeyDataForNcUI, callback));
         return true;
     }
@@ -594,9 +595,7 @@ public class HttpHelper {
                     if (IS_COOKIE_OUT) {
                         if (isSuccess(jsonObject)) {
                             IS_COOKIE_OUT = false;
-                            if (callback != null) {
-                                callback.onFailure(url, 0, "系统登录成功");
-                            }
+                            Toast.makeText(mContext, "系统登录成功，请继续操作", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }
@@ -607,7 +606,7 @@ public class HttpHelper {
                             IS_COOKIE_OUT = true;
                             UserInfoBo loginUser = SpUtil.getLoginUser();
                             login(loginUser.getUSER(), loginUser.getPassword(), callback);
-                            Toast.makeText(mContext, "由于您长时间未操作，正在重新登录系统...", Toast.LENGTH_SHORT).show();
+                            callback.onFailure(url, 0, "由于您长时间未操作，正在重新登录系统...");
                             return;
                         }
                     }

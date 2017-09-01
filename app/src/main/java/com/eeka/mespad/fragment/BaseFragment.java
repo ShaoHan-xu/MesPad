@@ -21,6 +21,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
@@ -47,6 +48,10 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     }
 
     protected void initView() {
+        View rootView = mView.findViewById(R.id.layout_rootView);
+        if (rootView != null) {
+            rootView.setOnClickListener(this);
+        }
         mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
     }
 
@@ -70,7 +75,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
         if (loginUsers != null) {
             ScrollView scrollView = (ScrollView) mView.findViewById(R.id.scrollView_loginUsers);
             if (loginUsers.size() >= 3) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 120));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 100));
                 scrollView.setLayoutParams(params);
             } else {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -133,6 +138,9 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.layout_rootView) {
+            SystemUtils.hideKeyboard(mContext, v);
+        }
     }
 
     @Override

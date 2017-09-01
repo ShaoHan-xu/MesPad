@@ -33,7 +33,7 @@
             android:background="@color/white"
             android:divider="@drawable/divider_gray_vertical"
             android:orientation="horizontal"
-            android:showDividers="middle" />
+            android:showDividers="middle|end" />
 
         <View style="@style/line" />
 
@@ -44,7 +44,7 @@
             android:background="@color/white"
             android:divider="@drawable/divider_gray_vertical"
             android:orientation="horizontal"
-            android:showDividers="middle" />
+            android:showDividers="middle|end" />
 
         <View style="@style/line" />
     </LinearLayout>
@@ -91,7 +91,7 @@
 
         <LinearLayout
             android:id="@+id/layout_recordSewNC_selected"
-            android:layout_width="150dp"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"

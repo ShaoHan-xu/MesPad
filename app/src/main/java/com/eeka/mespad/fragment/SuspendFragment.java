@@ -77,7 +77,7 @@ public class SuspendFragment extends BaseFragment {
     protected void initData() {
         super.initData();
         mList_sfcs = new ArrayList<>();
-        mSFCAdapter = new SFCAdapter(mContext, mList_sfcs, R.layout.layout_tab);
+        mSFCAdapter = new SFCAdapter(mContext, mList_sfcs, R.layout.item_textview);
         mLv_orderList.setAdapter(mSFCAdapter);
     }
 

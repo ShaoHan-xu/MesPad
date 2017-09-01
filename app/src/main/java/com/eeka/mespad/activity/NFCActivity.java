@@ -10,7 +10,6 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.widget.TextView;
 
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.nfc.NdefMessageParser;
@@ -225,7 +224,7 @@ public class NFCActivity extends BaseActivity {
 //                sb.append(" ");
 //            }
         }
-        return sb.toString();
+        return sb.toString().toUpperCase();
     }
 
     private long getDec(byte[] bytes) {

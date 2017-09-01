@@ -23,7 +23,7 @@
         android:paddingTop="10dp" />
 
     <EditText
-        android:id="@+id/et_sewQc_clothingSize"
+        android:id="@+id/et_sewQc_finishedSize"
         style="@style/textStyle_default"
         android:background="@color/white"
         android:gravity="center"

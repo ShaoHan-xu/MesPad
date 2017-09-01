@@ -1,5 +1,6 @@
 package com.eeka.mespad.bo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -87,7 +88,7 @@ public class UpdateSewNcBo {
         }
     }
 
-    public static class NcCodeOperationListBean {
+    public static class NcCodeOperationListBean implements Serializable{
         /**
          * ncCodeRef : NCCodeBO:TEST,GC-OP-CAIJIAN
          * operation : GC-OP-CAIJIAN
