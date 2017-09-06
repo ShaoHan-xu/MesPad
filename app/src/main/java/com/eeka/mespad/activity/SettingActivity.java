@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.manager.UpdateManager;
+import com.eeka.mespad.utils.SystemUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,6 +34,9 @@ public class SettingActivity extends BaseActivity {
         super.initView();
         findViewById(R.id.tv_setLoginUser).setOnClickListener(this);
         findViewById(R.id.tv_checkUpdate).setOnClickListener(this);
+
+        TextView tv_version = (TextView) findViewById(R.id.tv_version);
+        tv_version.setText("版本：" + SystemUtils.getAppVersionName(mContext) + "(" + SystemUtils.getAppVersionCode(mContext) + ")");
     }
 
     @Override

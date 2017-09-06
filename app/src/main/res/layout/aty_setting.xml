@@ -1,27 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:background="@drawable/border_black"
-    android:divider="@drawable/divider_gray"
-    android:orientation="vertical"
-    android:showDividers="middle">
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <TextView
+            android:id="@+id/tv_setLoginUser"
+            style="@style/textStyle_default"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="设置系统用户" />
+
+        <TextView
+            android:id="@+id/tv_checkUpdate"
+            style="@style/textStyle_default"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="下载最新版本" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_setLoginUser"
+        android:id="@+id/tv_version"
         style="@style/textStyle_default"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:padding="20dp"
-        android:text="设置系统用户" />
-
-    <TextView
-        android:id="@+id/tv_checkUpdate"
-        style="@style/textStyle_default"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:padding="20dp"
-        android:text="下载最新版本" />
-
-</LinearLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="版本" />
+</RelativeLayout>
