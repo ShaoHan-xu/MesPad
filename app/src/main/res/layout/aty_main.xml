@@ -130,13 +130,13 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/tv_setLoginUser"
+                android:id="@+id/tv_setting"
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="设置系统账户"
+                android:text="设置"
                 android:textColor="@color/white" />
 
             <LinearLayout

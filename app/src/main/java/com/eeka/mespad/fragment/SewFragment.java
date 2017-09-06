@@ -22,6 +22,7 @@ import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.TabViewUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -90,7 +91,8 @@ public class SewFragment extends BaseFragment {
     }
 
     public void searchOrder(String orderNum) {
-        showLoading();
+        if (isAdded())
+            showLoading();
         HttpHelper.getSewData(orderNum, this);
     }
 
@@ -148,7 +150,13 @@ public class SewFragment extends BaseFragment {
         if (opeationInfos != null) {
             for (int i = 0; i < opeationInfos.size(); i++) {
                 SewDataBo.SewAttr opera = opeationInfos.get(i);
-                mLayout_processTab.addView(getProcessTabView(opera, i));
+                final int finalI = i;
+                mLayout_processTab.addView(TabViewUtil.getTabView(mContext, opera, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mVP_sop.setCurrentItem(finalI);
+                    }
+                }));
             }
 
             mLv_curProcess.setAdapter(new ProcessListAdapter(mContext, opeationInfos, R.layout.item_textview));
@@ -184,11 +192,12 @@ public class SewFragment extends BaseFragment {
 
         ProcessListAdapter(Context context, List<SewDataBo.SewAttr> list, int layoutId) {
             super(context, list, layoutId);
+
         }
 
         @Override
         public void convert(ViewHolder holder, SewDataBo.SewAttr item, int position) {
-            holder.setText(R.id.text, item.getDescription());
+            holder.setText(R.id.textView, item.getDescription());
         }
     }
 
@@ -259,23 +268,6 @@ public class SewFragment extends BaseFragment {
         mLayout_processTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
     }
 
-    /**
-     * 顶部工序导航标签布局
-     */
-    private View getProcessTabView(SewDataBo.SewAttr item, final int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab, null);
-        TextView textView = (TextView) view.findViewById(R.id.text);
-        textView.setText(item.getDescription());
-        textView.setPadding(20, 20, 20, 20);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mVP_sop.setCurrentItem(position);
-            }
-        });
-        return view;
-    }
-
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
@@ -284,9 +276,6 @@ public class SewFragment extends BaseFragment {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 initData();
             }
-        } else {
-            String message = resultJSON.getString("message");
-            showErrorDialog(message);
         }
     }
 }

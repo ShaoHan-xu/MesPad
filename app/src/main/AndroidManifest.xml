@@ -73,6 +73,10 @@
             android:name=".activity.VideoPlayerActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 

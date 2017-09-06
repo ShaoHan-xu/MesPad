@@ -3,9 +3,11 @@ package com.eeka.mespad.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -281,4 +283,15 @@ public class SystemUtils {
     }
 
 
+    /**
+     * 安装APK文件
+     */
+    public static void installApk(Context context, String path) {
+        // 通过Intent安装APK文件
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setDataAndType(Uri.parse("file://" + path), "application/vnd.android.package-archive");
+        context.startActivity(i);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }

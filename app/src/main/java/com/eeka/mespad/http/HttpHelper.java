@@ -33,7 +33,7 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    //    public static String PAD_IP = "192.168.0.110";
+//        public static String PAD_IP = "10.7.24.66";
     public static String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
@@ -419,13 +419,13 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("rfId", RFID);
         params.put("padIp", PAD_IP);
-        params.put("userId", "REX");
-//        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-//        if (positionUsers != null && positionUsers.size() != 0) {
-//            params.put("userId", positionUsers.get(0).getUSER());
-//        } else {
-//            return false;
-//        }
+//        params.put("userId", "REX");
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        if (positionUsers != null && positionUsers.size() != 0) {
+            params.put("userId", positionUsers.get(0).getUSER());
+        } else {
+            return false;
+        }
         HttpRequest.post(findPadKeyDataForNcUI, params, getResponseHandler(findPadKeyDataForNcUI, callback));
         return true;
     }

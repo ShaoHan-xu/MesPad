@@ -54,8 +54,6 @@ import java.util.List;
 
 public class MainActivity extends NFCActivity {
 
-    private static final int REQUEST_LOGIN = 1;
-
     private DrawerLayout mDrawerLayout;
     private LoginFragment mLoginFragment;
     private CutFragment mCutFragment;
@@ -130,8 +128,8 @@ public class MainActivity extends NFCActivity {
             showLoading();
             HttpHelper.positionLogout(cardId, this);
         } else if (PushJson.TYPE_RELOGIN.equals(type)) {
-            dismissLoading();
-            toast("系统登录成功，请继续操作");
+            showLoading();
+            HttpHelper.findProcessWithPadId(this);
         } else {
             toast("收到工单消息，正在刷新页面");
             mEt_orderNum.setText(push.getContent());
@@ -149,7 +147,7 @@ public class MainActivity extends NFCActivity {
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
         findViewById(R.id.tv_sew).setOnClickListener(this);
         findViewById(R.id.tv_sewQC).setOnClickListener(this);
-        findViewById(R.id.tv_setLoginUser).setOnClickListener(this);
+        findViewById(R.id.tv_setting).setOnClickListener(this);
 
         findViewById(R.id.btn_searchOrder).setOnClickListener(this);
         findViewById(R.id.btn_searchPosition).setOnClickListener(this);
@@ -346,9 +344,9 @@ public class MainActivity extends NFCActivity {
                 changeFragment();
                 mDrawerLayout.closeDrawer(Gravity.START);
                 break;
-            case R.id.tv_setLoginUser:
+            case R.id.tv_setting:
                 mDrawerLayout.closeDrawer(Gravity.START);
-                startActivityForResult(new Intent(mContext, LoginActivity.class), REQUEST_LOGIN);
+                startActivity(new Intent(mContext, SettingActivity.class));
                 break;
             case R.id.btn_materialReturn:
                 if (mCutFragment != null) {
@@ -389,7 +387,7 @@ public class MainActivity extends NFCActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                if (isEmpty(videoPath)) {
+                if (!isEmpty(videoPath)) {
                     //自定义播放器，可缓存视频到本地
 //                    startActivity(VideoPlayerActivity.getIntent(mContext, videoPath));
                     //系统自带视频播放，无缓存
@@ -500,16 +498,6 @@ public class MainActivity extends NFCActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_LOGIN) {
-                HttpHelper.findProcessWithPadId(this);
-            }
-        }
-    }
-
     private Dialog mLogoutDialog;
     private CommonRecyclerAdapter mLogoutAdapter;
     private int mLogoutIndex;
@@ -587,6 +575,8 @@ public class MainActivity extends NFCActivity {
                 }
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
+                List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
+                SpUtil.savePositionUsers(positionUsers);
                 onClockIn(true);
             } else if (HttpHelper.positionLogout_url.equals(url)) {
                 toast("用户下岗成功");
@@ -678,12 +668,5 @@ public class MainActivity extends NFCActivity {
                 refreshLoginUser();
             }
         }
-    }
-
-    /**
-     * 获取站位相关信息
-     */
-    public PositionInfoBo getPositionInfo() {
-        return mPositionInfo;
     }
 }

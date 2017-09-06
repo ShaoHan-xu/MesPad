@@ -116,13 +116,12 @@ public class LoginFragment extends BaseFragment {
         View ppwView = LayoutInflater.from(mContext).inflate(R.layout.ppw_selector, null);
         ListView listView = (ListView) ppwView.findViewById(R.id.lv_ppw_selector);
         final List<String> sites = new ArrayList<>();
-        sites.add("TEST");
-        sites.add("LongHua");
-        sites.add("YuDu");
+        sites.add("8080");
+        sites.add("8081");
         listView.setAdapter(new CommonAdapter<String>(mContext, sites, R.layout.item_textview) {
             @Override
             public void convert(ViewHolder holder, String item, int position) {
-                holder.setText(R.id.text, item);
+                holder.setText(R.id.textView, item);
             }
         });
 

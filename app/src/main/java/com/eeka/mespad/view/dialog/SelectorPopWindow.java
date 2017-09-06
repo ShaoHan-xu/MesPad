@@ -45,9 +45,9 @@ public class SelectorPopWindow<T> extends PopupWindow {
             @Override
             public void convert(ViewHolder holder, T item, int position) {
                 if (item instanceof BTReasonBo) {
-                    holder.setText(R.id.text, ((BTReasonBo) item).getREASON_DESC());
+                    holder.setText(R.id.textView, ((BTReasonBo) item).getREASON_DESC());
                 } else {
-                    holder.setText(R.id.text, item.toString());
+                    holder.setText(R.id.textView, item.toString());
                 }
             }
         });

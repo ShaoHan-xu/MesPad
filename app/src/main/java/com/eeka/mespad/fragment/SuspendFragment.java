@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -21,12 +22,14 @@ import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
-import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * 吊挂作业界面
@@ -111,7 +114,8 @@ public class SuspendFragment extends BaseFragment {
     }
 
     public void searchOrder(String orderNum) {
-        showLoading();
+        if (isAdded())
+            showLoading();
         HttpHelper.getSfcComponents(mOperationBo, mContextInfo.getHANDLE(), orderNum, this);
     }
 
@@ -151,7 +155,8 @@ public class SuspendFragment extends BaseFragment {
         @Override
         public void convert(ViewHolder holder, String item, int position) {
             TextView textView = holder.getView(R.id.textView);
-            textView.setPadding(0, 20, 0, 20);
+            textView.setPadding(0, 15, 0, 15);
+            textView.setLayoutParams(new RelativeLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
             textView.setText(item);
             if (item.equals(mCurSFC)) {
                 textView.setBackgroundResource(R.color.text_green_default);
@@ -166,7 +171,7 @@ public class SuspendFragment extends BaseFragment {
      */
     private View getComponentView(final SuspendComponentBo.COMPONENTSBean component) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_component, null);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, 0);
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
         Button btn_component = (Button) view.findViewById(R.id.btn_componentName);
@@ -210,8 +215,6 @@ public class SuspendFragment extends BaseFragment {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mContextInfo = JSON.parseObject(result.toString(), ContextInfoBo.class);
                 SpUtil.saveContextInfo(mContextInfo);
-                List<UserInfoBo> loginUserList = mContextInfo.getLOGIN_USER_LIST();
-                SpUtil.savePositionUsers(loginUserList);
             } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
                 if (isAdded())
                     showLoading();

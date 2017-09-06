@@ -136,8 +136,8 @@ public class NFCActivity extends BaseActivity {
                 byte[] empty = new byte[0];
                 byte[] id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID);
                 Parcelable p = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                String hexId = getHex(((Tag) p).getId());
-                byte[] payload = hexId.getBytes();
+                String decId = getDec(((Tag) p).getId()) + "";
+                byte[] payload = decId.getBytes();
                 NdefRecord record = new NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload);
                 NdefMessage msg = new NdefMessage(new NdefRecord[]{record});
                 msgs = new NdefMessage[]{msg};
