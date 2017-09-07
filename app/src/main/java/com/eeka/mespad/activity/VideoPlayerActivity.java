@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -67,6 +68,14 @@ public class VideoPlayerActivity extends BaseActivity {
         String proxyUrl = proxy.getProxyUrl(videoUrl);
         mVideoView.setVideoPath(proxyUrl);//获取视频文件路径
         mVideoView.setOnPreparedListener(new PreparedListener());
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                dismissLoading();
+                toggleControl(true);
+                return false;
+            }
+        });
         mVideoView.setOnCompletionListener(new CompleteListener());
         mVideoView.start();//开始播放
     }

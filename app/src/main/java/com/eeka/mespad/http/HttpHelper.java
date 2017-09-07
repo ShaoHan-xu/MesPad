@@ -87,7 +87,7 @@ public class HttpHelper {
      * @param callback 回调
      */
     public static void initData(HttpCallback callback) {
-        RequestParams params = new RequestParams();
+        RequestParams params = getBaseParams();
         params.put("padIp", PAD_IP);
         HttpRequest.post(queryPositionByPadIp_url, params, getResponseHandler(queryPositionByPadIp_url, callback));
     }

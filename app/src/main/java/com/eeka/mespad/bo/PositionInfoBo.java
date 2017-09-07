@@ -87,8 +87,17 @@ public class PositionInfoBo {
         private String OPERATION;
         private String DESCRIPTION;
         private String SOP_URL;
+        private String VIDEO_URL;
         private String QUALITY_REQUIREMENT;
         private String OPERATION_INSTRUCTION;
+
+        public String getVIDEO_URL() {
+            return VIDEO_URL;
+        }
+
+        public void setVIDEO_URL(String VIDEO_URL) {
+            this.VIDEO_URL = VIDEO_URL;
+        }
 
         public String getTOPIC() {
             return TOPIC;

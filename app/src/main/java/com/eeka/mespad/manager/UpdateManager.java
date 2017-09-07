@@ -79,6 +79,7 @@ public class UpdateManager {
         mProgress = (ProgressBar) v.findViewById(R.id.progressBar);
         builder.setView(v);
         AlertDialog mDownloadDialog = builder.create();
+        mDownloadDialog.setCancelable(false);
         mDownloadDialog.show();
     }
 

@@ -2,7 +2,6 @@ package com.eeka.mespad.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,8 +43,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -82,24 +79,15 @@ public class MainActivity extends NFCActivity {
         MQTTService.actionStart(mContext);
 
         initData();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         MQTTService.actionStop(mContext);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -112,6 +100,9 @@ public class MainActivity extends NFCActivity {
             toast("用户刷卡登录");
             JSONObject json = JSON.parseObject(push.getContent());
             String cardNum = json.getString("EMPLOYEE_CARD");
+            if (isEmpty(cardNum)) {
+                cardNum = json.getString("EMPLOYEE_ID");
+            }
             showLoading();
             HttpHelper.positionLogin(cardNum, this);
         } else if ("LOGOUT".equals(type)) {
@@ -161,21 +152,21 @@ public class MainActivity extends NFCActivity {
     protected void initData() {
         super.initData();
 
-        UserInfoBo loginUser = SpUtil.getLoginUser();
-        if (loginUser == null) {
-            if (mLoginFragment == null) {
-                initLoginFragment();
-            }
-            mLoginFragment.setType(LoginFragment.TYPE_LOGIN);
-            FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.replace(R.id.layout_content, mLoginFragment);
-            ft.commit();
-        } else {
-            showLoading();
-            HttpHelper.initData(this);
-            HttpHelper.findProcessWithPadId(this);
-            findViewById(R.id.layout_RFID).setVisibility(View.VISIBLE);
-        }
+//        UserInfoBo loginUser = SpUtil.getLoginUser();
+//        if (loginUser == null) {
+//            if (mLoginFragment == null) {
+//                initLoginFragment();
+//            }
+//            mLoginFragment.setType(LoginFragment.TYPE_LOGIN);
+//            FragmentTransaction ft = mFragmentManager.beginTransaction();
+//            ft.replace(R.id.layout_content, mLoginFragment);
+//            ft.commit();
+//        } else {
+        showLoading();
+        HttpHelper.initData(this);
+        HttpHelper.findProcessWithPadId(this);
+        findViewById(R.id.layout_search).setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
@@ -373,29 +364,12 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_video:
-                String videoPath = null;
-                try {
-                    String url = "http://10.7.121.75/gst/在.mp4";
-                    if (!isEmpty(url)) {
-                        int indexOf = url.lastIndexOf("/");
-                        if (indexOf != -1) {
-                            String host = url.substring(0, indexOf + 1);
-                            String name = url.substring(indexOf + 1, url.length());
-                            videoPath = host + URLEncoder.encode(name, "utf-8");
-                        }
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                if (!isEmpty(videoPath)) {
-                    //自定义播放器，可缓存视频到本地
-//                    startActivity(VideoPlayerActivity.getIntent(mContext, videoPath));
-                    //系统自带视频播放，无缓存
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
-                    startActivity(intent);
-                } else {
-                    showErrorDialog("视频路径出错");
+                List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
+                if (operInfo != null && operInfo.size() != 0) {
+                    PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
+                    SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
+                }else {
+                    showErrorDialog("站位无工序");
                 }
                 break;
             case R.id.btn_login:

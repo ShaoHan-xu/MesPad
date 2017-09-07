@@ -121,15 +121,6 @@ public class CutFragment extends BaseFragment {
         mBtn_done.setOnClickListener(this);
     }
 
-    @Override
-    protected void initData() {
-        super.initData();
-        List<UserInfoBo> userInfo = SpUtil.getPositionUsers();
-        if (userInfo != null) {
-            refreshLoginUsers();
-        }
-    }
-
     public void refreshView() {
         mView.findViewById(R.id.layout_processDescription).setVisibility(View.VISIBLE);
         mView.findViewById(R.id.layout_orderInfo).setVisibility(View.VISIBLE);
@@ -244,7 +235,6 @@ public class CutFragment extends BaseFragment {
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
         tv_special.setText(orderInfo.getSO_REMARK());
 
-        refreshLoginUsers();
     }
 
     /**
@@ -618,9 +608,6 @@ public class CutFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             switch (url) {
-                case HttpHelper.positionLogin_url:
-                    refreshLoginUsers();
-                    break;
                 case HttpHelper.findProcessWithPadId_url:
                     JSONObject result = resultJSON.getJSONObject("result");
                     mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);

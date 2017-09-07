@@ -2,9 +2,13 @@ package com.eeka.mespad;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
+import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.service.LogUtil;
+import com.eeka.mespad.utils.SpUtil;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
@@ -22,8 +26,17 @@ public class PadApplication extends Application {
         super.onCreate();
 
         mContext = this;
+        LogUtil.init(this);
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
+
+        //配置初始用户及站点
+        UserInfoBo loginUser = SpUtil.getLoginUser();
+        if (loginUser == null)
+            SpUtil.saveLoginUser(new UserInfoBo("PAD_USER", "mes123456"));
+        String site = SpUtil.getSite();
+        if (TextUtils.isEmpty(site))
+            SpUtil.saveSite("8081");
     }
 
     private void initOkHttp() {

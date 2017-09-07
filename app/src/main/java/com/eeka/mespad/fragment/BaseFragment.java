@@ -53,6 +53,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
             rootView.setOnClickListener(this);
         }
         mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
+        refreshLoginUsers();
     }
 
     protected void bindListener() {

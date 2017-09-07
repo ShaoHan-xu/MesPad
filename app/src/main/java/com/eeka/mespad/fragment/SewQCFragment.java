@@ -81,12 +81,6 @@ public class SewQCFragment extends BaseFragment {
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
     }
 
-    @Override
-    protected void initData() {
-        super.initData();
-        refreshLoginUsers();
-    }
-
     private void setupView() {
         if (mSewQCData == null) {
             toast("数据错误");

@@ -11,12 +11,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.eeka.mespad.activity.VideoPlayerActivity;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +27,8 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 /**
@@ -293,5 +298,37 @@ public class SystemUtils {
         i.setDataAndType(Uri.parse("file://" + path), "application/vnd.android.package-archive");
         context.startActivity(i);
         android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    /**
+     * 开启视频播放界面
+     *
+     * @param context
+     * @param videoUrl
+     */
+    public static void startVideoActivity(Context context, String videoUrl) {
+        String videoPath = null;
+        try {
+            if (!TextUtils.isEmpty(videoUrl)) {
+                int indexOf = videoUrl.lastIndexOf("/");
+                if (indexOf != -1) {
+                    String host = videoUrl.substring(0, indexOf + 1);
+                    String name = videoUrl.substring(indexOf + 1, videoUrl.length());
+                    videoPath = host + URLEncoder.encode(name, "utf-8");
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(videoPath)) {
+            //自定义播放器，可缓存视频到本地
+            context.startActivity(VideoPlayerActivity.getIntent(context, videoPath));
+            //系统自带视频播放，无缓存
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
+//            context.startActivity(intent);
+        } else {
+            ErrorDialog.showDialog(context, "视频路径出错");
+        }
     }
 }

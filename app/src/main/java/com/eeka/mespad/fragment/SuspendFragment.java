@@ -73,7 +73,6 @@ public class SuspendFragment extends BaseFragment {
         mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
         mIv_component = (ImageView) mView.findViewById(R.id.iv_suspend_componentImg);
-        refreshLoginUsers();
     }
 
     @Override
@@ -243,9 +242,6 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }
-        } else {
-            String message = resultJSON.getString("message");
-            showErrorDialog(message);
         }
     }
 }

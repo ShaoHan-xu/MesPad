@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -23,8 +24,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.IOException;
 
 /**
  * Created by Administrator on 2017/2/22.
@@ -50,9 +49,10 @@ public class MQTTService extends Service {
     private static String myTopic;
     private String clientId = HttpHelper.PAD_IP;
     // Connection log for the push service. Good for debugging.
-    private static ConnectionLog mLog;
+    private static Context mContext;
 
     public static void actionStart(final Context ctx) {
+        mContext = ctx;
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.startService(intent);
     }
@@ -79,12 +79,6 @@ public class MQTTService extends Service {
     public void onCreate() {
         super.onCreate();
 //        clientId = myTopic;
-        try {
-            mLog = new ConnectionLog();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Failed to open log", e);
-        }
     }
 
     @Override
@@ -152,13 +146,13 @@ public class MQTTService extends Service {
             e.printStackTrace();
             Logger.e("MQTT 断开连接异常" + e.getMessage());
         }
-        if (mLog != null) {
-            try {
-                mLog.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (mLog != null) {
+//            try {
+//                mLog.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     /**
@@ -199,7 +193,7 @@ public class MQTTService extends Service {
             // 连接失败，自动重连1次
             Logger.d("connect failure");
         }
-    };//  108030002  刘小勇
+    };
 
     private String mLastMsgType;
     private long mLastMsgMillis;
@@ -212,6 +206,9 @@ public class MQTTService extends Service {
             String str1 = new String(message.getPayload());
             String str2 = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
             Logger.d("MQTT收到推送->" + str2 + ",message:" + str1);
+            LogUtil.writeToFile("MQTT->" + str1);
+//            FileUtils.writeStringToFile(mLogFile,"接收到MQTT推送消息->" + str1);
+
             PushJson pushJson = JSON.parseObject(str1, PushJson.class);
             if ("0".equals(pushJson.getCode())) {
                 String type = pushJson.getType();
@@ -227,6 +224,8 @@ public class MQTTService extends Service {
                 mLastMsgMillis = System.currentTimeMillis();
                 mLastMsgType = type;
                 EventBus.getDefault().post(pushJson);
+            } else {
+                ErrorDialog.showDialog(mContext, pushJson.getMessage());
             }
         }
 
