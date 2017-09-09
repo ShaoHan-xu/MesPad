@@ -51,6 +51,8 @@ import java.util.List;
 
 public class MainActivity extends NFCActivity {
 
+    public static boolean isReLogin;
+
     private DrawerLayout mDrawerLayout;
     private LoginFragment mLoginFragment;
     private CutFragment mCutFragment;
@@ -84,6 +86,16 @@ public class MainActivity extends NFCActivity {
     }
 
     @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (isReLogin) {
+            isReLogin = false;
+            showLoading();
+            HttpHelper.initData(this);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         MQTTService.actionStop(mContext);
@@ -96,31 +108,14 @@ public class MainActivity extends NFCActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
-        if ("LOGIN".equals(type)) {
-            toast("用户刷卡登录");
-            JSONObject json = JSON.parseObject(push.getContent());
-            String cardNum = json.getString("EMPLOYEE_CARD");
-            if (isEmpty(cardNum)) {
-                cardNum = json.getString("EMPLOYEE_ID");
+        if ("LOGIN".equals(type) || "LOGOUT".equals(type)) {
+            if ("LOGIN".equals(type)) {
+                toast("用户刷卡上岗");
+            } else {
+                toast("用户刷卡离岗");
             }
             showLoading();
-            HttpHelper.positionLogin(cardNum, this);
-        } else if ("LOGOUT".equals(type)) {
-            JSONObject json = JSON.parseObject(push.getContent());
-            String cardId = json.getString("EMPLOYEE_CARD");
-            List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-            for (int i = 0; i < positionUsers.size(); i++) {
-                UserInfoBo user = positionUsers.get(i);
-                if (cardId.equals(user.getCARD_NUMBER())) {
-                    mLogoutIndex = i;
-                    break;
-                }
-            }
-            showLoading();
-            HttpHelper.positionLogout(cardId, this);
-        } else if (PushJson.TYPE_RELOGIN.equals(type)) {
-            showLoading();
-            HttpHelper.findProcessWithPadId(this);
+            HttpHelper.getPositionLoginUsers(this);
         } else {
             toast("收到工单消息，正在刷新页面");
             mEt_orderNum.setText(push.getContent());
@@ -152,21 +147,10 @@ public class MainActivity extends NFCActivity {
     protected void initData() {
         super.initData();
 
-//        UserInfoBo loginUser = SpUtil.getLoginUser();
-//        if (loginUser == null) {
-//            if (mLoginFragment == null) {
-//                initLoginFragment();
-//            }
-//            mLoginFragment.setType(LoginFragment.TYPE_LOGIN);
-//            FragmentTransaction ft = mFragmentManager.beginTransaction();
-//            ft.replace(R.id.layout_content, mLoginFragment);
-//            ft.commit();
-//        } else {
-        showLoading();
-        HttpHelper.initData(this);
-        HttpHelper.findProcessWithPadId(this);
+        UserInfoBo loginUser = SpUtil.getLoginUser();
+        HttpHelper.login(loginUser.getUSER(), loginUser.getPassword(), this);
+//        HttpHelper.initData(this);
         findViewById(R.id.layout_search).setVisibility(View.VISIBLE);
-//        }
     }
 
     @Override
@@ -183,6 +167,9 @@ public class MainActivity extends NFCActivity {
     private void initButton(List<PositionInfoBo.BUTTONINFORBean> buttons) {
         mLayout_controlPanel.removeAllViews();
         for (PositionInfoBo.BUTTONINFORBean item : buttons) {
+            if (item.getBUTTON_ID().equals("BINDING")) {
+                continue;
+            }
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID().replace(" ", "")) {
@@ -235,7 +222,7 @@ public class MainActivity extends NFCActivity {
                     button.setId(R.id.btn_binding);
                     break;
                 case "UNBIND":
-                    button.setText("解绑");
+                    button.setText("制卡/解绑");
                     button.setId(R.id.btn_unbind);
                     break;
                 case "COMPLETE":
@@ -368,7 +355,7 @@ public class MainActivity extends NFCActivity {
                 if (operInfo != null && operInfo.size() != 0) {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
                     SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
-                }else {
+                } else {
                     showErrorDialog("站位无工序");
                 }
                 break;
@@ -379,13 +366,7 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_logout:
                 List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
                 if (loginUsers != null && loginUsers.size() != 0) {
-//                    if (loginUsers.size() == 1) {
-//                        UserInfoBo userInfo = loginUsers.get(0);
-//                        mLogoutIndex = 0;
-//                        HttpHelper.positionLogout(userInfo.getCARD_NUMBER(), this);
-//                    } else {
                     showLogoutDialog();
-//                    }
                 } else {
                     showErrorDialog("目前没有人在岗位登录");
                 }
@@ -443,11 +424,23 @@ public class MainActivity extends NFCActivity {
         }
     }
 
+    private void test() {
+        HttpHelper.initData(this);
+        HttpHelper.findProcessWithPadId(this);
+    }
+
     private void searchOrder() {
+//        if (true) {
+//            for (int i = 0; i < 5; i++) {
+//                test();
+//            }
+//            return;
+//        }
         ContextInfoBo contextInfo = SpUtil.getContextInfo();
         if (contextInfo == null || mPositionInfo == null) {
             isSearchOrder = true;
-            initData();
+            showLoading();
+            HttpHelper.initData(this);
             return;
         }
         String cardNum = mEt_orderNum.getText().toString();
@@ -511,24 +504,15 @@ public class MainActivity extends NFCActivity {
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
+            if (HttpHelper.login_url.equals(url)) {
+                HttpHelper.initData(this);
+            } else if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
-            } else if (HttpHelper.getCardInfo.equals(url)) {
-                JSONObject result = resultJSON.getJSONObject("result");
-                String orderType = result.getString("ORDER_TYPE");
-                mCardInfo.setCardType(orderType);
-                mCardInfo.setValue(resultJSON.getString("RI"));
-                switch (mTopic) {
-                    case TopicUtil.TOPIC_CUT:
-                        if ("P".equalsIgnoreCase(orderType) || "S".equalsIgnoreCase(orderType)) {
-                            mEt_orderNum.setText(mCardInfo.getCardNum());
-                            mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
-                        } else if ("M".equals(orderType)) {
-                            clockIn(mCardInfo.getCardNum());
-                        }
-                        break;
-                }
+                List<UserInfoBo> positionUsers = contextInfoBo.getLOGIN_USER_LIST();
+                SpUtil.savePositionUsers(positionUsers);
+
+                HttpHelper.findProcessWithPadId(this);
             } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
                 mPositionInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), PositionInfoBo.class);
                 SpUtil.save(SpUtil.KEY_RESOURCE, JSON.toJSONString(mPositionInfo.getRESR_INFOR()));
@@ -547,6 +531,21 @@ public class MainActivity extends NFCActivity {
                     isSearchOrder = false;
                     searchOrder();
                 }
+            } else if (HttpHelper.getCardInfo.equals(url)) {
+                JSONObject result = resultJSON.getJSONObject("result");
+                String orderType = result.getString("ORDER_TYPE");
+                mCardInfo.setCardType(orderType);
+                mCardInfo.setValue(resultJSON.getString("RI"));
+                switch (mTopic) {
+                    case TopicUtil.TOPIC_CUT:
+                        if ("P".equalsIgnoreCase(orderType) || "S".equalsIgnoreCase(orderType)) {
+                            mEt_orderNum.setText(mCardInfo.getCardNum());
+                            mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
+                        } else if ("M".equals(orderType)) {
+                            clockIn(mCardInfo.getCardNum());
+                        }
+                        break;
+                }
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
@@ -555,6 +554,10 @@ public class MainActivity extends NFCActivity {
             } else if (HttpHelper.positionLogout_url.equals(url)) {
                 toast("用户下岗成功");
                 logoutSuccess();
+            } else if (HttpHelper.getPositionLoginUser_url.equals(url)) {
+                List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
+                SpUtil.savePositionUsers(positionUsers);
+                refreshLoginUser();
             }
         } else {
             String message = resultJSON.getString("message");
@@ -562,7 +565,7 @@ public class MainActivity extends NFCActivity {
                 toast("用户下线成功");
                 logoutSuccess();
             } else {
-                showErrorDialog(message);
+//                showErrorDialog(message);
             }
         }
     }

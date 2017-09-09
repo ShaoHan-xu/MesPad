@@ -121,7 +121,7 @@ public class SpUtil {
     public static void saveCookie(String cookie) {
         SharedPreferences.Editor edit = mSP.edit();
         edit.putString("cookie", cookie);
-        edit.apply();
+        edit.commit();
     }
 
     public static String getCookie() {

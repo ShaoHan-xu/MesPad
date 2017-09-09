@@ -1,5 +1,6 @@
 package com.eeka.mespad.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -40,7 +41,8 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnClock
     public void onLogin(boolean success) {
         super.onLogin(success);
         if (success) {
-            setResult(RESULT_OK);
+            MainActivity.isReLogin = true;
+            startActivity(new Intent(mContext, MainActivity.class));
             finish();
         }
     }

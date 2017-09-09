@@ -53,6 +53,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
             rootView.setOnClickListener(this);
         }
         mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
+
+//        HttpHelper.getPositionLoginUsers(this);
         refreshLoginUsers();
     }
 
@@ -126,7 +128,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     }
 
     protected void showErrorDialog(String msg) {
-        ErrorDialog.showDialog(mContext, msg);
+        ErrorDialog.showAlert(mContext, msg);
     }
 
     protected void toast(String msg) {
@@ -155,7 +157,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
     @Override
     public void onFailure(String url, int code, String message) {
         dismissLoading();
-        ErrorDialog.showDialog(mContext, message);
+        ErrorDialog.showAlert(mContext, message);
     }
 
 }

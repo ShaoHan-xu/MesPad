@@ -44,7 +44,7 @@ public class SettingActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_setLoginUser:
-                startActivityForResult(new Intent(mContext, LoginActivity.class), REQUEST_LOGIN);
+                startActivity(new Intent(mContext, LoginActivity.class));
                 break;
             case R.id.tv_checkUpdate:
                 UpdateManager.downloadApk(mContext);
@@ -58,9 +58,6 @@ public class SettingActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_LOGIN) {
                 toast("设置成功，正刷新数据");
-                PushJson push = new PushJson();
-                push.setType(PushJson.TYPE_RELOGIN);
-                EventBus.getDefault().post(push);
                 startActivity(new Intent(mContext, MainActivity.class));
                 finish();
             }

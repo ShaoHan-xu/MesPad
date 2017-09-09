@@ -253,19 +253,7 @@ public class SewFragment extends BaseFragment {
         if (!isEmpty(qualityDesc))
             mTv_qualityReq.setText(qualityDesc.replace("\\n", "\n"));
 
-        refreshMatTab(position);
-    }
-
-    /**
-     * 刷新物料标签视图
-     */
-    private void refreshMatTab(int position) {
-        int childCount = mLayout_processTab.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childAt = mLayout_processTab.getChildAt(i);
-            childAt.setBackgroundResource(R.color.white);
-        }
-        mLayout_processTab.getChildAt(position).setBackgroundResource(R.color.text_gray_default);
+        TabViewUtil.refreshTabView(mLayout_processTab,position);
     }
 
     @Override

@@ -26,6 +26,7 @@ public class UpdateManager {
     private static final String apkUrl = "http://10.7.121.75/app/MesPad.apk";
     private static File apkFile;
 
+    private static AlertDialog mDownloadDialog;
     private static ProgressBar mProgress;
 
     private static void initPath() {
@@ -57,6 +58,7 @@ public class UpdateManager {
             @Override
             public void onDone() {
                 super.onDone();
+                mDownloadDialog.dismiss();
                 Toast.makeText(context, "下载成功", Toast.LENGTH_SHORT).show();
                 SystemUtils.installApk(context, apkFile.getPath());
             }
@@ -64,7 +66,8 @@ public class UpdateManager {
             @Override
             public void onFailure() {
                 super.onFailure();
-                ErrorDialog.showDialog(context, "下载失败");
+                mDownloadDialog.dismiss();
+                ErrorDialog.showAlert(context, "下载失败");
             }
 
         });
@@ -78,7 +81,7 @@ public class UpdateManager {
         View v = inflater.inflate(R.layout.layout_progress, null);
         mProgress = (ProgressBar) v.findViewById(R.id.progressBar);
         builder.setView(v);
-        AlertDialog mDownloadDialog = builder.create();
+        mDownloadDialog = builder.create();
         mDownloadDialog.setCancelable(false);
         mDownloadDialog.show();
     }

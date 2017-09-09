@@ -31,6 +31,8 @@ import okhttp3.OkHttpClient;
  */
 public final class HttpRequest {
 
+    public static HttpRequestBo mLastRequest;
+
     public static void get(String url) {
         get(url, null, null);
     }
@@ -44,7 +46,8 @@ public final class HttpRequest {
     }
 
     /**
-     * Get请求 
+     * Get请求
+     *
      * @param url
      * @param params
      * @param callback
@@ -78,7 +81,8 @@ public final class HttpRequest {
     }
 
     /**
-     * Post请求 
+     * Post请求
+     *
      * @param url
      * @param params
      * @param callback
@@ -88,6 +92,14 @@ public final class HttpRequest {
     }
 
     public static void post(String url, RequestParams params, long timeout, BaseHttpRequestCallback callback) {
+        if (mLastRequest == null) {
+            mLastRequest = new HttpRequestBo();
+        }
+        mLastRequest.setMethod(Method.POST);
+        mLastRequest.setUrl(url);
+        mLastRequest.setParams(params);
+        mLastRequest.setCallback(callback);
+
         OkHttpClient.Builder builder = OkHttpFinal.getInstance().getOkHttpClientBuilder();
         builder.readTimeout(timeout, TimeUnit.MILLISECONDS);
         builder.connectTimeout(timeout, TimeUnit.MILLISECONDS);
@@ -112,7 +124,8 @@ public final class HttpRequest {
     }
 
     /**
-     * put请求 
+     * put请求
+     *
      * @param url
      * @param params
      * @param callback
@@ -146,7 +159,8 @@ public final class HttpRequest {
     }
 
     /**
-     * delete请求 
+     * delete请求
+     *
      * @param url
      * @param params
      * @param callback
@@ -180,7 +194,8 @@ public final class HttpRequest {
     }
 
     /**
-     * head请求 
+     * head请求
+     *
      * @param url
      * @param params
      * @param callback
@@ -214,7 +229,8 @@ public final class HttpRequest {
     }
 
     /**
-     * patch请求 
+     * patch请求
+     *
      * @param url
      * @param params
      * @param callback
@@ -237,12 +253,13 @@ public final class HttpRequest {
 
     /**
      * 取消请求
+     *
      * @param url
      */
     public static void cancel(String url) {
-        if ( !TextUtils.isEmpty(url) ) {
+        if (!TextUtils.isEmpty(url)) {
             Call call = OkHttpCallManager.getInstance().getCall(url);
-            if ( call != null ) {
+            if (call != null) {
                 call.cancel();
             }
 
@@ -256,8 +273,9 @@ public final class HttpRequest {
 
     /**
      * 下载文件
+     *
      * @param url
-     * @param target 保存的文件
+     * @param target   保存的文件
      * @param callback
      */
     public static void download(String url, File target, FileDownloadCallback callback) {
@@ -269,11 +287,53 @@ public final class HttpRequest {
 
     private static void executeRequest(Method method, String url, RequestParams params, OkHttpClient.Builder builder, BaseHttpRequestCallback callback) {
         if (!TextUtils.isEmpty(url)) {
-            if(builder == null) {
+            if (builder == null) {
                 builder = OkHttpFinal.getInstance().getOkHttpClientBuilder();
             }
             OkHttpTask task = new OkHttpTask(method, url, params, builder, callback);
             task.execute();
+        }
+    }
+
+    /**
+     * 请求实体，用于保存上一次请求
+     */
+    public static class HttpRequestBo {
+        private Method method;
+        private String url;
+        private RequestParams params;
+        private BaseHttpRequestCallback callback;
+
+        public Method getMethod() {
+            return method;
+        }
+
+        public void setMethod(Method method) {
+            this.method = method;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public RequestParams getParams() {
+            return params;
+        }
+
+        public void setParams(RequestParams params) {
+            this.params = params;
+        }
+
+        public BaseHttpRequestCallback getCallback() {
+            return callback;
+        }
+
+        public void setCallback(BaseHttpRequestCallback callback) {
+            this.callback = callback;
         }
     }
 

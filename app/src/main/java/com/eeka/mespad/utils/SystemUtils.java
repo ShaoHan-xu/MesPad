@@ -297,7 +297,6 @@ public class SystemUtils {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.setDataAndType(Uri.parse("file://" + path), "application/vnd.android.package-archive");
         context.startActivity(i);
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     /**
@@ -328,7 +327,7 @@ public class SystemUtils {
 //            intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
 //            context.startActivity(intent);
         } else {
-            ErrorDialog.showDialog(context, "视频路径出错");
+            ErrorDialog.showAlert(context, "视频路径出错");
         }
     }
 }

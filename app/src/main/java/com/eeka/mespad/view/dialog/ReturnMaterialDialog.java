@@ -225,14 +225,14 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
                 }
             }
         } else {
-            ErrorDialog.showDialog(mContext, resultJSON.getString("message"));
+            ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
         }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
         LoadingDialog.dismiss();
-        ErrorDialog.showDialog(mContext, message);
+        ErrorDialog.showAlert(mContext, message);
     }
 
     public interface OnReturnMaterialCallback {

@@ -34,6 +34,7 @@ public class PadApplication extends Application {
         UserInfoBo loginUser = SpUtil.getLoginUser();
         if (loginUser == null)
             SpUtil.saveLoginUser(new UserInfoBo("PAD_USER", "mes123456"));
+//            SpUtil.saveLoginUser(new UserInfoBo("SHAWN", "sap12345"));
         String site = SpUtil.getSite();
         if (TextUtils.isEmpty(site))
             SpUtil.saveSite("8081");

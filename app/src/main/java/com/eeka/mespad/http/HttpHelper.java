@@ -20,6 +20,7 @@ import java.util.List;
 
 import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
 import cn.finalteam.okhttpfinal.HttpRequest;
+import cn.finalteam.okhttpfinal.Part;
 import cn.finalteam.okhttpfinal.RequestParams;
 import okhttp3.Headers;
 import okhttp3.Response;
@@ -33,7 +34,8 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-//        public static String PAD_IP = "10.7.24.66";
+//    public static String PAD_IP = "10.7.25.122";//上裁
+//    public static String PAD_IP = "10.7.25.107";//缝制
     public static String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
@@ -43,7 +45,8 @@ public class HttpHelper {
     public static final String loginByCard_url = BASE_URL + "loginByCard?";
     public static final String positionLogin_url = BASE_URL + "position/positionLogin?";
     public static final String positionLogout_url = BASE_URL + "position/positionLogout?";
-    public static final String queryPositionByPadIp_url = BASE_URL + "position/queryPositionByPadIp?";
+    public static final String getPositionLoginUser_url = BASE_URL + "position/getPositionLoginUser?";
+    public static final String queryPositionByPadIp_url = BASE_URL + "position/getPositionContext?";
     public static final String findProcessWithPadId_url = BASE_URL + "cutpad/findPadBindOperations?";
     public static final String viewCutPadInfo_url = BASE_URL + "cutpad/viewCutPadInfor?";
     public static final String startBatchWork_url = BASE_URL + "product/startByProcessLot?";
@@ -77,6 +80,8 @@ public class HttpHelper {
 
     private static Context mContext;
 
+    private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
+
     static {
         mContext = PadApplication.mContext;
     }
@@ -88,7 +93,9 @@ public class HttpHelper {
      */
     public static void initData(HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("padIp", PAD_IP);
+        JSONObject json = new JSONObject();
+        json.put("PAD_IP", PAD_IP);
+        params.put("params", json.toJSONString());
         HttpRequest.post(queryPositionByPadIp_url, params, getResponseHandler(queryPositionByPadIp_url, callback));
     }
 
@@ -156,6 +163,17 @@ public class HttpHelper {
         json.put("CARD_ID", cardId);
         params.put("params", json.toJSONString());
         HttpRequest.post(positionLogout_url, params, getResponseHandler(positionLogout_url, callback));
+    }
+
+    /**
+     * 获取当前站位登录的人员
+     */
+    public static void getPositionLoginUsers(HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PAD_IP", PAD_IP);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getPositionLoginUser_url, params, getResponseHandler(getPositionLoginUser_url, callback));
     }
 
     /**
@@ -595,7 +613,18 @@ public class HttpHelper {
                     if (IS_COOKIE_OUT) {
                         if (isSuccess(jsonObject)) {
                             IS_COOKIE_OUT = false;
-                            Toast.makeText(mContext, "系统登录成功，请继续操作", Toast.LENGTH_LONG).show();
+                            //cookie过期后重新登录成功，继续执行之前的请求
+//                            Toast.makeText(mContext, "重新登录成功", Toast.LENGTH_LONG).show();
+
+                            if (mCookieOutRequest != null) {
+                                RequestParams params = getBaseParams();
+                                RequestParams lastParams = mCookieOutRequest.getParams();
+                                List<Part> formParams = lastParams.getFormParams();
+                                for (Part p : formParams) {
+                                    params.put(p.getKey(), p.getValue());
+                                }
+                                HttpRequest.post(mCookieOutRequest.getUrl(), params, mCookieOutRequest.getCallback());
+                            }
                             return;
                         }
                     }
@@ -604,9 +633,18 @@ public class HttpHelper {
                     if (!TextUtils.isEmpty(message)) {
                         if (message.contains(COOKIE_OUT)) {//cookie失效，重新登录获取新的cookie
                             IS_COOKIE_OUT = true;
+
+                            //记录cookie失效前的请求，重新登录后重新请求
+                            HttpRequest.HttpRequestBo lastRequest = HttpRequest.mLastRequest;
+                            mCookieOutRequest = new HttpRequest.HttpRequestBo();
+                            mCookieOutRequest.setMethod(lastRequest.getMethod());
+                            mCookieOutRequest.setUrl(lastRequest.getUrl());
+                            mCookieOutRequest.setParams(lastRequest.getParams());
+                            mCookieOutRequest.setCallback(lastRequest.getCallback());
+
                             UserInfoBo loginUser = SpUtil.getLoginUser();
                             login(loginUser.getUSER(), loginUser.getPassword(), callback);
-                            callback.onFailure(url, 0, "由于您长时间未操作，正在重新登录系统...");
+//                            Toast.makeText(mContext, "重新登录系统", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }

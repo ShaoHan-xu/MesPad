@@ -103,7 +103,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void showErrorDialog(String msg) {
-        ErrorDialog.showDialog(mContext, msg);
+        ErrorDialog.showAlert(mContext, msg);
     }
 
     protected void toast(String msg) {
@@ -149,7 +149,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onFailure(String url, int code, String message) {
         dismissLoading();
-        ErrorDialog.showDialog(mContext, message);
+        ErrorDialog.showAlert(mContext, message);
     }
 
     @Override

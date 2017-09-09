@@ -120,6 +120,7 @@ class OkHttpTask implements Callback, ProgressCallback {
         builder.url(url).tag(srcUrl).headers(headers);
         Request request = builder.build();
         if (Constants.DEBUG) {
+//            ILogger.d("url=" + srcUrl + params.toString() +"\n" + headers);
             ILogger.d("url=" + srcUrl + params.toString());
         }
         Call call = okHttpClient.newCall(request);
@@ -161,7 +162,6 @@ class OkHttpTask implements Callback, ProgressCallback {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-
         ResponseData responseData = new ResponseData();
         handlerResponse(responseData, response);
     }

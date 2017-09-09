@@ -19,21 +19,46 @@ public class ErrorDialog {
     private static Dialog dialog;
     private static AlertDialog.Builder errorDialog;
 
-    public static void showDialog(Context context, String error) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_error, null);
-        TextView tipTextView = (TextView) v.findViewById(R.id.text_error);
-        tipTextView.setText(error);
+    /**
+     * 错误提示弹框
+     */
+    public static void showAlert(Context context, String msg) {
+        showAlert(context, msg, true, null);
+    }
 
-        errorDialog = new AlertDialog.Builder(context);//Dialog(context, R.style.error_dialog);
-        errorDialog.setCancelable(false);
-        errorDialog.setTitle("出现错误:");
+    /**
+     * 确认提示弹框
+     */
+    public static void showConfirmAlert(Context context, String msg, View.OnClickListener listener) {
+        showAlert(context, msg, false, listener);
+    }
+
+    private static void showAlert(Context context, String msg, boolean error, final View.OnClickListener positiveListener) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View v = inflater.inflate(R.layout.dialog_alert, null);
+        TextView tipTextView = (TextView) v.findViewById(R.id.tv_alertMsg);
+        tipTextView.setText(msg);
+
+        errorDialog = new AlertDialog.Builder(context);
+        if (error) {
+            errorDialog.setTitle("出现错误:");
+        } else {
+            errorDialog.setTitle("温馨提示：");
+        }
         errorDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
+        if (positiveListener != null) {
+            errorDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    positiveListener.onClick(null);
+                }
+            });
+        }
         errorDialog.setView(v);
         errorDialog.show();
     }
