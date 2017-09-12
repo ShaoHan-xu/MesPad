@@ -25,6 +25,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 
+import cn.finalteam.okhttpfinal.LogUtil;
+
 /**
  * Created by Administrator on 2017/2/22.
  */
@@ -206,8 +208,7 @@ public class MQTTService extends Service {
             String str1 = new String(message.getPayload());
             String str2 = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
             Logger.d("MQTT收到推送->" + str2 + ",message:" + str1);
-            LogUtil.writeToFile("MQTT->" + str1);
-//            FileUtils.writeStringToFile(mLogFile,"接收到MQTT推送消息->" + str1);
+            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
 
             PushJson pushJson = JSON.parseObject(str1, PushJson.class);
             if ("0".equals(pushJson.getCode())) {

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 
@@ -35,6 +36,9 @@ public class TabViewUtil {
         } else if (data instanceof TailorInfoBo.MatInfoBean) {//物料标签
             TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) data;
             tv_tabName.setText(matInfo.getMAT_NO());
+        } else if (data instanceof SewDataBo.SewAttr) {//缝制工序标签
+            SewDataBo.SewAttr sewData = (SewDataBo.SewAttr) data;
+            tv_tabName.setText(sewData.getDescription());
         }
         return view;
     }

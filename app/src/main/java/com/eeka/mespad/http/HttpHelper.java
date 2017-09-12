@@ -34,7 +34,7 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-//    public static String PAD_IP = "10.7.25.122";//上裁
+    //    public static String PAD_IP = "10.7.25.122";//上裁
 //    public static String PAD_IP = "10.7.25.107";//缝制
     public static String PAD_IP = NetUtil.getHostIP();
 
@@ -77,6 +77,8 @@ public class HttpHelper {
     public static final String getProcessWithNcCode = BASE_URL + "logNcPad/listOperationsOnNcCode?";
     public static final String getRepairProcess = BASE_URL + "logNcPad/listOpersByProdComponent?";
     public static final String recordSewNc = BASE_URL + "logNcPad/logNcOnSew?";
+    public static final String createCard = BASE_URL + "sweing/bindSfcAndRfid?";
+    public static final String findCardInfoBySfcOrHangerId = BASE_URL + "sweing/findCardInfoBySfcOrHangerId?";
 
     private static Context mContext;
 
@@ -555,9 +557,34 @@ public class HttpHelper {
     }
 
     /**
+     * 制卡
+     */
+    public static void createCard(String sfc, String rfId, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("padIp", PAD_IP);
+        params.put("sfc", sfc);
+        params.put("rfId", rfId);
+        HttpRequest.post(createCard, params, getResponseHandler(createCard, callback));
+    }
+
+    /**
+     * 获取卡片信息
+     *
+     * @param sfc      任选一个参数
+     * @param hangerId 任选一个参数
+     */
+    public static void findCardInfoBySfcOrHangerId(String sfc, String hangerId, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("hangerId", hangerId);
+        params.put("sfc", sfc);
+        HttpRequest.post(findCardInfoBySfcOrHangerId, params, getResponseHandler(findCardInfoBySfcOrHangerId, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
+        PAD_IP = NetUtil.getHostIP();
         RequestParams params = new RequestParams();
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {

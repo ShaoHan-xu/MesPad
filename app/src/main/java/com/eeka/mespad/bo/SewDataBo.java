@@ -164,8 +164,17 @@ public class SewDataBo implements Serializable {
              */
             private String MAT_URL;
             private String SOP_URL;
+            private String VIDEO_URL;
             private String QUALITY_REQUIREMENT;//质量要求
             private String OPERATION_INSTRUCTION;//工艺说明
+
+            public String getVIDEO_URL() {
+                return VIDEO_URL;
+            }
+
+            public void setVIDEO_URL(String VIDEO_URL) {
+                this.VIDEO_URL = VIDEO_URL;
+            }
 
             public String getMAT_URL() {
                 return MAT_URL;

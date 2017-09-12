@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package com.eeka.mespad.service;
+package cn.finalteam.okhttpfinal;
 
 import android.content.Context;
 
@@ -14,7 +14,12 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 记录日志到本地文件
+ */
 public class LogUtil {
+    public static final int LOGTYPE_MQTT = 0;
+    public static final int LOGTYPE_HTTPREQUEST = 1;
     private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ");
     private static String mLogDir;
 
@@ -41,8 +46,13 @@ public class LogUtil {
         return df.format(new Date());
     }
 
-    public static void writeToFile(String message) {
-        File f = new File(mLogDir + "/" + getTodayString() + " log.txt");
+    public static void writeToFile(int logType, String message) {
+        File f = null;
+        if (logType == LOGTYPE_MQTT) {
+            f = new File(mLogDir + File.separator + "MQTT" + File.separator + getTodayString() + ".txt");
+        } else if (logType == LOGTYPE_HTTPREQUEST) {
+            f = new File(mLogDir + File.separator + "HttpRequest" + File.separator + getTodayString() + ".txt");
+        }
         String content = TIMESTAMP_FMT.format(new Date()) + message + "\n";
         BufferedWriter out = null;
         try {

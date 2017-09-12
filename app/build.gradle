@@ -7,7 +7,7 @@ android {
         applicationId "com.eeka.mespad"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 5
+        versionCode 6
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -36,10 +36,10 @@ android {
             def fileName
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 if (variant.buildType.name == 'release') {
-//                    fileName = "赢家智造_${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
-                    fileName = "MesPad.apk"
+                    fileName = "MesPad_${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
+//                    fileName = "MesPad.apk"
                 } else if (variant.buildType.name == 'debug') {
-                    fileName = "赢家智造_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
+                    fileName = "MesPad_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
                 }
                 output.outputFile = new File(outputFile.parent, fileName)
             }

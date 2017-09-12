@@ -351,12 +351,16 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_video:
-                List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
-                if (operInfo != null && operInfo.size() != 0) {
-                    PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
-                    SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
-                } else {
-                    showErrorDialog("站位无工序");
+                if (TopicUtil.TOPIC_SEW.equals(mTopic)){
+                    mSewFragment.playVideo();
+                }else {
+                    List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
+                    if (operInfo != null && operInfo.size() != 0) {
+                        PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
+                        SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
+                    } else {
+                        showErrorDialog("站位无工序");
+                    }
                 }
                 break;
             case R.id.btn_login:
@@ -565,7 +569,7 @@ public class MainActivity extends NFCActivity {
                 toast("用户下线成功");
                 logoutSuccess();
             } else {
-//                showErrorDialog(message);
+                showErrorDialog(message);
             }
         }
     }

@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.eeka.mespad.bo.UserInfoBo;
-import com.eeka.mespad.service.LogUtil;
 import com.eeka.mespad.utils.SpUtil;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
@@ -26,7 +25,6 @@ public class PadApplication extends Application {
         super.onCreate();
 
         mContext = this;
-        LogUtil.init(this);
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
@@ -43,7 +41,7 @@ public class PadApplication extends Application {
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
         builder.setDebug(true);
-        OkHttpFinal.getInstance().init(builder.build());
+        OkHttpFinal.getInstance().init(this,builder.build());
     }
 
     private HttpProxyCacheServer proxy;

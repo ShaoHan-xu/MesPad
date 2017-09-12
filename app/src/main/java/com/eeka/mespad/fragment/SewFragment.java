@@ -22,6 +22,7 @@ import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 
 import java.math.BigDecimal;
@@ -94,6 +95,20 @@ public class SewFragment extends BaseFragment {
         if (isAdded())
             showLoading();
         HttpHelper.getSewData(orderNum, this);
+    }
+
+    /**
+     * 播放视频
+     */
+    public void playVideo() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        int currentItem = mVP_sop.getCurrentItem();
+        List<SewDataBo.SewAttr> infos = mSewData.getCurrentOpeationInfos();
+        SewDataBo.SewAttr sewAttr = infos.get(currentItem);
+        SystemUtils.startVideoActivity(mContext, sewAttr.getAttributes().getVIDEO_URL());
     }
 
     @Override
@@ -253,7 +268,7 @@ public class SewFragment extends BaseFragment {
         if (!isEmpty(qualityDesc))
             mTv_qualityReq.setText(qualityDesc.replace("\\n", "\n"));
 
-        TabViewUtil.refreshTabView(mLayout_processTab,position);
+        TabViewUtil.refreshTabView(mLayout_processTab, position);
     }
 
     @Override

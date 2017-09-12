@@ -46,6 +46,15 @@ public class SuspendComponentBo {
         private String isNeedSubContract;
         private String isSubContractCompleted;
         private String operationRef;
+        private String isBound;
+
+        public String getIsBound() {
+            return isBound;
+        }
+
+        public void setIsBound(String isBound) {
+            this.isBound = isBound;
+        }
 
         public String getComponentName() {
             return componentName;
