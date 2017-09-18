@@ -174,6 +174,7 @@ public class TailorInfoBo implements Serializable {
         private String OPERATION_BO;
         private String QUALITY_REQUIREMENT;
         private String OPERATION;
+        private String VIDEO_URL;
         private String DESCRIPTION;
         private String OPERATION_INSTRUCTION;
 
@@ -183,6 +184,14 @@ public class TailorInfoBo implements Serializable {
 
         public void setQUALITY_REQUIREMENT(String QUALITY_REQUIREMENT) {
             this.QUALITY_REQUIREMENT = QUALITY_REQUIREMENT;
+        }
+
+        public String getVIDEO_URL() {
+            return VIDEO_URL;
+        }
+
+        public void setVIDEO_URL(String VIDEO_URL) {
+            this.VIDEO_URL = VIDEO_URL;
         }
 
         public String getOPERATION() {

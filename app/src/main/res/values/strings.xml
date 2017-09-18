@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">MesPad</string>
     <string name="loading">加载中...</string>
-    <string name="efficiency_s">当前效率：%s</string>
+    <string name="efficiency">当前效率</string>
 </resources>

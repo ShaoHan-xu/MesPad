@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
+import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
@@ -52,6 +53,8 @@ public class SuspendFragment extends BaseFragment {
     private String mCurSFC;
     private String mOperationBo;
 
+    private String mBmpUrl;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,6 +77,16 @@ public class SuspendFragment extends BaseFragment {
         mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
         mIv_component = (ImageView) mView.findViewById(R.id.iv_suspend_componentImg);
+        mIv_component.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isEmpty(mBmpUrl)) {
+                    ArrayList<String> urls = new ArrayList<>();
+                    urls.add(mBmpUrl);
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, 0));
+                }
+            }
+        });
 
         Button btn_binding = (Button) mView.findViewById(R.id.btn_suspend_binding);
         btn_binding.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +126,7 @@ public class SuspendFragment extends BaseFragment {
             mLayout_component.addView(getComponentView(component));
         }
         mIv_component.setImageResource(0);
+        mBmpUrl = null;
     }
 
     public void searchOrder(String orderNum) {
@@ -263,7 +277,8 @@ public class SuspendFragment extends BaseFragment {
                 HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), SuspendFragment.this);
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
-                Glide.with(mContext).load(result.getString("PICTURE_URL")).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_component);
+                mBmpUrl = result.getString("PICTURE_URL");
+                Glide.with(mContext).load(mBmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_component);
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
             } else if (HttpHelper.hangerUnbind.equals(url)) {

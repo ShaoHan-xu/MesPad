@@ -35,7 +35,7 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
     private TextView mTv_orderNum;
     private TextView mTv_operation;
     private TextView mTv_operationDesc;
-    private TextView mTv_rfidNum;
+    private EditText mEt_rfidNum;
 
     private String mSFC, mRfId, mHangerId;
 
@@ -64,7 +64,7 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_createCard_orderNum);
         mTv_operation = (TextView) mView.findViewById(R.id.tv_createCard_operation);
         mTv_operationDesc = (TextView) mView.findViewById(R.id.tv_createCard_operationDesc);
-        mTv_rfidNum = (TextView) mView.findViewById(R.id.tv_createCard_rfidNum);
+        mEt_rfidNum = (EditText) mView.findViewById(R.id.et_createCard_rfidNum);
 
         mView.findViewById(R.id.btn_createCard_search).setOnClickListener(this);
         mView.findViewById(R.id.btn_createCard_createCard).setOnClickListener(this);
@@ -98,15 +98,16 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
     }
 
     private void initData(JSONObject json) {
-        mRfId = json.getString("rfid");
+        mSFC = json.getString("sfc");
         mHangerId = json.getString("hangerId");
+        mRfId = json.getString("rfid");
 
-        mTv_sfc.setText(json.getString("sfc"));
-        mTv_hangerId.setText(json.getString("hangerId"));
+        mTv_sfc.setText(mSFC);
+        mTv_hangerId.setText(mHangerId);
         mTv_orderNum.setText(json.getString("shopOrder"));
         mTv_operation.setText(json.getString("operation"));
         mTv_operationDesc.setText(json.getString("operationDesc"));
-        mTv_rfidNum.setText(json.getString("rfid"));
+        mEt_rfidNum.setText(mRfId);
     }
 
     @Override
@@ -116,6 +117,7 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
                 search();
                 break;
             case R.id.btn_createCard_createCard:
+                mRfId = mEt_rfidNum.getText().toString();
                 LoadingDialog.show(mContext);
                 HttpHelper.createCard(mSFC, mRfId, this);
                 break;

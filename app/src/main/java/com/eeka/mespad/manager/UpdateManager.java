@@ -23,7 +23,7 @@ import cn.finalteam.okhttpfinal.HttpRequest;
 
 public class UpdateManager {
 
-    private static final String apkUrl = "http://10.7.121.75/app/MesPad.apk";
+    private static final String apkUrl = "http://10.7.121.10/app/MesPad.apk";
     private static File apkFile;
 
     private static AlertDialog mDownloadDialog;

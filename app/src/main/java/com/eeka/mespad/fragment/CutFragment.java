@@ -31,9 +31,9 @@ import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
-import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
@@ -88,6 +88,16 @@ public class CutFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_cut, null);
         return mView;
+    }
+
+    public void playVideo() {
+        if (mList_processData == null || mList_processData.size() == 0) {
+            toast("当前站位无工序");
+            return;
+        }
+        int currentItem = mVP_process.getCurrentItem();
+        String videoUrl = mList_processData.get(currentItem).getVIDEO_URL();
+        SystemUtils.startVideoActivity(mContext, videoUrl);
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String processLotBo) {

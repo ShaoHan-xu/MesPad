@@ -28,6 +28,8 @@ public class PadApplication extends Application {
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
+        CrashHandler.getInstance().init(getApplicationContext());
+
         //配置初始用户及站点
         UserInfoBo loginUser = SpUtil.getLoginUser();
         if (loginUser == null)
@@ -41,7 +43,7 @@ public class PadApplication extends Application {
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
         builder.setDebug(true);
-        OkHttpFinal.getInstance().init(this,builder.build());
+        OkHttpFinal.getInstance().init(this, builder.build());
     }
 
     private HttpProxyCacheServer proxy;

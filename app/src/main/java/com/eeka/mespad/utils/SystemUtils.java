@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.eeka.mespad.activity.VideoPlayerActivity;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
@@ -30,6 +29,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
+
+import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
+import cn.finalteam.okhttpfinal.HttpRequest;
+import okhttp3.Headers;
+import okhttp3.Response;
 
 /**
  * 系统工具类 Created by xsh on 2016/8/12.
@@ -305,7 +309,7 @@ public class SystemUtils {
      * @param context
      * @param videoUrl
      */
-    public static void startVideoActivity(Context context, String videoUrl) {
+    public static void startVideoActivity(final Context context, String videoUrl) {
         String videoPath = null;
         try {
             if (!TextUtils.isEmpty(videoUrl)) {
@@ -320,14 +324,26 @@ public class SystemUtils {
             e.printStackTrace();
         }
         if (!TextUtils.isEmpty(videoPath)) {
-            //自定义播放器，可缓存视频到本地
-            context.startActivity(VideoPlayerActivity.getIntent(context, videoPath));
-            //系统自带视频播放，无缓存
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setDataAndType(Uri.parse(videoPath), "video/mp4");
-//            context.startActivity(intent);
+            final String finalVideoPath = videoPath;
+            //先判断视频文件是否存在
+            HttpRequest.post(videoUrl, new BaseHttpRequestCallback() {
+                @Override
+                public void onResponse(Response httpResponse, String response, Headers headers) {
+                    super.onResponse(httpResponse, response, headers);
+                    if (httpResponse.code() == 404) {
+                        ErrorDialog.showAlert(context, "视频文件不存在");
+                    } else {
+                        //自定义播放器，可缓存视频到本地
+                        // context.startActivity(VideoPlayerActivity.getIntent(context, videoPath));
+                        //系统自带视频播放，无缓存
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(finalVideoPath), "video/mp4");
+                        context.startActivity(intent);
+                    }
+                }
+            });
         } else {
-            ErrorDialog.showAlert(context, "视频路径出错");
+            ErrorDialog.showAlert(context, "当前工序无视频");
         }
     }
 }

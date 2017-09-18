@@ -37,14 +37,26 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/tv_sew_workEfficiency"
-                    style="@style/textStyle_default"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:background="@color/white"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/efficiency_s" />
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:paddingRight="10dp"
+                        android:text="@string/efficiency" />
+
+                    <TextView
+                        android:id="@+id/tv_sew_workEfficiency"
+                        style="@style/textStyle_default"
+                        android:gravity="center"
+                        android:text="50%"
+                        android:textColor="@color/text_green_default"
+                        android:textSize="30sp" />
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -62,7 +74,8 @@
 
                     <TextView
                         style="@style/textStyle_default"
-                        android:text="当前工序：" />
+                        android:padding="8dp"
+                        android:text="当前工序" />
 
                     <ListView
                         android:id="@+id/lv_sew_curProcess"
@@ -82,7 +95,8 @@
 
                     <TextView
                         style="@style/textStyle_default"
-                        android:text="上一工序：" />
+                        android:padding="8dp"
+                        android:text="上一工序" />
 
                     <ListView
                         android:id="@+id/lv_sew_lastProcess"
@@ -233,7 +247,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp">

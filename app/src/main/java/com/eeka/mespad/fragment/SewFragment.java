@@ -107,6 +107,10 @@ public class SewFragment extends BaseFragment {
         }
         int currentItem = mVP_sop.getCurrentItem();
         List<SewDataBo.SewAttr> infos = mSewData.getCurrentOpeationInfos();
+        if (infos == null || infos.size() == 0){
+            toast("当前站位无工序");
+            return;
+        }
         SewDataBo.SewAttr sewAttr = infos.get(currentItem);
         SystemUtils.startVideoActivity(mContext, sewAttr.getAttributes().getVIDEO_URL());
     }
@@ -186,7 +190,7 @@ public class SewFragment extends BaseFragment {
                         public void onClick(View v) {
                             ArrayList<String> urls = new ArrayList<>();
                             for (SewDataBo.SewAttr data : opeationInfos) {
-                                urls.add(data.getAttributes().getMAT_URL());
+                                urls.add(data.getAttributes().getSOP_URL());
                             }
                             startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
                         }
@@ -207,7 +211,6 @@ public class SewFragment extends BaseFragment {
 
         ProcessListAdapter(Context context, List<SewDataBo.SewAttr> list, int layoutId) {
             super(context, list, layoutId);
-
         }
 
         @Override

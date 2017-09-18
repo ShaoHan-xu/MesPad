@@ -34,6 +34,7 @@ import com.eeka.mespad.fragment.SewFragment;
 import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
@@ -44,6 +45,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+
+import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
+import cn.finalteam.okhttpfinal.HttpRequest;
+import okhttp3.Headers;
+import okhttp3.Response;
 
 /**
  * Created by Lenovo on 2017/6/12.
@@ -83,6 +89,7 @@ public class MainActivity extends NFCActivity {
         initData();
 
         EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -147,6 +154,7 @@ public class MainActivity extends NFCActivity {
     protected void initData() {
         super.initData();
 
+        showLoading();
         UserInfoBo loginUser = SpUtil.getLoginUser();
         HttpHelper.login(loginUser.getUSER(), loginUser.getPassword(), this);
 //        HttpHelper.initData(this);
@@ -280,6 +288,7 @@ public class MainActivity extends NFCActivity {
                 }
                 ft.commit();
                 break;
+
             case TopicUtil.TOPIC_QC:
                 if (mSewQCFragment == null) {
                     mSewQCFragment = new SewQCFragment();
@@ -351,16 +360,17 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_video:
-                if (TopicUtil.TOPIC_SEW.equals(mTopic)){
+                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
                     mSewFragment.playVideo();
-                }else {
+                } else if (TopicUtil.TOPIC_CUT.equals(mTopic)){
+                    mCutFragment.playVideo();
                     List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
-                    if (operInfo != null && operInfo.size() != 0) {
-                        PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
-                        SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
-                    } else {
-                        showErrorDialog("站位无工序");
-                    }
+//                    if (operInfo != null && operInfo.size() != 0) {
+//                        PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
+//                        SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
+//                    } else {
+//                        showErrorDialog("站位无工序");
+//                    }
                 }
                 break;
             case R.id.btn_login:
@@ -428,18 +438,17 @@ public class MainActivity extends NFCActivity {
         }
     }
 
+    /**
+     * 测试用
+     */
     private void test() {
-        HttpHelper.initData(this);
-        HttpHelper.findProcessWithPadId(this);
+        for (int i = 0; i < 10; i++) {
+            HttpHelper.initData(MainActivity.this);
+        }
     }
 
     private void searchOrder() {
-//        if (true) {
-//            for (int i = 0; i < 5; i++) {
-//                test();
-//            }
-//            return;
-//        }
+        test();
         ContextInfoBo contextInfo = SpUtil.getContextInfo();
         if (contextInfo == null || mPositionInfo == null) {
             isSearchOrder = true;

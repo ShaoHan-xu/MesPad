@@ -34,7 +34,7 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    //    public static String PAD_IP = "10.7.25.122";//上裁
+    //        public static String PAD_IP = "10.7.25.122";//上裁
 //    public static String PAD_IP = "10.7.25.107";//缝制
     public static String PAD_IP = NetUtil.getHostIP();
 

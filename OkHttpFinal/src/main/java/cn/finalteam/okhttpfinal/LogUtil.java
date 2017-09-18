@@ -47,12 +47,16 @@ public class LogUtil {
     }
 
     public static void writeToFile(int logType, String message) {
-        File f = null;
+        File folder = null;
         if (logType == LOGTYPE_MQTT) {
-            f = new File(mLogDir + File.separator + "MQTT" + File.separator + getTodayString() + ".txt");
+            folder = new File(mLogDir, "MQTT");
         } else if (logType == LOGTYPE_HTTPREQUEST) {
-            f = new File(mLogDir + File.separator + "HttpRequest" + File.separator + getTodayString() + ".txt");
+            folder = new File(mLogDir, "HttpRequest");
         }
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
         String content = TIMESTAMP_FMT.format(new Date()) + message + "\n";
         BufferedWriter out = null;
         try {
