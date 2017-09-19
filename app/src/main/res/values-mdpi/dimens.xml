@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 标题字体大小-->
+    <dimen name="textSize_title">35sp</dimen>
+
+    <!-- 小标题字体大小-->
+    <dimen name="textSize_itemTitle">32sp</dimen>
+
+    <!-- 正文内容字体大小-->
+    <dimen name="textSize_content">28sp</dimen>
+
+    <!-- 描述类型、小字体大小-->
+    <dimen name="textSize_describe">24sp</dimen>
+
+    <dimen name="width_100">130dp</dimen>
+    <dimen name="width_sewNCSelected">350dp</dimen>
+    <dimen name="bottomBarHeight">80dp</dimen>
+    <dimen name="searchBoxWidth">250dp</dimen>
+</resources>

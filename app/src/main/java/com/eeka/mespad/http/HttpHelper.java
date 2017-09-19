@@ -34,8 +34,6 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    //        public static String PAD_IP = "10.7.25.122";//上裁
-//    public static String PAD_IP = "10.7.25.107";//缝制
     public static String PAD_IP = NetUtil.getHostIP();
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
@@ -585,6 +583,9 @@ public class HttpHelper {
      */
     public static RequestParams getBaseParams() {
         PAD_IP = NetUtil.getHostIP();
+//      PAD_IP = "10.7.25.196";//质检
+//      PAD_IP = "10.7.25.122";//上裁
+//      PAD_IP = "10.7.25.107";//缝制
         RequestParams params = new RequestParams();
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {

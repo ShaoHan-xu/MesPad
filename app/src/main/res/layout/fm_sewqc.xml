@@ -79,8 +79,9 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="250dp"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1.2"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -155,13 +156,15 @@
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_width="100dp"
+                            android:layout_width="@dimen/width_100"
                             android:gravity="right"
-                            android:text="SFC：" />
+                            android:text="SFC"
+                            android:textColor="@color/text_gray_default" />
 
                         <TextView
                             android:id="@+id/tv_sewQC_SFC"
-                            style="@style/textStyle_default" />
+                            style="@style/textStyle_default"
+                            android:layout_marginLeft="10dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -172,13 +175,15 @@
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_width="100dp"
+                            android:layout_width="@dimen/width_100"
                             android:gravity="right"
-                            android:text="当前工序：" />
+                            android:text="当前工序"
+                            android:textColor="@color/text_gray_default" />
 
                         <TextView
                             android:id="@+id/tv_sewQC_curProcess"
-                            style="@style/textStyle_default" />
+                            style="@style/textStyle_default"
+                            android:layout_marginLeft="10dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -189,13 +194,15 @@
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_width="100dp"
+                            android:layout_width="@dimen/width_100"
                             android:gravity="right"
-                            android:text="日产量：" />
+                            android:text="日产量"
+                            android:textColor="@color/text_gray_default" />
 
                         <TextView
                             android:id="@+id/tv_sewQC_dayOutput"
-                            style="@style/textStyle_default" />
+                            style="@style/textStyle_default"
+                            android:layout_marginLeft="10dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -206,13 +213,15 @@
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_width="100dp"
+                            android:layout_width="@dimen/width_100"
                             android:gravity="right"
-                            android:text="月产量：" />
+                            android:text="月产量"
+                            android:textColor="@color/text_gray_default" />
 
                         <TextView
                             android:id="@+id/tv_sewQC_monthOutput"
-                            style="@style/textStyle_default" />
+                            style="@style/textStyle_default"
+                            android:layout_marginLeft="10dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -220,9 +229,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
+                android:layout_weight="3"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -274,7 +284,7 @@
             android:id="@+id/layout_sewQC_orderInfo"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:background="@color/white"
             android:orientation="vertical"
             android:padding="5dp">
@@ -285,14 +295,17 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/textView2"
                     style="@style/textStyle_default"
-                    android:layout_width="100dp"
+                    android:layout_width="@dimen/width_100"
                     android:gravity="right"
-                    android:text="订单号：" />
+                    android:text="订单号"
+                    android:textColor="@color/text_gray_default" />
 
                 <TextView
                     android:id="@+id/tv_sewQC_orderNum"
-                    style="@style/textStyle_default" />
+                    style="@style/textStyle_default"
+                    android:layout_marginLeft="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -303,13 +316,15 @@
 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="100dp"
+                    android:layout_width="@dimen/width_100"
                     android:gravity="right"
-                    android:text="物料号：" />
+                    android:text="物料号"
+                    android:textColor="@color/text_gray_default" />
 
                 <TextView
                     android:id="@+id/tv_sewQC_matNum"
-                    style="@style/textStyle_default" />
+                    style="@style/textStyle_default"
+                    android:layout_marginLeft="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -320,24 +335,27 @@
 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="100dp"
+                    android:layout_width="@dimen/width_100"
                     android:gravity="right"
-                    android:text="尺码：" />
+                    android:text="尺码"
+                    android:textColor="@color/text_gray_default" />
 
                 <TextView
                     android:id="@+id/tv_sewQC_size"
-                    style="@style/textStyle_default" />
+                    style="@style/textStyle_default"
+                    android:layout_marginLeft="10dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <TextView
                     style="@style/textStyle_default"
                     android:text="特殊要求"
+                    android:textColor="@color/text_gray_default"
                     android:textStyle="bold" />
 
                 <TextView

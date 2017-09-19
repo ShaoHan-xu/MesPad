@@ -52,27 +52,27 @@
     <LinearLayout
         android:id="@+id/layout_controlPanel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/bottomBarHeight"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
 
         <Button
             android:id="@+id/btn_recordSewNC_choseRepairProcess"
             style="@style/btnStyle_primary"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginRight="10dp"
             android:text="选择返修工序" />
 
         <Button
             android:id="@+id/btn_cancel"
             style="@style/btnStyle_primary"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
             android:text="取消" />
 
     </LinearLayout>
@@ -91,7 +91,7 @@
 
         <LinearLayout
             android:id="@+id/layout_recordSewNC_selected"
-            android:layout_width="250dp"
+            android:layout_width="@dimen/width_sewNCSelected"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"
@@ -109,10 +109,10 @@
             <HorizontalScrollView
                 android:id="@+id/hsv_recordSewNC_NcProcess"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="120dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="5dp"
-                android:background="@color/white">
+                android:background="@drawable/border_black">
 
                 <LinearLayout
                     android:id="@+id/layout_recordSewNC_NcProcess"
@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/hsv_recordSewNC_NcProcess"
-                android:background="@color/white" />
+                android:background="@drawable/border_black" />
 
         </RelativeLayout>
     </RelativeLayout>

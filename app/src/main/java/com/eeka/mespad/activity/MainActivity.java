@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -238,6 +239,8 @@ public class MainActivity extends NFCActivity {
                         mCutFragment.showCompleteButton();
                     continue;
             }
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            button.setLayoutParams(params);
             mLayout_controlPanel.addView(button);
         }
     }
@@ -364,13 +367,8 @@ public class MainActivity extends NFCActivity {
                     mSewFragment.playVideo();
                 } else if (TopicUtil.TOPIC_CUT.equals(mTopic)){
                     mCutFragment.playVideo();
-                    List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
-//                    if (operInfo != null && operInfo.size() != 0) {
-//                        PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
-//                        SystemUtils.startVideoActivity(mContext, bean.getVIDEO_URL());
-//                    } else {
-//                        showErrorDialog("站位无工序");
-//                    }
+                }else {
+                    toast("该站位无视频");
                 }
                 break;
             case R.id.btn_login:
@@ -448,7 +446,7 @@ public class MainActivity extends NFCActivity {
     }
 
     private void searchOrder() {
-        test();
+//        test();
         ContextInfoBo contextInfo = SpUtil.getContextInfo();
         if (contextInfo == null || mPositionInfo == null) {
             isSearchOrder = true;

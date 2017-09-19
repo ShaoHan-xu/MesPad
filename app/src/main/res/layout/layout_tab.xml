@@ -9,6 +9,7 @@
         style="@style/textStyle_default"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:layout_gravity="center"
         android:padding="15dp" />
 
 </LinearLayout>
