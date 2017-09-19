@@ -77,6 +77,7 @@ public class HttpHelper {
     public static final String recordSewNc = BASE_URL + "logNcPad/logNcOnSew?";
     public static final String createCard = BASE_URL + "sweing/bindSfcAndRfid?";
     public static final String findCardInfoBySfcOrHangerId = BASE_URL + "sweing/findCardInfoBySfcOrHangerId?";
+    public static final String tellFusingStyleToGST = BASE_URL + "tellFusingStyleToGST?";
 
     private static Context mContext;
 
@@ -576,6 +577,22 @@ public class HttpHelper {
         params.put("hangerId", hangerId);
         params.put("sfc", sfc);
         HttpRequest.post(findCardInfoBySfcOrHangerId, params, getResponseHandler(findCardInfoBySfcOrHangerId, callback));
+    }
+
+    /**
+     * 选择粘朴方式
+     *
+     * @param processLot
+     * @param stickyCode
+     * @param callback
+     */
+    public static void tellFusingStyleToGST(String processLot, int stickyCode, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PROCESS_LOT", processLot);
+        json.put("FUSE_STYLE", stickyCode);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(tellFusingStyleToGST, params, getResponseHandler(tellFusingStyleToGST, callback));
     }
 
     /**

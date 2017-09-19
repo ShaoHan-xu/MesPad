@@ -50,6 +50,8 @@ public class SewFragment extends BaseFragment {
     private LinearLayout mLayout_matInfo;
     private ViewPager mVP_sop;
 
+    private ProcessListAdapter mCurProcessAdapter;
+    private ProcessListAdapter mLastProcessAdapter;
     private ListView mLv_curProcess;
     private ListView mLv_lastProcess;
     private TextView mTv_lastPosition;
@@ -107,7 +109,7 @@ public class SewFragment extends BaseFragment {
         }
         int currentItem = mVP_sop.getCurrentItem();
         List<SewDataBo.SewAttr> infos = mSewData.getCurrentOpeationInfos();
-        if (infos == null || infos.size() == 0){
+        if (infos == null || infos.size() == 0) {
             toast("当前站位无工序");
             return;
         }
@@ -122,6 +124,8 @@ public class SewFragment extends BaseFragment {
             toast("数据错误");
             return;
         }
+        mTv_qualityReq.setText(null);
+        mTv_craftDesc.setText(null);
         mTv_SFC.setText(mSewData.getSfc());
         mTv_orderNum.setText(mSewData.getShopOrder());
         mTv_style.setText(mSewData.getItem());
@@ -134,13 +138,14 @@ public class SewFragment extends BaseFragment {
             mTv_orderType.setText("定制订单");
         }
         String efficiency = mSewData.getWorkEfficiency();
+        mTv_workEfficiency.setText("0%");
         if (!isEmpty(efficiency)) {
             try {
                 Float aFloat = Float.valueOf(efficiency);
                 float v = aFloat * 100;
                 BigDecimal bd = new BigDecimal(v);
                 float v1 = bd.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                mTv_workEfficiency.setText("当前效率：" + v1 + "%");
+                mTv_workEfficiency.setText(v1 + "%");
             } catch (Exception e) {
                 try {
                     throw new DataFormatException("缝制数据：效率转换异常");
@@ -160,12 +165,21 @@ public class SewFragment extends BaseFragment {
         }
 
         List<SewDataBo.SewAttr> lastOperations = mSewData.getLastOperations();
-        if (lastOperations != null) {
-            mLv_lastProcess.setAdapter(new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview));
+        if (mLastProcessAdapter == null) {
+            mLastProcessAdapter = new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview);
+            mLv_lastProcess.setAdapter(mLastProcessAdapter);
+        }else {
+            mLastProcessAdapter.notifyDataSetChanged(lastOperations);
         }
 
         mLayout_processTab.removeAllViews();
         final List<SewDataBo.SewAttr> opeationInfos = mSewData.getCurrentOpeationInfos();
+        if (mCurProcessAdapter == null) {
+            mCurProcessAdapter = new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview);
+            mLv_curProcess.setAdapter(mCurProcessAdapter);
+        }else {
+            mCurProcessAdapter.notifyDataSetChanged(lastOperations);
+        }
         if (opeationInfos != null) {
             for (int i = 0; i < opeationInfos.size(); i++) {
                 SewDataBo.SewAttr opera = opeationInfos.get(i);
@@ -177,8 +191,6 @@ public class SewFragment extends BaseFragment {
                     }
                 }));
             }
-
-            mLv_curProcess.setAdapter(new ProcessListAdapter(mContext, opeationInfos, R.layout.item_textview));
 
             mVP_sop.setAdapter(new CommonVPAdapter<SewDataBo.SewAttr>(mContext, opeationInfos, R.layout.item_imageview) {
                 @Override
