@@ -89,8 +89,17 @@ public class MainActivity extends NFCActivity {
 
         initData();
 
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
         EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -107,7 +116,6 @@ public class MainActivity extends NFCActivity {
     protected void onDestroy() {
         super.onDestroy();
         MQTTService.actionStop(mContext);
-        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -233,6 +241,10 @@ public class MainActivity extends NFCActivity {
                 case "UNBIND":
                     button.setText("制卡/解绑");
                     button.setId(R.id.btn_unbind);
+                    break;
+                case "FUSING_METHOD":
+                    button.setText("粘朴方式");
+                    button.setId(R.id.btn_sticky);
                     break;
                 case "COMPLETE":
                     if (mCutFragment != null)
@@ -431,6 +443,11 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_unbind:
                 if (mSuspendFragment != null) {
                     mSuspendFragment.unBind();
+                }
+                break;
+            case R.id.btn_sticky:
+                if (mCutFragment != null) {
+                    mCutFragment.sticky();
                 }
                 break;
         }

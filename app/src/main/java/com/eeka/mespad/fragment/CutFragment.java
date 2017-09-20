@@ -37,6 +37,7 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
+import com.eeka.mespad.view.dialog.StickyDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
 
 import java.util.ArrayList;
@@ -281,6 +282,21 @@ public class CutFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 选择粘朴方式
+     */
+    public void sticky() {
+        if (mTailorInfo == null) {
+            toast("数据错误");
+            return;
+        }
+        TailorInfoBo.SHOPORDERINFORBean orderInfor = mTailorInfo.getSHOP_ORDER_INFOR();
+        List<String> process_lot_bo = orderInfor.getPROCESS_LOT_BO();
+        if (process_lot_bo != null && process_lot_bo.size() != 0) {
+            new StickyDialog(mContext, process_lot_bo.get(0)).show();
+        }
+    }
+
     private StartWorkParamsBo getStartAndCompleteParams() {
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         StartWorkParamsBo params = new StartWorkParamsBo();
@@ -432,7 +448,7 @@ public class CutFragment extends BaseFragment {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sizeinfo, null);
         TextView tv_yardage = (TextView) view.findViewById(R.id.tv_item_yardage);
         TextView tv_count = (TextView) view.findViewById(R.id.tv_item_count);
-        tv_yardage.setText(sizeInfo.getSIZE());
+        tv_yardage.setText(sizeInfo.getSIZE_CODE());
         tv_count.setText(sizeInfo.getSIZE_AMOUNT() + "");
         return view;
     }

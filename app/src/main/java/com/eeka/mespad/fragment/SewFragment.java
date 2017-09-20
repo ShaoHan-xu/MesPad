@@ -178,7 +178,7 @@ public class SewFragment extends BaseFragment {
             mCurProcessAdapter = new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview);
             mLv_curProcess.setAdapter(mCurProcessAdapter);
         }else {
-            mCurProcessAdapter.notifyDataSetChanged(lastOperations);
+            mCurProcessAdapter.notifyDataSetChanged(opeationInfos);
         }
         if (opeationInfos != null) {
             for (int i = 0; i < opeationInfos.size(); i++) {

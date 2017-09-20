@@ -20,6 +20,7 @@ import java.util.Date;
 public class LogUtil {
     public static final int LOGTYPE_MQTT = 0;
     public static final int LOGTYPE_HTTPREQUEST = 1;
+    public static final int LOGTYPE_HTTPRESPONSE = 2;
     private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ");
     private static String mLogDir;
 
@@ -52,6 +53,8 @@ public class LogUtil {
             folder = new File(mLogDir, "MQTT");
         } else if (logType == LOGTYPE_HTTPREQUEST) {
             folder = new File(mLogDir, "HttpRequest");
+        }else if (logType == LOGTYPE_HTTPRESPONSE){
+            folder = new File(mLogDir, "HttpResponse");
         }
         if (!folder.exists()) {
             folder.mkdirs();

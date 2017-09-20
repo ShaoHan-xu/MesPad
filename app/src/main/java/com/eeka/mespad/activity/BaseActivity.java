@@ -20,6 +20,7 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
 /**

@@ -11,7 +11,6 @@ import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
-import com.eeka.mespad.manager.Logger;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class SpUtil {
     private static SharedPreferences mSP;
 
     public static final String KEY_RESOURCE = "key_resource";
+    public static final String KEY_DEBUG = "key_debug";
 
     static {
         new SpUtil();
@@ -55,6 +55,22 @@ public class SpUtil {
 
     public static String get(String key, String defaultValue) {
         return mSP.getString(key, defaultValue);
+    }
+
+    /**
+     * 设置是否开启debug记录日志模式
+     *
+     * @param isDebug
+     * @return
+     */
+    public static void setDebugLog(boolean isDebug) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putBoolean(KEY_DEBUG, isDebug);
+        edit.apply();
+    }
+
+    public static boolean isDebugLog() {
+        return mSP.getBoolean(KEY_DEBUG, false);
     }
 
     /**

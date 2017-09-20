@@ -20,6 +20,7 @@ import java.util.List;
 
 import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
 import cn.finalteam.okhttpfinal.HttpRequest;
+import cn.finalteam.okhttpfinal.LogUtil;
 import cn.finalteam.okhttpfinal.Part;
 import cn.finalteam.okhttpfinal.RequestParams;
 import okhttp3.Headers;
@@ -38,6 +39,7 @@ public class HttpHelper {
 
     public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
 
+    public static final String getApkUrl = BASE_URL + "common/getAppUpgradeUrl?";
     public static final String login_url = BASE_URL + "login?";
     public static final String logout_url = BASE_URL + "logout?";
     public static final String loginByCard_url = BASE_URL + "loginByCard?";
@@ -85,6 +87,14 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 获取apk安装包路径
+     */
+    public static void getAPKUrl(HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        HttpRequest.post(getApkUrl, params, getResponseHandler(getApkUrl, callback));
     }
 
     /**
@@ -603,6 +613,7 @@ public class HttpHelper {
 //      PAD_IP = "10.7.25.196";//质检
 //      PAD_IP = "10.7.25.122";//上裁
 //      PAD_IP = "10.7.25.107";//缝制
+//        PAD_IP = "10.8.42.111";//裁剪
         RequestParams params = new RequestParams();
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {
@@ -707,6 +718,9 @@ public class HttpHelper {
                 } else if (response == null) {
                     Toast.makeText(mContext, "连接错误", Toast.LENGTH_SHORT).show();
                     return;
+                }
+                if (SpUtil.isDebugLog()) {
+                    LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + "\n" + response);
                 }
                 Logger.d(response);
             }

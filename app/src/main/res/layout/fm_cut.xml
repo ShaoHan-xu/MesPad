@@ -412,7 +412,8 @@
 
                     <TextView
                         style="@style/textStyle_default"
-                        android:text="当前工序：" />
+                        android:padding="8dp"
+                        android:text="当前工序" />
 
                     <ListView
                         android:id="@+id/lv_processList"
