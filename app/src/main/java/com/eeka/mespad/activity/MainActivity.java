@@ -35,7 +35,6 @@ import com.eeka.mespad.fragment.SewFragment;
 import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
@@ -46,11 +45,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
-
-import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
-import cn.finalteam.okhttpfinal.HttpRequest;
-import okhttp3.Headers;
-import okhttp3.Response;
 
 /**
  * Created by Lenovo on 2017/6/12.

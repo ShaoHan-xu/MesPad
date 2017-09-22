@@ -10,6 +10,10 @@
         <item name="android:windowBackground">@color/windowBackground</item>
     </style>
 
+    <style name="textStyle_gray" parent="textStyle_default">
+        <item name="android:textColor">@color/text_gray_default</item>
+    </style>
+
     <style name="textStyle_default">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

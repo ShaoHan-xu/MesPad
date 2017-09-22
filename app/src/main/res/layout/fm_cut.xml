@@ -3,6 +3,7 @@
     android:id="@+id/layout_rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -76,41 +77,34 @@
 
             </LinearLayout>
 
-            <ScrollView
+            <LinearLayout
+                android:id="@+id/layout_processDescription"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_weight="1"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-                <LinearLayout
-                    android:id="@+id/layout_processDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp"
-                    android:visibility="gone">
+                <!--<TextView-->
+                <!--style="@style/textStyle_default"-->
+                <!--android:text="工艺说明："-->
+                <!--android:textStyle="bold" />-->
 
-                    <!--<TextView-->
-                    <!--style="@style/textStyle_default"-->
-                    <!--android:text="工艺说明："-->
-                    <!--android:textStyle="bold" />-->
+                <!--<TextView-->
+                <!--android:id="@+id/tv_craftDescribe"-->
+                <!--style="@style/textStyle_default" />-->
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/tv_craftDescribe"-->
-                    <!--style="@style/textStyle_default" />-->
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="品质要求"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_marginTop="10dp"
-                        android:text="品质要求："
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_qualityDescribe"
-                        style="@style/textStyle_default" />
-                </LinearLayout>
-            </ScrollView>
+                <TextView
+                    android:id="@+id/tv_qualityDescribe"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -248,8 +242,9 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            style="@style/textStyle_default"
-                            android:text="订单号：" />
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
+                            android:text="订单号" />
 
                         <TextView
                             android:id="@+id/tv_sew_orderNum"
@@ -265,8 +260,9 @@
                         android:visibility="gone">
 
                         <TextView
-                            style="@style/textStyle_default"
-                            android:text="批次号：" />
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
+                            android:text="批次号" />
 
                         <TextView
                             android:id="@+id/tv_batchNum"
@@ -281,8 +277,9 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            style="@style/textStyle_default"
-                            android:text="款式：" />
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
+                            android:text="款式" />
 
                         <TextView
                             android:id="@+id/tv_sew_style"
@@ -297,8 +294,9 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            style="@style/textStyle_default"
-                            android:text="数量：" />
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
+                            android:text="数量" />
 
                         <TextView
                             android:id="@+id/tv_sew_qty"
@@ -351,7 +349,7 @@
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:text="特殊信息："
+                            android:text="特殊信息"
                             android:textStyle="bold" />
 
                         <TextView
@@ -389,19 +387,22 @@
                 <LinearLayout
                     android:id="@+id/layout_nextProcess"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="46dp"
                     android:layout_alignParentBottom="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/textStyle_default"
-                        android:text="下一工序：" />
+                        style="@style/textStyle_gray"
+                        android:padding="8dp"
+                        android:text="下一工序" />
 
                     <TextView
                         android:id="@+id/tv_nextProcess"
                         style="@style/textStyle_default"
-                        android:layout_width="match_parent" />
+                        android:layout_width="match_parent"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="8dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -411,7 +412,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/textStyle_default"
+                        style="@style/textStyle_gray"
                         android:padding="8dp"
                         android:text="当前工序" />
 

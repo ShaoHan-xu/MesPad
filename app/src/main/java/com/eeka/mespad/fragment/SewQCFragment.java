@@ -19,6 +19,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.MyAlertDialog;
 
 import java.util.List;
 
@@ -79,6 +80,18 @@ public class SewQCFragment extends BaseFragment {
         mTv_matNum = (TextView) mView.findViewById(R.id.tv_sewQC_matNum);
         mTv_size = (TextView) mView.findViewById(R.id.tv_sewQC_size);
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
+        mTv_special.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        if (v.getId() == R.id.tv_sewQC_special) {
+            String content = mTv_special.getText().toString();
+            if (!isEmpty(content)) {
+                MyAlertDialog.showAlert(mContext, content);
+            }
+        }
     }
 
     private void setupView() {

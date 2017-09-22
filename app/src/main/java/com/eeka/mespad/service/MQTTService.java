@@ -226,7 +226,7 @@ public class MQTTService extends Service {
                 mLastMsgType = type;
                 EventBus.getDefault().post(pushJson);
             } else {
-                ErrorDialog.showAlert(mContext, pushJson.getMessage());
+                ErrorDialog.showAlert(mContext, pushJson.getMessage(), true);
             }
         }
 

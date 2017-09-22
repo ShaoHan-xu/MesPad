@@ -544,7 +544,7 @@ public class HttpHelper {
     }
 
     /**
-     * 5.	查询返工工序列表
+     * 查询返工工序列表
      */
     public static void getRepairProcess(String produceComponent, String sfcBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
@@ -591,15 +591,11 @@ public class HttpHelper {
 
     /**
      * 选择粘朴方式
-     *
-     * @param processLot
-     * @param stickyCode
-     * @param callback
      */
     public static void tellFusingStyleToGST(String processLot, int stickyCode, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
-        json.put("PROCESS_LOT", processLot);
+        json.put("PROCESS_LOT_BO", processLot);
         json.put("FUSE_STYLE", stickyCode);
         params.put("params", json.toJSONString());
         HttpRequest.post(tellFusingStyleToGST, params, getResponseHandler(tellFusingStyleToGST, callback));
@@ -613,7 +609,6 @@ public class HttpHelper {
 //      PAD_IP = "10.7.25.196";//质检
 //      PAD_IP = "10.7.25.122";//上裁
 //      PAD_IP = "10.7.25.107";//缝制
-//        PAD_IP = "10.8.42.111";//裁剪
         RequestParams params = new RequestParams();
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {
@@ -654,6 +649,11 @@ public class HttpHelper {
             @Override
             protected void onSuccess(Headers headers, JSONObject jsonObject) {
                 super.onSuccess(headers, jsonObject);
+                boolean success = isSuccess(jsonObject);
+                if (!success) {
+                    String message = jsonObject.getString("message");
+                    LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPFAIL, url + "\n" + message);
+                }
                 //登录的时候保存cookie
                 if (login_url.contains(url)) {
                     if (headers != null) {
@@ -667,11 +667,9 @@ public class HttpHelper {
                         }
                     }
                     if (IS_COOKIE_OUT) {
-                        if (isSuccess(jsonObject)) {
+                        if (success) {
                             IS_COOKIE_OUT = false;
                             //cookie过期后重新登录成功，继续执行之前的请求
-//                            Toast.makeText(mContext, "重新登录成功", Toast.LENGTH_LONG).show();
-
                             if (mCookieOutRequest != null) {
                                 RequestParams params = getBaseParams();
                                 RequestParams lastParams = mCookieOutRequest.getParams();
@@ -684,7 +682,7 @@ public class HttpHelper {
                             return;
                         }
                     }
-                } else if (!isSuccess(jsonObject)) {
+                } else if (!success) {
                     String message = jsonObject.getString("message");
                     if (!TextUtils.isEmpty(message)) {
                         if (message.contains(COOKIE_OUT)) {//cookie失效，重新登录获取新的cookie
@@ -700,7 +698,6 @@ public class HttpHelper {
 
                             UserInfoBo loginUser = SpUtil.getLoginUser();
                             login(loginUser.getUSER(), loginUser.getPassword(), callback);
-//                            Toast.makeText(mContext, "重新登录系统", Toast.LENGTH_LONG).show();
                             return;
                         }
                     }

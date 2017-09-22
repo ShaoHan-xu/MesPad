@@ -24,6 +24,7 @@ import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.MyAlertDialog;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -91,6 +92,25 @@ public class SewFragment extends BaseFragment {
         mVP_sop.addOnPageChangeListener(new ViewPagerChangedListener());
         mLv_curProcess = (ListView) mView.findViewById(R.id.lv_sew_curProcess);
         mLv_lastProcess = (ListView) mView.findViewById(R.id.lv_sew_lastProcess);
+
+        mView.findViewById(R.id.layout_sew_craftDesc).setOnClickListener(this);
+        mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
+        mView.findViewById(R.id.layout_sew_special).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        String content = null;
+        if (v.getId() == R.id.layout_sew_craftDesc) {
+            content = mTv_craftDesc.getText().toString();
+        } else if (v.getId() == R.id.layout_sew_qualityReq) {
+            content = mTv_qualityReq.getText().toString();
+        } else if (v.getId() == R.id.layout_sew_special) {
+            content = mTv_special.getText().toString();
+        }
+        if (!isEmpty(content))
+            MyAlertDialog.showAlert(mContext, content);
     }
 
     public void searchOrder(String orderNum) {
@@ -168,16 +188,16 @@ public class SewFragment extends BaseFragment {
         if (mLastProcessAdapter == null) {
             mLastProcessAdapter = new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview);
             mLv_lastProcess.setAdapter(mLastProcessAdapter);
-        }else {
+        } else {
             mLastProcessAdapter.notifyDataSetChanged(lastOperations);
         }
 
         mLayout_processTab.removeAllViews();
         final List<SewDataBo.SewAttr> opeationInfos = mSewData.getCurrentOpeationInfos();
         if (mCurProcessAdapter == null) {
-            mCurProcessAdapter = new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview);
+            mCurProcessAdapter = new ProcessListAdapter(mContext, opeationInfos, R.layout.item_textview);
             mLv_curProcess.setAdapter(mCurProcessAdapter);
-        }else {
+        } else {
             mCurProcessAdapter.notifyDataSetChanged(opeationInfos);
         }
         if (opeationInfos != null) {

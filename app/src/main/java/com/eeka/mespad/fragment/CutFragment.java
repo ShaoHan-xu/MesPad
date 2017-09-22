@@ -35,6 +35,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 import com.eeka.mespad.view.dialog.StickyDialog;
@@ -64,6 +65,8 @@ public class CutFragment extends BaseFragment {
     private LinearLayout mLayout_processTab;//工序页签
     private LinearLayout mLayout_matTab;//物料图页签
     private TextView mTv_nextProcess;
+    private TextView mTv_qualityDesc;
+    private TextView mTv_special;
     private Button mBtn_done;
 
     public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
@@ -121,6 +124,8 @@ public class CutFragment extends BaseFragment {
         mLayout_processTab = (LinearLayout) mView.findViewById(R.id.layout_processTab);
         mLayout_matTab = (LinearLayout) mView.findViewById(R.id.layout_matTab);
         mTv_nextProcess = (TextView) mView.findViewById(R.id.tv_nextProcess);
+        mTv_qualityDesc = (TextView) mView.findViewById(R.id.tv_qualityDescribe);
+        mTv_special = (TextView) mView.findViewById(R.id.tv_special);
 
         mLv_process = (ListView) mView.findViewById(R.id.lv_processList);
         mLv_process.setOnItemClickListener(new ProcessClickListener());
@@ -130,10 +135,12 @@ public class CutFragment extends BaseFragment {
             mBtn_done.setVisibility(View.VISIBLE);
         }
         mBtn_done.setOnClickListener(this);
+
+        mView.findViewById(R.id.layout_processDescription).setOnClickListener(this);
+        mView.findViewById(R.id.layout_special).setOnClickListener(this);
     }
 
     public void refreshView() {
-        mView.findViewById(R.id.layout_processDescription).setVisibility(View.VISIBLE);
         mView.findViewById(R.id.layout_orderInfo).setVisibility(View.VISIBLE);
 
         //物料数据
@@ -238,40 +245,39 @@ public class CutFragment extends BaseFragment {
 //        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
         TextView tv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
         TextView tv_qty = (TextView) mView.findViewById(R.id.tv_sew_qty);
-        TextView tv_special = (TextView) mView.findViewById(R.id.tv_special);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
 //        tv_batchNum.setText(orderInfo.getPROCESS_LOT());
         tv_style.setText(orderInfo.getITEM());
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
-        tv_special.setText(orderInfo.getSO_REMARK());
+        mTv_special.setText(orderInfo.getSO_REMARK());
 
     }
 
     /**
      * 刷新工序相关的界面，包括工序图、工艺说明、品质要求、
-     *
-     * @param position
      */
     private void refreshProcessView(int position) {
         TailorInfoBo.OPERINFORBean item = mList_processData.get(position);
 
 //        TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_craftDescribe);
-        TextView tv_qualityDes = (TextView) mView.findViewById(R.id.tv_qualityDescribe);
+
 //        String craftDesc = item.getOPERATION_INSTRUCTION();
 //        if (!isEmpty(craftDesc))
-//            tv_craftDesc.setText(craftDesc.replace("\\n", "\n"));
+//            tv_craftDesc.setText(craftDesc.replace("#line#", "\n"));
         String qualityDesc = item.getQUALITY_REQUIREMENT();
-        if (!isEmpty(qualityDesc))
-            tv_qualityDes.setText(qualityDesc.replace("\\n", "\n"));
+        if (!isEmpty(qualityDesc)) {
+            mTv_qualityDesc.setText(qualityDesc.replace("#line#", "\n"));
+        } else {
+            mTv_qualityDesc.setText(null);
+        }
 
         TabViewUtil.refreshTabView(mLayout_processTab, position);
-
     }
 
     public void startWork() {
         if (mTailorInfo == null) {
-            toast("数据错误");
+            toast("请先获取订单数据");
             return;
         }
         showLoading();
@@ -287,13 +293,15 @@ public class CutFragment extends BaseFragment {
      */
     public void sticky() {
         if (mTailorInfo == null) {
-            toast("数据错误");
+            toast("请先获取订单数据");
             return;
         }
         TailorInfoBo.SHOPORDERINFORBean orderInfor = mTailorInfo.getSHOP_ORDER_INFOR();
         List<String> process_lot_bo = orderInfor.getPROCESS_LOT_BO();
         if (process_lot_bo != null && process_lot_bo.size() != 0) {
             new StickyDialog(mContext, process_lot_bo.get(0)).show();
+        }else {
+            toast("批次号为空");
         }
     }
 
@@ -339,6 +347,14 @@ public class CutFragment extends BaseFragment {
             } else {
                 HttpHelper.completeBatchWork(getStartAndCompleteParams(), this);
             }
+        } else if (v.getId() == R.id.layout_processDescription) {
+            String content = mTv_qualityDesc.getText().toString();
+            if (!isEmpty(content))
+                MyAlertDialog.showAlert(mContext, content);
+        } else if (v.getId() == R.id.layout_special) {
+            String content = mTv_special.getText().toString();
+            if (!isEmpty(content))
+                MyAlertDialog.showAlert(mContext, content);
         }
     }
 
@@ -565,7 +581,7 @@ public class CutFragment extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-            TextView textView = (TextView) view.findViewById(R.id.textView);
+            final TextView textView = (TextView) view.findViewById(R.id.textView);
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
                 TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;
@@ -574,8 +590,18 @@ public class CutFragment extends BaseFragment {
                 TailorInfoBo.OPERINFORBean operInfo = (TailorInfoBo.OPERINFORBean) object;
                 String quality = operInfo.getOPERATION_INSTRUCTION();
                 if (!isEmpty(quality))
-                    textView.setText(quality.replace("\\n", "\n"));
+                    textView.setText(quality.replace("#line#", "\n"));
+                else
+                    textView.setText(null);
             }
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String content = textView.getText().toString();
+                    if (!isEmpty(content))
+                        MyAlertDialog.showAlert(mContext, content);
+                }
+            });
             container.addView(view);
             return view;
         }

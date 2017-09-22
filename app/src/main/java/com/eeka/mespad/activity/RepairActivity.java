@@ -208,6 +208,10 @@ public class RepairActivity extends BaseActivity {
                 mList_type = JSON.parseArray(resultJSON.getJSONArray("result").toString(), JSONObject.class);
                 mAdapter.setData(mList_type);
                 mAdapter.notifyDataSetChanged();
+            } else if (HttpHelper.recordSewNc.equals(url)) {
+                toast("记录成功");
+                startActivity(new Intent(mContext, MainActivity.class));
+                finish();
             }
         }
     }

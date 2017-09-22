@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:text="工单号" />
 
             <LinearLayout
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
                     <TextView
                         style="@style/textStyle_default"
@@ -67,13 +67,16 @@
                 <LinearLayout
                     android:id="@+id/layout_sew_curProcess"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="10dp"
+                    android:layout_weight="1.5"
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/textStyle_default"
-                        android:padding="8dp"
+                        style="@style/textStyle_gray"
+                        android:paddingBottom="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="8dp"
                         android:text="当前工序" />
 
                     <ListView
@@ -89,12 +92,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/textStyle_default"
-                        android:padding="8dp"
+                        style="@style/textStyle_gray"
+                        android:paddingBottom="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingTop="8dp"
                         android:text="上一工序" />
 
                     <ListView
@@ -114,8 +120,9 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        style="@style/textStyle_default"
-                        android:text="上一站位：" />
+                        style="@style/textStyle_gray"
+                        android:paddingRight="8dp"
+                        android:text="上一站位" />
 
                     <TextView
                         android:id="@+id/tv_sew_lastPosition"
@@ -219,6 +226,7 @@
         <include layout="@layout/layout_loginusers" />
 
         <LinearLayout
+            android:id="@+id/layout_sew_craftDesc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
@@ -232,17 +240,13 @@
                 android:text="工艺描述："
                 android:textStyle="bold" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_sew_craftDesc"
-                    style="@style/textStyle_default" />
-            </ScrollView>
+            <TextView
+                android:id="@+id/tv_sew_craftDesc"
+                style="@style/textStyle_default" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_sew_qualityReq"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
@@ -256,17 +260,14 @@
                 android:text="品质要求："
                 android:textStyle="bold" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/tv_sew_qualityReq"
-                    style="@style/textStyle_default" />
-            </ScrollView>
+            <TextView
+                android:id="@+id/tv_sew_qualityReq"
+                style="@style/textStyle_default" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_sew_special"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
@@ -280,14 +281,9 @@
                 android:text="特殊要求："
                 android:textStyle="bold" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_sew_special"
-                    style="@style/textStyle_default" />
-            </ScrollView>
+            <TextView
+                android:id="@+id/tv_sew_special"
+                style="@style/textStyle_default" />
         </LinearLayout>
 
     </LinearLayout>
@@ -308,13 +304,18 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/layout_sew_processList"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/divider_gray_vertical"
-                android:orientation="horizontal"
-                android:showDividers="middle|end" />
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout_sew_processList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray_vertical"
+                    android:orientation="horizontal"
+                    android:showDividers="middle|end" />
+            </HorizontalScrollView>
 
             <View style="@style/line" />
 

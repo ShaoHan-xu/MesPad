@@ -1,6 +1,7 @@
 package com.eeka.mespad.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,22 +25,32 @@ public class TabViewUtil {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_tab, null);
         TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
         tv_tabName.setOnClickListener(listener);
+        String content = null;
         if (data instanceof SewQCDataBo.DesignComponentBean) {//生产部件
             final SewQCDataBo.DesignComponentBean item = (SewQCDataBo.DesignComponentBean) data;
-            tv_tabName.setText(item.getDescription());
+            content = item.getDescription();
         } else if (data instanceof SewQCDataBo.DesignComponentBean.DesgComponentsBean) {//设计部件
             final SewQCDataBo.DesignComponentBean.DesgComponentsBean item = (SewQCDataBo.DesignComponentBean.DesgComponentsBean) data;
-            tv_tabName.setText(item.getDescription());
+            content = item.getDescription();
         } else if (data instanceof TailorInfoBo.OPERINFORBean) {//工序标签
             TailorInfoBo.OPERINFORBean item = (TailorInfoBo.OPERINFORBean) data;
-            tv_tabName.setText(item.getDESCRIPTION());
+            content = item.getDESCRIPTION();
         } else if (data instanceof TailorInfoBo.MatInfoBean) {//物料标签
             TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) data;
-            tv_tabName.setText(matInfo.getMAT_NO());
+            content = matInfo.getMAT_NO();
         } else if (data instanceof SewDataBo.SewAttr) {//缝制工序标签
             SewDataBo.SewAttr sewData = (SewDataBo.SewAttr) data;
-            tv_tabName.setText(sewData.getDescription());
+            content = sewData.getDescription();
         }
+        if (!TextUtils.isEmpty(content)) {
+            int length = content.length();
+            if (length > 10) {
+                String str1 = content.substring(0, length / 2);
+                String str2 = content.substring(length / 2, length);
+                content = str1 + "\n" + str2;
+            }
+        }
+        tv_tabName.setText(content);
         return view;
     }
 

@@ -26,6 +26,7 @@ import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.MyAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +113,18 @@ public class SuspendFragment extends BaseFragment {
         mOperationBo = json.getString("HANDLE");
         TextView tv_curProcess = (TextView) mView.findViewById(R.id.tv_suspend_curProcess);
         tv_curProcess.setText(json.getString("OPERATION"));
-        TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_suspend_craftDesc);
+        final TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_suspend_craftDesc);
         tv_craftDesc.setText(json.getString("OPERATION_INSTRUCTION"));
+
+        tv_craftDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String content = tv_craftDesc.getText().toString();
+                if (!isEmpty(content)) {
+                    MyAlertDialog.showAlert(mContext, content);
+                }
+            }
+        });
     }
 
     /**

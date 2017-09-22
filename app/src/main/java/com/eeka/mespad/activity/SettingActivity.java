@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.UpdateManager;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
@@ -53,12 +55,23 @@ public class SettingActivity extends BaseActivity {
                 startActivity(new Intent(mContext, LoginActivity.class));
                 break;
             case R.id.tv_checkUpdate:
-                UpdateManager.downloadApk(mContext);
+                showLoading();
+                HttpHelper.getAPKUrl(this);
                 break;
             case R.id.layout_debugSwitch:
                 mDebugSwitch.setChecked(!mDebugSwitch.isChecked());
                 SpUtil.setDebugLog(mDebugSwitch.isChecked());
                 break;
+        }
+    }
+
+    @Override
+    public void onSuccess(String url, JSONObject resultJSON) {
+        super.onSuccess(url, resultJSON);
+        if (HttpHelper.getApkUrl.equals(url)) {
+            if (HttpHelper.isSuccess(resultJSON)) {
+                UpdateManager.downloadApk(mContext, resultJSON.getString("result"));
+            }
         }
     }
 
