@@ -33,13 +33,18 @@
                     android:background="@color/white"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/layout_matTab"
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@drawable/divider_gray_vertical"
-                        android:orientation="horizontal"
-                        android:showDividers="middle|end" />
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/layout_matTab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:divider="@drawable/divider_gray_vertical"
+                            android:orientation="horizontal"
+                            android:showDividers="middle|end" />
+                    </HorizontalScrollView>
 
                     <View style="@style/line" />
 
@@ -54,17 +59,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
                     android:background="@color/white"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/layout_processTab"
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@drawable/divider_gray_vertical"
-                        android:orientation="horizontal"
-                        android:showDividers="middle|end" />
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/layout_processTab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:divider="@drawable/divider_gray_vertical"
+                            android:orientation="horizontal"
+                            android:showDividers="middle|end" />
+                    </HorizontalScrollView>
 
                     <View style="@style/line" />
 

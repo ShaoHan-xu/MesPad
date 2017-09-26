@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="systemCode">
+        <item>D系统</item>
+        <item>Q系统</item>
+    </array>
+</resources>

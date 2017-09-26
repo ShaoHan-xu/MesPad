@@ -1,7 +1,6 @@
 package com.eeka.mespad.utils;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +41,16 @@ public class TabViewUtil {
             SewDataBo.SewAttr sewData = (SewDataBo.SewAttr) data;
             content = sewData.getDescription();
         }
-        if (!TextUtils.isEmpty(content)) {
-            int length = content.length();
-            if (length > 10) {
-                String str1 = content.substring(0, length / 2);
-                String str2 = content.substring(length / 2, length);
-                content = str1 + "\n" + str2;
-            }
-        }
+
+        //标签的字数超过10时，自动在一半的位置换行
+//        if (!TextUtils.isEmpty(content)) {
+//            int length = content.length();
+//            if (length > 10) {
+//                String str1 = content.substring(0, length / 2);
+//                String str2 = content.substring(length / 2, length);
+//                content = str1 + "\n" + str2;
+//            }
+//        }
         tv_tabName.setText(content);
         return view;
     }

@@ -84,6 +84,7 @@ public class MainActivity extends NFCActivity {
         initData();
 
     }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -150,7 +151,7 @@ public class MainActivity extends NFCActivity {
 
         mEt_orderNum = (EditText) findViewById(R.id.et_orderNum);
         mEt_position = (EditText) findViewById(R.id.et_position);
-        mEt_position.setText(HttpHelper.PAD_IP);
+        mEt_position.setText(HttpHelper.getPadIp());
     }
 
     @Override
@@ -248,6 +249,20 @@ public class MainActivity extends NFCActivity {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             button.setLayoutParams(params);
             mLayout_controlPanel.addView(button);
+        }
+    }
+
+    /**
+     * 设置配置的按钮的状态/设置可点击与不可点击
+     */
+    public void setButtonState(int buttonId, boolean state) {
+        int childCount = mLayout_controlPanel.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = mLayout_controlPanel.getChildAt(i);
+            if (buttonId == childAt.getId()) {
+                childAt.setEnabled(state);
+                break;
+            }
         }
     }
 
@@ -371,9 +386,9 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_video:
                 if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
                     mSewFragment.playVideo();
-                } else if (TopicUtil.TOPIC_CUT.equals(mTopic)){
+                } else if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mCutFragment.playVideo();
-                }else {
+                } else {
                     toast("该站位无视频");
                 }
                 break;
@@ -408,7 +423,7 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_searchPosition:
                 String position1 = mEt_position.getText().toString();
                 if (!isEmpty(position1)) {
-                    HttpHelper.PAD_IP = position1;
+//                    HttpHelper.PAD_IP = position1;
                 } else {
                     toast("请输入完整的站位");
                 }

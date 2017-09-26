@@ -49,7 +49,7 @@ public class MQTTService extends Service {
     private String userName = "admin";
     private String passWord = "admin";
     private static String myTopic;
-    private String clientId = HttpHelper.PAD_IP;
+    private String clientId;
     // Connection log for the push service. Good for debugging.
     private static Context mContext;
 
@@ -90,9 +90,10 @@ public class MQTTService extends Service {
     }
 
     private void init() {
-        myTopic = HttpHelper.PAD_IP;
+        myTopic = HttpHelper.getPadIp();
         // 服务器地址（协议+地址+端口号）
         String uri = host;
+        clientId = HttpHelper.getPadIp();
         client = new MqttAndroidClient(this, uri, clientId);
         // 设置MQTT监听并且接受消息
         client.setCallback(mqttCallback);
@@ -118,7 +119,7 @@ public class MQTTService extends Service {
         if ((!message.equals("")) || (!topic.equals(""))) {
             // 最后的遗嘱
             try {
-                conOpt.setWill(topic, message.getBytes(), qos.intValue(), retained.booleanValue());
+                conOpt.setWill(topic, message.getBytes(), qos, false);
             } catch (Exception e) {
                 Logger.d("Exception MqttConnectOptions Occured" + e.toString());
                 doConnect = false;

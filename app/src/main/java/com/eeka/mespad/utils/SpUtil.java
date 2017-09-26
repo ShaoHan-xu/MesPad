@@ -26,6 +26,7 @@ public class SpUtil {
 
     public static final String KEY_RESOURCE = "key_resource";
     public static final String KEY_DEBUG = "key_debug";
+    public static final String KEY_SYSTEMCODE = "key_systemCode";
 
     static {
         new SpUtil();
@@ -183,5 +184,6 @@ public class SpUtil {
         }
         return null;
     }
+
 
 }

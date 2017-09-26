@@ -35,9 +35,9 @@ public class HttpHelper {
     private static final String STATE = "status";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
-    public static String PAD_IP = NetUtil.getHostIP();
+    private static String PAD_IP;
 
-    public static final String BASE_URL = "http://10.7.121.54:50000/eeka-mes/";
+    public static String BASE_URL = PadApplication.BASE_URL;
 
     public static final String getApkUrl = BASE_URL + "common/getAppUpgradeUrl?";
     public static final String login_url = BASE_URL + "login?";
@@ -493,8 +493,6 @@ public class HttpHelper {
 
     /**
      * 根据SFC已完成的工序带出其生产部件集合
-     *
-     * @param sfcBo
      */
     public static void getProductComponentList(String sfcBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
@@ -518,7 +516,7 @@ public class HttpHelper {
     }
 
     /**
-     * 3.	根据设计部件获取不良代码列表
+     * 根据设计部件获取不良代码列表
      */
     public static void getSewNcCodeList(String designComponent, HttpCallback callback) {
         RequestParams params = getBaseParams();
@@ -530,7 +528,7 @@ public class HttpHelper {
     }
 
     /**
-     * 4.	根据不良代码获取工序列表
+     * 根据不良代码获取工序列表
      */
     public static void getProcessWithNcCode(String designComponent, String sfcBo, String ncCodeBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
@@ -605,10 +603,7 @@ public class HttpHelper {
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
-        PAD_IP = NetUtil.getHostIP();
-//      PAD_IP = "10.7.25.196";//质检
-//      PAD_IP = "10.7.25.122";//上裁
-//      PAD_IP = "10.7.25.107";//缝制
+        PAD_IP = getPadIp();
         RequestParams params = new RequestParams();
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {
@@ -619,6 +614,15 @@ public class HttpHelper {
             params.addHeader("Cookie", cookie);
         }
         return params;
+    }
+
+    public static String getPadIp() {
+        PAD_IP = NetUtil.getHostIP();
+//      PAD_IP = "10.7.25.196";//质检
+//      PAD_IP = "10.7.25.122";//上裁
+//      PAD_IP = "10.7.25.107";//缝制
+//        PAD_IP = "10.8.40.233";//裁剪
+        return PAD_IP;
     }
 
     public static boolean isSuccess(JSONObject json) {

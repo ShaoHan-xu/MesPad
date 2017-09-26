@@ -19,6 +19,9 @@ import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
 public class PadApplication extends Application {
 
     public static Context mContext;
+    public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
+    public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
+    public static String BASE_URL = BASE_URL_Q;
 
     @Override
     public void onCreate() {
@@ -29,6 +32,15 @@ public class PadApplication extends Application {
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
         CrashHandler.getInstance().init(getApplicationContext());
+
+        String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
+        if (!TextUtils.isEmpty(systemCode)) {
+            if ("D".equals(systemCode)) {
+                BASE_URL = BASE_URL_D;
+            } else if ("Q".equals(systemCode)) {
+                BASE_URL = BASE_URL_Q;
+            }
+        }
 
         //配置初始用户及站点
         UserInfoBo loginUser = SpUtil.getLoginUser();

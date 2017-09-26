@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
+import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.RecordCutNCActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
@@ -300,7 +301,7 @@ public class CutFragment extends BaseFragment {
         List<String> process_lot_bo = orderInfor.getPROCESS_LOT_BO();
         if (process_lot_bo != null && process_lot_bo.size() != 0) {
             new StickyDialog(mContext, process_lot_bo.get(0)).show();
-        }else {
+        } else {
             toast("批次号为空");
         }
     }
@@ -308,7 +309,7 @@ public class CutFragment extends BaseFragment {
     private StartWorkParamsBo getStartAndCompleteParams() {
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         StartWorkParamsBo params = new StartWorkParamsBo();
-        params.setPAD_ID(HttpHelper.PAD_IP);
+        params.setPAD_ID(HttpHelper.getPadIp());
         params.setPROCESS_LOTS(orderInfo.getPROCESS_LOT_BO());
         params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
         params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
@@ -659,50 +660,39 @@ public class CutFragment extends BaseFragment {
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            switch (url) {
-                case HttpHelper.findProcessWithPadId_url:
-                    JSONObject result = resultJSON.getJSONObject("result");
-                    mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
-                    break;
-                case HttpHelper.viewCutPadInfo_url:
-                    JSONObject result1 = resultJSON.getJSONObject("result");
-                    mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
-                    if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
-                        mBtn_done.setEnabled(false);
-                        mTailorInfo.setOPER_INFOR(mList_processData);
-                    } else {
-                        mBtn_done.setEnabled(true);
-                        mList_processData = mTailorInfo.getOPER_INFOR();
-                    }
-                    mTailorInfo.setOrderType(mOrderType);
-                    mTailorInfo.setRFID(mRFID);
-                    refreshView();
-                    break;
-                case HttpHelper.startBatchWork_url:
-                case HttpHelper.startCustomWork_url:
-//                    mBtn_done.setText("完成");
+            if (url.equals(HttpHelper.findProcessWithPadId_url)) {
+                JSONObject result = resultJSON.getJSONObject("result");
+                mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
+            } else if (url.equals(HttpHelper.viewCutPadInfo_url)) {
+                JSONObject result1 = resultJSON.getJSONObject("result");
+                mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
+                if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
+                    mBtn_done.setEnabled(false);
+                    ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
+                    mTailorInfo.setOPER_INFOR(mList_processData);
+                } else {
+                    mBtn_done.setEnabled(true);
+                    ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
+                    mList_processData = mTailorInfo.getOPER_INFOR();
+                }
+                mTailorInfo.setOrderType(mOrderType);
+                mTailorInfo.setRFID(mRFID);
+                refreshView();
+            } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {//                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
-                    toast("开始作业");
-                    break;
-                case HttpHelper.completeBatchWork_url:
-                case HttpHelper.completeCustomWork_url:
-//                    mBtn_done.setText("开始");
+                toast("开始作业");
+            } else if (url.equals(HttpHelper.completeBatchWork_url) || url.equals(HttpHelper.completeCustomWork_url)) {//                    mBtn_done.setText("开始");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
-                    toast("工序已完成");
-                    break;
-                case HttpHelper.saveLabuData:
-                    toast("保存成功");
-                    break;
-                case HttpHelper.saveLabuDataAndComplete:
-                    toast("保存成功");
-                    if (mLabuDialog != null && mLabuDialog.isShowing()) {
-                        mLabuDialog.dismiss();
-                    }
-                    break;
-                case HttpHelper.signoffByShopOrder:
-                case HttpHelper.signoffByProcessLot:
-                    toast("注销在制品成功，可重新开始");
-                    break;
+                toast("工序已完成");
+            } else if (url.equals(HttpHelper.saveLabuData)) {
+                toast("保存成功");
+            } else if (url.equals(HttpHelper.saveLabuDataAndComplete)) {
+                toast("保存成功");
+                if (mLabuDialog != null && mLabuDialog.isShowing()) {
+                    mLabuDialog.dismiss();
+                }
+            } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {
+                toast("注销在制品成功，可重新开始");
             }
         }
     }
