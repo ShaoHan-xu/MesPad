@@ -233,12 +233,12 @@ public class MQTTService extends Service {
 
         @Override
         public void deliveryComplete(IMqttDeliveryToken token) {
-            Log.e("test", "deliveryComplete");
+            Log.e("Test1", "deliveryComplete");
         }
 
         @Override
         public void connectionLost(Throwable throwable) {
-            Log.e("test", "connectionLost");
+            Log.e("Test1", "connectionLost");
         }
     };
 

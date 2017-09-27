@@ -11,4 +11,10 @@
 
     <!-- 描述类型、小字体大小-->
     <dimen name="textSize_describe">16sp</dimen>
+
+    <dimen name="width_100">100dp</dimen>
+    <dimen name="width_sewNCSelected">250dp</dimen>
+    <dimen name="bottomBarHeight">50dp</dimen>
+    <dimen name="searchBoxWidth">180dp</dimen>
+
 </resources>

@@ -101,10 +101,10 @@
                         android:paddingBottom="8dp"
                         android:paddingRight="8dp"
                         android:paddingTop="8dp"
-                        android:text="上一工序" />
+                        android:text="下一工序" />
 
                     <ListView
-                        android:id="@+id/lv_sew_lastProcess"
+                        android:id="@+id/lv_sew_nextProcess"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -210,6 +210,24 @@
 
                 <TextView
                     android:id="@+id/tv_sew_style"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_marginRight="10dp"
+                    android:text="尺码"
+                    android:textColor="@color/text_gray_default" />
+
+                <TextView
+                    android:id="@+id/tv_sew_size"
                     style="@style/textStyle_default" />
             </LinearLayout>
 

@@ -466,9 +466,6 @@ public class MainActivity extends NFCActivity {
      * 测试用
      */
     private void test() {
-        for (int i = 0; i < 10; i++) {
-            HttpHelper.initData(MainActivity.this);
-        }
     }
 
     private void searchOrder() {

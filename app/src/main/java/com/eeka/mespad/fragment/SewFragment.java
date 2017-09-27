@@ -40,7 +40,8 @@ public class SewFragment extends BaseFragment {
 
     private TextView mTv_SFC;//工单号
     private TextView mTv_orderNum;//订单号
-    private TextView mTv_style;//风格
+    private TextView mTv_style;//款号
+    private TextView mTv_size;//尺码
     private TextView mTv_orderType;//订单类型，定制/批量
     private TextView mTv_workEfficiency;//效率
     private TextView mTv_craftDesc;//工艺说明
@@ -52,9 +53,9 @@ public class SewFragment extends BaseFragment {
     private ViewPager mVP_sop;
 
     private ProcessListAdapter mCurProcessAdapter;
-    private ProcessListAdapter mLastProcessAdapter;
+    private ProcessListAdapter mNextProcessAdapter;
     private ListView mLv_curProcess;
-    private ListView mLv_lastProcess;
+    private ListView mLv_nextProcess;
     private TextView mTv_lastPosition;
 
     private SewDataBo mSewData;
@@ -80,6 +81,7 @@ public class SewFragment extends BaseFragment {
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
         mTv_orderType = (TextView) mView.findViewById(R.id.tv_sew_orderType);
         mTv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
+        mTv_size = (TextView) mView.findViewById(R.id.tv_sew_size);
         mTv_workEfficiency = (TextView) mView.findViewById(R.id.tv_sew_workEfficiency);
         mTv_craftDesc = (TextView) mView.findViewById(R.id.tv_sew_craftDesc);
         mTv_qualityReq = (TextView) mView.findViewById(R.id.tv_sew_qualityReq);
@@ -91,7 +93,7 @@ public class SewFragment extends BaseFragment {
         mVP_sop = (ViewPager) mView.findViewById(R.id.vp_sew_sop);
         mVP_sop.addOnPageChangeListener(new ViewPagerChangedListener());
         mLv_curProcess = (ListView) mView.findViewById(R.id.lv_sew_curProcess);
-        mLv_lastProcess = (ListView) mView.findViewById(R.id.lv_sew_lastProcess);
+        mLv_nextProcess = (ListView) mView.findViewById(R.id.lv_sew_nextProcess);
 
         mView.findViewById(R.id.layout_sew_craftDesc).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
@@ -149,7 +151,13 @@ public class SewFragment extends BaseFragment {
         mTv_SFC.setText(mSewData.getSfc());
         mTv_orderNum.setText(mSewData.getShopOrder());
         mTv_style.setText(mSewData.getItem());
-        mTv_special.setText(mSewData.getSoRemark());
+        mTv_size.setText(mSewData.getSize());
+        String remark = mSewData.getSoRemark();
+        if (isEmpty(remark)) {
+            mTv_special.setText(null);
+        } else {
+            mTv_special.setText(remark.replace("#line#", "\n"));
+        }
         mTv_lastPosition.setText(mSewData.getLastLineCategory() + "," + mSewData.getLastPosition());
         String salesOrder = mSewData.getSalesOrder();
         if (isEmpty(salesOrder)) {
@@ -184,12 +192,12 @@ public class SewFragment extends BaseFragment {
             }
         }
 
-        List<SewDataBo.SewAttr> lastOperations = mSewData.getLastOperations();
-        if (mLastProcessAdapter == null) {
-            mLastProcessAdapter = new ProcessListAdapter(mContext, lastOperations, R.layout.item_textview);
-            mLv_lastProcess.setAdapter(mLastProcessAdapter);
+        List<SewDataBo.SewAttr> nextOperations = mSewData.getNextOperation();
+        if (mNextProcessAdapter == null) {
+            mNextProcessAdapter = new ProcessListAdapter(mContext, nextOperations, R.layout.item_textview);
+            mLv_nextProcess.setAdapter(mNextProcessAdapter);
         } else {
-            mLastProcessAdapter.notifyDataSetChanged(lastOperations);
+            mNextProcessAdapter.notifyDataSetChanged(nextOperations);
         }
 
         mLayout_processTab.removeAllViews();
@@ -298,10 +306,10 @@ public class SewFragment extends BaseFragment {
         SewDataBo.SewAttr item = mSewData.getCurrentOpeationInfos().get(position);
         String craftDesc = item.getAttributes().getOPERATION_INSTRUCTION();
         if (!isEmpty(craftDesc))
-            mTv_craftDesc.setText(craftDesc.replace("\\n", "\n"));
+            mTv_craftDesc.setText(craftDesc.replace("#line#", "\n"));
         String qualityDesc = item.getAttributes().getQUALITY_REQUIREMENT();
         if (!isEmpty(qualityDesc))
-            mTv_qualityReq.setText(qualityDesc.replace("\\n", "\n"));
+            mTv_qualityReq.setText(qualityDesc.replace("#line#", "\n"));
 
         TabViewUtil.refreshTabView(mLayout_processTab, position);
     }

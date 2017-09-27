@@ -28,12 +28,22 @@ public class SewDataBo implements Serializable {
     private String lastPosition;
     private String salesOrder;
     private String sfc;
+    private String size;
     private String shopOrder;
     private String soRemark;
     private String workEfficiency;
     private List<SewAttr> currentOpeationInfos;
     private List<SewAttr> lastOperations;
+    private List<SewAttr> nextOperation;
     private List<SewAttr> materialPictures;// 用料图
+
+    public List<SewAttr> getNextOperation() {
+        return nextOperation;
+    }
+
+    public void setNextOperation(List<SewAttr> nextOperation) {
+        this.nextOperation = nextOperation;
+    }
 
     public String getItem() {
         return item;
@@ -97,6 +107,14 @@ public class SewDataBo implements Serializable {
 
     public void setSoRemark(String soRemark) {
         this.soRemark = soRemark;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public String getWorkEfficiency() {

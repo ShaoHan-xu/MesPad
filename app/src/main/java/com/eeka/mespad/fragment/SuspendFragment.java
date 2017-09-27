@@ -114,7 +114,12 @@ public class SuspendFragment extends BaseFragment {
         TextView tv_curProcess = (TextView) mView.findViewById(R.id.tv_suspend_curProcess);
         tv_curProcess.setText(json.getString("OPERATION"));
         final TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_suspend_craftDesc);
-        tv_craftDesc.setText(json.getString("OPERATION_INSTRUCTION"));
+        String instruction = json.getString("OPERATION_INSTRUCTION");
+        if (isEmpty(instruction)) {
+            tv_craftDesc.setText(null);
+        } else {
+            tv_craftDesc.setText(instruction.replace("#line#", "\n"));
+        }
 
         tv_craftDesc.setOnClickListener(new View.OnClickListener() {
             @Override

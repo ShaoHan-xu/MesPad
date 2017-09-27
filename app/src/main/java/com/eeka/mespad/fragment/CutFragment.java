@@ -416,10 +416,6 @@ public class CutFragment extends BaseFragment {
 
     /**
      * 获取排料图
-     *
-     * @param item
-     * @param position
-     * @return
      */
     private View getLayoutView(final TailorInfoBo.LayoutInfoBean item, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
