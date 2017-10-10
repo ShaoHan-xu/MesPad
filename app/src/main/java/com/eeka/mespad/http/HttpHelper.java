@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
@@ -80,6 +81,8 @@ public class HttpHelper {
     public static final String createCard = BASE_URL + "sweing/bindSfcAndRfid?";
     public static final String findCardInfoBySfcOrHangerId = BASE_URL + "sweing/findCardInfoBySfcOrHangerId?";
     public static final String tellFusingStyleToGST = BASE_URL + "tellFusingStyleToGST?";
+    public static final String getClothSize = BASE_URL + "logNcPad/viewGarmentSize?";
+    public static final String saveQCClothSizeData = BASE_URL + "logNcPad/saveDcCollect?";
 
     private static Context mContext;
 
@@ -600,6 +603,27 @@ public class HttpHelper {
     }
 
     /**
+     * 获取成衣数据信息
+     */
+    public static void getClothSize(String SFC, String operationBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC", SFC);
+        json.put("OPERATION_BO", operationBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getClothSize, params, getResponseHandler(getClothSize, callback));
+    }
+
+    /**
+     * 保存成衣数据
+     */
+    public static void saveClothSizeData(SaveClothSizeBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveQCClothSizeData, params, getResponseHandler(saveQCClothSizeData, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
@@ -618,9 +642,9 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//      PAD_IP = "10.7.25.196";//质检
+//        PAD_IP = "10.7.25.196";//质检
 //      PAD_IP = "10.7.25.122";//上裁
-//      PAD_IP = "10.7.25.107";//缝制
+//      PAD_IP = "10.7.25.120";//缝制
 //        PAD_IP = "10.8.40.233";//裁剪
         return PAD_IP;
     }

@@ -3,6 +3,7 @@ package com.eeka.mespad.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
+import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
@@ -46,7 +48,7 @@ public class SuspendFragment extends BaseFragment {
     private SFCAdapter mSFCAdapter;
 
     private LinearLayout mLayout_component;
-    private ImageView mIv_component;
+    private TextView mTv_curSFC;
 
     private ContextInfoBo mContextInfo;
     private SuspendComponentBo mComponent;
@@ -54,7 +56,9 @@ public class SuspendFragment extends BaseFragment {
     private String mCurSFC;
     private String mOperationBo;
 
-    private String mBmpUrl;
+    private ViewPager mVP_img;
+    private List<String> mList_img;
+    private ImgAdapter mImgAdapter;
 
     @Nullable
     @Override
@@ -77,17 +81,8 @@ public class SuspendFragment extends BaseFragment {
         super.initView();
         mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
-        mIv_component = (ImageView) mView.findViewById(R.id.iv_suspend_componentImg);
-        mIv_component.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isEmpty(mBmpUrl)) {
-                    ArrayList<String> urls = new ArrayList<>();
-                    urls.add(mBmpUrl);
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, 0));
-                }
-            }
-        });
+        mTv_curSFC = (TextView) mView.findViewById(R.id.tv_suspend_curSFC);
+        mVP_img = (ViewPager) mView.findViewById(R.id.vp_suspend_componentImg);
 
         Button btn_binding = (Button) mView.findViewById(R.id.btn_suspend_binding);
         btn_binding.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +96,10 @@ public class SuspendFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        mList_sfcList = new ArrayList<>();
-        mSFCAdapter = new SFCAdapter(mContext, mList_sfcList, R.layout.item_textview);
-        mLv_orderList.setAdapter(mSFCAdapter);
+//        mList_sfcList = new ArrayList<>();
+//        mSFCAdapter = new SFCAdapter(mContext, mList_sfcList, R.layout.item_textview);
+//        mLv_orderList.setAdapter(mSFCAdapter);
+
     }
 
     /**
@@ -141,8 +137,8 @@ public class SuspendFragment extends BaseFragment {
         for (SuspendComponentBo.COMPONENTSBean component : components) {
             mLayout_component.addView(getComponentView(component));
         }
-        mIv_component.setImageResource(0);
-        mBmpUrl = null;
+        mVP_img.setAdapter(null);
+        mList_img = null;
     }
 
     public void searchOrder(String orderNum) {
@@ -180,6 +176,31 @@ public class SuspendFragment extends BaseFragment {
         dialog.show();
     }
 
+    private class ImgAdapter extends CommonVPAdapter<String> {
+
+        public ImgAdapter(Context context, List<String> data, int layoutId) {
+            super(context, data, layoutId);
+        }
+
+        @Override
+        public void convertView(View view, String item, final int position) {
+            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            String url = mList_img.get(position);
+            Glide.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> urls = new ArrayList<>();
+                    for (String url : mList_img) {
+                        urls.add(url);
+                    }
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+                }
+            });
+
+        }
+    }
+
     private class SFCAdapter extends CommonAdapter<String> {
 
         SFCAdapter(Context context, List<String> list, int layoutId) {
@@ -210,6 +231,7 @@ public class SuspendFragment extends BaseFragment {
         view.setLayoutParams(layoutParams);
         Button btn_component = (Button) view.findViewById(R.id.btn_componentName);
         btn_component.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        ImageView iv_finished = (ImageView) view.findViewById(R.id.iv_part_finished);
         TextView tv_helpDesc = (TextView) view.findViewById(R.id.tv_helpDesc);
         btn_component.setText(component.getComponentName());
         String isNeedSubContract = component.getIsNeedSubContract();//是否需要外协
@@ -225,8 +247,10 @@ public class SuspendFragment extends BaseFragment {
         }
         if ("true".equals(component.getIsBound())) {
             btn_component.setEnabled(false);
+            iv_finished.setVisibility(View.VISIBLE);
         } else {
             btn_component.setEnabled(true);
+            iv_finished.setVisibility(View.GONE);
         }
         btn_component.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,11 +258,17 @@ public class SuspendFragment extends BaseFragment {
                 mCurComponent = component;
 //                showLoading();
                 HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
+                List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
                 int childCount = mLayout_component.getChildCount();
                 for (int i = 0; i < childCount; i++) {
                     View childAt = mLayout_component.getChildAt(i);
                     Button button = (Button) childAt.findViewById(R.id.btn_componentName);
-                    button.setEnabled(true);
+                    SuspendComponentBo.COMPONENTSBean componentsBean = components.get(i);
+                    if ("true".equals(componentsBean.getIsBound())) {
+                        button.setEnabled(false);
+                    } else {
+                        button.setEnabled(true);
+                    }
                 }
                 v.setEnabled(false);
             }
@@ -262,7 +292,7 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.getSuspendBaseData.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 setupBaseView(result);
-                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), this);
+//                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), this);
             } else if (HttpHelper.getSuspendUndoList.equals(url)) {
                 mList_sfcList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), String.class);
                 mSFCAdapter.notifyDataSetChanged(mList_sfcList);
@@ -288,13 +318,15 @@ public class SuspendFragment extends BaseFragment {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);
                 mCurSFC = mComponent.getSFC();
+                mTv_curSFC.setText(mCurSFC);
                 mCurComponent = null;
                 setupComponentView();
-                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), SuspendFragment.this);
+//                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), SuspendFragment.this);
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
-                mBmpUrl = result.getString("PICTURE_URL");
-                Glide.with(mContext).load(mBmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_component);
+                mList_img = JSON.parseArray(result.getJSONArray("PICTURE_URL").toString(), String.class);
+                mImgAdapter = new ImgAdapter(mContext, mList_img, R.layout.item_imageview);
+                mVP_img.setAdapter(mImgAdapter);
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
             } else if (HttpHelper.hangerUnbind.equals(url)) {

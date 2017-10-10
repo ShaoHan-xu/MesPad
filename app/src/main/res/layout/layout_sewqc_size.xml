@@ -13,7 +13,8 @@
         style="@style/textStyle_default"
         android:gravity="center"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_sewQc_refSize"
@@ -25,12 +26,13 @@
     <EditText
         android:id="@+id/et_sewQc_finishedSize"
         style="@style/textStyle_default"
-        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:background="@drawable/btn_normal"
         android:gravity="center"
-        android:hint="点击录入"
         android:inputType="numberDecimal"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="10dp"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_sewQc_refTolerance"
@@ -42,6 +44,7 @@
     <TextView
         android:id="@+id/tv_sewQc_realTolerance"
         style="@style/textStyle_default"
+        android:layout_width="match_parent"
         android:gravity="center"
         android:paddingBottom="10dp"
         android:paddingTop="10dp" />

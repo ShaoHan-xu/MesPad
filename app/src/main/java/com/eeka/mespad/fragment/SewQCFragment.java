@@ -3,6 +3,8 @@ package com.eeka.mespad.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +16,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
+import com.eeka.mespad.bo.ClothSizeBo;
+import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.FormatUtil;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +54,7 @@ public class SewQCFragment extends BaseFragment {
     private TextView mTv_special;
 
     private SewQCDataBo mSewQCData;
+    private ClothSizeBo mClothSizeData;
 
     @Nullable
     @Override
@@ -81,6 +89,9 @@ public class SewQCFragment extends BaseFragment {
         mTv_size = (TextView) mView.findViewById(R.id.tv_sewQC_size);
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
         mTv_special.setOnClickListener(this);
+
+        mView.findViewById(R.id.btn_sewQc_save).setOnClickListener(this);
+        mView.findViewById(R.id.btn_sewQc_refresh).setOnClickListener(this);
     }
 
     @Override
@@ -91,6 +102,10 @@ public class SewQCFragment extends BaseFragment {
             if (!isEmpty(content)) {
                 MyAlertDialog.showAlert(mContext, content);
             }
+        } else if (v.getId() == R.id.btn_sewQc_refresh) {
+            getClothSizeData();
+        } else if (v.getId() == R.id.btn_sewQc_save) {
+            saveClothSizeData();
         }
     }
 
@@ -112,12 +127,6 @@ public class SewQCFragment extends BaseFragment {
         List<SewQCDataBo.BomComponentBean> bomComponent = mSewQCData.getBomComponent();
         for (SewQCDataBo.BomComponentBean bom : bomComponent) {
             mLayout_matInfo.addView(getMatInfo(bom));
-        }
-
-        mLayout_sizeInfo.removeAllViews();
-        List<SewQCDataBo.ClothingSizeBean> clothingSize = mSewQCData.getClothingSize();
-        for (SewQCDataBo.ClothingSizeBean clothing : clothingSize) {
-            mLayout_sizeInfo.addView(getSizeInfoView(clothing));
         }
 
         mLayout_productComponent.removeAllViews();
@@ -142,6 +151,24 @@ public class SewQCFragment extends BaseFragment {
     }
 
     /**
+     * 设置尺寸表格数据
+     */
+    private void setupSizeInfo() {
+        if (mClothSizeData == null) {
+            toast("获取尺寸数据失败");
+            return;
+        }
+        mLayout_sizeInfo.removeAllViews();
+        List<ClothSizeBo.DCPARRMSBean> parrms = mClothSizeData.getDC_PARRMS();
+        if (parrms != null) {
+            for (int i = 0; i < parrms.size(); i++) {
+                ClothSizeBo.DCPARRMSBean item = parrms.get(i);
+                mLayout_sizeInfo.addView(getSizeInfoView(item, i));
+            }
+        }
+    }
+
+    /**
      * 记录不良
      */
     public void recordNC() {
@@ -159,6 +186,56 @@ public class SewQCFragment extends BaseFragment {
         if (!flag) {
             dismissLoading();
             showErrorDialog("需要员工上岗后才能搜索工单");
+        }
+    }
+
+    /**
+     * 获取成衣尺寸数据
+     */
+    private void getClothSizeData() {
+        if (mSewQCData != null) {
+            if (isAdded())
+                showLoading();
+            String currentOperation = mSewQCData.getCurrentOperation();
+            String operationBo = "OperationBO:" + SpUtil.getSite() + "," + currentOperation + ",A";
+            HttpHelper.getClothSize(mSewQCData.getSfc(), operationBo, this);
+        }
+    }
+
+    /**
+     * 保存成衣数据
+     */
+    private void saveClothSizeData() {
+        if (mSewQCData != null && mClothSizeData != null) {
+            SaveClothSizeBo data = new SaveClothSizeBo();
+            data.setDC_GROUP(mClothSizeData.getDC_GROUP());
+            data.setSFC(mSewQCData.getSfc());
+            PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+            data.setRESOURCE_BO(resource.getRESOURCE_BO());
+            String currentOperation = mSewQCData.getCurrentOperation();
+            String operationBo = "OperationBO:" + SpUtil.getSite() + "," + currentOperation + ",A";
+            data.setOPERATION_BO(operationBo);
+
+            List<SaveClothSizeBo.Item> items = new ArrayList<>();
+            for (ClothSizeBo.DCPARRMSBean bean : mClothSizeData.getDC_PARRMS()) {
+                if ("true".equals(bean.getALLOW_COLLECTION())) {
+                    String value = bean.getCOLLECTED_VALUE();
+                    if (!isEmpty(value)) {
+                        SaveClothSizeBo.Item item = new SaveClothSizeBo.Item();
+                        item.setDATA_TYPE(bean.getDATA_TYPE());
+                        item.setMEASURED_ATTRIBUTE(bean.getMEASURED_ATTRIBUTE());
+                        item.setVALUE(value);
+                        items.add(item);
+                    }
+                }
+            }
+            if (items.size() != 0) {
+                data.setDCS(items);
+                HttpHelper.saveClothSizeData(data, this);
+            } else {
+                toast("请录入实际尺寸后保存");
+            }
+
         }
     }
 
@@ -185,7 +262,7 @@ public class SewQCFragment extends BaseFragment {
     /**
      * 获取尺寸信息布局
      */
-    private View getSizeInfoView(SewQCDataBo.ClothingSizeBean sizeInfo) {
+    private View getSizeInfoView(ClothSizeBo.DCPARRMSBean sizeInfo, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sewqc_size, null);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.weight = 1;
@@ -195,42 +272,108 @@ public class SewQCFragment extends BaseFragment {
         TextView tv_refTolerance = (TextView) view.findViewById(R.id.tv_sewQc_refTolerance);
         TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
         EditText et_finishedSize = (EditText) view.findViewById(R.id.et_sewQc_finishedSize);
-        et_finishedSize.setTag(sizeInfo);
-        et_finishedSize.setOnFocusChangeListener(new FocusChangedListener());
+//        et_finishedSize.setTag(position);
+//        et_finishedSize.setOnFocusChangeListener(new FocusChangedListener());
 
-        tv_sizeAttr.setText(sizeInfo.getName());
-        tv_refSize.setText(sizeInfo.getAttributes().getValue() + "");
+        String description = sizeInfo.getDESCRIPTION();
+        if (isEmpty(description)) {
+            tv_sizeAttr.setText("Measure Attribute");
+        } else {
+            tv_sizeAttr.setText(description + sizeInfo.getUNIT());
+        }
 
+        String refSize = sizeInfo.getVALUE();
+        String refTolerance = sizeInfo.getSTANDARD();
+        tv_refSize.setText(refSize);
+        tv_refTolerance.setText(refTolerance);
+
+        String realSize = sizeInfo.getCOLLECTED_VALUE();
+        if (isEmpty(realSize)) {
+            tv_realTolerance.setText(null);
+            et_finishedSize.setText(null);
+        } else {
+            et_finishedSize.setText(realSize);
+
+            float fRealSize = FormatUtil.strToFloat(realSize);
+            float fRefSize = FormatUtil.strToFloat(refSize);
+            float realTolerance = fRealSize - fRefSize;
+            float fRefTolerance = FormatUtil.strToFloat(refTolerance);
+            tv_realTolerance.setText(realTolerance + "");
+            if (Math.abs(realTolerance) > fRefTolerance) {
+                tv_realTolerance.setTextColor(getResources().getColor(R.color.white));
+                tv_realTolerance.setBackgroundResource(R.color.text_red_default);
+            } else {
+                tv_realTolerance.setTextColor(getResources().getColor(R.color.text_black_default));
+                tv_realTolerance.setBackgroundResource(R.color.white);
+            }
+        }
+
+        String flag = sizeInfo.getALLOW_COLLECTION();
+        if ("false".equals(flag)) {
+            et_finishedSize.setEnabled(false);
+            et_finishedSize.setHint(null);
+        } else {
+            et_finishedSize.setEnabled(true);
+            et_finishedSize.setHint("点击录入");
+        }
+
+        et_finishedSize.addTextChangedListener(new TextChangedListener(position));
         return view;
     }
 
-    private class FocusChangedListener implements View.OnFocusChangeListener {
+    private class TextChangedListener implements TextWatcher {
+
+        int position;
+
+        public TextChangedListener(int position) {
+            this.position = position;
+        }
 
         @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            EditText editText = (EditText) v;
-            if (!hasFocus) {
-                SewQCDataBo.ClothingSizeBean sizeInfo = (SewQCDataBo.ClothingSizeBean) v.getTag();
-                SewQCDataBo.ClothingSizeBean.AttributesBeanX attributes = sizeInfo.getAttributes();
-                String text = editText.getText().toString();
-                float finishedSize = FormatUtil.strToFloat(text);
-                if (finishedSize != attributes.getFinishedSize()) {
-                    float refSize = attributes.getValue();
-                    float realTolerance = finishedSize - refSize;
-                    attributes.setFinishedSize(finishedSize);
-                    attributes.setRealTolerance(realTolerance);
-                    sizeInfo.setAttributes(attributes);
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    Logger.d(JSON.toJSONString(sizeInfo));
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String text = s.toString();
+            int posDot = text.indexOf(".");
+            if (posDot > 0) {
+                if (text.length() - posDot - 1 > 2) {
+                    s.delete(posDot + 3, posDot + 4);
                 }
             }
+
+            ClothSizeBo.DCPARRMSBean sizeInfo = mClothSizeData.getDC_PARRMS().get(position);
+            float finishedSize = FormatUtil.strToFloat(text);
+            float refSize = FormatUtil.strToFloat(sizeInfo.getVALUE());
+            sizeInfo.setCOLLECTED_VALUE(finishedSize + "");
+
+            mClothSizeData.getDC_PARRMS().set(position, sizeInfo);
+            View view = mLayout_sizeInfo.getChildAt(position);
+            TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
+            float realTolerance = new BigDecimal(finishedSize - refSize).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+            float fRefTolerance = FormatUtil.strToFloat(sizeInfo.getSTANDARD());
+            tv_realTolerance.setText(String.format("%.1f", realTolerance));
+
+            if (Math.abs(realTolerance) > fRefTolerance) {
+                tv_realTolerance.setTextColor(getResources().getColor(R.color.white));
+                tv_realTolerance.setBackgroundResource(R.color.text_red_default);
+            } else {
+                tv_realTolerance.setTextColor(getResources().getColor(R.color.text_black_default));
+                tv_realTolerance.setBackgroundResource(R.color.white);
+            }
+//                Logger.d(JSON.toJSONString(sizeInfo));
         }
     }
 
     /**
      * 获取物料属性布局
-     *
-     * @return
      */
     private View getMatInfo(SewQCDataBo.BomComponentBean bom) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_key_value, null);
@@ -254,6 +397,13 @@ public class SewQCFragment extends BaseFragment {
             if (HttpHelper.findPadKeyDataForNcUI.equals(url)) {
                 mSewQCData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewQCDataBo.class);
                 setupView();
+
+                getClothSizeData();
+            } else if (HttpHelper.getClothSize.equals(url)) {
+                mClothSizeData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ClothSizeBo.class);
+                setupSizeInfo();
+            } else if (HttpHelper.saveQCClothSizeData.equals(url)) {
+                toast("保存成功");
             }
         }
     }

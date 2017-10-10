@@ -32,7 +32,7 @@ public class SewQCDataBo {
     private int dailyOutput;
     private int monthlyOutput;
     private List<BomComponentBean> bomComponent;
-    private List<ClothingSizeBean> clothingSize;
+//    private List<ClothingSizeBean> clothingSize;
     private List<DesignComponentBean> designComponent;
 
     public String getShopOrder() {
@@ -107,13 +107,13 @@ public class SewQCDataBo {
         this.bomComponent = bomComponent;
     }
 
-    public List<ClothingSizeBean> getClothingSize() {
-        return clothingSize;
-    }
-
-    public void setClothingSize(List<ClothingSizeBean> clothingSize) {
-        this.clothingSize = clothingSize;
-    }
+//    public List<ClothingSizeBean> getClothingSize() {
+//        return clothingSize;
+//    }
+//
+//    public void setClothingSize(List<ClothingSizeBean> clothingSize) {
+//        this.clothingSize = clothingSize;
+//    }
 
     public List<DesignComponentBean> getDesignComponent() {
         return designComponent;

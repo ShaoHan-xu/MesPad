@@ -80,21 +80,9 @@ public class MainActivity extends NFCActivity {
         mCardInfo = new CardInfoBo();
 
         MQTTService.actionStart(mContext);
-
+        EventBus.getDefault().register(this);
         initData();
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -111,6 +99,7 @@ public class MainActivity extends NFCActivity {
     protected void onDestroy() {
         super.onDestroy();
         MQTTService.actionStop(mContext);
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -127,6 +116,10 @@ public class MainActivity extends NFCActivity {
             }
             showLoading();
             HttpHelper.getPositionLoginUsers(this);
+        } else if (PushJson.TYPE_EXIT.equals(type)) {
+            MQTTService.actionStop(mContext);
+            finish();
+            System.exit(0);
         } else {
             toast("收到工单消息，正在刷新页面");
             mEt_orderNum.setText(push.getContent());
@@ -161,7 +154,6 @@ public class MainActivity extends NFCActivity {
         showLoading();
         UserInfoBo loginUser = SpUtil.getLoginUser();
         HttpHelper.login(loginUser.getUSER(), loginUser.getPassword(), this);
-//        HttpHelper.initData(this);
         findViewById(R.id.layout_search).setVisibility(View.VISIBLE);
     }
 
@@ -439,9 +431,6 @@ public class MainActivity extends NFCActivity {
                         break;
                     case TopicUtil.TOPIC_SEW:
                         break;
-                    case TopicUtil.TOPIC_SUSPEND:
-
-                        break;
                 }
                 break;
             case R.id.btn_binding:
@@ -466,6 +455,10 @@ public class MainActivity extends NFCActivity {
      * 测试用
      */
     private void test() {
+        for (int i = 0; i < 10; i++) {
+            //测试并发请求
+            HttpHelper.login("Shawn", "sap12345", this);
+        }
     }
 
     private void searchOrder() {

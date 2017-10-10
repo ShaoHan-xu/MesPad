@@ -64,7 +64,7 @@ public class RecordCutNCActivity extends BaseActivity {
         findViewById(R.id.btn_recordBad_save).setOnClickListener(this);
         findViewById(R.id.btn_recordBad_cancel).setOnClickListener(this);
 
-        if (mList_badRecord == null) {
+        if (mList_badRecord == null || mList_badRecord.size() == 0) {
             showLoading();
             HttpHelper.getBadList(this);
         }
@@ -88,8 +88,17 @@ public class RecordCutNCActivity extends BaseActivity {
             json.put("OPERATION_BO", mTailorInfo.getOPER_INFOR().get(0).getOPERATION_BO());
             HttpHelper.saveBadRecord(json, this);
         } else if (v.getId() == R.id.btn_recordBad_cancel) {
-            finish();
+            onBackPressed();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("badList", (Serializable) mList_badRecord);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private class ItemAdapter extends CommonRecyclerAdapter<RecordNCBo> {
@@ -141,10 +150,9 @@ public class RecordCutNCActivity extends BaseActivity {
                 mAdapter.setData(mList_badRecord);
             } else if (HttpHelper.saveBadRecord.equals(url)) {
                 toast("保存成功");
-                Intent intent = new Intent();
-                intent.putExtra("badList", (Serializable) mList_badRecord);
-                setResult(RESULT_OK, intent);
-                finish();
+                //保存成功后清除记录并关闭界面
+                mList_badRecord.clear();
+                onBackPressed();
             }
         }
     }

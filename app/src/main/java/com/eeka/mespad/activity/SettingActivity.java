@@ -14,11 +14,14 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.UpdateManager;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 设置界面
@@ -150,7 +153,10 @@ public class SettingActivity extends BaseActivity {
                     ErrorDialog.showConfirmAlert(mContext, "系统切换成功，重启应用后生效。", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            System.exit(0);
+                            PushJson push = new PushJson();
+                            push.setType(PushJson.TYPE_EXIT);
+                            EventBus.getDefault().post(push);
+                            finish();
                         }
                     });
                 }

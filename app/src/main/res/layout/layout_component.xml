@@ -4,14 +4,30 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_componentName"
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:textColor="@color/white"
-        android:background="@drawable/btn_green"
-        android:text="前幅" />
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/btn_componentName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_green"
+            android:text="前幅"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/iv_part_finished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_part_finish"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_helpDesc"

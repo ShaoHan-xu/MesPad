@@ -336,6 +336,7 @@ public class CutFragment extends BaseFragment {
                 return;
             }
             if ("P".equals(mOrderType)) {
+                List<TailorInfoBo.OPERINFORBean> operInfo = mTailorInfo.getOPER_INFOR();
                 if (mLabuData == null || mLabuData.getLAYOUTS() == null || mLabuData.getLAYOUTS().size() == 0) {
                     toast("请先记录拉布数据");
                     showRecordLabuDialog();
@@ -674,6 +675,7 @@ public class CutFragment extends BaseFragment {
                 mTailorInfo.setOrderType(mOrderType);
                 mTailorInfo.setRFID(mRFID);
                 refreshView();
+                mList_recordNC = new ArrayList<>();
             } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {//                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
                 toast("开始作业");

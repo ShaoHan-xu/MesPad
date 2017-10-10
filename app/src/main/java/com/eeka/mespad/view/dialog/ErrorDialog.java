@@ -3,6 +3,7 @@ package com.eeka.mespad.view.dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,18 @@ import com.eeka.mespad.R;
 public class ErrorDialog {
 
     private static AlertDialog mDialog;
-    private static Handler mHandler = new Handler();
+
+    private static String mLastMsg;
+
+    private static Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0){
+                mDialog.dismiss();
+            }
+        }
+    };
 
     /**
      * 错误提示弹框
@@ -34,6 +46,12 @@ public class ErrorDialog {
     }
 
     private static void showAlert(Context context, String msg, boolean error, final View.OnClickListener positiveListener, boolean autoDismiss) {
+        mHandler.removeCallbacksAndMessages(null);
+        if (mLastMsg != null && mLastMsg.equals(msg) && mDialog != null && mDialog.isShowing()) {
+            mHandler.sendEmptyMessageDelayed(0,10000);
+            return;
+        }
+        mLastMsg = msg;
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_alert, null);
         TextView tipTextView = (TextView) v.findViewById(R.id.tv_alertMsg);
@@ -42,15 +60,9 @@ public class ErrorDialog {
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
-        mHandler.removeCallbacksAndMessages(null);
+
         if (autoDismiss) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mDialog != null && mDialog.isShowing())
-                        mDialog.dismiss();
-                }
-            }, 5000);
+            mHandler.sendEmptyMessageDelayed(0,10000);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

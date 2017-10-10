@@ -11,10 +11,36 @@
         android:layout_weight="3">
 
         <LinearLayout
-            android:id="@+id/layout_sewQC_sizeTab"
+            android:id="@+id/layout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/btn_sewQc_save"
+                style="@style/btnStyle_green_round"
+                android:layout_width="100dp"
+                android:text="保存" />
+
+            <Button
+                android:id="@+id/btn_sewQc_refresh"
+                style="@style/btnStyle_green_round"
+                android:layout_width="100dp"
+                android:layout_marginLeft="20dp"
+                android:text="刷新" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_sewQC_sizeTab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/layout_button"
             android:layout_marginTop="5dp"
             android:background="@drawable/border_black"
             android:divider="@drawable/divider_gray_vertical"
@@ -66,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:divider="@drawable/divider_gray_vertical"
                 android:orientation="horizontal"
-                android:showDividers="middle|end">
+                android:showDividers="middle">
 
             </LinearLayout>
 

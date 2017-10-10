@@ -20,22 +20,23 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
                 android:layout_weight="2"
-                android:background="@color/white"
+                android:background="@drawable/border_black"
+                android:divider="@drawable/divider_gray_vertical"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="0.5dp"
+                android:showDividers="middle">
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <ImageView
-                        android:id="@+id/iv_suspend_componentImg"
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/vp_suspend_componentImg"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
+                        android:layout_height="match_parent" />
+
                 </RelativeLayout>
 
                 <LinearLayout
@@ -43,10 +44,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_black"
                     android:divider="@drawable/divider_gray"
                     android:orientation="vertical"
-                    android:padding="0.5dp"
                     android:showDividers="middle" />
 
             </LinearLayout>
@@ -62,13 +61,12 @@
 
                 <TextView
                     style="@style/textStyle_default"
-                    android:text="工艺说明："
+                    android:text="工艺说明"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_suspend_craftDesc"
-                    style="@style/textStyle_default"
-                    android:text="1、工艺说明" />
+                    style="@style/textStyle_default" />
             </LinearLayout>
 
         </LinearLayout>
@@ -143,7 +141,7 @@
         <LinearLayout
             android:id="@+id/layout_curProcess"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:orientation="vertical">
@@ -156,8 +154,11 @@
                 android:padding="5dp">
 
                 <TextView
-                    style="@style/textStyle_default"
-                    android:text="当前工序：" />
+                    style="@style/textStyle_gray"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:text="当前工序" />
 
                 <TextView
                     android:id="@+id/tv_suspend_curProcess"
@@ -170,8 +171,8 @@
                 style="@style/btnStyle_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="30sp"
-                android:text="绑定" />
+                android:text="绑定"
+                android:textSize="30sp" />
 
         </LinearLayout>
 
@@ -182,23 +183,34 @@
             android:layout_below="@id/tag_layout_loginUsers"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
-                android:background="@color/white"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="待作业工单" />
+                android:text="当前作业工单" />
 
             <View style="@style/line" />
+
+            <TextView
+                android:id="@+id/tv_suspend_curSFC"
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/text_green_default"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textColor="@color/white" />
 
             <ListView
                 android:id="@+id/lv_sfcList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#DEF0FA" />
+                android:background="#DEF0FA"
+                android:visibility="gone" />
 
         </LinearLayout>
 
