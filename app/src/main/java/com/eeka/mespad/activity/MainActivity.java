@@ -1,7 +1,11 @@
 package com.eeka.mespad.activity;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,9 +40,11 @@ import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.service.MQTTService;
+import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
+import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -81,9 +87,25 @@ public class MainActivity extends NFCActivity {
 
         MQTTService.actionStart(mContext);
         EventBus.getDefault().register(this);
-        initData();
 
+        SpUtil.saveBTReasons(ReturnMaterialDialog.TYPE_RETURN, null);
+        SpUtil.saveBTReasons(ReturnMaterialDialog.TYPE_ADD, null);
+
+        registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
+
+    /**
+     * 网络状态发生变化接收器
+     */
+    private final BroadcastReceiver mConnectivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (NetUtil.isNetworkAvalible(mContext)) {
+                checkResource();
+            }
+        }
+    };
+
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -97,9 +119,10 @@ public class MainActivity extends NFCActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         MQTTService.actionStop(mContext);
+        unregisterReceiver(mConnectivityReceiver);
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     /**
@@ -108,22 +131,26 @@ public class MainActivity extends NFCActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
-        if ("LOGIN".equals(type) || "LOGOUT".equals(type)) {
-            if ("LOGIN".equals(type)) {
+        if (PushJson.TYPE_EXIT.equals(type)) {
+            MQTTService.actionStop(mContext);
+            finish();
+            System.exit(0);
+        } else if (PushJson.TYPE_LOGIN.equals(type) || PushJson.TYPE_LOGOUT.equals(type)) {
+            if (PushJson.TYPE_LOGIN.equals(type)) {
                 toast("用户刷卡上岗");
             } else {
                 toast("用户刷卡离岗");
             }
-            showLoading();
-            HttpHelper.getPositionLoginUsers(this);
-        } else if (PushJson.TYPE_EXIT.equals(type)) {
-            MQTTService.actionStop(mContext);
-            finish();
-            System.exit(0);
+            if (checkResource()) {
+                showLoading();
+                HttpHelper.getPositionLoginUsers(this);
+            }
         } else {
-            toast("收到工单消息，正在刷新页面");
+            toast("有新衣架进站，正在刷新数据");
             mEt_orderNum.setText(push.getContent());
-            searchOrder();
+            isSearchOrder = true;
+            if (checkResource())
+                searchOrder();
         }
     }
 
@@ -150,11 +177,9 @@ public class MainActivity extends NFCActivity {
     @Override
     protected void initData() {
         super.initData();
-
         showLoading();
         UserInfoBo loginUser = SpUtil.getLoginUser();
         HttpHelper.login(loginUser.getUSER(), loginUser.getPassword(), this);
-        findViewById(R.id.layout_search).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -410,7 +435,9 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_searchOrder:
-                searchOrder();
+                isSearchOrder = true;
+                if (checkResource())
+                    searchOrder();
                 break;
             case R.id.btn_searchPosition:
                 String position1 = mEt_position.getText().toString();
@@ -452,24 +479,19 @@ public class MainActivity extends NFCActivity {
     }
 
     /**
-     * 测试用
+     * 检查本地资源，如果已有资源，返回true，否则返回false
      */
-    private void test() {
-        for (int i = 0; i < 10; i++) {
-            //测试并发请求
-            HttpHelper.login("Shawn", "sap12345", this);
+    private boolean checkResource() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo == null || mPositionInfo == null) {
+            showLoading();
+            HttpHelper.initData(this);
+            return false;
         }
+        return true;
     }
 
     private void searchOrder() {
-//        test();
-        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-        if (contextInfo == null || mPositionInfo == null) {
-            isSearchOrder = true;
-            showLoading();
-            HttpHelper.initData(this);
-            return;
-        }
         String cardNum = mEt_orderNum.getText().toString();
         if (isEmpty(cardNum)) {
             toast("请输入RFID卡号");

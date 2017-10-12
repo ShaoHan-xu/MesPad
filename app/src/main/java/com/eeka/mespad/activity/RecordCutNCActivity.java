@@ -94,7 +94,6 @@ public class RecordCutNCActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         Intent intent = new Intent();
         intent.putExtra("badList", (Serializable) mList_badRecord);
         setResult(RESULT_OK, intent);

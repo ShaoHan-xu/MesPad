@@ -337,11 +337,20 @@ public class CutFragment extends BaseFragment {
             }
             if ("P".equals(mOrderType)) {
                 List<TailorInfoBo.OPERINFORBean> operInfo = mTailorInfo.getOPER_INFOR();
-                if (mLabuData == null || mLabuData.getLAYOUTS() == null || mLabuData.getLAYOUTS().size() == 0) {
-                    toast("请先记录拉布数据");
-                    showRecordLabuDialog();
-                    return;
+                if (operInfo != null) {
+                    //遍历当前工序，如果有拉布，并且没有记录拉布数据，则必须记录拉布数据才可以完工
+                    for (TailorInfoBo.OPERINFORBean item : operInfo) {
+                        if (!isEmpty(item.getDESCRIPTION()) && item.getDESCRIPTION().contains("拉布")) {
+                            if (mLabuData == null || mLabuData.getLAYOUTS() == null || mLabuData.getLAYOUTS().size() == 0) {
+                                toast("请先记录拉布数据");
+                                showRecordLabuDialog();
+                                return;
+                            }
+                            break;
+                        }
+                    }
                 }
+
             }
             showLoading();
             if ("S".equals(mOrderType)) {
@@ -675,7 +684,10 @@ public class CutFragment extends BaseFragment {
                 mTailorInfo.setOrderType(mOrderType);
                 mTailorInfo.setRFID(mRFID);
                 refreshView();
+
+                //更新订单后需要清空之前的记录
                 mList_recordNC = new ArrayList<>();
+                mLabuData = null;
             } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {//                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
                 toast("开始作业");

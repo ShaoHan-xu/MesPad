@@ -1,18 +1,21 @@
 package com.eeka.mespad.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.IBinder;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -25,206 +28,129 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import cn.finalteam.okhttpfinal.LogUtil;
 
 /**
- * Created by Administrator on 2017/2/22.
+ * mqtt 推送控制服务
+ * Created by Lenovo on 2017/10/11.
  */
 
 public class MQTTService extends Service {
+    private static final String MQTT_BROKER = "10.7.121.40"; // Broker URL or IP Address
+    private static final String MQTT_PORT = "1883"; // Broker Port
+    private static final String MQTT_URL_FORMAT = "tcp://%s:%s"; // URL Format normally don't change
+    private String myTopic = NetUtil.getHostIP();
+    private String mClientId = NetUtil.getHostIP();
+    private ScheduledExecutorService scheduler;
+    private MqttAndroidClient mqttClient;
+    private String userName = "admin"; // 连接的用户名
+    private String passWord = "admin"; //连接的密码
+    private ConnectivityManager mConnectivityManager; // To check for connectivity changes
+    private MqttConnectOptions options;
+    private Context mContext;
 
-    public static final String TAG = MQTTService.class.getSimpleName();
-    public static final int RECONNECT = 10;
-
-    // This the application level keep-alive interval, that is used by the AlarmManager
-    // to keep the connection active, even when the device goes to sleep.
-    private static final long KEEP_ALIVE_INTERVAL = 1000 * 60 * 28;
-
-    private static boolean isConnected = false;//是否已连接
-    private static MqttAndroidClient client;
-    private MqttConnectOptions conOpt;
-    private static boolean doConnect = true;
-
-    private String host = "tcp://10.7.121.40:1883";//默认端口号1883
-    private String userName = "admin";
-    private String passWord = "admin";
-    private static String myTopic;
-    private String clientId;
-    // Connection log for the push service. Good for debugging.
-    private static Context mContext;
-
-    public static void actionStart(final Context ctx) {
-        mContext = ctx;
+    public static void actionStart(Context ctx) {
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.startService(intent);
     }
 
     public static void actionStop(Context ctx) {
-        stopConnect();
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.stopService(intent);
     }
 
-    public void publish(String msg) {
-        String topic = myTopic;
-        Integer qos = 0;
-        Boolean retained = false;
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mConnectivityReceiver);
+        stopConnect();
+    }
+
+    private void stopConnect() {
         try {
-            client.publish(topic, msg.getBytes(), qos.intValue(), retained.booleanValue());
+            mqttClient.unsubscribe(myTopic);
+            mqttClient.unregisterResources();
+            mqttClient.disconnect();
         } catch (MqttException e) {
             e.printStackTrace();
-            Logger.d("client publish failed" + e.toString());
+            Logger.e("mqtt 断开连接异常");
         }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-//        clientId = myTopic;
+        mContext = this;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        init();
+        mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mContext.registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void init() {
-        myTopic = HttpHelper.getPadIp();
-        // 服务器地址（协议+地址+端口号）
-        String uri = host;
-        clientId = HttpHelper.getPadIp();
-        client = new MqttAndroidClient(this, uri, clientId);
-        // 设置MQTT监听并且接受消息
-        client.setCallback(mqttCallback);
-
-        conOpt = new MqttConnectOptions();
-        // 清除缓存
-        conOpt.setCleanSession(true);
-        // 设置超时时间，单位：秒
-        conOpt.setConnectionTimeout(30);
-        // 心跳包发送间隔，单位：秒
-        conOpt.setKeepAliveInterval(300);
-        // 用户名
-        conOpt.setUserName(userName);
-        // 密码
-        conOpt.setPassword(passWord.toCharArray());
-
-        // last will message
-//        boolean doConnect = true;
-        String message = "{\"terminal_uid\":\"" + clientId + "\"}";
-        String topic = myTopic;
-        Integer qos = 0;
-        Boolean retained = false;
-        if ((!message.equals("")) || (!topic.equals(""))) {
-            // 最后的遗嘱
-            try {
-                conOpt.setWill(topic, message.getBytes(), qos, false);
-            } catch (Exception e) {
-                Logger.d("Exception MqttConnectOptions Occured" + e.toString());
-                doConnect = false;
-            }
-        }
-        if (doConnect) {
-            doClientConnection();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        stopConnect();
-    }
-
-    private static void stopConnect() {
+    /**
+     * 初始化相关数据
+     */
+    public void init() {
         try {
-            client.unsubscribe(myTopic);
-            client.unregisterResources();
-            client.disconnect();
-            client = null;
-            doConnect = true;
-            isConnected = false;
-            Logger.d("MQTT 断开连接");
+            myTopic = HttpHelper.getPadIp();
+            mClientId = myTopic;
+
+            //host为主机名，test为clientid即连接MQTT的客户端ID，一般以客户端唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
+            String url = String.format(Locale.US, MQTT_URL_FORMAT, MQTT_BROKER, MQTT_PORT);
+            mqttClient = new MqttAndroidClient(mContext, url, mClientId);
+            //MQTT的连接设置
+            options = new MqttConnectOptions();
+            //设置是否清空session,这里如果设置为false表示服务器会保留客户端的连接记录，这里设置为true表示每次连接到服务器都以新的身份连接
+            options.setCleanSession(true);
+            //设置连接的用户名
+            options.setUserName(userName);
+            //设置连接的密码
+            options.setPassword(passWord.toCharArray());
+            // 设置超时时间 单位为秒
+            options.setConnectionTimeout(10);
+            // 设置会话心跳时间 单位为秒 服务器会每隔1.5*value秒的时间向客户端发送个消息判断客户端是否在线，但这个方法并没有重连的机制
+            options.setKeepAliveInterval(60);
+            //设置自动重连
+            options.setAutomaticReconnect(true);
+//            mqttAsyncClient.connect(connOpts).waitForCompletion();
+            //设置回调
+            mqttClient.setCallback(mqttCallback);
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.e("MQTT 断开连接异常" + e.getMessage());
         }
-//        if (mLog != null) {
-//            try {
-//                mLog.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        startReconnect();
     }
-
-    /**
-     * 连接MQTT服务器
-     */
-    private void doClientConnection() {
-        if (!client.isConnected() && isConnectIsNomarl()) {
-            try {
-                client.connect(conOpt, null, iMqttActionListener);
-                doConnect = false;
-            } catch (MqttException e) {
-                e.printStackTrace();
-                Logger.d("Exception connect occured" + e.toString());
-            }
-        }
-    }
-
-    // MQTT是否连接成功
-    private IMqttActionListener iMqttActionListener = new IMqttActionListener() {
-        @Override
-        public void onSuccess(IMqttToken token) {
-            Logger.d("MQTT 连接成功");
-            try {
-                // 订阅myTopic话题
-                client.subscribe(myTopic, 0);
-                isConnected = true;
-                Logger.d("MQTT 订阅" + myTopic + "成功");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Logger.e("MQTT 订阅异常 " + e.getMessage());
-                doClientConnection();//连接成功但是订阅失败时再次连接可以订阅成功，但是会收到两次推送
-            }
-        }
-
-        @Override
-        public void onFailure(IMqttToken token, Throwable throwable) {
-            throwable.printStackTrace();
-            // 连接失败，自动重连1次
-            Logger.d("connect failure");
-        }
-    };
-
-    private String mLastMsgType;
-    private long mLastMsgMillis;
 
     // MQTT监听并且接受消息
     private MqttCallback mqttCallback = new MqttCallback() {
 
         @Override
+        public void connectionLost(Throwable cause) {
+            //连接丢失后，一般在这里面进行重连
+            Logger.d("mqtt connectionLost");
+            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, "mqtt connectionLost断线");
+            if (isNetworkAvailable()) {
+                startReconnect();
+            }
+        }
+
+        @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
+            //收到消息推送时会回调
             String str1 = new String(message.getPayload());
-            String str2 = topic + ";qos:" + message.getQos() + ";retained:" + message.isRetained();
-            Logger.d("MQTT收到推送->" + str2 + ",message:" + str1);
+            Logger.d("MQTT收到推送->" + "message:" + str1);
             LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
 
             PushJson pushJson = JSON.parseObject(str1, PushJson.class);
             if ("0".equals(pushJson.getCode())) {
-                String type = pushJson.getType();
-                if (!TextUtils.isEmpty(mLastMsgType)) {
-                    if (mLastMsgType.equals(type)) {
-                        long curMillis = System.currentTimeMillis();
-                        if (curMillis - mLastMsgMillis < 500) {
-                            //暂时解决接收两次推送的问题
-                            return;
-                        }
-                    }
-                }
-                mLastMsgMillis = System.currentTimeMillis();
-                mLastMsgType = type;
                 EventBus.getDefault().post(pushJson);
             } else {
                 ErrorDialog.showAlert(mContext, pushJson.getMessage(), true);
@@ -233,33 +159,126 @@ public class MQTTService extends Service {
 
         @Override
         public void deliveryComplete(IMqttDeliveryToken token) {
-            Log.e("Test1", "deliveryComplete");
+            //publish后会执行到这里
+            long messageId = token.getMessageId();
+            Logger.d("messageId=:" + messageId);
+        }
+
+    };
+
+    /**
+     * Query's the NetworkInfo via ConnectivityManager
+     * to return the current connected state
+     * 通过ConnectivityManager查询网络连接状态
+     *
+     * @return boolean true if we are connected false otherwise
+     * 如果网络状态正常则返回true反之flase
+     */
+    private boolean isNetworkAvailable() {
+        NetworkInfo info = mConnectivityManager.getActiveNetworkInfo();
+        return info != null && info.isConnected();
+    }
+
+    /**
+     * Checkes the current connectivity
+     * and reconnects if it is required.
+     * 重新连接如果他是必须的
+     */
+    public synchronized void reconnectIfNecessary() {
+        if (mqttClient == null || !mqttClient.isConnected()) {
+            connect();
+        }
+    }
+
+    private void connect() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    mqttClient.connect(options, null, iMqttActionListener);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // 连接出错，可以设置重新连接
+                }
+            }
+        }).start();
+    }
+
+    // MQTT是否连接成功
+    private IMqttActionListener iMqttActionListener = new IMqttActionListener() {
+        @Override
+        public void onSuccess(IMqttToken token) {
+            Logger.d("MQTT 连接成功");
+            scheduler.shutdownNow();
+            try {
+                // 订阅myTopic话题
+                mqttClient.subscribe(myTopic, 0);
+                Logger.d("MQTT 订阅" + myTopic + "成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                Logger.e("MQTT 订阅异常 " + e.getMessage());
+            }
         }
 
         @Override
-        public void connectionLost(Throwable throwable) {
-            Log.e("Test1", "connectionLost");
+        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+            Logger.d("连接失败");
         }
     };
 
     /**
-     * 判断网络是否连接
+     * 调用init() 方法之后，调用此方法。
      */
-    private boolean isConnectIsNomarl() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-        if (info != null && info.isAvailable()) {
-            String name = info.getTypeName();
-            Log.i(TAG, "MQTT当前网络名称：" + name);
-            return true;
-        } else {
-            Log.i(TAG, "MQTT 没有可用网络");
-            return false;
-        }
+    public void startReconnect() {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new Runnable() {
+
+            @Override
+            public void run() {
+                if (!mqttClient.isConnected() && isNetworkAvailable()) {
+                    connect();
+                }
+            }
+        }, 0, 10 * 1000, TimeUnit.MILLISECONDS);
     }
 
+    private long mLastNetworkUnAvailableMills;
+
+    /**
+     * Receiver that listens for connectivity chanes
+     * via ConnectivityManager
+     * 网络状态发生变化接收器
+     */
+    private final BroadcastReceiver mConnectivityReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (!isNetworkAvailable()) {
+                Logger.d("无网络连接...");
+                //处理网络断开时收到两次广播的情况
+                long curMills = System.currentTimeMillis();
+                if (curMills - mLastNetworkUnAvailableMills > 2000) {
+                    mLastNetworkUnAvailableMills = curMills;
+                    Toast.makeText(context, "网络不可用", Toast.LENGTH_SHORT).show();
+                    if (scheduler != null) {
+                        scheduler.shutdownNow();
+                    }
+                }
+            } else {
+                Logger.d("网络已连接...");
+                if (mqttClient == null) {
+                    init();
+                } else {
+                    startReconnect();
+                }
+            }
+        }
+    };
+
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
+
 }
