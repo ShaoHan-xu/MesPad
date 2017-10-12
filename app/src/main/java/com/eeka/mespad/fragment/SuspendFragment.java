@@ -106,9 +106,10 @@ public class SuspendFragment extends BaseFragment {
      * 设置固定布局：工艺说明、当前工序
      */
     private void setupBaseView(JSONObject json) {
-        mOperationBo = json.getString("HANDLE");
-        TextView tv_curProcess = (TextView) mView.findViewById(R.id.tv_suspend_curProcess);
-        tv_curProcess.setText(json.getString("OPERATION"));
+//        mOperationBo = json.getString("HANDLE");
+        mOperationBo = "OperationBO:8081,SCBD001,A";
+//        TextView tv_curProcess = (TextView) mView.findViewById(R.id.tv_suspend_curProcess);
+//        tv_curProcess.setText(json.getString("OPERATION"));
         final TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_suspend_craftDesc);
         String instruction = json.getString("OPERATION_INSTRUCTION");
         if (isEmpty(instruction)) {

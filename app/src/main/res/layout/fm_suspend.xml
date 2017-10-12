@@ -162,7 +162,8 @@
 
                 <TextView
                     android:id="@+id/tv_suspend_curProcess"
-                    style="@style/textStyle_default" />
+                    style="@style/textStyle_default"
+                    android:text="上裁绑定" />
 
             </LinearLayout>
 

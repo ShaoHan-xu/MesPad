@@ -52,9 +52,10 @@ public class MQTTService extends Service {
     private String passWord = "admin"; //连接的密码
     private ConnectivityManager mConnectivityManager; // To check for connectivity changes
     private MqttConnectOptions options;
-    private Context mContext;
+    private static Context mContext;
 
     public static void actionStart(Context ctx) {
+        mContext = ctx;
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.startService(intent);
     }
@@ -85,7 +86,6 @@ public class MQTTService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
     }
 
     @Override
