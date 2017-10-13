@@ -106,7 +106,6 @@ public class MainActivity extends NFCActivity {
         }
     };
 
-
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -146,7 +145,7 @@ public class MainActivity extends NFCActivity {
                 HttpHelper.getPositionLoginUsers(this);
             }
         } else {
-            toast("有新衣架进站，正在刷新数据");
+            toast("正在刷新页面");
             mEt_orderNum.setText(push.getContent());
             isSearchOrder = true;
             if (checkResource())
@@ -201,7 +200,7 @@ public class MainActivity extends NFCActivity {
             }
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
-            switch (item.getBUTTON_ID().replace(" ", "")) {
+            switch (item.getBUTTON_ID()) {
                 case "MATERIALRETURN":
                     button.setText("退料");
                     button.setId(R.id.btn_materialReturn);
@@ -241,6 +240,10 @@ public class MainActivity extends NFCActivity {
                 case "NCRECORD":
                     button.setText("不良录入");
                     button.setId(R.id.btn_NcRecord);
+                    break;
+                case "QA_NCRECORD":
+                    button.setText("QA不良录入");
+                    button.setId(R.id.btn_QaNcRecord);
                     break;
                 case "START":
                     button.setText("开始");
@@ -397,7 +400,12 @@ public class MainActivity extends NFCActivity {
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mCutFragment.recordNC();
                 } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
-                    mSewQCFragment.recordNC();
+                    mSewQCFragment.recordNC(SewQCFragment.TYPE_QC);
+                }
+                break;
+            case R.id.btn_QaNcRecord:
+                if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                    mSewQCFragment.recordNC(SewQCFragment.TYPE_QA);
                 }
                 break;
             case R.id.btn_video:

@@ -16,6 +16,7 @@ import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
@@ -24,7 +25,6 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 
@@ -45,7 +45,7 @@ public class MQTTService extends Service {
     private static final String MQTT_PORT = "1883"; // Broker Port
     private static final String MQTT_URL_FORMAT = "tcp://%s:%s"; // URL Format normally don't change
     private String myTopic = NetUtil.getHostIP();
-    private String mClientId = NetUtil.getHostIP();
+    private String mClientId = null;
     private ScheduledExecutorService scheduler;
     private MqttAndroidClient mqttClient;
     private String userName = "admin"; // 连接的用户名
@@ -68,16 +68,16 @@ public class MQTTService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mConnectivityReceiver);
         stopConnect();
     }
 
     private void stopConnect() {
         try {
+            unregisterReceiver(mConnectivityReceiver);
             mqttClient.unsubscribe(myTopic);
             mqttClient.unregisterResources();
             mqttClient.disconnect();
-        } catch (MqttException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Logger.e("mqtt 断开连接异常");
         }
@@ -101,8 +101,8 @@ public class MQTTService extends Service {
     public void init() {
         try {
             myTopic = HttpHelper.getPadIp();
-            mClientId = myTopic;
-
+            //clientId要唯一，不然会挤掉另外相同的clientId的连接
+            mClientId = SystemUtils.getIMEI(mContext);
             //host为主机名，test为clientid即连接MQTT的客户端ID，一般以客户端唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
             String url = String.format(Locale.US, MQTT_URL_FORMAT, MQTT_BROKER, MQTT_PORT);
             mqttClient = new MqttAndroidClient(mContext, url, mClientId);
@@ -136,7 +136,7 @@ public class MQTTService extends Service {
         public void connectionLost(Throwable cause) {
             //连接丢失后，一般在这里面进行重连
             Logger.d("mqtt connectionLost");
-            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, "mqtt connectionLost断线");
+            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost");
             if (isNetworkAvailable()) {
                 startReconnect();
             }
@@ -214,6 +214,7 @@ public class MQTTService extends Service {
             try {
                 // 订阅myTopic话题
                 mqttClient.subscribe(myTopic, 0);
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connected and subscribe success");
                 Logger.d("MQTT 订阅" + myTopic + "成功");
             } catch (Exception e) {
                 e.printStackTrace();

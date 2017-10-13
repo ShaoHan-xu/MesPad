@@ -18,6 +18,7 @@
     <item name="btn_logout" type="id" />
     <item name="btn_start" type="id" />
     <item name="btn_NcRecord" type="id" />
+    <item name="btn_QaNcRecord" type="id" />
     <item name="btn_binding" type="id" />
     <item name="btn_unbind" type="id" />
     <item name="btn_sticky" type="id" />

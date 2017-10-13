@@ -2,6 +2,7 @@ package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +27,7 @@ public class SelectorPopWindow<T> extends PopupWindow {
     private View mView;
     private List<T> mList_data;
     private AdapterView.OnItemClickListener mItemClickListener;
+    private int mPpwHeight = 500;
 
     public SelectorPopWindow(Context context, List<T> data, AdapterView.OnItemClickListener itemClickListener) {
         mContext = context;
@@ -61,4 +63,16 @@ public class SelectorPopWindow<T> extends PopupWindow {
         });
     }
 
+    public void show(View view, int windowHeight) {
+        setWidth(view.getWidth());
+        setHeight(mPpwHeight);
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        if (location[1] > windowHeight - 300) {
+            showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] - mPpwHeight);
+        } else {
+            showAsDropDown(view);
+        }
+
+    }
 }

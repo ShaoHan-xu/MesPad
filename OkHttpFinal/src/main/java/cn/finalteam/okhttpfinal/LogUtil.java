@@ -18,10 +18,11 @@ import java.util.Date;
  * 记录日志到本地文件
  */
 public class LogUtil {
-    public static final int LOGTYPE_MQTT = 0;
-    public static final int LOGTYPE_HTTPREQUEST = 1;
-    public static final int LOGTYPE_HTTPRESPONSE = 2;
-    public static final int LOGTYPE_HTTPFAIL = 3;
+    public static final int LOGTYPE_MQTT = 0;//mqtt推送相关的记录目录
+    public static final int LOGTYPE_HTTPREQUEST = 1;//http网络请求相关的记录目录
+    public static final int LOGTYPE_HTTPRESPONSE = 2;//http网络请求返回数据记录目录，开启debug模式才会记录
+    public static final int LOGTYPE_HTTPFAIL = 3;//http请求失败时返回的数据
+    public static final int LOGTYPE_MQTT_STATUS = 4;//mqtt状态记录，掉线/重连
 
     private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ");
     private static String mLogDir;
@@ -55,10 +56,12 @@ public class LogUtil {
             folder = new File(mLogDir, "MQTT");
         } else if (logType == LOGTYPE_HTTPREQUEST) {
             folder = new File(mLogDir, "HttpRequest");
-        }else if (logType == LOGTYPE_HTTPRESPONSE){
+        } else if (logType == LOGTYPE_HTTPRESPONSE) {
             folder = new File(mLogDir, "HttpResponse");
-        }else if (logType == LOGTYPE_HTTPFAIL){
+        } else if (logType == LOGTYPE_HTTPFAIL) {
             folder = new File(mLogDir, "HttpFail");
+        } else if (logType == LOGTYPE_MQTT_STATUS) {
+            folder = new File(mLogDir, "mqttStatus");
         }
         if (!folder.exists()) {
             folder.mkdirs();

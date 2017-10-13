@@ -66,6 +66,8 @@
                 android:id="@+id/layout_recordLabu_materialImg"
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
+                android:showDividers="beginning|middle"
+                android:divider="@drawable/divider_white"
                 android:orientation="horizontal" />
 
         </HorizontalScrollView>

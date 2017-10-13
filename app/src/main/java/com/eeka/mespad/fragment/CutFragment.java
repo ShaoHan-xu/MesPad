@@ -76,9 +76,6 @@ public class CutFragment extends BaseFragment {
     private String mOrderType;
     private String mRFID;
 
-    private ReturnMaterialInfoBo mReturnMaterialInfo;//退料
-    private ReturnMaterialInfoBo mAddMaterialInfo;//补料
-
     private List<RecordNCBo> mList_recordNC;//记录不良
 
     @Override
@@ -106,8 +103,7 @@ public class CutFragment extends BaseFragment {
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String processLotBo) {
-        mReturnMaterialInfo = null;
-        mAddMaterialInfo = null;
+
         showLoading();
         mOrderType = orderType;
         mRFID = orderNum;
@@ -517,20 +513,13 @@ public class CutFragment extends BaseFragment {
             material.setITEM(item.getMAT_NO());
             materialList.add(material);
         }
+        ReturnMaterialInfoBo materialInfoBo = new ReturnMaterialInfoBo();
+        materialInfoBo.setOrderNum(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
+        materialInfoBo.setMaterialInfoList(materialList);
         if (isReturn) {
-            if (mReturnMaterialInfo == null) {
-                mReturnMaterialInfo = new ReturnMaterialInfoBo();
-                mReturnMaterialInfo.setOrderNum(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
-                mReturnMaterialInfo.setMaterialInfoList(materialList);
-            }
-            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_RETURN, mReturnMaterialInfo).show();
+            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_RETURN, materialInfoBo).show();
         } else {
-            if (mAddMaterialInfo == null) {
-                mAddMaterialInfo = new ReturnMaterialInfoBo();
-                mAddMaterialInfo.setOrderNum(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
-                mAddMaterialInfo.setMaterialInfoList(materialList);
-            }
-            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, mAddMaterialInfo).show();
+            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, materialInfoBo).show();
         }
     }
 

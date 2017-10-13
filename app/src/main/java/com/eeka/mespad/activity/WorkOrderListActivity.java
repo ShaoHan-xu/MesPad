@@ -94,7 +94,7 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
                 break;
             case R.id.btn_orderList_undo:
                 mType = TYPE_UNDO;
-                mBtn_undo.setBackgroundResource(R.color.text_gray_default);
+                mBtn_undo.setBackgroundResource(R.color.gray_disable);
                 mBtn_done.setBackgroundResource(R.color.white);
                 mAdapter.notifyDataSetChanged();
                 mTv_statusTag.setVisibility(View.VISIBLE);
@@ -102,7 +102,7 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
                 break;
             case R.id.btn_orderList_done:
                 mType = TYPE_DONE;
-                mBtn_done.setBackgroundResource(R.color.text_gray_default);
+                mBtn_done.setBackgroundResource(R.color.gray_disable);
                 mBtn_undo.setBackgroundResource(R.color.white);
                 mAdapter.notifyDataSetChanged();
                 mTv_statusTag.setVisibility(View.INVISIBLE);

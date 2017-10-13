@@ -40,7 +40,6 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     private Context mContext;
     private View mView;
-    private Button mBtn_save, mBtn_submit;
 
     private int mType;
     private ReturnMaterialInfoBo mReturnMaterialInfo;
@@ -61,6 +60,7 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         mView = LayoutInflater.from(mContext).inflate(R.layout.dlg_return_material, null);
         setContentView(mView);
+        setCanceledOnTouchOutside(false);
 
         initView();
 
@@ -83,8 +83,8 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
         mLayout_material = (LinearLayout) mView.findViewById(R.id.layout_returnMaterial_material);
 
-        mBtn_save = (Button) mView.findViewById(R.id.btn_returnMaterial_save);
-        mBtn_submit = (Button) mView.findViewById(R.id.btn_returnMaterial_submit);
+        Button mBtn_save = (Button) mView.findViewById(R.id.btn_returnMaterial_save);
+        Button mBtn_submit = (Button) mView.findViewById(R.id.btn_returnMaterial_submit);
         mBtn_save.setOnClickListener(this);
         mBtn_submit.setOnClickListener(this);
         mView.findViewById(R.id.btn_dlg_close).setOnClickListener(this);
@@ -197,9 +197,7 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
                 ((TextView) v).setText(reasonBo.getREASON_DESC());
             }
         });
-        ppw.setWidth(v.getWidth());
-        ppw.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-        ppw.showAsDropDown(v);
+        ppw.show(v, (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
     }
 
     @Override
@@ -233,10 +231,6 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
     public void onFailure(String url, int code, String message) {
         LoadingDialog.dismiss();
         ErrorDialog.showAlert(mContext, message);
-    }
-
-    public interface OnReturnMaterialCallback {
-        void returnMaterialCallback(List<ReturnMaterialInfoBo.MaterialInfoBo> data);
     }
 
 }

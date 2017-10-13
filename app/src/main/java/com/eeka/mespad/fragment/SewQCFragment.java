@@ -36,6 +36,9 @@ import java.util.List;
  */
 public class SewQCFragment extends BaseFragment {
 
+    public static int TYPE_QC = 0;
+    public static int TYPE_QA = 1;
+
     private static final int REQUEST_NC = 0;
 
     private LinearLayout mLayout_sizeInfo;
@@ -171,9 +174,9 @@ public class SewQCFragment extends BaseFragment {
     /**
      * 记录不良
      */
-    public void recordNC() {
+    public void recordNC(int type) {
         if (mSewQCData != null) {
-            startActivityForResult(RecordSewNCActivity.getIntent(mContext, mSewQCData.getSfc(), mSewQCData.getDesignComponent()), REQUEST_NC);
+            startActivityForResult(RecordSewNCActivity.getIntent(mContext, type, mSewQCData.getSfc(), mSewQCData.getDesignComponent()), REQUEST_NC);
         } else {
             showErrorDialog("请先获取工单数据");
         }

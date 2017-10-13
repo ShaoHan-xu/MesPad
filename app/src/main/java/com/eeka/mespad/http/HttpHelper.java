@@ -642,10 +642,11 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.7.25.196";//质检
+//        PAD_IP = "10.7.25.179";//质检
 //      PAD_IP = "10.7.25.122";//上裁
 //      PAD_IP = "10.7.25.120";//缝制
-//        PAD_IP = "10.8.40.233";//裁剪
+//        PAD_IP = "10.7.25.198";//裁剪
+//        PAD_IP = "10.8.42.113";
         return PAD_IP;
     }
 
