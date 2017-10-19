@@ -29,10 +29,7 @@ import com.eeka.mespad.utils.TabViewUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 记录缝制质检部良界面
@@ -58,8 +55,9 @@ public class RecordSewNCActivity extends BaseActivity {
     private String mSFCBo;
     private int mProductPosition, mDesignPosition;
     private int mNcCodePosition;
-    private Map<RecordNCBo, JSONObject> mMap_ncCode;
 
+    private UpdateSewNcBo.NcCodeOperationListBean mCurSelecting;
+    private List<UpdateSewNcBo.NcCodeOperationListBean> mList_selected;
     private List<SewQCDataBo.DesignComponentBean> mList_component;
 
     private int mRecordType;
@@ -103,35 +101,16 @@ public class RecordSewNCActivity extends BaseActivity {
         if (v.getId() == R.id.btn_cancel) {
             finish();
         } else if (v.getId() == R.id.btn_recordSewNC_choseRepairProcess) {
-            if (mMap_ncCode == null || mMap_ncCode.size() == 0) {
+            if (mList_selected == null || mList_selected.size() == 0) {
                 showErrorDialog("请选择不良代码及对应工序");
                 return;
             }
             if (mRecordType == SewQCFragment.TYPE_QA) {
                 done();
             } else {
-                List<UpdateSewNcBo.NcCodeOperationListBean> list = getSelectedData();
-                startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component, list), REQUEST_REPAIR);
+                startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component, mList_selected), REQUEST_REPAIR);
             }
         }
-    }
-
-    /**
-     * 生成已选中的数据
-     */
-    private List<UpdateSewNcBo.NcCodeOperationListBean> getSelectedData() {
-        List<UpdateSewNcBo.NcCodeOperationListBean> list = new ArrayList<>();
-        Set<Map.Entry<RecordNCBo, JSONObject>> entries = mMap_ncCode.entrySet();
-        for (Map.Entry<RecordNCBo, JSONObject> next : entries) {
-            RecordNCBo key = next.getKey();
-            JSONObject value = next.getValue();
-
-            UpdateSewNcBo.NcCodeOperationListBean item = new UpdateSewNcBo.NcCodeOperationListBean();
-            item.setNcCodeRef(key.getNC_CODE_BO());
-            item.setOperation(value.getString("OPERATION"));
-            list.add(item);
-        }
-        return list;
     }
 
     private void done() {
@@ -142,22 +121,20 @@ public class RecordSewNCActivity extends BaseActivity {
         if (resource != null) {
             data.setResourceRef(resource.getRESOURCE_BO());
         }
-        List<UpdateSewNcBo.NcCodeOperationListBean> list = getSelectedData();
         UpdateSewNcBo.NcCodeOperationListBean bean = new UpdateSewNcBo.NcCodeOperationListBean();
         String ncCodeBo = "NCCodeBO:" + SpUtil.getSite() + ",NC2QC";
         bean.setNcCodeRef(ncCodeBo);
-        bean.setOperation(list.get(0).getOperation());
-        list.add(bean);
-        data.setNcCodeOperationList(list);
+        bean.setOperation(mList_selected.get(0).getOperation());
+        mList_selected.add(bean);
+        data.setNcCodeOperationList(mList_selected);
         HttpHelper.recordSewNc(data, this);
     }
-
 
     @Override
     protected void initData() {
         super.initData();
         mNcCodePosition = -1;
-        mMap_ncCode = new LinkedHashMap<>();
+        mList_selected = new ArrayList<>();
         String sfc = getIntent().getStringExtra(KEY_SFC);
         mTv_orderNum.setText(sfc);
         mSFCBo = "SFCBO:" + SpUtil.getSite() + "," + sfc;
@@ -262,8 +239,24 @@ public class RecordSewNCActivity extends BaseActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String operation = item.getString("OPERATION");
                 RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
-                mMap_ncCode.put(recordNCBo, item);
+                for (UpdateSewNcBo.NcCodeOperationListBean selected : mList_selected) {
+                    if (operation.equals(selected.getOperation()) && recordNCBo.getNC_CODE_BO().equals(selected.getNC_CODE_BO())) {
+                        mList_selected.remove(selected);
+                        refreshSelectedView();
+                        v.setBackgroundResource(0);
+                        return;
+                    }
+                }
+
+                mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
+                mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());
+                mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
+                mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
+                mCurSelecting.setOperation(operation);
+                mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
+                mList_selected.add(mCurSelecting);
                 refreshNcProcessView(position);
                 refreshSelectedView();
             }
@@ -285,20 +278,18 @@ public class RecordSewNCActivity extends BaseActivity {
      */
     private void refreshSelectedView() {
         mLayout_selected.removeAllViews();
-        Set<RecordNCBo> recordNCBos = mMap_ncCode.keySet();
-        for (final RecordNCBo item : recordNCBos) {
-            JSONObject json = mMap_ncCode.get(item);
+        for (final UpdateSewNcBo.NcCodeOperationListBean item : mList_selected) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sewnc_selected, null);
             TextView tv_code = (TextView) view.findViewById(R.id.tv_recordSewNC_selected_code);
             TextView tv_process = (TextView) view.findViewById(R.id.tv_recordSewNC_selected_process);
             tv_code.setText(item.getDESCRIPTION());
-            tv_process.setText(json.getString("DESCRIPTION"));
+            tv_process.setText(item.getProcessDesc());
             mLayout_selected.addView(view);
 
             view.findViewById(R.id.btn_recordSewNC_delSelected).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mMap_ncCode.remove(item);
+                    mList_selected.remove(item);
                     refreshSelectedView();
                 }
             });

@@ -22,4 +22,5 @@
     <item name="btn_binding" type="id" />
     <item name="btn_unbind" type="id" />
     <item name="btn_sticky" type="id" />
+    <item name="btn_gotoQC" type="id" />
 </resources>

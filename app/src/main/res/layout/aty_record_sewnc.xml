@@ -56,9 +56,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:orientation="horizontal"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_recordSewNC_choseRepairProcess"
@@ -89,22 +89,28 @@
         android:layout_below="@id/layout_componentInfo"
         android:layout_marginBottom="1dp">
 
-        <LinearLayout
-            android:id="@+id/layout_recordSewNC_selected"
+        <ScrollView
+            android:id="@+id/scrollView_recordSewNC_selected"
             android:layout_width="@dimen/width_sewNCSelected"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="5dp"
-            android:background="@color/white"
-            android:divider="@drawable/divider_white"
-            android:orientation="vertical"
-            android:padding="5dp"
-            android:showDividers="middle|end" />
+            android:background="@color/white">
+
+            <LinearLayout
+                android:id="@+id/layout_recordSewNC_selected"
+                android:layout_width="@dimen/width_sewNCSelected"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_white"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:showDividers="middle|end" />
+        </ScrollView>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/layout_recordSewNC_selected">
+            android:layout_toLeftOf="@id/scrollView_recordSewNC_selected">
 
             <HorizontalScrollView
                 android:id="@+id/hsv_recordSewNC_NcProcess"

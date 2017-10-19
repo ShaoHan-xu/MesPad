@@ -1,5 +1,7 @@
 package com.eeka.mespad.utils;
 
+import android.text.TextUtils;
+
 import com.eeka.mespad.manager.Logger;
 
 /**
@@ -10,6 +12,8 @@ import com.eeka.mespad.manager.Logger;
 public class FormatUtil {
 
     public static float strToFloat(String str) {
+        if (TextUtils.isEmpty(str))
+            return 0;
         try {
             return Float.valueOf(str);
         } catch (NumberFormatException e) {

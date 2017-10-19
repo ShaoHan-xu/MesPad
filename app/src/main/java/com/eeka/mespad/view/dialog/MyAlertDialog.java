@@ -19,10 +19,8 @@ public class MyAlertDialog {
 
     public static void showAlert(Context context, String msg) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_alert, null);
+        View v = inflater.inflate(R.layout.dlg_alert, null);
         TextView tipTextView = (TextView) v.findViewById(R.id.tv_alertMsg);
-        tipTextView.setTextColor(context.getResources().getColor(R.color.text_black_default));
-        tipTextView.setTextSize(30);
         tipTextView.setText(msg);
 
         final Dialog dialog = new Dialog(context);
@@ -31,7 +29,7 @@ public class MyAlertDialog {
         dialog.show();
         dialog.getWindow().setLayout(SystemUtils.getScreenWidth(context), SystemUtils.getScreenHeight(context));
 
-        tipTextView.setOnClickListener(new View.OnClickListener() {
+        v.findViewById(R.id.btn_dlg_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

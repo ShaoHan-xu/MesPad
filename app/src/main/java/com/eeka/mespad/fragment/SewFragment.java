@@ -20,8 +20,10 @@ import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
@@ -119,6 +121,15 @@ public class SewFragment extends BaseFragment {
         if (isAdded())
             showLoading();
         HttpHelper.getSewData(orderNum, this);
+    }
+
+    public void gotoQC() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), this);
     }
 
     /**
@@ -321,6 +332,8 @@ public class SewFragment extends BaseFragment {
             if (HttpHelper.getSewData.equals(url)) {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 initData();
+            } else if (HttpHelper.initNcForQA.equals(url)) {
+                toast("操作成功");
             }
         }
     }

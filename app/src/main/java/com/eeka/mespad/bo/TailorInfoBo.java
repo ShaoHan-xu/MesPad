@@ -106,6 +106,15 @@ public class TailorInfoBo implements Serializable {
         private String Z_LAYOUT_BO;
         private String GRAND_CATEGORY;
         private String MID_CATEGORY;
+        private String UNIT_LABEL;
+
+        public String getUNIT_LABEL() {
+            return UNIT_LABEL;
+        }
+
+        public void setUNIT_LABEL(String UNIT_LABEL) {
+            this.UNIT_LABEL = UNIT_LABEL;
+        }
 
         public String getZ_LAYOUT_BO() {
             return Z_LAYOUT_BO;

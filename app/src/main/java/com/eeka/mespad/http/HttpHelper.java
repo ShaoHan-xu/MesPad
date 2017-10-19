@@ -83,6 +83,7 @@ public class HttpHelper {
     public static final String tellFusingStyleToGST = BASE_URL + "tellFusingStyleToGST?";
     public static final String getClothSize = BASE_URL + "logNcPad/viewGarmentSize?";
     public static final String saveQCClothSizeData = BASE_URL + "logNcPad/saveDcCollect?";
+    public static final String initNcForQA = BASE_URL + "logNcPad/initNcForQA?";
 
     private static Context mContext;
 
@@ -506,7 +507,7 @@ public class HttpHelper {
     }
 
     /**
-     * 2.	根据生产部件查询设计部件
+     * 根据生产部件查询设计部件
      */
     public static void getDesignComponentList(String productComponent, String sfcBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
@@ -624,6 +625,18 @@ public class HttpHelper {
     }
 
     /**
+     * 缝制站去质检站
+     */
+    public static void initNcForQA(String sfc, String resourceBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC", sfc);
+        json.put("ResourceBO", resourceBo);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(initNcForQA, params, getResponseHandler(initNcForQA, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
@@ -646,7 +659,7 @@ public class HttpHelper {
 //      PAD_IP = "10.7.25.122";//上裁
 //      PAD_IP = "10.7.25.120";//缝制
 //        PAD_IP = "10.7.25.198";//裁剪
-//        PAD_IP = "10.8.42.113";
+//        PAD_IP = "10.7.25.210";
         return PAD_IP;
     }
 

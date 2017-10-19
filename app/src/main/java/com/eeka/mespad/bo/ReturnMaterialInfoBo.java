@@ -39,9 +39,18 @@ public class ReturnMaterialInfoBo {
     public static class MaterialInfoBo {
         private String picUrl;
         private String ITEM;
+        private String UNIT_LABEL;
         private String reason;//退/补料原因
         private String REASON_CODE;//退/补料原因
         private String QTY;//退/补料的值
+
+        public String getUNIT_LABEL() {
+            return UNIT_LABEL;
+        }
+
+        public void setUNIT_LABEL(String UNIT_LABEL) {
+            this.UNIT_LABEL = UNIT_LABEL;
+        }
 
         public String getReason() {
             return reason;

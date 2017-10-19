@@ -25,6 +25,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 
@@ -77,7 +78,7 @@ public class MQTTService extends Service {
             mqttClient.unsubscribe(myTopic);
             mqttClient.unregisterResources();
             mqttClient.disconnect();
-        } catch (Exception e) {
+        } catch (MqttException e) {
             e.printStackTrace();
             Logger.e("mqtt 断开连接异常");
         }
@@ -91,7 +92,7 @@ public class MQTTService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mContext.registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -232,6 +233,9 @@ public class MQTTService extends Service {
      * 调用init() 方法之后，调用此方法。
      */
     public void startReconnect() {
+        if (scheduler != null) {
+            scheduler.shutdownNow();
+        }
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new Runnable() {
 
@@ -251,7 +255,7 @@ public class MQTTService extends Service {
      * via ConnectivityManager
      * 网络状态发生变化接收器
      */
-    private final BroadcastReceiver mConnectivityReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mConnectivityReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!isNetworkAvailable()) {

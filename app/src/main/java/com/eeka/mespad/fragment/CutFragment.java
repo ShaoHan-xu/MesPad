@@ -511,6 +511,7 @@ public class CutFragment extends BaseFragment {
             ReturnMaterialInfoBo.MaterialInfoBo material = new ReturnMaterialInfoBo.MaterialInfoBo();
             material.setPicUrl(item.getMAT_URL());
             material.setITEM(item.getMAT_NO());
+            material.setUNIT_LABEL(item.getUNIT_LABEL());
             materialList.add(material);
         }
         ReturnMaterialInfoBo materialInfoBo = new ReturnMaterialInfoBo();

@@ -93,6 +93,7 @@ public class SewQCFragment extends BaseFragment {
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
         mTv_special.setOnClickListener(this);
 
+        mTv_componentDesc.setOnClickListener(this);
         mView.findViewById(R.id.btn_sewQc_save).setOnClickListener(this);
         mView.findViewById(R.id.btn_sewQc_refresh).setOnClickListener(this);
     }
@@ -102,6 +103,11 @@ public class SewQCFragment extends BaseFragment {
         super.onClick(v);
         if (v.getId() == R.id.tv_sewQC_special) {
             String content = mTv_special.getText().toString();
+            if (!isEmpty(content)) {
+                MyAlertDialog.showAlert(mContext, content);
+            }
+        } else if (v.getId() == R.id.tv_sewQC_componentDesc) {
+            String content = mTv_componentDesc.getText().toString();
             if (!isEmpty(content)) {
                 MyAlertDialog.showAlert(mContext, content);
             }
@@ -228,6 +234,7 @@ public class SewQCFragment extends BaseFragment {
                         item.setDATA_TYPE(bean.getDATA_TYPE());
                         item.setMEASURED_ATTRIBUTE(bean.getMEASURED_ATTRIBUTE());
                         item.setVALUE(value);
+                        item.setPARAM_DESC(bean.getPARAM_DESC());
                         items.add(item);
                     }
                 }
@@ -252,12 +259,12 @@ public class SewQCFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     TabViewUtil.refreshTabView(mLayout_designComponent, finalI);
-                    mTv_componentDesc.setText(bean.getDescription());
+                    mTv_componentDesc.setText(bean.getQualityStandard());
                 }
             }));
             if (i == 0) {
                 TabViewUtil.refreshTabView(mLayout_designComponent, 0);
-                mTv_componentDesc.setText(bean.getDescription());
+                mTv_componentDesc.setText(bean.getQualityStandard());
             }
         }
     }
@@ -284,6 +291,12 @@ public class SewQCFragment extends BaseFragment {
         } else {
             tv_sizeAttr.setText(description + sizeInfo.getUNIT());
         }
+        String content = tv_sizeAttr.getText().toString();
+        if (content.length() > 6) {
+            String st = content.substring(0, content.length() / 2);
+            String en = content.substring(content.length() / 2, content.length());
+            tv_sizeAttr.setText(st + "\n" + en);
+        }
 
         String refSize = sizeInfo.getVALUE();
         String refTolerance = sizeInfo.getSTANDARD();
@@ -299,10 +312,10 @@ public class SewQCFragment extends BaseFragment {
 
             float fRealSize = FormatUtil.strToFloat(realSize);
             float fRefSize = FormatUtil.strToFloat(refSize);
-            float realTolerance = fRealSize - fRefSize;
+            float realTolerance = Math.abs(fRealSize - fRefSize);
             float fRefTolerance = FormatUtil.strToFloat(refTolerance);
-            tv_realTolerance.setText(realTolerance + "");
-            if (Math.abs(realTolerance) > fRefTolerance) {
+            tv_realTolerance.setText(String.format("%.1f", realTolerance));
+            if ((int) (realTolerance * 100) > (int) (fRefTolerance * 100)) {
                 tv_realTolerance.setTextColor(getResources().getColor(R.color.white));
                 tv_realTolerance.setBackgroundResource(R.color.text_red_default);
             } else {
@@ -344,7 +357,16 @@ public class SewQCFragment extends BaseFragment {
 
         @Override
         public void afterTextChanged(Editable s) {
+            ClothSizeBo.DCPARRMSBean sizeInfo = mClothSizeData.getDC_PARRMS().get(position);
+            View view = mLayout_sizeInfo.getChildAt(position);
+            TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
             String text = s.toString();
+            if (isEmpty(text)) {
+                sizeInfo.setCOLLECTED_VALUE(null);
+                mClothSizeData.getDC_PARRMS().set(position, sizeInfo);
+                tv_realTolerance.setText(null);
+                return;
+            }
             int posDot = text.indexOf(".");
             if (posDot > 0) {
                 if (text.length() - posDot - 1 > 2) {
@@ -352,19 +374,17 @@ public class SewQCFragment extends BaseFragment {
                 }
             }
 
-            ClothSizeBo.DCPARRMSBean sizeInfo = mClothSizeData.getDC_PARRMS().get(position);
+
             float finishedSize = FormatUtil.strToFloat(text);
             float refSize = FormatUtil.strToFloat(sizeInfo.getVALUE());
             sizeInfo.setCOLLECTED_VALUE(finishedSize + "");
-
             mClothSizeData.getDC_PARRMS().set(position, sizeInfo);
-            View view = mLayout_sizeInfo.getChildAt(position);
-            TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
-            float realTolerance = new BigDecimal(finishedSize - refSize).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+
+            float realTolerance = Math.abs(new BigDecimal(finishedSize - refSize).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue());
             float fRefTolerance = FormatUtil.strToFloat(sizeInfo.getSTANDARD());
             tv_realTolerance.setText(String.format("%.1f", realTolerance));
 
-            if (Math.abs(realTolerance) > fRefTolerance) {
+            if ((int) (realTolerance * 100) > (int) (fRefTolerance * 100)) {
                 tv_realTolerance.setTextColor(getResources().getColor(R.color.white));
                 tv_realTolerance.setBackgroundResource(R.color.text_red_default);
             } else {

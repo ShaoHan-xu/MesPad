@@ -101,7 +101,6 @@ public class RepairActivity extends BaseActivity {
     }
 
     private void done() {
-        showLoading();
         UpdateSewNcBo data = new UpdateSewNcBo();
         data.setSfcRef(mSFCBO);
         PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
@@ -110,17 +109,31 @@ public class RepairActivity extends BaseActivity {
         }
         List<UpdateSewNcBo.NcCodeOperationListBean> list = (List<UpdateSewNcBo.NcCodeOperationListBean>) getIntent().getSerializableExtra(KEY_SELECTED);
         data.setNcCodeOperationList(list);
+        int containsCount = 0;
         List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
         for (int i = 0; i < mList_selected.size(); i++) {
             JSONObject json = mList_selected.get(i);
             UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
             item.setSequence(i + 1);
-            item.setReworkOperation(json.getString("OPERATION"));
+            String operation = json.getString("OPERATION");
+            item.setReworkOperation(operation);
             item.setOperationDesc(json.getString("DESCRIPTION"));
             process.add(item);
+            if (!isEmpty(operation)) {
+                for (UpdateSewNcBo.NcCodeOperationListBean bean : list) {
+                    if (operation.equals(bean.getOperation())) {
+                        containsCount++;
+                    }
+                }
+            }
         }
-        data.setReworkOperationList(process);
-        HttpHelper.recordSewNc(data, this);
+        if (containsCount >= list.size()) {
+            data.setReworkOperationList(process);
+            showLoading();
+            HttpHelper.recordSewNc(data, this);
+        } else {
+            showErrorDialog("返修工序需要包含所有被记录不良的工序");
+        }
     }
 
     /**

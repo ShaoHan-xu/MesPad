@@ -1,6 +1,8 @@
 package com.eeka.mespad.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +23,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,22 +77,50 @@ public class RecordCutNCActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_recordBad_save) {
-            showLoading();
-            JSONObject json = new JSONObject();
-            json.put("RFID", mTailorInfo.getRFID());
-            json.put("ORDER_TYPE", mTailorInfo.getOrderType());
-            json.put("SHOP_ORDER", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
-            json.put("SHOP_ORDER_BO", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());
-            PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
-            if (resource != null)
-                json.put("RESOURCE_BO", resource.getRESOURCE_BO());
-            json.put("NC_CODES", mList_badRecord);
-            json.put("OPERATION", mTailorInfo.getOPER_INFOR().get(0).getOPERATION());
-            json.put("OPERATION_BO", mTailorInfo.getOPER_INFOR().get(0).getOPERATION_BO());
-            HttpHelper.saveBadRecord(json, this);
+            final List<RecordNCBo> list = new ArrayList<>();
+            for (RecordNCBo item : mList_badRecord) {
+                if (item.getQTY() > 0) {
+                    list.add(item);
+                }
+            }
+            if (list.size() == 0) {
+                toast("请选择要记录的不良代码");
+                return;
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setMessage("确认保存所选的不良记录吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    save(list);
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
         } else if (v.getId() == R.id.btn_recordBad_cancel) {
             onBackPressed();
         }
+    }
+
+    private void save(List<RecordNCBo> list) {
+        showLoading();
+        JSONObject json = new JSONObject();
+        json.put("RFID", mTailorInfo.getRFID());
+        json.put("ORDER_TYPE", mTailorInfo.getOrderType());
+        json.put("SHOP_ORDER", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
+        json.put("SHOP_ORDER_BO", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        if (resource != null)
+            json.put("RESOURCE_BO", resource.getRESOURCE_BO());
+        json.put("NC_CODES", list);
+        json.put("OPERATION", mTailorInfo.getOPER_INFOR().get(0).getOPERATION());
+        json.put("OPERATION_BO", mTailorInfo.getOPER_INFOR().get(0).getOPERATION_BO());
+        HttpHelper.saveBadRecord(json, this);
     }
 
     @Override

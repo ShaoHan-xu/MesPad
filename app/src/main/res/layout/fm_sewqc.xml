@@ -58,44 +58,47 @@
                 <TextView
                     style="@style/textStyle_default"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:lines="2"
+                    android:padding="8dp"
                     android:text="尺寸属性" />
 
                 <TextView
                     style="@style/textStyle_default"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:text="参考尺寸" />
 
                 <TextView
                     style="@style/textStyle_default"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:text="成衣尺寸" />
 
                 <TextView
                     style="@style/textStyle_default"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:text="参考公差" />
 
                 <TextView
                     style="@style/textStyle_default"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:text="实际公差" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_sewQC_sizeInfo"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@drawable/divider_gray_vertical"
-                android:orientation="horizontal"
-                android:showDividers="middle">
+                android:layout_height="match_parent">
 
-            </LinearLayout>
-
+                <LinearLayout
+                    android:id="@+id/layout_sewQC_sizeInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:divider="@drawable/divider_gray_vertical"
+                    android:orientation="horizontal"
+                    android:showDividers="middle|end" />
+            </HorizontalScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -289,10 +292,10 @@
                 <TextView
                     android:id="@+id/tv_sewQC_componentDesc"
                     style="@style/textStyle_default"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center" />
-
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical" />
             </LinearLayout>
 
         </LinearLayout>

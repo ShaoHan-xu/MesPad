@@ -261,6 +261,10 @@ public class MainActivity extends NFCActivity {
                     button.setText("粘朴方式");
                     button.setId(R.id.btn_sticky);
                     break;
+                case "NOR_TO_QC":
+                    button.setText("去质检");
+                    button.setId(R.id.btn_gotoQC);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -481,6 +485,10 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_sticky:
                 if (mCutFragment != null) {
                     mCutFragment.sticky();
+                }
+            case R.id.btn_gotoQC:
+                if (mSewFragment != null) {
+                    mSewFragment.gotoQC();
                 }
                 break;
         }

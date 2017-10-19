@@ -58,6 +58,16 @@ public class SaveClothSizeBo {
         private String MEASURED_ATTRIBUTE;
         private String VALUE;
         private String DATA_TYPE;
+        private String PARAM_DESC;
+
+        public String getPARAM_DESC() {
+            return PARAM_DESC;
+        }
+
+        public void setPARAM_DESC(String PARAM_DESC) {
+            this.PARAM_DESC = PARAM_DESC;
+        }
+
 
         public String getMEASURED_ATTRIBUTE() {
             return MEASURED_ATTRIBUTE;

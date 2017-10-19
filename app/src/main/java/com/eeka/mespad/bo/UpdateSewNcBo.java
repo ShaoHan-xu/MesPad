@@ -88,7 +88,7 @@ public class UpdateSewNcBo {
         }
     }
 
-    public static class NcCodeOperationListBean implements Serializable{
+    public static class NcCodeOperationListBean implements Serializable {
         /**
          * ncCodeRef : NCCodeBO:TEST,GC-OP-CAIJIAN
          * operation : GC-OP-CAIJIAN
@@ -96,6 +96,33 @@ public class UpdateSewNcBo {
 
         private String ncCodeRef;
         private String operation;
+        private String NC_CODE_BO;
+        private String DESCRIPTION;
+        private String processDesc;
+
+        public String getProcessDesc() {
+            return processDesc;
+        }
+
+        public void setProcessDesc(String processDesc) {
+            this.processDesc = processDesc;
+        }
+
+        public String getNC_CODE_BO() {
+            return NC_CODE_BO;
+        }
+
+        public void setNC_CODE_BO(String NC_CODE_BO) {
+            this.NC_CODE_BO = NC_CODE_BO;
+        }
+
+        public String getDESCRIPTION() {
+            return DESCRIPTION;
+        }
+
+        public void setDESCRIPTION(String DESCRIPTION) {
+            this.DESCRIPTION = DESCRIPTION;
+        }
 
         public String getNcCodeRef() {
             return ncCodeRef;

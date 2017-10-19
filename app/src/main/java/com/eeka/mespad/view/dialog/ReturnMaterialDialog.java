@@ -159,16 +159,22 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_return_material, null);
         ImageView iv_materialImg = (ImageView) view.findViewById(R.id.iv_returnMaterial_img);
         TextView tv_num = (TextView) view.findViewById(R.id.tv_returnMaterial_materialNum);
+        TextView tv_unit = (TextView) view.findViewById(R.id.tv_returnMaterial_unit);
         TextView tv_valueSubTitle = (TextView) view.findViewById(R.id.tv_returnMaterial_value_subTitle);
         TextView tv_reasonSubTitle = (TextView) view.findViewById(R.id.tv_returnMaterial_reason_subTitle);
         if (mType == TYPE_RETURN) {
-            tv_valueSubTitle.setText("退料/米");
+            tv_valueSubTitle.setText("退料");
             tv_reasonSubTitle.setText("退料原因");
         } else {
-            tv_valueSubTitle.setText("补料/米");
+            tv_valueSubTitle.setText("补料");
             tv_reasonSubTitle.setText("补料原因");
         }
 
+        String unit = materialInfo.getUNIT_LABEL();
+        tv_unit.setText(unit);
+        if (!"厘米".equals(unit)){
+            tv_unit.setTextColor(mContext.getResources().getColor(R.color.text_red_default));
+        }
         tv_num.setText(materialInfo.getITEM());
         EditText et_value = (EditText) view.findViewById(R.id.et_returnMaterial_value);
         Glide.with(mContext).load(materialInfo.getPicUrl()).into(iv_materialImg);

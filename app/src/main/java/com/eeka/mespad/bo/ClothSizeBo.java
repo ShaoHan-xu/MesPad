@@ -11,7 +11,7 @@ public class ClothSizeBo {
 
     /**
      * DC_GROUP : GARMENT_SIZE_TEST
-     * DC_PARRMS : [{"MEASURED_ATTRIBUTE":"KYW","COLLECTED_VALUE":"1","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"94"},{"MEASURED_ATTRIBUTE":"TW","DESCRIPTION":"臀围","COLLECTED_VALUE":"11","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"103.5","STANDARD":"11"},{"MEASURED_ATTRIBUTE":"PW","DESCRIPTION":"脾围","COLLECTED_VALUE":"33","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"61"},{"MEASURED_ATTRIBUTE":"XTW","COLLECTED_VALUE":"22","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"38.5"},{"MEASURED_ATTRIBUTE":"XW","DESCRIPTION":"膝围","ALLOW_COLLECTION":"false","UNIT":"cm","VALUE":"40.39"},{"MEASURED_ATTRIBUTE":"JW","DESCRIPTION":"脚围","ALLOW_COLLECTION":"false","UNIT":"cm","VALUE":"30.50"},{"MEASURED_ATTRIBUTE":"ZD","ALLOW_COLLECTION":"false","UNIT":"cm","VALUE":"27.50"}]
+     * DC_PARRMS : [{"MEASURED_ATTRIBUTE":"KYW","PARAM_DESC":"描述","COLLECTED_VALUE":"1","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"94"},{"MEASURED_ATTRIBUTE":"TW","DESCRIPTION":"臀围","COLLECTED_VALUE":"11","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"103.5","STANDARD":"11"},{"MEASURED_ATTRIBUTE":"PW","DESCRIPTION":"脾围","COLLECTED_VALUE":"33","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"61"},{"MEASURED_ATTRIBUTE":"XTW","COLLECTED_VALUE":"22","ALLOW_COLLECTION":"true","DATA_TYPE":"N","UNIT":"cm","VALUE":"38.5"},{"MEASURED_ATTRIBUTE":"XW","DESCRIPTION":"膝围","ALLOW_COLLECTION":"false","UNIT":"cm","VALUE":"40.39"},{"MEASURED_ATTRIBUTE":"JW","DESCRIPTION":"脚围","ALLOW_COLLECTION":"false","UNIT":"cm","VALUE":"30.50"},{"MEASURED_ATTRIBUTE":"ZD","ALLOW_COLLECTION":"false","UNIT":"cm","VALUE":"27.50"}]
      */
 
     private String DC_GROUP;
@@ -36,6 +36,7 @@ public class ClothSizeBo {
     public static class DCPARRMSBean {
         /**
          * MEASURED_ATTRIBUTE : KYW
+         * PARAM_DESC : 描述
          * COLLECTED_VALUE : 1
          * ALLOW_COLLECTION : true
          * DATA_TYPE : N
@@ -53,6 +54,15 @@ public class ClothSizeBo {
         private String VALUE;
         private String DESCRIPTION;
         private String STANDARD;
+        private String PARAM_DESC;
+
+        public String getPARAM_DESC() {
+            return PARAM_DESC;
+        }
+
+        public void setPARAM_DESC(String PARAM_DESC) {
+            this.PARAM_DESC = PARAM_DESC;
+        }
 
         public String getMEASURED_ATTRIBUTE() {
             return MEASURED_ATTRIBUTE;
