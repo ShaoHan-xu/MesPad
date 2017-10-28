@@ -8,4 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <TextView
+        android:id="@+id/textView"
+        style="@style/textStyle_default"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/trans_50"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
 </RelativeLayout>

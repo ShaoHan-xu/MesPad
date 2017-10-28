@@ -219,14 +219,14 @@ public class HttpHelper {
     /**
      * 获取拉布、裁剪数据
      *
-     * @param orderType 订单类型 P=批量、S=定制
+     * @param orderType 订单类型 P=批量、S=定制、W=缝制返修配片
      */
-    public static void viewCutPadInfo(String orderType, String orderNum, String resourceBO, String processLotBo, HttpCallback callback) {
+    public static void viewCutPadInfo(String orderType, String orderNum, String resourceBO, String RI, HttpCallback callback) {
         JSONObject json = new JSONObject();
+        json.put("PAD_ID", PAD_IP);
         json.put("RFID", orderNum);
         json.put("ORDER_TYPE", orderType);
-        json.put("PAD_ID", PAD_IP);
-        json.put("PROCESS_LOT_BO", processLotBo);
+        json.put("RI", RI);
         json.put("RESOURCE_BO", resourceBO);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());

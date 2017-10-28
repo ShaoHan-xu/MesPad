@@ -24,6 +24,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 
 import java.math.BigDecimal;
@@ -185,6 +186,18 @@ public class SewQCFragment extends BaseFragment {
             startActivityForResult(RecordSewNCActivity.getIntent(mContext, type, mSewQCData.getSfc(), mSewQCData.getDesignComponent()), REQUEST_NC);
         } else {
             showErrorDialog("请先获取工单数据");
+        }
+    }
+
+    /**
+     * 解绑
+     */
+    public void unBind() {
+        if (mSewQCData == null) {
+            showErrorDialog("请先获取工单数据");
+        } else {
+            CreateCardDialog dialog = new CreateCardDialog(mContext, mSewQCData.getSfc());
+            dialog.show();
         }
     }
 

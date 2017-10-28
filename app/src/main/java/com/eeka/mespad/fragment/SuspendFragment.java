@@ -179,7 +179,7 @@ public class SuspendFragment extends BaseFragment {
 
     private class ImgAdapter extends CommonVPAdapter<String> {
 
-        public ImgAdapter(Context context, List<String> data, int layoutId) {
+        ImgAdapter(Context context, List<String> data, int layoutId) {
             super(context, data, layoutId);
         }
 

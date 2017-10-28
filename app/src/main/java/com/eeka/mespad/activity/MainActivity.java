@@ -265,6 +265,10 @@ public class MainActivity extends NFCActivity {
                     button.setText("去质检");
                     button.setId(R.id.btn_gotoQC);
                     break;
+                case "SEWING_MAT_BT":
+                    button.setText("缝制退补料申请");
+                    button.setId(R.id.btn_returnOrFeeding);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -478,8 +482,18 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_unbind:
-                if (mSuspendFragment != null) {
-                    mSuspendFragment.unBind();
+                if (TopicUtil.TOPIC_SUSPEND.equals(mTopic)) {
+                    if (mSuspendFragment != null) {
+                        mSuspendFragment.unBind();
+                    }
+                } else if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                    if (mSewFragment != null) {
+                        mSewFragment.unBind();
+                    }
+                } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                    if (mSewQCFragment != null) {
+                        mSewQCFragment.unBind();
+                    }
                 }
                 break;
             case R.id.btn_sticky:

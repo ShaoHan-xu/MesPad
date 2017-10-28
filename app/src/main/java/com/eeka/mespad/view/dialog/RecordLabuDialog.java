@@ -44,8 +44,8 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
     private LinearLayout mLayout_material;
 
     private ScrollView mScrollView_material;
-    private List<UpdateLabuBo.MatItem> mList_matItem;
-    private List<TailorInfoBo.MatInfoBean> mList_matInfo;
+    private List<UpdateLabuBo.MatItem> mList_matItem;//用户添加的物料列表
+    private List<TailorInfoBo.MatInfoBean> mList_matInfo;//主数据传过来的物料列表
     private OnRecordLabuCallback mRecordLabuCallback;
     private TailorInfoBo mTailorInfo;//主数据
 
@@ -103,7 +103,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         if (mList_matInfo != null) {
             for (int i = 0; i < mList_matInfo.size(); i++) {
                 TailorInfoBo.MatInfoBean matInfo = mList_matInfo.get(i);
-                mLayout_materialImg.addView(getMaterialsView(matInfo, i));
+                mLayout_materialImg.addView(getMaterialsImgView(matInfo, i));
             }
 
             if (mList_matItem == null) {
@@ -121,9 +121,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
                 }
             }
 
-            for (UpdateLabuBo.MatItem materialInfo : mList_matItem) {
-                mLayout_material.addView(getMaterialInfoView(materialInfo), mLayout_material.getChildCount() - 1);
-            }
+            refreshMatInfoView();
         }
     }
 
@@ -199,10 +197,6 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
                         matItem.setITEM_BO(info.getITEM_BO());
                     }
                 }
-
-                if (!withDone) {
-                    matItem.setEditEnable(false);
-                }
                 mList_matItem.add(matItem);
 
                 if (layersMap.containsKey(num)) {
@@ -229,6 +223,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
             }
         }
 
+        //整合，同一个物料多行添加时，放到同一个LAYOUTS里
         Map<String, List<UpdateLabuBo.Layouts>> layoutMap = new HashMap<>();
         for (UpdateLabuBo.MatItem matItem : mList_matItem) {
             String matNo = matItem.getMAT_NO();
@@ -243,16 +238,16 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
             } else {
                 List<UpdateLabuBo.Layouts> layoutList = new ArrayList<>();
                 UpdateLabuBo.Layouts layout = new UpdateLabuBo.Layouts();
-                List<UpdateLabuBo.MatItem> list = new ArrayList<>();
+                List<UpdateLabuBo.MatItem> details = new ArrayList<>();
                 layout.setMAT_NO(matNo);
-                layout.setPLAN_LAYERS(matItem.getLAYERS());
                 for (TailorInfoBo.MatInfoBean info : mList_matInfo) {
                     if (info.getMAT_NO().equals(matNo)) {
+                        layout.setPLAN_LAYERS(info.getLAYERS() + "");
                         layout.setZ_LAYOUT_BO(info.getZ_LAYOUT_BO());
-                        list.add(matItem);
+                        details.add(matItem);
                     }
                 }
-                layout.setDETAILS(list);
+                layout.setDETAILS(details);
                 layoutList.add(layout);
                 layoutMap.put(matNo, layoutList);
             }
@@ -279,10 +274,22 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         mRecordLabuCallback.recordLabuCallback(mLabuData, withDone);
     }
 
+    private void refreshMatInfoView() {
+        int count = mLayout_material.getChildCount();
+        for (int i = 0; i < count - 1; i++) {
+            //移除原有子view，因为布局内包含了“添加物料”按钮，所以最后一个不移除
+            mLayout_material.removeViewAt(i);
+        }
+
+        for (UpdateLabuBo.MatItem materialInfo : mList_matItem) {
+            mLayout_material.addView(getMaterialInfoView(materialInfo), mLayout_material.getChildCount() - 1);
+        }
+    }
+
     /**
      * 获取物料图布局
      */
-    private View getMaterialsView(final TailorInfoBo.MatInfoBean item, int position) {
+    private View getMaterialsImgView(final TailorInfoBo.MatInfoBean item, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         view.setTag(position);
         ImageView iv_materials = (ImageView) view.findViewById(R.id.iv_materials);
@@ -320,6 +327,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
 
             if (!materialInfo.isEditEnable()) {
                 tv_num.setBackgroundResource(0);
+                tv_num.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 et_juanHao.setBackgroundResource(0);
                 et_length.setBackgroundResource(0);
                 et_layers.setBackgroundResource(0);
@@ -383,6 +391,13 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
     public void show() {
         super.show();
         getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.9), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+    }
+
+    public void saveSuccess() {
+        for (UpdateLabuBo.MatItem matItem : mList_matItem) {
+            matItem.setEditEnable(false);
+        }
+        refreshMatInfoView();
     }
 
     public interface OnRecordLabuCallback {

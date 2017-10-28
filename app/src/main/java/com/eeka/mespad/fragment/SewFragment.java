@@ -26,6 +26,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 
 import java.math.BigDecimal;
@@ -130,6 +131,18 @@ public class SewFragment extends BaseFragment {
         }
         PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
         HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), this);
+    }
+
+    /**
+     * 解绑
+     */
+    public void unBind() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取工单数据");
+        } else {
+            CreateCardDialog dialog = new CreateCardDialog(mContext, mSewData.getSfc());
+            dialog.show();
+        }
     }
 
     /**

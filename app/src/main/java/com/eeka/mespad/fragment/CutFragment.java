@@ -102,12 +102,11 @@ public class CutFragment extends BaseFragment {
         SystemUtils.startVideoActivity(mContext, videoUrl);
     }
 
-    public void searchOrder(String orderType, String orderNum, String resourceBo, String processLotBo) {
-
+    public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
         showLoading();
         mOrderType = orderType;
         mRFID = orderNum;
-        HttpHelper.viewCutPadInfo(orderType, orderNum, resourceBo, processLotBo, this);
+        HttpHelper.viewCutPadInfo(orderType, orderNum, resourceBo, RI, this);
     }
 
     protected void initView() {
@@ -248,6 +247,14 @@ public class CutFragment extends BaseFragment {
         tv_style.setText(orderInfo.getITEM());
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
         mTv_special.setText(orderInfo.getSO_REMARK());
+
+        if ("P".equals(mOrderType)) {
+            mView.findViewById(R.id.layout_cut_layers).setVisibility(View.VISIBLE);
+            TextView tv_layers = (TextView) mView.findViewById(R.id.tv_sew_layers);
+            tv_layers.setText(orderInfo.getLAYERS() + "");
+        } else {
+            mView.findViewById(R.id.layout_cut_layers).setVisibility(View.GONE);
+        }
 
     }
 
@@ -468,7 +475,8 @@ public class CutFragment extends BaseFragment {
         TextView tv_yardage = (TextView) view.findViewById(R.id.tv_item_yardage);
         TextView tv_count = (TextView) view.findViewById(R.id.tv_item_count);
         tv_yardage.setText(sizeInfo.getSIZE_CODE());
-        tv_count.setText(sizeInfo.getSIZE_AMOUNT() + "");
+        int layers = mTailorInfo.getSHOP_ORDER_INFOR().getLAYERS();
+        tv_count.setText((sizeInfo.getSIZE_AMOUNT() * layers) + "");
         return view;
     }
 
@@ -678,17 +686,23 @@ public class CutFragment extends BaseFragment {
                 //更新订单后需要清空之前的记录
                 mList_recordNC = new ArrayList<>();
                 mLabuData = null;
-            } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {//                    mBtn_done.setText("完成");
+            } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {
+//                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
                 toast("开始作业");
-            } else if (url.equals(HttpHelper.completeBatchWork_url) || url.equals(HttpHelper.completeCustomWork_url)) {//                    mBtn_done.setText("开始");
+            } else if (url.equals(HttpHelper.completeBatchWork_url) || url.equals(HttpHelper.completeCustomWork_url)) {
+//                    mBtn_done.setText("开始");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
                 toast("工序已完成");
             } else if (url.equals(HttpHelper.saveLabuData)) {
                 toast("保存成功");
+                if (mLabuDialog != null && mLabuDialog.isShowing()) {
+                    mLabuDialog.saveSuccess();
+                }
             } else if (url.equals(HttpHelper.saveLabuDataAndComplete)) {
                 toast("保存成功");
                 if (mLabuDialog != null && mLabuDialog.isShowing()) {
+                    mLabuDialog.saveSuccess();
                     mLabuDialog.dismiss();
                 }
             } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {
