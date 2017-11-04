@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
@@ -29,6 +28,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,7 +187,7 @@ public class SuspendFragment extends BaseFragment {
         public void convertView(View view, String item, final int position) {
             ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
             String url = mList_img.get(position);
-            Glide.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
+            Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

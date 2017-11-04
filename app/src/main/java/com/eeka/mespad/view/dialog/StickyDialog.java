@@ -67,9 +67,6 @@ public class StickyDialog extends Dialog {
                 case R.id.rb_sticky_2:
                     stickyCode = 2;
                     break;
-                case R.id.rb_sticky_3:
-                    stickyCode = 3;
-                    break;
                 case R.id.rb_sticky_4:
                     stickyCode = 4;
                     break;

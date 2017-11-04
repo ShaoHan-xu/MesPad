@@ -62,6 +62,15 @@ public class UpdateSewNcBo {
         private String reworkOperation;
         private int sequence;
         private String operationDesc;
+        private String partId;
+
+        public String getPartId() {
+            return partId;
+        }
+
+        public void setPartId(String partId) {
+            this.partId = partId;
+        }
 
         public String getReworkOperation() {
             return reworkOperation;

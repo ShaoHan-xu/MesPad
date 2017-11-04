@@ -1,5 +1,364 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/viewPager_imgBrowser"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layout_matInfo_desc"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/layout_matInfo_matDesc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/trans_30"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:padding="2.5dp"
+                android:text="物料属性"
+                android:textSize="@dimen/textSize_title"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料号"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_matNo"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料描述"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_matDesc"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料大类"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_matBig"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料大类描述"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_matBigDesc"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料中类"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_matMid"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料中类描述"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_matMidDesc"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_matInfo_layDesc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/trans_30"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:padding="2.5dp"
+                android:text="排料图属性"
+                android:textSize="@dimen/textSize_title"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="排料图名称"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_layName"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="物料号"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_layNo"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="幅长(单位)"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_layLength"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="幅宽(单位)"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_layWidth"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="拉布层数"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_layLayers"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="成衣件数"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_layAmount"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2.5dp">
+
+                <TextView
+                    style="@style/textStyle_gray"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="尺码配比"
+                    android:textSize="@dimen/textSize_itemTitle" />
+
+                <TextView
+                    android:id="@+id/tv_matInfo_sizeRatio"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/textSize_itemTitle" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/layout_matInfo_desc">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_matInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

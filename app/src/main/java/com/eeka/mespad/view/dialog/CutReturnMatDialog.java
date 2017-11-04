@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
@@ -25,15 +25,17 @@ import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 退/补料弹框
+ * 裁剪段退/补料弹框
  * Created by Lenovo on 2017/7/4.
  */
 
-public class ReturnMaterialDialog extends Dialog implements View.OnClickListener, HttpCallback {
+public class CutReturnMatDialog extends Dialog implements View.OnClickListener, HttpCallback {
 
     public static final int TYPE_RETURN = 3;//退料
     public static final int TYPE_ADD = 2;//补料
@@ -47,7 +49,9 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
     private LinearLayout mLayout_material;
 
-    public ReturnMaterialDialog(@NonNull Context context, int type, @NonNull ReturnMaterialInfoBo returnMaterialInfo) {
+    private boolean isSubmit;
+
+    public CutReturnMatDialog(@NonNull Context context, int type, @NonNull ReturnMaterialInfoBo returnMaterialInfo) {
         super(context);
         mType = type;
         mReturnMaterialInfo = returnMaterialInfo;
@@ -58,7 +62,7 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
     private void init(Context context) {
         mContext = context;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mView = LayoutInflater.from(mContext).inflate(R.layout.dlg_return_material, null);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.dlg_return_cut, null);
         setContentView(mView);
         setCanceledOnTouchOutside(false);
 
@@ -117,22 +121,32 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
     }
 
     private void save() {
+        isSubmit = false;
         generateData();
     }
 
     private void submit() {
-        generateData();
+        isSubmit = true;
+        List<ReturnMaterialInfoBo.MaterialInfoBo> infoBos = generateData();
+        if (infoBos == null) {
+            return;
+        }
+        if (infoBos.size() == 0) {
+            Toast.makeText(mContext, "请选择要退补的物料并输入数量", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         JSONObject params = new JSONObject();
         params.put("TYPE", mType);
         params.put("SHOP_ORDER", mReturnMaterialInfo.getOrderNum());
-        params.put("ITEM_INFOS", JSON.toJSONString(mReturnMaterialInfo.getMaterialInfoList()));
+        params.put("ITEM_INFOS", JSON.toJSONString(infoBos));
 
         LoadingDialog.show(mContext);
-        HttpHelper.cutMaterialReturnOrFeeding(params, this);
+        HttpHelper.saveMatReturnOrFeeding(params, this);
     }
 
-    private void generateData() {
+    private List<ReturnMaterialInfoBo.MaterialInfoBo> generateData() {
+        List<ReturnMaterialInfoBo.MaterialInfoBo> list = new ArrayList<>();
         List<ReturnMaterialInfoBo.MaterialInfoBo> list_materialInfo = mReturnMaterialInfo.getMaterialInfoList();
         int childCount = mLayout_material.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -143,13 +157,26 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
             String reason = tv_reason.getText().toString();
             String value = et_value.getText().toString();
+            if (TextUtils.isEmpty(reason) && TextUtils.isEmpty(value)) {
+                continue;
+            } else if (TextUtils.isEmpty(reason)) {
+                Toast.makeText(mContext, "请选择退补料原因", Toast.LENGTH_SHORT).show();
+                return null;
+            } else if (TextUtils.isEmpty(value)) {
+                Toast.makeText(mContext, "请输入退补料数量", Toast.LENGTH_SHORT).show();
+                return null;
+            }
 
             ReturnMaterialInfoBo.MaterialInfoBo material = list_materialInfo.get(i);
             material.setReason(reason);
             material.setQTY(value);
-            list_materialInfo.set(i, material);
+            if (isSubmit) {
+                list.add(material);
+            } else {
+                list_materialInfo.set(i, material);
+            }
         }
-
+        return list;
     }
 
     /**
@@ -172,12 +199,12 @@ public class ReturnMaterialDialog extends Dialog implements View.OnClickListener
 
         String unit = materialInfo.getUNIT_LABEL();
         tv_unit.setText(unit);
-        if (!"厘米".equals(unit)){
+        if (!"厘米".equals(unit)) {
             tv_unit.setTextColor(mContext.getResources().getColor(R.color.text_red_default));
         }
         tv_num.setText(materialInfo.getITEM());
         EditText et_value = (EditText) view.findViewById(R.id.et_returnMaterial_value);
-        Glide.with(mContext).load(materialInfo.getPicUrl()).into(iv_materialImg);
+        Picasso.with(mContext).load(materialInfo.getPicUrl()).into(iv_materialImg);
         TextView tv_reason = (TextView) view.findViewById(R.id.tv_returnMaterial_reason);
 
         tv_reason.setText(materialInfo.getReason());

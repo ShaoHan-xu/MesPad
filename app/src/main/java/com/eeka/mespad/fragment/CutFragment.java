@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.activity.MainActivity;
@@ -36,11 +35,12 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
-import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
 import com.eeka.mespad.view.dialog.StickyDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +99,7 @@ public class CutFragment extends BaseFragment {
         }
         int currentItem = mVP_process.getCurrentItem();
         String videoUrl = mList_processData.get(currentItem).getVIDEO_URL();
-        SystemUtils.startVideoActivity(mContext, videoUrl);
+        SystemUtils.playVideo(mContext, videoUrl);
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
@@ -153,11 +153,11 @@ public class CutFragment extends BaseFragment {
                 mLayout_matTab.addView(TabViewUtil.getTabView(mContext, matInfoBean, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ArrayList<String> urls = new ArrayList<>();
-                        for (TailorInfoBo.MatInfoBean mat : mTailorInfo.getMAT_INFOR()) {
-                            urls.add(mat.getMAT_URL());
-                        }
-                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, finalI));
+//                        List<String> urls = new ArrayList<>();
+//                        for (TailorInfoBo.MatInfoBean mat : mTailorInfo.getMAT_INFOR()) {
+//                            urls.add(mat.getMAT_URL());
+//                        }
+                        startActivity(ImageBrowserActivity.getIntent(mContext, mTailorInfo.getMAT_INFOR(), finalI));
                     }
                 }));
             }
@@ -393,7 +393,7 @@ public class CutFragment extends BaseFragment {
         TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
         if (data instanceof TailorInfoBo.LayoutInfoBean) {
             TailorInfoBo.LayoutInfoBean item = (TailorInfoBo.LayoutInfoBean) data;
-            Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+            Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
             iv_material.setTag(position);
             tv_material.setText(item.getLAYOUT());
             iv_material.setOnClickListener(new View.OnClickListener() {
@@ -409,7 +409,7 @@ public class CutFragment extends BaseFragment {
             });
         } else if (data instanceof TailorInfoBo.StickyInfo) {
             TailorInfoBo.StickyInfo item = (TailorInfoBo.StickyInfo) data;
-            Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+            Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
             iv_material.setTag(position);
             tv_material.setText(item.getIDENTITY_INFO());
             iv_material.setOnClickListener(new View.OnClickListener() {
@@ -435,20 +435,19 @@ public class CutFragment extends BaseFragment {
         view.setTag(position);
         ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
         TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
-        Glide.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+        Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
         iv_material.setTag(position);
         tv_material.setText(item.getLAYOUT());
 
         iv_material.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> urls = new ArrayList<>();
-                List<TailorInfoBo.LayoutInfoBean> list = mTailorInfo.getLAYOUT_INFOR();
-                for (TailorInfoBo.LayoutInfoBean item : list) {
-                    urls.add(item.getPICTURE_URL());
-                }
-
-                startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
+//                ArrayList<String> urls = new ArrayList<>();
+//                List<TailorInfoBo.LayoutInfoBean> list = mTailorInfo.getLAYOUT_INFOR();
+//                for (TailorInfoBo.LayoutInfoBean item : list) {
+//                    urls.add(item.getPICTURE_URL());
+//                }
+                startActivity(ImageBrowserActivity.getIntent(mContext, mTailorInfo.getLAYOUT_INFOR(), (Integer) v.getTag()));
             }
         });
         return view;
@@ -526,9 +525,9 @@ public class CutFragment extends BaseFragment {
         materialInfoBo.setOrderNum(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
         materialInfoBo.setMaterialInfoList(materialList);
         if (isReturn) {
-            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_RETURN, materialInfoBo).show();
+            new CutReturnMatDialog(mContext, CutReturnMatDialog.TYPE_RETURN, materialInfoBo).show();
         } else {
-            new ReturnMaterialDialog(mContext, ReturnMaterialDialog.TYPE_ADD, materialInfoBo).show();
+            new CutReturnMatDialog(mContext, CutReturnMatDialog.TYPE_ADD, materialInfoBo).show();
         }
     }
 

@@ -44,7 +44,7 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
-import com.eeka.mespad.view.dialog.ReturnMaterialDialog;
+import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -88,8 +88,8 @@ public class MainActivity extends NFCActivity {
         MQTTService.actionStart(mContext);
         EventBus.getDefault().register(this);
 
-        SpUtil.saveBTReasons(ReturnMaterialDialog.TYPE_RETURN, null);
-        SpUtil.saveBTReasons(ReturnMaterialDialog.TYPE_ADD, null);
+        SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_RETURN, null);
+        SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_ADD, null);
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
@@ -267,7 +267,7 @@ public class MainActivity extends NFCActivity {
                     break;
                 case "SEWING_MAT_BT":
                     button.setText("缝制退补料申请");
-                    button.setId(R.id.btn_returnOrFeeding);
+                    button.setId(R.id.btn_returnForSew);
                     break;
                 case "COMPLETE":
                     if (mCutFragment != null)
@@ -505,6 +505,11 @@ public class MainActivity extends NFCActivity {
                     mSewFragment.gotoQC();
                 }
                 break;
+            case R.id.btn_returnForSew:
+                if (mSewFragment != null){
+                    mSewFragment.returnOrFeeding();
+                }
+                break;
         }
     }
 
@@ -614,14 +619,14 @@ public class MainActivity extends NFCActivity {
                 JSONObject result = resultJSON.getJSONObject("result");
                 String orderType = result.getString("ORDER_TYPE");
                 mCardInfo.setCardType(orderType);
-                mCardInfo.setValue(resultJSON.getString("RI"));
+                mCardInfo.setValue(result.getString("RI"));
                 switch (mTopic) {
                     case TopicUtil.TOPIC_CUT:
-                        if ("P".equalsIgnoreCase(orderType) || "S".equalsIgnoreCase(orderType)) {
+                        if ("M".equals(orderType)) {
+                            clockIn(mCardInfo.getCardNum());
+                        } else {
                             mEt_orderNum.setText(mCardInfo.getCardNum());
                             mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
-                        } else if ("M".equals(orderType)) {
-                            clockIn(mCardInfo.getCardNum());
                         }
                         break;
                 }

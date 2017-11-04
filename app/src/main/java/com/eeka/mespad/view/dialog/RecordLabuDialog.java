@@ -16,7 +16,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.bo.PositionInfoBo;
@@ -24,6 +23,7 @@ import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +35,6 @@ import java.util.Set;
  * 记录拉布数据弹框
  * Created by Lenovo on 2017/7/4.
  */
-
 public class RecordLabuDialog extends Dialog implements View.OnClickListener {
 
     private Context mContext;
@@ -294,7 +293,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         view.setTag(position);
         ImageView iv_materials = (ImageView) view.findViewById(R.id.iv_materials);
         TextView tv_materials = (TextView) view.findViewById(R.id.tv_matNum);
-        Glide.with(mContext).load(item.getMAT_URL()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(iv_materials);
+        Picasso.with(mContext).load(item.getMAT_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_materials);
         iv_materials.setTag(position);
         tv_materials.setText(item.getMAT_NO());
         iv_materials.setOnClickListener(new View.OnClickListener() {

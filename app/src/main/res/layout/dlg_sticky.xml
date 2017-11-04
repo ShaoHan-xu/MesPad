@@ -54,12 +54,6 @@
             android:text="净裁片粘全朴" />
 
         <RadioButton
-            android:id="@+id/rb_sticky_3"
-            style="@style/textStyle_default"
-            android:layout_margin="5dp"
-            android:text="毛裁片粘朴" />
-
-        <RadioButton
             android:id="@+id/rb_sticky_4"
             style="@style/textStyle_default"
             android:layout_margin="5dp"

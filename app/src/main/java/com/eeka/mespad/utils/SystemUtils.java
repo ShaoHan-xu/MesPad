@@ -309,7 +309,7 @@ public class SystemUtils {
      * @param context
      * @param videoUrl
      */
-    public static void startVideoActivity(final Context context, String videoUrl) {
+    public static void playVideo(final Context context, String videoUrl) {
         String videoPath = null;
         try {
             if (!TextUtils.isEmpty(videoUrl)) {

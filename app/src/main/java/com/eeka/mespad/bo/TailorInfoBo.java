@@ -102,11 +102,38 @@ public class TailorInfoBo implements Serializable {
         private int LAYERS;
         private String MAT_URL;
         private String MAT_NO;
+        private String MAT_DESC;
         private String ITEM_BO;
         private String Z_LAYOUT_BO;
         private String GRAND_CATEGORY;
+        private String GRAND_CATEGORY_DESC;
         private String MID_CATEGORY;
+        private String MID_CATEGORY_DESC;
         private String UNIT_LABEL;
+
+        public String getMAT_DESC() {
+            return MAT_DESC;
+        }
+
+        public void setMAT_DESC(String MAT_DESC) {
+            this.MAT_DESC = MAT_DESC;
+        }
+
+        public String getGRAND_CATEGORY_DESC() {
+            return GRAND_CATEGORY_DESC;
+        }
+
+        public void setGRAND_CATEGORY_DESC(String GRAND_CATEGORY_DESC) {
+            this.GRAND_CATEGORY_DESC = GRAND_CATEGORY_DESC;
+        }
+
+        public String getMID_CATEGORY_DESC() {
+            return MID_CATEGORY_DESC;
+        }
+
+        public void setMID_CATEGORY_DESC(String MID_CATEGORY_DESC) {
+            this.MID_CATEGORY_DESC = MID_CATEGORY_DESC;
+        }
 
         public String getUNIT_LABEL() {
             return UNIT_LABEL;
@@ -365,6 +392,78 @@ public class TailorInfoBo implements Serializable {
     public static class LayoutInfoBean implements Serializable {
         private String PICTURE_URL;
         private String LAYOUT;
+        private String ITEM;
+        private String LENGTH;
+        private String LENGTH_UNIT;
+        private String WIDTH;
+        private String WIDTH_UNIT;
+        private String LAYERS;
+        private String AMOUNT;
+        private String SIZE_RATIO;
+
+        public String getITEM() {
+            return ITEM;
+        }
+
+        public void setITEM(String ITEM) {
+            this.ITEM = ITEM;
+        }
+
+        public String getLENGTH() {
+            return LENGTH;
+        }
+
+        public void setLENGTH(String LENGTH) {
+            this.LENGTH = LENGTH;
+        }
+
+        public String getLENGTH_UNIT() {
+            return LENGTH_UNIT;
+        }
+
+        public void setLENGTH_UNIT(String LENGTH_UNIT) {
+            this.LENGTH_UNIT = LENGTH_UNIT;
+        }
+
+        public String getWIDTH() {
+            return WIDTH;
+        }
+
+        public void setWIDTH(String WIDTH) {
+            this.WIDTH = WIDTH;
+        }
+
+        public String getWIDTH_UNIT() {
+            return WIDTH_UNIT;
+        }
+
+        public void setWIDTH_UNIT(String WIDTH_UNIT) {
+            this.WIDTH_UNIT = WIDTH_UNIT;
+        }
+
+        public String getLAYERS() {
+            return LAYERS;
+        }
+
+        public void setLAYERS(String LAYERS) {
+            this.LAYERS = LAYERS;
+        }
+
+        public String getAMOUNT() {
+            return AMOUNT;
+        }
+
+        public void setAMOUNT(String AMOUNT) {
+            this.AMOUNT = AMOUNT;
+        }
+
+        public String getSIZE_RATIO() {
+            return SIZE_RATIO;
+        }
+
+        public void setSIZE_RATIO(String SIZE_RATIO) {
+            this.SIZE_RATIO = SIZE_RATIO;
+        }
 
         public String getLAYOUT() {
             return LAYOUT;

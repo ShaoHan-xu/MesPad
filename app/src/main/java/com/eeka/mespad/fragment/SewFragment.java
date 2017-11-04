@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bumptech.glide.Glide;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
@@ -28,6 +27,8 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.eeka.mespad.view.dialog.SewReturnMatDialog;
+import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -134,6 +135,16 @@ public class SewFragment extends BaseFragment {
     }
 
     /**
+     * 退补料申请
+     */
+    public void returnOrFeeding() {
+        if (mSewData == null)
+            new SewReturnMatDialog(mContext, null).show();
+        else
+            new SewReturnMatDialog(mContext, mSewData.getSfc()).show();
+    }
+
+    /**
      * 解绑
      */
     public void unBind() {
@@ -160,7 +171,7 @@ public class SewFragment extends BaseFragment {
             return;
         }
         SewDataBo.SewAttr sewAttr = infos.get(currentItem);
-        SystemUtils.startVideoActivity(mContext, sewAttr.getAttributes().getVIDEO_URL());
+        SystemUtils.playVideo(mContext, sewAttr.getAttributes().getVIDEO_URL());
     }
 
     @Override
@@ -248,7 +259,7 @@ public class SewFragment extends BaseFragment {
                 @Override
                 public void convertView(View view, SewDataBo.SewAttr item, final int position) {
                     ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-                    Glide.with(mContext).load(item.getAttributes().getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+                    Picasso.with(mContext).load(item.getAttributes().getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -289,7 +300,7 @@ public class SewFragment extends BaseFragment {
     private View getMatView(SewDataBo.SewAttr item, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.iv_materials);
-        Glide.with(this).load(item.getAttributes().getMAT_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+        Picasso.with(mContext).load(item.getAttributes().getMAT_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         TextView textView = (TextView) view.findViewById(R.id.tv_matNum);
         textView.setText(item.getDescription());
         imageView.setOnClickListener(new View.OnClickListener() {

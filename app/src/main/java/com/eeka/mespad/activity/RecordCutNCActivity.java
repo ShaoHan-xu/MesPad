@@ -77,10 +77,12 @@ public class RecordCutNCActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_recordBad_save) {
+            StringBuilder sb = new StringBuilder("确认保存所选的不良记录吗？\n");
             final List<RecordNCBo> list = new ArrayList<>();
             for (RecordNCBo item : mList_badRecord) {
                 if (item.getQTY() > 0) {
                     list.add(item);
+                    sb.append(",").append(item.getDESCRIPTION());
                 }
             }
             if (list.size() == 0) {
@@ -88,7 +90,7 @@ public class RecordCutNCActivity extends BaseActivity {
                 return;
             }
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setMessage("确认保存所选的不良记录吗？");
+            builder.setMessage(sb.toString().replaceFirst(",", ""));
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

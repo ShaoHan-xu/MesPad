@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:text="缝制段退补料申请"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_title" />
+
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <Button
+            android:id="@+id/btn_done"
+            style="@style/btnStyle_primary"
+            android:layout_marginRight="20dp"
+            android:text="保存" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/btnStyle_primary"
+            android:text="取消" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_bottom"
+        android:layout_below="@id/tv_title"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="操作：" />
+
+                <TextView
+                    android:id="@+id/tv_returnSew_type"
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:background="@drawable/border_black"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="退料" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="原因代码：" />
+
+                <TextView
+                    android:id="@+id/tv_returnSew_code"
+                    style="@style/textStyle_default"
+                    android:layout_width="200dp"
+                    android:background="@drawable/border_black"
+                    android:gravity="center"
+                    android:padding="8dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="订单号/工票号：" />
+
+            <EditText
+                android:id="@+id/et_returnSew_sfc"
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:background="@drawable/border_black"
+                android:gravity="center"
+                android:padding="8dp" />
+
+            <Button
+                android:id="@+id/btn_returnSew_search"
+                style="@style/btnStyle_primary"
+                android:layout_marginLeft="10dp"
+                android:text="搜索" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/border_black"
+            android:divider="@drawable/divider_gray"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_gray_vertical"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="物料编码" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="物料描述" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="申请数量" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="单位" />
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/layout_returnSew_matInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

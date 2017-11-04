@@ -84,6 +84,7 @@ public class HttpHelper {
     public static final String getClothSize = BASE_URL + "logNcPad/viewGarmentSize?";
     public static final String saveQCClothSizeData = BASE_URL + "logNcPad/saveDcCollect?";
     public static final String initNcForQA = BASE_URL + "logNcPad/initNcForQA?";
+    public static final String getBomInfo = BASE_URL + "sweing/getBomInfo?";
 
     private static Context mContext;
 
@@ -240,7 +241,7 @@ public class HttpHelper {
      *             SHOP_ORDER = 订单号
      *             ITEM_INFOS = 退/补料对象列表，对象：ITEM = 物料号，QTY = 数量，REASON_CODE = 原因代码
      */
-    public static void cutMaterialReturnOrFeeding(JSONObject json, HttpCallback callback) {
+    public static void saveMatReturnOrFeeding(JSONObject json, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
         HttpRequest.post(cutMaterialReturnOrFeeding, params, getResponseHandler(cutMaterialReturnOrFeeding, callback));
@@ -637,6 +638,15 @@ public class HttpHelper {
     }
 
     /**
+     * 搜索工单对应的bom
+     */
+    public static void getBomInfo(String sfc, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("ordernumber", sfc);
+        HttpRequest.post(getBomInfo, params, getResponseHandler(getBomInfo, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
@@ -654,12 +664,12 @@ public class HttpHelper {
     }
 
     public static String getPadIp() {
-        PAD_IP = NetUtil.getHostIP();
+//        PAD_IP = NetUtil.getHostIP();
 //        PAD_IP = "10.7.25.179";//质检
-//      PAD_IP = "10.7.25.122";//上裁
-//      PAD_IP = "10.7.25.120";//缝制
+//        PAD_IP = "10.7.25.122";//上裁
+//        PAD_IP = "10.7.25.120";//缝制
 //        PAD_IP = "10.7.25.198";//裁剪
-//        PAD_IP = "10.7.25.210";
+        PAD_IP = "10.8.94.144";
         return PAD_IP;
     }
 

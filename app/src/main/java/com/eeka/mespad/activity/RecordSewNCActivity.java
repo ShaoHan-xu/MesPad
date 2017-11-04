@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,13 +27,14 @@ import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.RepairSelectorDialog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 记录缝制质检部良界面
+ * 记录缝制质检不良界面
  * Created by Lenovo on 2017/8/11.
  */
 public class RecordSewNCActivity extends BaseActivity {
@@ -306,10 +308,24 @@ public class RecordSewNCActivity extends BaseActivity {
                 mNcAdapter.notifyDataSetChanged();
             } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
                 mList_NcProcess = resultJSON.getJSONArray("result");
-                mLayout_NcProcess.removeAllViews();
-                for (int i = 0; i < mList_NcProcess.size(); i++) {
-                    mLayout_NcProcess.addView(getNcProcessView(mList_NcProcess.getJSONObject(i), i));
-                }
+                final RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
+                new RepairSelectorDialog(mContext, recordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        JSONObject item = mList_NcProcess.getJSONObject(position);
+                        String operation = item.getString("OPERATION");
+
+                        mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
+                        mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());
+                        mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
+                        mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
+                        mCurSelecting.setOperation(operation);
+                        mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
+                        mList_selected.add(mCurSelecting);
+
+                        refreshSelectedView();
+                    }
+                }).show();
             } else if (HttpHelper.recordSewNc.equals(url)) {
                 toast("保存成功");
                 finish();

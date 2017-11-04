@@ -48,6 +48,7 @@ public class RepairActivity extends BaseActivity {
 
     private String mSFCBO;
 
+    private int mProductIndex;
     private List<JSONObject> mList_selected;
 
     @Override
@@ -118,6 +119,7 @@ public class RepairActivity extends BaseActivity {
             String operation = json.getString("OPERATION");
             item.setReworkOperation(operation);
             item.setOperationDesc(json.getString("DESCRIPTION"));
+            item.setPartId(json.getString("partId"));
             process.add(item);
             if (!isEmpty(operation)) {
                 for (UpdateSewNcBo.NcCodeOperationListBean bean : list) {
@@ -157,6 +159,7 @@ public class RepairActivity extends BaseActivity {
     }
 
     private void refreshTab(int position) {
+        mProductIndex = position;
         int childCount = mLayout_component.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = mLayout_component.getChildAt(i);
@@ -205,6 +208,7 @@ public class RepairActivity extends BaseActivity {
                                 return;
                             }
                         }
+                        item.put("partId", mList_component.get(mProductIndex).getName());
                         mList_selected.add(item);
                         mAdapter.notifyDataSetChanged();
                     }

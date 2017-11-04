@@ -23,5 +23,5 @@
     <item name="btn_unbind" type="id" />
     <item name="btn_sticky" type="id" />
     <item name="btn_gotoQC" type="id" />
-    <item name="btn_returnOrFeeding" type="id" />
+    <item name="btn_returnForSew" type="id" />
 </resources>
