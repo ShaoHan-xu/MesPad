@@ -66,9 +66,9 @@
                 android:id="@+id/layout_recordLabu_materialImg"
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
-                android:showDividers="beginning|middle"
                 android:divider="@drawable/divider_white"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                android:showDividers="beginning|middle" />
 
         </HorizontalScrollView>
 
@@ -132,14 +132,19 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/layout_recordLabu_material"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider_gray"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:showDividers="middle">
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layout_recordLabu_material"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:showDividers="middle" />
 
                 <Button
                     android:id="@+id/btn_recordLabu_addMaterial"
@@ -150,7 +155,13 @@
                     android:layout_marginTop="5dp"
                     android:text="添加物料" />
 
+                <View
+                    android:id="@+id/spaceView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
             </LinearLayout>
+
         </ScrollView>
     </LinearLayout>
 

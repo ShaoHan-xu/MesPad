@@ -489,6 +489,10 @@ public class CutFragment extends BaseFragment {
      * 记录拉布数据
      */
     public void showRecordLabuDialog() {
+        if (mTailorInfo == null) {
+            toast("请先获取订单数据");
+            return;
+        }
         mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
             @Override
             public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {

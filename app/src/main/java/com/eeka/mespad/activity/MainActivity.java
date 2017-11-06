@@ -92,6 +92,7 @@ public class MainActivity extends NFCActivity {
         SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_ADD, null);
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
     }
 
     /**
@@ -279,6 +280,7 @@ public class MainActivity extends NFCActivity {
             mLayout_controlPanel.addView(button);
         }
     }
+
 
     /**
      * 设置配置的按钮的状态/设置可点击与不可点击
@@ -506,7 +508,7 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_returnForSew:
-                if (mSewFragment != null){
+                if (mSewFragment != null) {
                     mSewFragment.returnOrFeeding();
                 }
                 break;
@@ -730,4 +732,5 @@ public class MainActivity extends NFCActivity {
             }
         }
     }
+
 }

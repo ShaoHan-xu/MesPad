@@ -91,9 +91,10 @@
                 android:showDividers="middle" />
 
             <View
+                android:id="@+id/spaceView"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:layout_height="210dp" />
 
         </LinearLayout>
 

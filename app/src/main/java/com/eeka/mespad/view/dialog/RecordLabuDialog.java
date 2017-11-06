@@ -2,10 +2,12 @@ package com.eeka.mespad.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -21,6 +23,7 @@ import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.squareup.picasso.Picasso;
@@ -83,13 +86,21 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         mView.findViewById(R.id.btn_recordLabu_saveAndDone).setOnClickListener(this);
         View btn_addMaterial = mView.findViewById(R.id.btn_recordLabu_addMaterial);
         btn_addMaterial.setOnClickListener(this);
+
+        getWindow().getDecorView().addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                //获取View可见区域的bottom
+                Rect rect = new Rect();
+                getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+                if (bottom != 0 && oldBottom != 0 && bottom - rect.bottom <= 0) {
+                } else {
+                }
+            }
+        });
     }
 
     private void initData() {
-        if (mTailorInfo == null) {
-            Toast.makeText(mContext, "数据错误", Toast.LENGTH_SHORT).show();
-            return;
-        }
         mList_matInfo = mTailorInfo.getMAT_INFOR();
         if (mLabuData != null) {
             List<UpdateLabuBo.Layouts> layouts = mLabuData.getLAYOUTS();
@@ -131,7 +142,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.btn_recordLabu_addMaterial:
-                mLayout_material.addView(getMaterialInfoView(null), mLayout_material.getChildCount() - 1);
+                mLayout_material.addView(getMaterialInfoView(null), mLayout_material.getChildCount());
                 mScrollView_material.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -156,7 +167,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
     private void save(boolean withDone) {
         mList_matItem = new ArrayList<>();
         Map<String, Integer> layersMap = new HashMap<>();
-        int childCount = mLayout_material.getChildCount() - 1;
+        int childCount = mLayout_material.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childView = mLayout_material.getChildAt(i);
             TextView tv_num = (TextView) childView.findViewById(R.id.tv_recordLabu_materialNum);
@@ -274,11 +285,7 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
     }
 
     private void refreshMatInfoView() {
-        int count = mLayout_material.getChildCount();
-        for (int i = 0; i < count - 1; i++) {
-            //移除原有子view，因为布局内包含了“添加物料”按钮，所以最后一个不移除
-            mLayout_material.removeViewAt(i);
-        }
+        mLayout_material.removeAllViews();
 
         for (UpdateLabuBo.MatItem materialInfo : mList_matItem) {
             mLayout_material.addView(getMaterialInfoView(materialInfo), mLayout_material.getChildCount() - 1);

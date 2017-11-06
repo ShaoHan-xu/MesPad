@@ -2,12 +2,12 @@ package com.eeka.mespad.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +23,7 @@ import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.squareup.picasso.Picasso;
@@ -50,6 +51,8 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
     private LinearLayout mLayout_material;
 
     private boolean isSubmit;
+
+    private int mFlag;
 
     public CutReturnMatDialog(@NonNull Context context, int type, @NonNull ReturnMaterialInfoBo returnMaterialInfo) {
         super(context);
@@ -95,6 +98,22 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
 
         TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_returnMaterial_orderNum);
         tv_orderNum.setText(mReturnMaterialInfo.getOrderNum());
+
+        mLayout_material.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                //获取View可见区域的bottom
+                Rect rect = new Rect();
+                mLayout_material.getWindowVisibleDisplayFrame(rect);
+                if (bottom != 0 && oldBottom != 0 && bottom - rect.bottom <= 0) {
+                    mView.findViewById(R.id.spaceView).setVisibility(View.VISIBLE);
+                    Logger.d("隐藏");
+                } else {
+                    mView.findViewById(R.id.spaceView).setVisibility(View.GONE);
+                    Logger.d("弹出");
+                }
+            }
+        });
     }
 
     private void initData() {
