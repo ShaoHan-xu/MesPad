@@ -664,12 +664,12 @@ public class HttpHelper {
     }
 
     public static String getPadIp() {
-//        PAD_IP = NetUtil.getHostIP();
+        PAD_IP = NetUtil.getHostIP();
 //        PAD_IP = "10.7.25.179";//质检
 //        PAD_IP = "10.7.25.122";//上裁
 //        PAD_IP = "10.7.25.120";//缝制
 //        PAD_IP = "10.7.25.198";//裁剪
-        PAD_IP = "10.8.94.144";
+//        PAD_IP = "10.8.94.144";
         return PAD_IP;
     }
 
