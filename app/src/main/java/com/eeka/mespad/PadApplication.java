@@ -8,6 +8,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.utils.SpUtil;
+import com.tencent.bugly.Bugly;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
@@ -27,11 +28,13 @@ public class PadApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Bugly.init(getApplicationContext(), "6af52b66e6", true);
+
         mContext = this;
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
-        CrashHandler.getInstance().init(getApplicationContext());
+//        CrashHandler.getInstance().init(getApplicationContext());
 
         String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
         if (!TextUtils.isEmpty(systemCode)) {
