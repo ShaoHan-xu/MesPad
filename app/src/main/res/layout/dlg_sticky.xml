@@ -39,26 +39,6 @@
         android:id="@+id/radioGroup_sticky"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <RadioButton
-            android:id="@+id/rb_sticky_1"
-            style="@style/textStyle_default"
-            android:layout_margin="5dp"
-            android:text="净裁片局部粘朴" />
-
-        <RadioButton
-            android:id="@+id/rb_sticky_2"
-            style="@style/textStyle_default"
-            android:layout_margin="5dp"
-            android:text="净裁片粘全朴" />
-
-        <RadioButton
-            android:id="@+id/rb_sticky_4"
-            style="@style/textStyle_default"
-            android:layout_margin="5dp"
-            android:text="整卷面料粘朴" />
-
-    </RadioGroup>
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

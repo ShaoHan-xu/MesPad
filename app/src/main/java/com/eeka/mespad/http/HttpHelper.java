@@ -85,6 +85,7 @@ public class HttpHelper {
     public static final String saveQCClothSizeData = BASE_URL + "logNcPad/saveDcCollect?";
     public static final String initNcForQA = BASE_URL + "logNcPad/initNcForQA?";
     public static final String getBomInfo = BASE_URL + "sweing/getBomInfo?";
+    public static final String getDictionaryData = BASE_URL + "common/getDictionaryData?";
 
     private static Context mContext;
 
@@ -595,7 +596,7 @@ public class HttpHelper {
     /**
      * 选择粘朴方式
      */
-    public static void tellFusingStyleToGST(String processLot, int stickyCode, HttpCallback callback) {
+    public static void tellFusingStyleToGST(String processLot, String stickyCode, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("PROCESS_LOT_BO", processLot);
@@ -644,6 +645,17 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("ordernumber", sfc);
         HttpRequest.post(getBomInfo, params, getResponseHandler(getBomInfo, callback));
+    }
+
+    /**
+     * 获取字典数据
+     */
+    public static void getDictionaryData(String code, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("code", code);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getDictionaryData, params, getResponseHandler(getDictionaryData, callback));
     }
 
     /**

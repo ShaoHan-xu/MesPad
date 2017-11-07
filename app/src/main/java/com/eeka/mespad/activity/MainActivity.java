@@ -90,6 +90,7 @@ public class MainActivity extends NFCActivity {
 
         SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_RETURN, null);
         SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_ADD, null);
+        SpUtil.saveStickyData(null);
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 

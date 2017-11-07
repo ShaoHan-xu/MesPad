@@ -10,6 +10,8 @@ import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.StickyTypeBo;
+import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 
 import java.util.List;
@@ -185,5 +187,24 @@ public class SpUtil {
         return null;
     }
 
+    /**
+     * 保存粘朴方式
+     */
+    public static void saveStickyData(String data) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putString("sticky", data);
+        edit.apply();
+    }
+
+    /**
+     * 获取粘朴方式数据列表
+     */
+    public static List<StickyTypeBo> getStickyData() {
+        String BTReason = mSP.getString("sticky", null);
+        if (!TextUtils.isEmpty(BTReason)) {
+            return JSON.parseArray(BTReason, StickyTypeBo.class);
+        }
+        return null;
+    }
 
 }
