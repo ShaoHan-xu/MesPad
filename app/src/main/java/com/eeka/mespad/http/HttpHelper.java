@@ -66,7 +66,6 @@ public class HttpHelper {
     public static final String cutMaterialReturnOrFeeding = BASE_URL + "cutpad/cutMaterialReturnOrFeeding?";
     public static final String hangerBinding = BASE_URL + "hanger/bind?";
     public static final String hangerUnbind = BASE_URL + "hanger/unbind?";
-    public static final String getBTReason = BASE_URL + "cutpad/getBTReasons?";
     public static final String getSuspendBaseData = BASE_URL + "bandpad/initial?";
     public static final String getSuspendUndoList = BASE_URL + "bandpad/getSfcs?";
     public static final String getSfcComponents = BASE_URL + "bandpad/getSfcComponents?";
@@ -409,17 +408,6 @@ public class HttpHelper {
     }
 
     /**
-     * 获取退补料原因数据
-     *
-     * @param type 类型，2=退料，3=补料
-     */
-    public static void getBTReason(int type, HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        params.put("type", type);
-        HttpRequest.post(getBTReason, params, getResponseHandler(getBTReason, callback));
-    }
-
-    /**
      * 获取上裁工序基础数据
      *
      * @param positionBo 站位bo
@@ -649,6 +637,10 @@ public class HttpHelper {
 
     /**
      * 获取字典数据
+     * code:
+     * ZpType = 粘朴数据
+     * BlReason = 补料数据
+     * TlReason = 退料数据
      */
     public static void getDictionaryData(String code, HttpCallback callback) {
         RequestParams params = getBaseParams();

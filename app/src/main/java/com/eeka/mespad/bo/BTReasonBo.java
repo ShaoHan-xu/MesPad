@@ -5,6 +5,7 @@ package com.eeka.mespad.bo;
  * Created by Lenovo on 2017/8/14.
  */
 public class BTReasonBo {
+
     private String REASON_CODE;
     private String REASON_DESC;
 

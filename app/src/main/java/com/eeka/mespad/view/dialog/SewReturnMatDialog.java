@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.BTReasonBo;
+import com.eeka.mespad.bo.DictionaryDataBo;
 import com.eeka.mespad.bo.SewReturnMatBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
@@ -69,7 +70,13 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
         mList_reason = SpUtil.getBTReason(mType);
         if (mList_reason == null || mList_reason.size() == 0) {
             LoadingDialog.show(mContext);
-            HttpHelper.getBTReason(mType, this);
+            String code = null;
+            if (mType == 2) {
+                code = DictionaryDataBo.CODE_BTReason;
+            } else if (mType == 3) {
+                code = DictionaryDataBo.CODE_BIReason;
+            }
+            HttpHelper.getDictionaryData(code, this);
         }
     }
 
@@ -190,7 +197,13 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
                     mList_reason = SpUtil.getBTReason(mType);
                     if (mList_reason == null || mList_reason.size() == 0) {
                         LoadingDialog.show(mContext);
-                        HttpHelper.getBTReason(mType, SewReturnMatDialog.this);
+                        String code = null;
+                        if (mType == 2) {
+                            code = DictionaryDataBo.CODE_BTReason;
+                        } else if (mType == 3) {
+                            code = DictionaryDataBo.CODE_BIReason;
+                        }
+                        HttpHelper.getDictionaryData(code, SewReturnMatDialog.this);
                     }
                 }
             }
@@ -244,12 +257,16 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
             } else if (HttpHelper.cutMaterialReturnOrFeeding.equals(url)) {
                 Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
                 dismiss();
-            } else if (HttpHelper.getBTReason.equals(url)) {
-                String resultStr = HttpHelper.getResultStr(resultJSON);
-                if (!TextUtils.isEmpty(resultStr)) {
-                    String jsonArray = resultJSON.getJSONObject("result").getJSONArray("REASONS").toJSONString();
-                    SpUtil.saveBTReasons(mType, jsonArray);
-                    mList_reason = JSON.parseArray(jsonArray, BTReasonBo.class);
+            } else if (HttpHelper.getDictionaryData.equals(url)) {
+                String jsonArray = resultJSON.getJSONArray("result").toString();
+                SpUtil.saveBTReasons(mType, jsonArray);
+                List<DictionaryDataBo> list = JSON.parseArray(jsonArray, DictionaryDataBo.class);
+                mList_reason = new ArrayList<>();
+                for (DictionaryDataBo dic : list) {
+                    BTReasonBo reasonBo = new BTReasonBo();
+                    reasonBo.setREASON_CODE(dic.getVALUE());
+                    reasonBo.setREASON_DESC(dic.getLABEL());
+                    mList_reason.add(reasonBo);
                 }
             }
         } else {

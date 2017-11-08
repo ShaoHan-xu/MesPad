@@ -13,13 +13,12 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.StickyTypeBo;
+import com.eeka.mespad.bo.DictionaryDataBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public class StickyDialog extends Dialog implements HttpCallback {
     private Context mContext;
     private String mProcessLot;
     private RadioGroup mRadioGroup;
-    private List<StickyTypeBo> mList;
+    private List<DictionaryDataBo> mList;
 
     public StickyDialog(@NonNull Context context, String processLot) {
         super(context);
@@ -65,11 +64,11 @@ public class StickyDialog extends Dialog implements HttpCallback {
         mList = SpUtil.getStickyData();
         if (mList == null || mList.size() == 0) {
             LoadingDialog.show(mContext);
-            HttpHelper.getDictionaryData("ZpType", new HttpCallback() {
+            HttpHelper.getDictionaryData(DictionaryDataBo.CODE_STICKY, new HttpCallback() {
                 @Override
                 public void onSuccess(String url, JSONObject resultJSON) {
                     if (HttpHelper.isSuccess(resultJSON)) {
-                        mList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), StickyTypeBo.class);
+                        mList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), DictionaryDataBo.class);
                         SpUtil.saveStickyData(JSON.toJSONString(mList));
                         initView();
                     } else {
@@ -92,7 +91,7 @@ public class StickyDialog extends Dialog implements HttpCallback {
     private void initView() {
         mRadioGroup.removeAllViews();
         for (int i = 0; i < mList.size(); i++) {
-            StickyTypeBo item = mList.get(i);
+            DictionaryDataBo item = mList.get(i);
             RadioButton radioButton = new RadioButton(mContext);
             radioButton.setTextSize(18);
             radioButton.setTextColor(mContext.getResources().getColor(R.color.text_black_default));

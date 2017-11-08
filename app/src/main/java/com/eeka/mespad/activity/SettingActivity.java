@@ -20,6 +20,8 @@ import com.eeka.mespad.manager.UpdateManager;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -68,6 +70,8 @@ public class SettingActivity extends BaseActivity {
                 mTv_systemCode.setText("D系统");
             } else if ("Q".equals(systemCode)) {
                 mTv_systemCode.setText("Q系统");
+            } else if ("P".equals(systemCode)) {
+                mTv_systemCode.setText("P系统");
             }
         }
 
@@ -81,8 +85,9 @@ public class SettingActivity extends BaseActivity {
                 startActivity(new Intent(mContext, LoginActivity.class));
                 break;
             case R.id.tv_checkUpdate:
-                showLoading();
-                HttpHelper.getAPKUrl(this);
+//                showLoading();
+//                HttpHelper.getAPKUrl(this);
+                Beta.checkUpgrade();
                 break;
             case R.id.layout_debugSwitch:
                 mDebugSwitch.setChecked(!mDebugSwitch.isChecked());

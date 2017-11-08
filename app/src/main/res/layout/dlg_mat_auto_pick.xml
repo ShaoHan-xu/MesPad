@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/textStyle_default"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="自动捡选提示"
+        android:textSize="@dimen/textSize_title"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="生产订单：" />
+
+            <TextView
+                android:id="@+id/tv_autoPick_shopOrder"
+                style="@style/textStyle_default"
+                android:text="HHHHH" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="成品批次：" />
+
+            <TextView
+                android:id="@+id/tv_autoPick_"
+                style="@style/textStyle_default"
+                android:text="HH" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_done"
+        style="@style/btnStyle_primary"
+        android:layout_marginTop="10dp"
+        android:text="调用" />
+</LinearLayout>
