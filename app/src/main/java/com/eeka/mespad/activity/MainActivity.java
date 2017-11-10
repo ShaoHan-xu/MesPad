@@ -271,6 +271,14 @@ public class MainActivity extends NFCActivity {
                     button.setText("缝制退补料申请");
                     button.setId(R.id.btn_returnForSew);
                     break;
+                case "AUTO_PICK":
+                    button.setText("拣选");
+                    button.setId(R.id.btn_autoPicking);
+                    break;
+                case "GY_PIC":
+                    button.setText("工艺图");
+                    button.setId(R.id.btn_gyPic);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -511,6 +519,17 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_returnForSew:
                 if (mSewFragment != null) {
                     mSewFragment.returnOrFeeding();
+                }
+            case R.id.btn_autoPicking:
+                if (mCutFragment != null) {
+                    mCutFragment.autoPicking();
+                } else if (mSuspendFragment != null) {
+                    mSuspendFragment.autoPicking();
+                }
+                break;
+            case R.id.btn_gyPic:
+                if (mSewFragment != null) {
+                    mSewFragment.lookOutlinePic();
                 }
                 break;
         }

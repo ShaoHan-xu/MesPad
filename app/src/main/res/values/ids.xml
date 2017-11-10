@@ -24,4 +24,6 @@
     <item name="btn_sticky" type="id" />
     <item name="btn_gotoQC" type="id" />
     <item name="btn_returnForSew" type="id" />
+    <item name="btn_autoPicking" type="id" />
+    <item name="btn_gyPic" type="id" />
 </resources>

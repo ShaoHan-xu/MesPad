@@ -14,7 +14,25 @@ public class SuspendComponentBo {
      */
 
     private String SFC;
+    private String SHOP_ORDER;
+    private String ITEM;
     private List<COMPONENTSBean> COMPONENTS;
+
+    public String getSHOP_ORDER() {
+        return SHOP_ORDER;
+    }
+
+    public void setSHOP_ORDER(String SHOP_ORDER) {
+        this.SHOP_ORDER = SHOP_ORDER;
+    }
+
+    public String getITEM() {
+        return ITEM;
+    }
+
+    public void setITEM(String ITEM) {
+        this.ITEM = ITEM;
+    }
 
     public String getSFC() {
         return SFC;

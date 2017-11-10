@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
+import com.eeka.mespad.activity.OutlinePicActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
@@ -172,6 +173,17 @@ public class SewFragment extends BaseFragment {
         }
         SewDataBo.SewAttr sewAttr = infos.get(currentItem);
         SystemUtils.playVideo(mContext, sewAttr.getAttributes().getVIDEO_URL());
+    }
+
+    /**
+     * 查看工艺图
+     */
+    public void lookOutlinePic() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        startActivity(OutlinePicActivity.getIntent(mContext, mSewData.getSfc()));
     }
 
     @Override

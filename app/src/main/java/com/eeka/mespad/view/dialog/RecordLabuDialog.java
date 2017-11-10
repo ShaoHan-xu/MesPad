@@ -2,7 +2,6 @@ package com.eeka.mespad.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -85,17 +84,6 @@ public class RecordLabuDialog extends Dialog implements View.OnClickListener {
         View btn_addMaterial = mView.findViewById(R.id.btn_recordLabu_addMaterial);
         btn_addMaterial.setOnClickListener(this);
 
-        getWindow().getDecorView().addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                //获取View可见区域的bottom
-                Rect rect = new Rect();
-                getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-                if (bottom != 0 && oldBottom != 0 && bottom - rect.bottom <= 0) {
-                } else {
-                }
-            }
-        });
     }
 
     private void initData() {

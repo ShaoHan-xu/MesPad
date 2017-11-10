@@ -26,6 +26,7 @@ import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.squareup.picasso.Picasso;
@@ -58,7 +59,6 @@ public class SuspendFragment extends BaseFragment {
 
     private ViewPager mVP_img;
     private List<String> mList_img;
-    private ImgAdapter mImgAdapter;
 
     @Nullable
     @Override
@@ -175,6 +175,17 @@ public class SuspendFragment extends BaseFragment {
     public void unBind() {
         CreateCardDialog dialog = new CreateCardDialog(mContext, mCurSFC);
         dialog.show();
+    }
+
+    /**
+     * 自动拣选
+     */
+    public void autoPicking() {
+        if (mComponent == null) {
+            toast("请先获取订单数据");
+            return;
+        }
+        new AutoPickDialog(mContext, mComponent.getSHOP_ORDER(), mComponent.getITEM(), "30").show();
     }
 
     private class ImgAdapter extends CommonVPAdapter<String> {
@@ -326,8 +337,7 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mList_img = JSON.parseArray(result.getJSONArray("PICTURE_URL").toString(), String.class);
-                mImgAdapter = new ImgAdapter(mContext, mList_img, R.layout.item_imageview);
-                mVP_img.setAdapter(mImgAdapter);
+                mVP_img.setAdapter(new ImgAdapter(mContext, mList_img, R.layout.item_imageview));
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
             } else if (HttpHelper.hangerUnbind.equals(url)) {

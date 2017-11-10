@@ -35,6 +35,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
@@ -308,6 +309,21 @@ public class CutFragment extends BaseFragment {
             toast("批次号为空");
         }
     }
+
+    /**
+     * 自动拣选
+     */
+    public void autoPicking() {
+        if (mTailorInfo == null) {
+            toast("请先获取订单数据");
+            return;
+        }
+        TailorInfoBo.SHOPORDERINFORBean orderInfor = mTailorInfo.getSHOP_ORDER_INFOR();
+        String shopOrder = orderInfor.getSHOP_ORDER();
+        String itemCode = orderInfor.getITEM();
+        new AutoPickDialog(mContext, shopOrder, itemCode, "20").show();
+    }
+
 
     private StartWorkParamsBo getStartAndCompleteParams() {
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();

@@ -85,6 +85,8 @@ public class HttpHelper {
     public static final String initNcForQA = BASE_URL + "logNcPad/initNcForQA?";
     public static final String getBomInfo = BASE_URL + "sweing/getBomInfo?";
     public static final String getDictionaryData = BASE_URL + "common/getDictionaryData?";
+    public static final String automaticPicking = BASE_URL + "cutpad/automaticPicking?";
+    public static final String getOutlineInfo = BASE_URL + "syncCraftPic/craficInfo?";
 
     private static Context mContext;
 
@@ -651,6 +653,36 @@ public class HttpHelper {
     }
 
     /**
+     * 自动拣选
+     *
+     * @param shopOrder    订单号
+     * @param itemCode     款号
+     * @param locationType 库位类型 20=裁剪段，30=上裁段
+     */
+    public static void autoPicking(String shopOrder, String itemCode, String locationType, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("referDocCode", shopOrder);
+        json.put("itemCode", itemCode);
+        json.put("LocationTypeCode", locationType);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(automaticPicking, params, getResponseHandler(automaticPicking, callback));
+    }
+
+    /**
+     * 获取线稿图数据
+     *
+     * @param sfc sfc
+     */
+    public static void getOutlineInfo(String sfc, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC", sfc);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getOutlineInfo, params, getResponseHandler(getOutlineInfo, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     public static RequestParams getBaseParams() {
@@ -669,11 +701,7 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.7.25.179";//质检
-//        PAD_IP = "10.7.25.122";//上裁
-//        PAD_IP = "10.7.25.120";//缝制
-//        PAD_IP = "10.7.25.198";//裁剪
-//        PAD_IP = "10.8.94.144";
+//        PAD_IP = "10.7.25.111";
         return PAD_IP;
     }
 

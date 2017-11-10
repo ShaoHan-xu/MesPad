@@ -77,6 +77,10 @@
             android:name=".activity.SettingActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.OutlinePicActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 
