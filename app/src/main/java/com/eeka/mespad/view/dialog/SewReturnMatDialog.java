@@ -67,16 +67,13 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
         initView();
 
         mType = TYPE_RETURN;
-        mList_reason = SpUtil.getBTReason(mType);
-        if (mList_reason == null || mList_reason.size() == 0) {
+        String code = DictionaryDataBo.CODE_BlReason;
+        List<DictionaryDataBo> list = SpUtil.getDictionaryData(code);
+        if (list == null || list.size() == 0) {
             LoadingDialog.show(mContext);
-            String code = null;
-            if (mType == 2) {
-                code = DictionaryDataBo.CODE_BTReason;
-            } else if (mType == 3) {
-                code = DictionaryDataBo.CODE_BIReason;
-            }
             HttpHelper.getDictionaryData(code, this);
+        } else {
+            initData(list);
         }
     }
 
@@ -95,6 +92,16 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
 
         if (!TextUtils.isEmpty(mSFC))
             search();
+    }
+
+    private void initData(List<DictionaryDataBo> list) {
+        mList_reason = new ArrayList<>();
+        for (DictionaryDataBo dic : list) {
+            BTReasonBo reasonBo = new BTReasonBo();
+            reasonBo.setREASON_CODE(dic.getVALUE());
+            reasonBo.setREASON_DESC(dic.getLABEL());
+            mList_reason.add(reasonBo);
+        }
     }
 
     @Override
@@ -189,21 +196,20 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
                 } else if (t instanceof String) {
                     String type = (String) t;
                     mTv_type.setText(type);
+                    String code;
                     if ("退料".equals(type)) {
                         mType = TYPE_RETURN;
+                        code = DictionaryDataBo.CODE_TlReason;
                     } else {
                         mType = TYPE_ADD;
+                        code = DictionaryDataBo.CODE_BlReason;
                     }
-                    mList_reason = SpUtil.getBTReason(mType);
-                    if (mList_reason == null || mList_reason.size() == 0) {
+                    List<DictionaryDataBo> list = SpUtil.getDictionaryData(code);
+                    if (list == null || list.size() == 0) {
                         LoadingDialog.show(mContext);
-                        String code = null;
-                        if (mType == 2) {
-                            code = DictionaryDataBo.CODE_BTReason;
-                        } else if (mType == 3) {
-                            code = DictionaryDataBo.CODE_BIReason;
-                        }
                         HttpHelper.getDictionaryData(code, SewReturnMatDialog.this);
+                    } else {
+                        initData(list);
                     }
                 }
             }
@@ -259,15 +265,13 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
                 dismiss();
             } else if (HttpHelper.getDictionaryData.equals(url)) {
                 String jsonArray = resultJSON.getJSONArray("result").toString();
-                SpUtil.saveBTReasons(mType, jsonArray);
-                List<DictionaryDataBo> list = JSON.parseArray(jsonArray, DictionaryDataBo.class);
-                mList_reason = new ArrayList<>();
-                for (DictionaryDataBo dic : list) {
-                    BTReasonBo reasonBo = new BTReasonBo();
-                    reasonBo.setREASON_CODE(dic.getVALUE());
-                    reasonBo.setREASON_DESC(dic.getLABEL());
-                    mList_reason.add(reasonBo);
+                if (mType == 2) {
+                    SpUtil.saveDictionaryData(DictionaryDataBo.CODE_BlReason, jsonArray);
+                } else {
+                    SpUtil.saveDictionaryData(DictionaryDataBo.CODE_TlReason, jsonArray);
                 }
+                List<DictionaryDataBo> list = JSON.parseArray(jsonArray, DictionaryDataBo.class);
+                initData(list);
             }
         } else {
             ErrorDialog.showAlert(mContext, resultJSON.getString("message"));

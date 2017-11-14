@@ -12,6 +12,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.BuildConfig;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.PushJson;
@@ -20,7 +21,6 @@ import com.eeka.mespad.manager.UpdateManager;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.ErrorDialog;
-import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +61,14 @@ public class SettingActivity extends BaseActivity {
 
         TextView tv_version = (TextView) findViewById(R.id.tv_version);
         tv_version.setOnClickListener(this);
-        tv_version.setText("版本：" + SystemUtils.getAppVersionName(mContext) + "(" + SystemUtils.getAppVersionCode(mContext) + ")");
+        StringBuilder sb = new StringBuilder("版本：");
+        sb.append(SystemUtils.getAppVersionName(mContext));
+        sb.append("(").append(SystemUtils.getAppVersionCode(mContext)).append(")");
+        sb.append("_").append(SystemUtils.getChannelName(this));
+        if (SystemUtils.isApkInDebug(mContext)) {
+            sb.append("_debug");
+        }
+        tv_version.setText(sb.toString());
 
         mTv_systemCode = (TextView) findViewById(R.id.tv_setting_system);
         String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
@@ -138,6 +145,8 @@ public class SettingActivity extends BaseActivity {
                 checked = 0;
             } else if (s.contains("Q")) {
                 checked = 1;
+            } else if (s.contains("P")) {
+                checked = 2;
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -154,6 +163,9 @@ public class SettingActivity extends BaseActivity {
                     } else if (which == 1) {
                         SpUtil.save(SpUtil.KEY_SYSTEMCODE, "Q");
                         PadApplication.BASE_URL = PadApplication.BASE_URL_Q;
+                    } else if (which == 2) {
+                        SpUtil.save(SpUtil.KEY_SYSTEMCODE, "P");
+                        PadApplication.BASE_URL = PadApplication.BASE_URL_P;
                     }
                     ErrorDialog.showConfirmAlert(mContext, "系统切换成功，重启应用后生效。", new View.OnClickListener() {
                         @Override

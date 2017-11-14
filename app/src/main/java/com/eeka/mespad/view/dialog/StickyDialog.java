@@ -61,7 +61,7 @@ public class StickyDialog extends Dialog implements HttpCallback {
         setContentView(view);
         setCanceledOnTouchOutside(false);
 
-        mList = SpUtil.getStickyData();
+        mList = SpUtil.getDictionaryData(DictionaryDataBo.CODE_STICKY);
         if (mList == null || mList.size() == 0) {
             LoadingDialog.show(mContext);
             HttpHelper.getDictionaryData(DictionaryDataBo.CODE_STICKY, new HttpCallback() {
@@ -69,7 +69,7 @@ public class StickyDialog extends Dialog implements HttpCallback {
                 public void onSuccess(String url, JSONObject resultJSON) {
                     if (HttpHelper.isSuccess(resultJSON)) {
                         mList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), DictionaryDataBo.class);
-                        SpUtil.saveStickyData(JSON.toJSONString(mList));
+                        SpUtil.saveDictionaryData(DictionaryDataBo.CODE_STICKY,JSON.toJSONString(mList));
                         initView();
                     } else {
                         ErrorDialog.showAlert(mContext, resultJSON.getString("message"));

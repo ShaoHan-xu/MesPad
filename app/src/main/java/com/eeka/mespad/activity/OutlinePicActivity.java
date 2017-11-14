@@ -7,7 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONArray;
@@ -62,6 +64,9 @@ public class OutlinePicActivity extends BaseActivity {
         for (int i = 0; i < result.size(); i++) {
             JSONObject item = result.getJSONObject(i);
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_imageview, null);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.weight = 1;
+            view.setLayoutParams(params);
             String pictureUrl = item.getString("PICTURE_URL");
             if (!isEmpty(pictureUrl)) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.imageView);

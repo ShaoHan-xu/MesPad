@@ -685,7 +685,7 @@ public class HttpHelper {
     /**
      * 获取固定请求参数<br>
      */
-    public static RequestParams getBaseParams() {
+    private static RequestParams getBaseParams() {
         PAD_IP = getPadIp();
         RequestParams params = new RequestParams();
         String site = SpUtil.getSite();

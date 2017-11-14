@@ -9,6 +9,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.utils.SpUtil;
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
@@ -28,9 +29,8 @@ public class PadApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Bugly.init(getApplicationContext(), "6af52b66e6", true);
-
         mContext = this;
+        initBugly();
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
@@ -53,6 +53,12 @@ public class PadApplication extends Application {
         String site = SpUtil.getSite();
         if (TextUtils.isEmpty(site))
             SpUtil.saveSite("8081");
+    }
+
+    private void initBugly(){
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(mContext);
+        strategy.setAppChannel("LongHua");
+        Bugly.init(getApplicationContext(), "6af52b66e6", true);
     }
 
     private void initOkHttp() {

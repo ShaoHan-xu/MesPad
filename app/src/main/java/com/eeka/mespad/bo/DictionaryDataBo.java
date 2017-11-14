@@ -7,8 +7,8 @@ package com.eeka.mespad.bo;
 
 public class DictionaryDataBo {
     public static final String CODE_STICKY = "ZpType";//获取粘朴数据的keyCode
-    public static final String CODE_BIReason = "BlReason";//获取补料数据的code
-    public static final String CODE_BTReason = "TlReason";//获取退料数据的code
+    public static final String CODE_BlReason = "BlReason";//获取补料数据的code
+    public static final String CODE_TlReason = "TlReason";//获取退料数据的code
 
     private String VALUE;
     private String LABEL;

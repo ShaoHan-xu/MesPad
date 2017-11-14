@@ -23,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="CHANNEL"
+            android:value="${CHANNEL_VALUE}" />
+
         <service android:name=".service.MQTTService" />
         <service android:name="org.eclipse.paho.android.service.MqttService" />
 

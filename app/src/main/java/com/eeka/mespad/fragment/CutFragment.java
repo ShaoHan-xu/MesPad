@@ -685,26 +685,30 @@ public class CutFragment extends BaseFragment {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (url.equals(HttpHelper.findProcessWithPadId_url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
-                mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
+                if (result != null) {
+                    mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
+                }
             } else if (url.equals(HttpHelper.viewCutPadInfo_url)) {
                 JSONObject result1 = resultJSON.getJSONObject("result");
-                mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
-                if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
-                    mBtn_done.setEnabled(false);
-                    ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
-                    mTailorInfo.setOPER_INFOR(mList_processData);
-                } else {
-                    mBtn_done.setEnabled(true);
-                    ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
-                    mList_processData = mTailorInfo.getOPER_INFOR();
-                }
-                mTailorInfo.setOrderType(mOrderType);
-                mTailorInfo.setRFID(mRFID);
-                refreshView();
+                if (result1 != null) {
+                    mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
+                    if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
+                        mBtn_done.setEnabled(false);
+                        ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
+                        mTailorInfo.setOPER_INFOR(mList_processData);
+                    } else {
+                        mBtn_done.setEnabled(true);
+                        ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
+                        mList_processData = mTailorInfo.getOPER_INFOR();
+                    }
+                    mTailorInfo.setOrderType(mOrderType);
+                    mTailorInfo.setRFID(mRFID);
+                    refreshView();
 
-                //更新订单后需要清空之前的记录
-                mList_recordNC = new ArrayList<>();
-                mLabuData = null;
+                    //更新订单后需要清空之前的记录
+                    mList_recordNC = new ArrayList<>();
+                    mLabuData = null;
+                }
             } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {
 //                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);

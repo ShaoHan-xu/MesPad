@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Point;
 import android.net.Uri;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.eeka.mespad.BuildConfig;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
@@ -218,11 +221,31 @@ public class SystemUtils {
             return info.versionName;
         } catch (NameNotFoundException e) {
             Logger.e(e);
-            return "";
         }
+        return null;
     }
 
-    // @SuppressWarnings("deprecation")
+    public static String getChannelName(Activity activity) {
+        try {
+            ApplicationInfo appInfo = activity.getPackageManager().getApplicationInfo(activity.getPackageName(), PackageManager.GET_META_DATA);
+            return appInfo.metaData.getString("CHANNEL");
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 判断当前应用是否是debug状态
+     */
+    public static boolean isApkInDebug(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @SuppressLint("NewApi")
     public static void readSDCard() {

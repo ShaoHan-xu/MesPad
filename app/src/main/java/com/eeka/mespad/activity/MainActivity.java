@@ -44,7 +44,6 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
-import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -88,9 +87,7 @@ public class MainActivity extends NFCActivity {
         MQTTService.actionStart(mContext);
         EventBus.getDefault().register(this);
 
-        SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_RETURN, null);
-        SpUtil.saveBTReasons(CutReturnMatDialog.TYPE_ADD, null);
-        SpUtil.saveStickyData(null);
+        SpUtil.cleanDictionaryData();
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 

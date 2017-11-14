@@ -69,19 +69,18 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
         setCanceledOnTouchOutside(false);
 
         initView();
-
-        mList_reason = SpUtil.getBTReason(mType);
-        if (mList_reason == null || mList_reason.size() == 0) {
+        String code = null;
+        if (mType == TYPE_ADD) {
+            code = DictionaryDataBo.CODE_BlReason;
+        } else if (mType == TYPE_RETURN) {
+            code = DictionaryDataBo.CODE_TlReason;
+        }
+        List<DictionaryDataBo> list = SpUtil.getDictionaryData(code);
+        if (list == null || list.size() == 0) {
             LoadingDialog.show(mContext);
-            String code = null;
-            if (mType == 2) {
-                code = DictionaryDataBo.CODE_BTReason;
-            } else if (mType == 3) {
-                code = DictionaryDataBo.CODE_BIReason;
-            }
             HttpHelper.getDictionaryData(code, this);
         } else {
-            initData();
+            initData(list);
         }
     }
 
@@ -121,7 +120,14 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
         });
     }
 
-    private void initData() {
+    private void initData(List<DictionaryDataBo> list) {
+        mList_reason = new ArrayList<>();
+        for (DictionaryDataBo dic : list) {
+            BTReasonBo reasonBo = new BTReasonBo();
+            reasonBo.setREASON_CODE(dic.getVALUE());
+            reasonBo.setREASON_DESC(dic.getLABEL());
+            mList_reason.add(reasonBo);
+        }
         List<ReturnMaterialInfoBo.MaterialInfoBo> infoList = mReturnMaterialInfo.getMaterialInfoList();
         for (int i = 0; i < infoList.size(); i++) {
             ReturnMaterialInfoBo.MaterialInfoBo material = infoList.get(i);
@@ -272,16 +278,13 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
                 dismiss();
             } else if (HttpHelper.getDictionaryData.equals(url)) {
                 String jsonArray = resultJSON.getJSONArray("result").toString();
-                SpUtil.saveBTReasons(mType, jsonArray);
-                List<DictionaryDataBo> list = JSON.parseArray(jsonArray, DictionaryDataBo.class);
-                mList_reason = new ArrayList<>();
-                for (DictionaryDataBo dic : list) {
-                    BTReasonBo reasonBo = new BTReasonBo();
-                    reasonBo.setREASON_CODE(dic.getVALUE());
-                    reasonBo.setREASON_DESC(dic.getLABEL());
-                    mList_reason.add(reasonBo);
+                if (mType == 2) {
+                    SpUtil.saveDictionaryData(DictionaryDataBo.CODE_BlReason, jsonArray);
+                } else if (mType == 3) {
+                    SpUtil.saveDictionaryData(DictionaryDataBo.CODE_TlReason, jsonArray);
                 }
-                initData();
+                List<DictionaryDataBo> list = JSON.parseArray(jsonArray, DictionaryDataBo.class);
+                initData(list);
             }
         } else {
             ErrorDialog.showAlert(mContext, resultJSON.getString("message"));

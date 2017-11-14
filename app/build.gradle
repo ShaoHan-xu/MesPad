@@ -16,10 +16,16 @@ android {
             abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false
+            // 移除无用的resource文件
+//            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
         }
     }
 
@@ -34,6 +40,23 @@ android {
         }
     }
 
+    productFlavors {
+        longhua {
+            applicationId "com.eeka.mespad.lh"
+            // 动态添加 string.xml 字段；
+            // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
+            resValue "string", "app_name", "赢领智裳_LH"
+        }
+        yudu {
+            applicationId "com.eeka.mespad.yd"
+            resValue "string", "app_name", "赢领智裳_YD"
+        }
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
+    }
+
     //指定打包后应用名称
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -41,10 +64,10 @@ android {
             def fileName
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 if (variant.buildType.name == 'release') {
-                    fileName = "MesPad_${defaultConfig.versionName}_${defaultConfig.versionCode}.apk"
+                    fileName = "MesPad_${defaultConfig.versionName}_${defaultConfig.versionCode}_${variant.productFlavors[0].name}.apk"
 //                    fileName = "MesPad.apk"
                 } else if (variant.buildType.name == 'debug') {
-                    fileName = "MesPad_${defaultConfig.versionName}_${defaultConfig.versionCode}_debug.apk"
+                    fileName = "MesPad_${defaultConfig.versionName}_${defaultConfig.versionCode}_${variant.productFlavors[0].name}_debug.apk"
                 }
                 output.outputFile = new File(outputFile.parent, fileName)
             }

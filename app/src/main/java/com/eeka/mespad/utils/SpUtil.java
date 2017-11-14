@@ -7,10 +7,9 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
-import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.ContextInfoBo;
-import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.DictionaryDataBo;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
 
 import java.util.List;
@@ -167,39 +166,30 @@ public class SpUtil {
     }
 
     /**
-     * 保存退补料原因
+     * 保存字典数据
      */
-    public static void saveBTReasons(int type, String reasons) {
+    public static void saveDictionaryData(String key, String data) {
         SharedPreferences.Editor edit = mSP.edit();
-        edit.putString("BTReasons_" + type, reasons);
+        edit.putString("dictionaryData_" + key, data);
         edit.apply();
     }
 
     /**
-     * 获取退补料原因
+     * 清空字典数据
      */
-    public static List<BTReasonBo> getBTReason(int type) {
-        String BTReason = mSP.getString("BTReasons_" + type, null);
-        if (!TextUtils.isEmpty(BTReason)) {
-            return JSON.parseArray(BTReason, BTReasonBo.class);
-        }
-        return null;
-    }
-
-    /**
-     * 保存粘朴方式
-     */
-    public static void saveStickyData(String data) {
+    public static void cleanDictionaryData() {
         SharedPreferences.Editor edit = mSP.edit();
-        edit.putString("sticky", data);
+        edit.putString("dictionaryData_" + DictionaryDataBo.CODE_STICKY, null);
+        edit.putString("dictionaryData_" + DictionaryDataBo.CODE_BlReason, null);
+        edit.putString("dictionaryData_" + DictionaryDataBo.CODE_TlReason, null);
         edit.apply();
     }
 
     /**
-     * 获取粘朴方式数据列表
+     * 获取字典数据
      */
-    public static List<DictionaryDataBo> getStickyData() {
-        String BTReason = mSP.getString("sticky", null);
+    public static List<DictionaryDataBo> getDictionaryData(String key) {
+        String BTReason = mSP.getString("dictionaryData_" + key, null);
         if (!TextUtils.isEmpty(BTReason)) {
             return JSON.parseArray(BTReason, DictionaryDataBo.class);
         }
