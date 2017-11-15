@@ -1,5 +1,23 @@
 apply plugin: 'com.android.application'
 
+def keystoreFilepath = ""
+def keystorePSW = ""
+def keystoreAlias = ""
+def keystoreAliasPSW = ""
+// default keystore file, PLZ config file path in local.properties
+def keyFile = file('s.keystore.temp')
+
+Properties properties = new Properties()
+// local.properties file in the root director
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+keystoreFilepath = properties.getProperty("keystore.path")
+
+if (keystoreFilepath) {
+    keystorePSW = properties.getProperty("keystore.password")
+    keystoreAlias = properties.getProperty("keystore.alias")
+    keystoreAliasPSW = properties.getProperty("keystore.alias_password")
+    keyFile = file(keystoreFilepath)
+}
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -17,11 +35,31 @@ android {
         }
     }
 
+    signingConfigs {
+        debug {
+            v1SigningEnabled true
+            v2SigningEnabled true
+
+            keyAlias keystoreAlias
+            keyPassword keystoreAliasPSW
+            storeFile keyFile
+            storePassword keystorePSW
+        }
+        release {
+            v1SigningEnabled true
+            v2SigningEnabled true
+
+            keyAlias keystoreAlias
+            keyPassword keystoreAliasPSW
+            storeFile keyFile
+            storePassword keystorePSW
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
-            // 移除无用的resource文件
-//            shrinkResources true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -29,28 +67,18 @@ android {
         }
     }
 
-    signingConfigs {
-        debug {
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-        release {
-            v1SigningEnabled true
-            v2SigningEnabled true
-        }
-    }
-
     productFlavors {
+        yudu {
+//            applicationId "com.eeka.mespad.yd"
+            resValue "string", "app_name", "赢领智裳_YD"
+        }
         longhua {
-            applicationId "com.eeka.mespad.lh"
+//            applicationId "com.eeka.mespad.lh"
             // 动态添加 string.xml 字段；
             // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
             resValue "string", "app_name", "赢领智裳_LH"
         }
-        yudu {
-            applicationId "com.eeka.mespad.yd"
-            resValue "string", "app_name", "赢领智裳_YD"
-        }
+
     }
 
     productFlavors.all {

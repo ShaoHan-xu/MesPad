@@ -324,7 +324,6 @@ public class CutFragment extends BaseFragment {
         new AutoPickDialog(mContext, shopOrder, itemCode, "20").show();
     }
 
-
     private StartWorkParamsBo getStartAndCompleteParams() {
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         StartWorkParamsBo params = new StartWorkParamsBo();

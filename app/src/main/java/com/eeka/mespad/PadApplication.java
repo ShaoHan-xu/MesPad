@@ -2,6 +2,7 @@ package com.eeka.mespad;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.util.TypeUtils;
@@ -9,7 +10,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.utils.SpUtil;
 import com.tencent.bugly.Bugly;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.bugly.beta.Beta;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
@@ -55,9 +56,10 @@ public class PadApplication extends Application {
             SpUtil.saveSite("8081");
     }
 
-    private void initBugly(){
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(mContext);
-        strategy.setAppChannel("LongHua");
+    private void initBugly() {
+        Beta.enableHotfix = false;//关闭热更新功能
+//        Beta.autoDownloadOnWifi = true;//WiFi网络下自动下载安装包
+//        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         Bugly.init(getApplicationContext(), "6af52b66e6", true);
     }
 
