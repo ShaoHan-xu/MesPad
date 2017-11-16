@@ -37,7 +37,7 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
     private TextView mTv_operationDesc;
     private EditText mEt_rfidNum;
 
-    private String mSFC, mRfId, mHangerId;
+    private String mSFC, mRFID, mHangerId;
 
     public CreateCardDialog(@NonNull Context context, String sfc) {
         super(context);
@@ -72,7 +72,7 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
         mView.findViewById(R.id.btn_cancel).setOnClickListener(this);
 
         mTv_site.setText("站点：" + SpUtil.getSite());
-        mTv_sfc.setText(mSFC);
+        mEt_sfc.setText(mSFC);
 
         if (!TextUtils.isEmpty(mSFC)) {
             search();
@@ -100,14 +100,14 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
     private void initData(JSONObject json) {
         mSFC = json.getString("sfc");
         mHangerId = json.getString("hangerId");
-        mRfId = json.getString("rfid");
+        mRFID = json.getString("rfid");
 
         mTv_sfc.setText(mSFC);
         mTv_hangerId.setText(mHangerId);
         mTv_orderNum.setText(json.getString("shopOrder"));
         mTv_operation.setText(json.getString("operation"));
         mTv_operationDesc.setText(json.getString("operationDesc"));
-        mEt_rfidNum.setText(mRfId);
+        mEt_rfidNum.setText(mRFID);
     }
 
     @Override
@@ -117,24 +117,45 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
                 search();
                 break;
             case R.id.btn_createCard_createCard:
-                mRfId = mEt_rfidNum.getText().toString();
-                LoadingDialog.show(mContext);
-                HttpHelper.createCard(mSFC, mRfId, this);
-                break;
-            case R.id.btn_createCard_unbind:
-                if (TextUtils.isEmpty(mHangerId)) {
-                    ErrorDialog.showAlert(mContext, "衣架号为空，请确认已制卡后再进行解绑操作;\n如果已制卡，请查询出衣架号，不为空后继续解绑。");
+                mRFID = mEt_rfidNum.getText().toString();
+                if (TextUtils.isEmpty(mRFID)) {
+                    ErrorDialog.showAlert(mContext, "请输入RFID卡号进行制卡");
                     return;
                 }
                 LoadingDialog.show(mContext);
-                JSONObject json = new JSONObject();
-                json.put("HANGER_ID", mHangerId);
-                HttpHelper.hangerUnbind(json, this);
+                HttpHelper.createCard(mSFC, mRFID, this);
+                break;
+            case R.id.btn_createCard_unbind:
+                if (TextUtils.isEmpty(mSFC)) {
+                    ErrorDialog.showAlert(mContext, "请输入工票号或者衣架号查询后再进行解绑操作");
+                    return;
+                }
+                if (TextUtils.isEmpty(mHangerId)) {
+                    ErrorDialog.showAlert(mContext, "该衣架已解绑");
+                    return;
+                }
+                if (TextUtils.isEmpty(mRFID)) {
+                    ErrorDialog.showConfirmAlert(mContext, "该衣架未制卡，是否确定解绑？", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            unBind();
+                        }
+                    });
+                    return;
+                }
+                unBind();
                 break;
             case R.id.btn_cancel:
                 dismiss();
                 break;
         }
+    }
+
+    private void unBind() {
+        LoadingDialog.show(mContext);
+        JSONObject json = new JSONObject();
+        json.put("HANGER_ID", mHangerId);
+        HttpHelper.hangerUnbind(json, this);
     }
 
     @Override
@@ -151,6 +172,7 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
                 Toast.makeText(mContext, "制卡成功", Toast.LENGTH_SHORT).show();
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 Toast.makeText(mContext, "解绑成功", Toast.LENGTH_SHORT).show();
+                mTv_hangerId.setText(null);
             } else if (HttpHelper.findCardInfoBySfcOrHangerId.equals(url)) {
                 initData(resultJSON.getJSONObject("result"));
             }

@@ -149,11 +149,10 @@ public class SewFragment extends BaseFragment {
      * 解绑
      */
     public void unBind() {
-        if (mSewData == null) {
-            showErrorDialog("请先获取工单数据");
+        if (mSewData != null) {
+            new CreateCardDialog(mContext, mSewData.getSfc()).show();
         } else {
-            CreateCardDialog dialog = new CreateCardDialog(mContext, mSewData.getSfc());
-            dialog.show();
+            new CreateCardDialog(mContext, null).show();
         }
     }
 

@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -30,7 +30,7 @@ public class StickyDialog extends Dialog implements HttpCallback {
 
     private Context mContext;
     private String mProcessLot;
-    private RadioGroup mRadioGroup;
+    private LinearLayout mLayout_sticky;
     private List<DictionaryDataBo> mList;
 
     public StickyDialog(@NonNull Context context, String processLot) {
@@ -55,7 +55,7 @@ public class StickyDialog extends Dialog implements HttpCallback {
             }
         });
 
-        mRadioGroup = (RadioGroup) view.findViewById(R.id.radioGroup_sticky);
+        mLayout_sticky = (LinearLayout) view.findViewById(R.id.layout_sticky);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(view);
@@ -64,72 +64,44 @@ public class StickyDialog extends Dialog implements HttpCallback {
         mList = SpUtil.getDictionaryData(DictionaryDataBo.CODE_STICKY);
         if (mList == null || mList.size() == 0) {
             LoadingDialog.show(mContext);
-            HttpHelper.getDictionaryData(DictionaryDataBo.CODE_STICKY, new HttpCallback() {
-                @Override
-                public void onSuccess(String url, JSONObject resultJSON) {
-                    if (HttpHelper.isSuccess(resultJSON)) {
-                        mList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), DictionaryDataBo.class);
-                        SpUtil.saveDictionaryData(DictionaryDataBo.CODE_STICKY,JSON.toJSONString(mList));
-                        initView();
-                    } else {
-                        ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
-                    }
-                    LoadingDialog.dismiss();
-                }
-
-                @Override
-                public void onFailure(String url, int code, String message) {
-                    LoadingDialog.dismiss();
-                    ErrorDialog.showAlert(mContext, message);
-                }
-            });
+            HttpHelper.getDictionaryData(DictionaryDataBo.CODE_STICKY, this);
         } else {
             initView();
         }
     }
 
     private void initView() {
-        mRadioGroup.removeAllViews();
+        mLayout_sticky.removeAllViews();
         for (int i = 0; i < mList.size(); i++) {
             DictionaryDataBo item = mList.get(i);
-            RadioButton radioButton = new RadioButton(mContext);
-            radioButton.setTextSize(18);
-            radioButton.setTextColor(mContext.getResources().getColor(R.color.text_black_default));
-            radioButton.setText(item.getLABEL());
-            int id = R.id.radioButton1 + i;
-            radioButton.setId(id);
-            radioButton.setTag(item.getVALUE());
-            mRadioGroup.addView(radioButton);
+            CheckBox checkBox = new CheckBox(mContext);
+            checkBox.setTextSize(18);
+            checkBox.setPadding(10, 10, 10, 10);
+            checkBox.setTextColor(mContext.getResources().getColor(R.color.text_black_default));
+            checkBox.setText(item.getLABEL());
+            checkBox.setTag(item.getVALUE());
+            mLayout_sticky.addView(checkBox);
         }
     }
 
+    private int checkedCount;//选择粘朴方式个数
+
     private void done() {
-        int checkedId = mRadioGroup.getCheckedRadioButtonId();
-        RadioButton radioButton = (RadioButton) mRadioGroup.findViewById(checkedId);
-        if (checkedId == -1) {
+        checkedCount = 0;
+        int count = mLayout_sticky.getChildCount();
+        for (int i = 0; i < count; i++) {
+            CheckBox checkBox = (CheckBox) mLayout_sticky.getChildAt(i);
+            if (checkBox.isChecked()) {
+                checkedCount++;
+                if (!LoadingDialog.isShowing()) {
+                    LoadingDialog.show(mContext);
+                }
+                String stickyCode = (String) checkBox.getTag();
+                HttpHelper.tellFusingStyleToGST(mProcessLot, stickyCode, this);
+            }
+        }
+        if (checkedCount == 0) {
             ErrorDialog.showAlert(mContext, "请选择一种粘朴方式");
-        } else {
-            LoadingDialog.show(mContext);
-            String stickyCode = (String) radioButton.getTag();
-
-            HttpHelper.tellFusingStyleToGST(mProcessLot, stickyCode, new HttpCallback() {
-                @Override
-                public void onSuccess(String url, JSONObject resultJSON) {
-                    LoadingDialog.dismiss();
-                    if (HttpHelper.isSuccess(resultJSON)) {
-                        Toast.makeText(mContext, "操作成功", Toast.LENGTH_SHORT).show();
-                        dismiss();
-                    } else {
-                        ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
-                    }
-                }
-
-                @Override
-                public void onFailure(String url, int code, String message) {
-                    LoadingDialog.dismiss();
-                    ErrorDialog.showAlert(mContext, message);
-                }
-            });
         }
     }
 
@@ -141,11 +113,27 @@ public class StickyDialog extends Dialog implements HttpCallback {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-
+        if (HttpHelper.isSuccess(resultJSON)) {
+            if (HttpHelper.getDictionaryData.equals(url)) {
+                mList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), DictionaryDataBo.class);
+                SpUtil.saveDictionaryData(DictionaryDataBo.CODE_STICKY, JSON.toJSONString(mList));
+                initView();
+            } else if (HttpHelper.tellFusingStyleToGST.equals(url)) {
+                checkedCount--;
+                if (checkedCount == 0) {
+                    Toast.makeText(mContext, "操作成功", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }
+            }
+        } else {
+            ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
+        }
+        LoadingDialog.dismiss();
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
-
+        LoadingDialog.dismiss();
+        ErrorDialog.showAlert(mContext, message);
     }
 }

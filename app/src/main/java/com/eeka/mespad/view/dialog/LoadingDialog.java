@@ -34,6 +34,10 @@ public class LoadingDialog {
         mDialog.show();
     }
 
+    public static boolean isShowing() {
+        return mDialog != null && mDialog.isShowing();
+    }
+
     public static void dismiss() {
         if (mDialog != null) {
             mDialog.dismiss();

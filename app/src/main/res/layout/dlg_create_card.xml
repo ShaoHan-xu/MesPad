@@ -203,6 +203,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@null"
+                android:hint="点击输入"
                 android:gravity="center"
                 android:imeOptions="actionDone"
                 android:singleLine="true" />

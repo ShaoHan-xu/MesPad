@@ -173,8 +173,7 @@ public class SuspendFragment extends BaseFragment {
      * 解绑
      */
     public void unBind() {
-        CreateCardDialog dialog = new CreateCardDialog(mContext, mCurSFC);
-        dialog.show();
+        new CreateCardDialog(mContext, mCurSFC).show();
     }
 
     /**
