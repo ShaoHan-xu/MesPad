@@ -68,8 +68,8 @@ public class MQTTService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         stopConnect();
+        super.onDestroy();
     }
 
     private void stopConnect() {
@@ -78,7 +78,7 @@ public class MQTTService extends Service {
             mqttClient.unsubscribe(myTopic);
             mqttClient.unregisterResources();
             mqttClient.disconnect();
-        } catch (MqttException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Logger.e("mqtt 断开连接异常");
         }

@@ -302,7 +302,7 @@ public class MainActivity extends NFCActivity {
         }
     }
 
-    private void changeFragment() {
+    private synchronized void changeFragment() {
         if (mPositionInfo == null) {
             toast("请先获取站位数据");
             return;

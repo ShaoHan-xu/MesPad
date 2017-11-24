@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -617,6 +618,7 @@ public class CutFragment extends BaseFragment {
         public Object instantiateItem(ViewGroup container, final int position) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
             final TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setGravity(Gravity.LEFT);
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
                 TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;

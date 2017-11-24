@@ -12,7 +12,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.eeka.mespad.BuildConfig;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.PushJson;
@@ -101,7 +100,9 @@ public class SettingActivity extends BaseActivity {
                 SpUtil.setDebugLog(mDebugSwitch.isChecked());
                 break;
             case R.id.tv_version:
-                openSystemEnvironment();
+                if (SystemUtils.isApkInDebug(mContext)) {
+                    openSystemEnvironment();
+                }
                 break;
             case R.id.layout_setSystem:
                 setSystemCode();

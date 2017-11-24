@@ -325,10 +325,15 @@ public class SewQCFragment extends BaseFragment {
 
             float fRealSize = FormatUtil.strToFloat(realSize);
             float fRefSize = FormatUtil.strToFloat(refSize);
-            float realTolerance = Math.abs(fRealSize - fRefSize);
+            float realTolerance = fRealSize - fRefSize;
             float fRefTolerance = FormatUtil.strToFloat(refTolerance);
-            tv_realTolerance.setText(String.format("%.1f", realTolerance));
-            if ((int) (realTolerance * 100) > (int) (fRefTolerance * 100)) {
+            String format = String.format("%.1f", realTolerance);
+            if (realTolerance > 0) {
+                tv_realTolerance.setText("+" + format);
+            } else {
+                tv_realTolerance.setText(format);
+            }
+            if ((int) (Math.abs(realTolerance) * 100) > (int) (fRefTolerance * 100)) {
                 tv_realTolerance.setTextColor(getResources().getColor(R.color.white));
                 tv_realTolerance.setBackgroundResource(R.color.text_red_default);
             } else {
@@ -387,17 +392,21 @@ public class SewQCFragment extends BaseFragment {
                 }
             }
 
-
             float finishedSize = FormatUtil.strToFloat(text);
             float refSize = FormatUtil.strToFloat(sizeInfo.getVALUE());
             sizeInfo.setCOLLECTED_VALUE(finishedSize + "");
             mClothSizeData.getDC_PARRMS().set(position, sizeInfo);
 
-            float realTolerance = Math.abs(new BigDecimal(finishedSize - refSize).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue());
+            float realTolerance = finishedSize - refSize;
             float fRefTolerance = FormatUtil.strToFloat(sizeInfo.getSTANDARD());
-            tv_realTolerance.setText(String.format("%.1f", realTolerance));
+            String format = String.format("%.1f", realTolerance);
+            if (realTolerance > 0) {
+                tv_realTolerance.setText("+" + format);
+            } else {
+                tv_realTolerance.setText(format);
+            }
 
-            if ((int) (realTolerance * 100) > (int) (fRefTolerance * 100)) {
+            if ((int) (Math.abs(realTolerance) * 100) > (int) (fRefTolerance * 100)) {
                 tv_realTolerance.setTextColor(getResources().getColor(R.color.white));
                 tv_realTolerance.setBackgroundResource(R.color.text_red_default);
             } else {
