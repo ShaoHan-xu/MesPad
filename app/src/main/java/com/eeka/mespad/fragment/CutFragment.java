@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,14 @@ import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.RecordCutNCActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
@@ -327,6 +330,16 @@ public class CutFragment extends BaseFragment {
     private StartWorkParamsBo getStartAndCompleteParams() {
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         StartWorkParamsBo params = new StartWorkParamsBo();
+        params.setRFID(mRFID);
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        if (positionUsers != null && positionUsers.size() != 0) {
+            params.setUSER_ID(positionUsers.get(0).getUSER());
+        }
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo != null) {
+            params.setPOSITION(contextInfo.getPOSITION());
+            params.setLINE_CATEGORY(contextInfo.getLINE_CATEGORY());
+        }
         params.setPAD_ID(HttpHelper.getPadIp());
         params.setPROCESS_LOTS(orderInfo.getPROCESS_LOT_BO());
         params.setSHOP_ORDER(orderInfo.getSHOP_ORDER());
@@ -605,6 +618,7 @@ public class CutFragment extends BaseFragment {
         public Object instantiateItem(ViewGroup container, final int position) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
             final TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setGravity(Gravity.LEFT);
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
                 TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;

@@ -9,6 +9,10 @@ import java.util.List;
 
 public class StartWorkParamsBo {
 
+    private String RFID;
+    private String USER_ID;
+    private String LINE_CATEGORY;
+    private String POSITION;
     private String PAD_ID;
     private String SHOP_ORDER;
     private String SHOP_ORDER_BO;
@@ -21,6 +25,38 @@ public class StartWorkParamsBo {
 
     //定制订单字段
     private int ORDER_QTY;
+
+    public String getRFID() {
+        return RFID;
+    }
+
+    public void setRFID(String RFID) {
+        this.RFID = RFID;
+    }
+
+    public String getUSER_ID() {
+        return USER_ID;
+    }
+
+    public void setUSER_ID(String USER_ID) {
+        this.USER_ID = USER_ID;
+    }
+
+    public String getLINE_CATEGORY() {
+        return LINE_CATEGORY;
+    }
+
+    public void setLINE_CATEGORY(String LINE_CATEGORY) {
+        this.LINE_CATEGORY = LINE_CATEGORY;
+    }
+
+    public String getPOSITION() {
+        return POSITION;
+    }
+
+    public void setPOSITION(String POSITION) {
+        this.POSITION = POSITION;
+    }
 
     public int getORDER_QTY() {
         return ORDER_QTY;

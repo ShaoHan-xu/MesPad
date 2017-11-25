@@ -27,6 +27,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.squareup.picasso.Picasso;
@@ -131,8 +132,13 @@ public class SewFragment extends BaseFragment {
             toast("请先获取缝制数据");
             return;
         }
-        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
-        HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), this);
+        ErrorDialog.showConfirmAlert(mContext, "发现当前实物有不良，需要去质检站？", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+                HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), SewFragment.this);
+            }
+        });
     }
 
     /**
@@ -149,11 +155,10 @@ public class SewFragment extends BaseFragment {
      * 解绑
      */
     public void unBind() {
-        if (mSewData == null) {
-            showErrorDialog("请先获取工单数据");
+        if (mSewData != null) {
+            new CreateCardDialog(mContext, mSewData.getSfc()).show();
         } else {
-            CreateCardDialog dialog = new CreateCardDialog(mContext, mSewData.getSfc());
-            dialog.show();
+            new CreateCardDialog(mContext, null).show();
         }
     }
 
