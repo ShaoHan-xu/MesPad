@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\Android\Projects\MesPad\OkHttpFinal\src\main\assets"/><source path="D:\Android\Projects\MesPad\OkHttpFinal\build\generated\assets\shaders\release"/></dataSet><dataSet config="release"><source path="D:\Android\Projects\MesPad\OkHttpFinal\src\release\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/xushaohan/Android/github/MesPad/OkHttpFinal/src/main/assets"/><source path="/Users/xushaohan/Android/github/MesPad/OkHttpFinal/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/Users/xushaohan/Android/github/MesPad/OkHttpFinal/src/release/assets"/></dataSet></merger>
