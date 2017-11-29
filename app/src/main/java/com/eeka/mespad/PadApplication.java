@@ -65,6 +65,7 @@ public class PadApplication extends Application {
 
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
+        builder.setTimeout(60 * 1000);
         builder.setDebug(true);
         OkHttpFinal.getInstance().init(this, builder.build());
     }

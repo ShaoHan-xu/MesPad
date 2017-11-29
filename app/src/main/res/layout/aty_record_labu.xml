@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="15dp"
+        android:text="记录拉布数据"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_title" />
+
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/btnStyle_primary"
+            android:text="保存" />
+
+        <Button
+            android:id="@+id/btn_add"
+            style="@style/btnStyle_primary"
+            android:layout_margin="20dp"
+            android:text="新增" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="@style/btnStyle_primary"
+            android:text="取消" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_bottom"
+        android:layout_below="@id/tv_title"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_recordLabu_matImg"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"
+                    android:src="@drawable/loading" />
+
+                <LinearLayout
+                    android:id="@+id/layout_sizeInfo"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/border_black"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:showDividers="middle|end">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/text_green_default"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="尺码"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="数量"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/layout_sizeInfo"
+                    android:layout_toRightOf="@id/iv_recordLabu_matImg"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:text="订单号：" />
+
+                            <TextView
+                                android:id="@+id/tv_recordLabu_orderNum"
+                                style="@style/textStyle_default"
+                                android:text="123456" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:text="床次号：" />
+
+                            <TextView
+                                android:id="@+id/tv_recordLabu_chuangCi"
+                                style="@style/textStyle_default"
+                                android:text="123456" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:text="裁床编号：" />
+
+                            <TextView
+                                android:id="@+id/tv_recordLabu_cutNum"
+                                style="@style/textStyle_default"
+                                android:text="123456" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:text="物料号：" />
+
+                            <TextView
+                                android:id="@+id/tv_recordLabu_matNum"
+                                style="@style/textStyle_default"
+                                android:text="123456" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:text="排料图长度：" />
+
+                            <TextView
+                                android:id="@+id/tv_recordLabu_layoutLength"
+                                style="@style/textStyle_default"
+                                android:text="1.5M" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:text="预计拉布层数：" />
+
+                            <TextView
+                                android:id="@+id/tv_recordLabu_planLabuCount"
+                                style="@style/textStyle_default"
+                                android:text="50" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border_black"
+                android:divider="@drawable/divider_gray"
+                android:orientation="vertical"
+                android:padding="0.5dp"
+                android:showDividers="middle">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray_vertical"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="卷号" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="面料长度" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="拉布层数" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="余料" />
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="短码数" />
+
+                    <ImageView
+                        android:id="@+id/iv_recordLabu_del"
+                        style="@style/textStyle_default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_del"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_recordLabu_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

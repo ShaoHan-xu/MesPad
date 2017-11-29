@@ -11,9 +11,19 @@ import com.eeka.mespad.manager.Logger;
 
 public class FormatUtil {
 
+    /**
+     * 字符串转float，以小数点开始或结尾时补0计算
+     */
     public static float strToFloat(String str) {
-        if (TextUtils.isEmpty(str))
+        if (TextUtils.isEmpty(str)) {
             return 0;
+        }
+        if (str.startsWith(".")) {
+            str = "0" + str;
+        }
+        if (str.endsWith(".")) {
+            str = str + "0";
+        }
         try {
             return Float.valueOf(str);
         } catch (NumberFormatException e) {

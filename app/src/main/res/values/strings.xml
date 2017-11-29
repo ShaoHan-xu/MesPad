@@ -1,4 +1,5 @@
 <resources>
     <string name="loading">加载中...</string>
     <string name="efficiency">当前效率</string>
+    <string name="float.2">%.2f</string>
 </resources>

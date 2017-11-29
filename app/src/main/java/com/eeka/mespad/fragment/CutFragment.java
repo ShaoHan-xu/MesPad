@@ -24,6 +24,7 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.RecordCutNCActivity;
+import com.eeka.mespad.activity.RecordLabuActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
@@ -241,7 +242,7 @@ public class CutFragment extends BaseFragment {
             mTv_nextProcess.setText(nextOperInfo.getOPER_DESC());
         }
 
-        TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
+        TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_cut_orderNum);
 //        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
         TextView tv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
         TextView tv_qty = (TextView) mView.findViewById(R.id.tv_sew_qty);
@@ -521,19 +522,20 @@ public class CutFragment extends BaseFragment {
             toast("请先获取订单数据");
             return;
         }
-        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
-            @Override
-            public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
-                mLabuData = labuData;
-                showLoading();
-                if (done) {
-                    HttpHelper.saveLabuDataAndComplete(labuData, CutFragment.this);
-                } else {
-                    HttpHelper.saveLabuData(labuData, CutFragment.this);
-                }
-            }
-        });
-        mLabuDialog.show();
+        startActivity(RecordLabuActivity.getIntent(mContext,mTailorInfo));
+//        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
+//            @Override
+//            public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
+//                mLabuData = labuData;
+//                showLoading();
+//                if (done) {
+//                    HttpHelper.saveLabuDataAndComplete(labuData, CutFragment.this);
+//                } else {
+//                    HttpHelper.saveLabuData(labuData, CutFragment.this);
+//                }
+//            }
+//        });
+//        mLabuDialog.show();
     }
 
     /**
@@ -622,7 +624,7 @@ public class CutFragment extends BaseFragment {
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
                 TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;
-                textView.setText("1、" + matInfo.getGRAND_CATEGORY() + "\n2、" + matInfo.getMID_CATEGORY());
+                textView.setText("1、" + matInfo.getGRAND_CATEGORY_DESC() + "\n2、" + matInfo.getMID_CATEGORY_DESC());
             } else if (object instanceof TailorInfoBo.OPERINFORBean) {
                 TailorInfoBo.OPERINFORBean operInfo = (TailorInfoBo.OPERINFORBean) object;
                 String quality = operInfo.getOPERATION_INSTRUCTION();

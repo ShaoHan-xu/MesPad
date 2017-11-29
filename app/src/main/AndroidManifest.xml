@@ -85,6 +85,10 @@
             android:name=".activity.OutlinePicActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.RecordLabuActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
 
     </application>
 

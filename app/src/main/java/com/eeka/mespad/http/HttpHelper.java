@@ -8,7 +8,9 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.GetLabuDataBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
+import com.eeka.mespad.bo.SaveLabuDataBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
@@ -56,6 +58,8 @@ public class HttpHelper {
     public static final String completeCustomWork_url = BASE_URL + "product/completeByShopOrder?";
     public static final String getWorkOrderList_url = BASE_URL + "cutpad/viewJobOrderList?";
     public static final String saveLabuData = BASE_URL + "cutpad/saveRabData?";
+    public static final String getLabuData = BASE_URL + "rabDataCollection/dataInit?";
+    public static final String saveOrUpdateLabuData = BASE_URL + "rabDataCollection/saveOrUpdateRabData?";
     public static final String saveLabuDataAndComplete = BASE_URL + "cutpad/saveRabDataAndComplete?";
     public static final String getBadList = BASE_URL + "logNcPad/listNcCodesOnOperation?";
     public static final String saveBadRecord = BASE_URL + "logNcPad/logNc?";
@@ -302,6 +306,24 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(getWorkOrderList_url, params, getResponseHandler(getWorkOrderList_url, callback));
+    }
+
+    /**
+     * 获取拉布数据
+     */
+    public static void getLabuData(GetLabuDataBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(getLabuData, params, getResponseHandler(getLabuData, callback));
+    }
+
+    /**
+     * 保存拉布数据
+     */
+    public static void saveLabuData(SaveLabuDataBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveOrUpdateLabuData, params, getResponseHandler(saveOrUpdateLabuData, callback));
     }
 
     /**
@@ -700,8 +722,8 @@ public class HttpHelper {
     }
 
     public static String getPadIp() {
-        PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.7.25.199";
+//        PAD_IP = NetUtil.getHostIP();
+        PAD_IP = "10.8.42.87";
         return PAD_IP;
     }
 

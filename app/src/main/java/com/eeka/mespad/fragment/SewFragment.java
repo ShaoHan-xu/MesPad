@@ -46,6 +46,7 @@ public class SewFragment extends BaseFragment {
 
     private TextView mTv_SFC;//工单号
     private TextView mTv_orderNum;//订单号
+    private TextView mTv_MTMOrderNum;//MTM订单号
     private TextView mTv_style;//款号
     private TextView mTv_size;//尺码
     private TextView mTv_orderType;//订单类型，定制/批量
@@ -85,6 +86,7 @@ public class SewFragment extends BaseFragment {
         super.initView();
         mTv_SFC = (TextView) mView.findViewById(R.id.tv_sew_sfc);
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
+        mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_sew_MTMOrderNum);
         mTv_orderType = (TextView) mView.findViewById(R.id.tv_sew_orderType);
         mTv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
         mTv_size = (TextView) mView.findViewById(R.id.tv_sew_size);
@@ -212,6 +214,7 @@ public class SewFragment extends BaseFragment {
         }
         mTv_lastPosition.setText(mSewData.getLastLineCategory() + "," + mSewData.getLastPosition());
         String salesOrder = mSewData.getSalesOrder();
+        mTv_MTMOrderNum.setText(mSewData.getSalesOrder());
         if (isEmpty(salesOrder)) {
             mTv_orderType.setText("批量订单");
         } else {
