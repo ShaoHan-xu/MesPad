@@ -24,7 +24,9 @@ public class SewQCDataBo {
      */
 
     private String shopOrder;
+    private String salesOrder;
     private String item;
+    private String itemDesc;
     private String sfcSize;
     private String sfc;
     private String currentOperation;
@@ -32,8 +34,24 @@ public class SewQCDataBo {
     private int dailyOutput;
     private int monthlyOutput;
     private List<BomComponentBean> bomComponent;
-//    private List<ClothingSizeBean> clothingSize;
+    //    private List<ClothingSizeBean> clothingSize;
     private List<DesignComponentBean> designComponent;
+
+    public String getSalesOrder() {
+        return salesOrder;
+    }
+
+    public void setSalesOrder(String salesOrder) {
+        this.salesOrder = salesOrder;
+    }
+
+    public String getItemDesc() {
+        return itemDesc;
+    }
+
+    public void setItemDesc(String itemDesc) {
+        this.itemDesc = itemDesc;
+    }
 
     public String getShopOrder() {
         return shopOrder;
@@ -158,7 +176,7 @@ public class SewQCDataBo {
             this.name = name;
         }
 
-        public static class AttributesBean implements Serializable{
+        public static class AttributesBean implements Serializable {
             /**
              * PART_ID : A,B
              */
@@ -175,7 +193,7 @@ public class SewQCDataBo {
         }
     }
 
-    public static class ClothingSizeBean implements Serializable{
+    public static class ClothingSizeBean implements Serializable {
         /**
          * attributes : {"value":"123"}
          * description :
@@ -211,7 +229,7 @@ public class SewQCDataBo {
             this.name = name;
         }
 
-        public static class AttributesBeanX implements Serializable{
+        public static class AttributesBeanX implements Serializable {
             /**
              * value : 123
              */

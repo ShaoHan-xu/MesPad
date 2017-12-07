@@ -285,10 +285,27 @@ public class TailorInfoBo implements Serializable {
         private List<String> PROCESS_LOT_BO;
         private String ITEM;
         private String SO_REMARK;
-        private String SALE_ORDER;
         private int ORDER_QTY;
         private int LAYERS;
         private String Z_LAYOUT_BO;
+        private String SALES_ORDER;
+        private String ITEM_DESC;
+
+        public String getSALES_ORDER() {
+            return SALES_ORDER;
+        }
+
+        public void setSALES_ORDER(String SALES_ORDER) {
+            this.SALES_ORDER = SALES_ORDER;
+        }
+
+        public String getITEM_DESC() {
+            return ITEM_DESC;
+        }
+
+        public void setITEM_DESC(String ITEM_DESC) {
+            this.ITEM_DESC = ITEM_DESC;
+        }
 
         public String getSO_REMARK() {
             return SO_REMARK;
@@ -296,14 +313,6 @@ public class TailorInfoBo implements Serializable {
 
         public void setSO_REMARK(String SO_REMARK) {
             this.SO_REMARK = SO_REMARK;
-        }
-
-        public String getSALE_ORDER() {
-            return SALE_ORDER;
-        }
-
-        public void setSALE_ORDER(String SALE_ORDER) {
-            this.SALE_ORDER = SALE_ORDER;
         }
 
         public int getLAYERS() {

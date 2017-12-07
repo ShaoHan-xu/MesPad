@@ -44,12 +44,13 @@ import java.util.zip.DataFormatException;
 
 public class SewFragment extends BaseFragment {
 
+    private LinearLayout mLayout_MTMOrderNum;
     private TextView mTv_SFC;//工单号
     private TextView mTv_orderNum;//订单号
     private TextView mTv_MTMOrderNum;//MTM订单号
     private TextView mTv_style;//款号
     private TextView mTv_size;//尺码
-    private TextView mTv_orderType;//订单类型，定制/批量
+    private TextView mTv_matDesc;//物料描述
     private TextView mTv_workEfficiency;//效率
     private TextView mTv_craftDesc;//工艺说明
     private TextView mTv_qualityReq;//质量要求
@@ -84,10 +85,11 @@ public class SewFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
+        mLayout_MTMOrderNum = (LinearLayout) mView.findViewById(R.id.layout_sew_salesOrder);
         mTv_SFC = (TextView) mView.findViewById(R.id.tv_sew_sfc);
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
         mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_sew_MTMOrderNum);
-        mTv_orderType = (TextView) mView.findViewById(R.id.tv_sew_orderType);
+        mTv_matDesc = (TextView) mView.findViewById(R.id.tv_sew_matDesc);
         mTv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
         mTv_size = (TextView) mView.findViewById(R.id.tv_sew_size);
         mTv_workEfficiency = (TextView) mView.findViewById(R.id.tv_sew_workEfficiency);
@@ -204,6 +206,7 @@ public class SewFragment extends BaseFragment {
         mTv_craftDesc.setText(null);
         mTv_SFC.setText(mSewData.getSfc());
         mTv_orderNum.setText(mSewData.getShopOrder());
+        mTv_matDesc.setText(mSewData.getItemDesc());
         mTv_style.setText(mSewData.getItem());
         mTv_size.setText(mSewData.getSize());
         String remark = mSewData.getSoRemark();
@@ -214,11 +217,11 @@ public class SewFragment extends BaseFragment {
         }
         mTv_lastPosition.setText(mSewData.getLastLineCategory() + "," + mSewData.getLastPosition());
         String salesOrder = mSewData.getSalesOrder();
-        mTv_MTMOrderNum.setText(mSewData.getSalesOrder());
-        if (isEmpty(salesOrder)) {
-            mTv_orderType.setText("批量订单");
+        if (!isEmpty(salesOrder)) {
+            mLayout_MTMOrderNum.setVisibility(View.VISIBLE);
+            mTv_MTMOrderNum.setText(salesOrder);
         } else {
-            mTv_orderType.setText("定制订单");
+            mLayout_MTMOrderNum.setVisibility(View.GONE);
         }
         String efficiency = mSewData.getWorkEfficiency();
         mTv_workEfficiency.setText("0%");
@@ -239,7 +242,7 @@ public class SewFragment extends BaseFragment {
         }
 
         mLayout_matInfo.removeAllViews();
-        List<SewDataBo.SewAttr> matInfos = mSewData.getMaterialPictures();
+        List<SewDataBo.SewAttr> matInfos = mSewData.getColorItems();
         if (matInfos != null) {
             for (int i = 0; i < matInfos.size(); i++) {
                 SewDataBo.SewAttr matInfo = matInfos.get(i);
@@ -327,7 +330,7 @@ public class SewFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 ArrayList<String> urls = new ArrayList<>();
-                List<SewDataBo.SewAttr> matInfos = mSewData.getMaterialPictures();
+                List<SewDataBo.SewAttr> matInfos = mSewData.getColorItems();
                 for (SewDataBo.SewAttr matInfo : matInfos) {
                     urls.add(matInfo.getAttributes().getMAT_URL());
                 }

@@ -81,7 +81,7 @@ public class RepairSelectorDialog extends Dialog {
             textView.setBackgroundResource(0);
             textView.setText(item.getString("DESCRIPTION"));
 
-            textView.setOnClickListener(new View.OnClickListener() {
+            holder.getView(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {

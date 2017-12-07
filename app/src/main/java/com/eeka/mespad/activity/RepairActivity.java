@@ -196,7 +196,7 @@ public class RepairActivity extends BaseActivity {
                 }
             }
 
-            tv_type.setOnClickListener(new View.OnClickListener() {
+            holder.getView(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String itemBo = item.getString("OPERATION_BO");

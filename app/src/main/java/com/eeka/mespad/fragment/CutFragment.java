@@ -59,7 +59,7 @@ public class CutFragment extends BaseFragment {
     private VPAdapter mVPAdapter_process;
     private ViewPager mVP_matInfo;
     private VPAdapter mVPAdapter_matInfo;
-    private List<TailorInfoBo.OPERINFORBean> mList_processData;//工序列表数据
+    private List<TailorInfoBo.OPERINFORBean> mList_padProcess;//工序列表数据
 
     private LinearLayout mLayout_material1;//排料图
     private LinearLayout mLayout_material2;//粘朴图
@@ -98,12 +98,12 @@ public class CutFragment extends BaseFragment {
     }
 
     public void playVideo() {
-        if (mList_processData == null || mList_processData.size() == 0) {
+        if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
             toast("当前站位无工序");
             return;
         }
         int currentItem = mVP_process.getCurrentItem();
-        String videoUrl = mList_processData.get(currentItem).getVIDEO_URL();
+        String videoUrl = mTailorInfo.getOPER_INFOR().get(currentItem).getVIDEO_URL();
         SystemUtils.playVideo(mContext, videoUrl);
     }
 
@@ -142,8 +142,6 @@ public class CutFragment extends BaseFragment {
     }
 
     public void refreshView() {
-        mView.findViewById(R.id.layout_orderInfo).setVisibility(View.VISIBLE);
-
         //物料数据
         mLayout_material1.removeAllViews();
         mLayout_matTab.removeAllViews();
@@ -158,10 +156,6 @@ public class CutFragment extends BaseFragment {
                 mLayout_matTab.addView(TabViewUtil.getTabView(mContext, matInfoBean, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        List<String> urls = new ArrayList<>();
-//                        for (TailorInfoBo.MatInfoBean mat : mTailorInfo.getMAT_INFOR()) {
-//                            urls.add(mat.getMAT_URL());
-//                        }
                         startActivity(ImageBrowserActivity.getIntent(mContext, mTailorInfo.getMAT_INFOR(), finalI));
                     }
                 }));
@@ -226,7 +220,7 @@ public class CutFragment extends BaseFragment {
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 final int finalI = i;
-                mLayout_processTab.addView(TabViewUtil.getTabView(mContext, mList_processData.get(i), new View.OnClickListener() {
+                mLayout_processTab.addView(TabViewUtil.getTabView(mContext, mTailorInfo.getOPER_INFOR().get(i), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mVP_process.setCurrentItem(finalI);
@@ -243,12 +237,14 @@ public class CutFragment extends BaseFragment {
         }
 
         TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_cut_orderNum);
-//        TextView tv_batchNum = (TextView) mView.findViewById(R.id.tv_batchNum);
+        TextView tv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_cut_MTMOrderNum);
         TextView tv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
         TextView tv_qty = (TextView) mView.findViewById(R.id.tv_sew_qty);
+        TextView tv_matDesc = (TextView) mView.findViewById(R.id.tv_cut_matDesc);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
-//        tv_batchNum.setText(orderInfo.getPROCESS_LOT());
+        tv_MTMOrderNum.setText(orderInfo.getSALES_ORDER());
+        tv_matDesc.setText(orderInfo.getITEM_DESC());
         tv_style.setText(orderInfo.getITEM());
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
         mTv_special.setText(orderInfo.getSO_REMARK());
@@ -267,7 +263,7 @@ public class CutFragment extends BaseFragment {
      * 刷新工序相关的界面，包括工序图、工艺说明、品质要求、
      */
     private void refreshProcessView(int position) {
-        TailorInfoBo.OPERINFORBean item = mList_processData.get(position);
+        TailorInfoBo.OPERINFORBean item = mTailorInfo.getOPER_INFOR().get(position);
 
 //        TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_craftDescribe);
 
@@ -351,8 +347,8 @@ public class CutFragment extends BaseFragment {
             params.setRESOURCE_BO(resource.getRESOURCE_BO());
         params.setORDER_QTY(orderInfo.getORDER_QTY());
         List<String> opList = new ArrayList<>();
-        if (mList_processData != null) {
-            for (TailorInfoBo.OPERINFORBean item : mList_processData) {
+        if (mTailorInfo.getOPER_INFOR() != null) {
+            for (TailorInfoBo.OPERINFORBean item : mTailorInfo.getOPER_INFOR()) {
                 opList.add(item.getOPERATION_BO());
             }
         }
@@ -522,7 +518,7 @@ public class CutFragment extends BaseFragment {
             toast("请先获取订单数据");
             return;
         }
-        startActivity(RecordLabuActivity.getIntent(mContext,mTailorInfo));
+        startActivity(RecordLabuActivity.getIntent(mContext, mTailorInfo));
 //        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
 //            @Override
 //            public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
@@ -578,7 +574,7 @@ public class CutFragment extends BaseFragment {
         static final int TYPE_PROCESS = 1;
         int TYPE;
 
-        public ViewPagerChangedListener(int TYPE) {
+        ViewPagerChangedListener(int TYPE) {
             this.TYPE = TYPE;
         }
 
@@ -701,7 +697,7 @@ public class CutFragment extends BaseFragment {
             if (url.equals(HttpHelper.findProcessWithPadId_url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 if (result != null) {
-                    mList_processData = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
+                    mList_padProcess = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
                 }
             } else if (url.equals(HttpHelper.viewCutPadInfo_url)) {
                 JSONObject result1 = resultJSON.getJSONObject("result");
@@ -710,11 +706,10 @@ public class CutFragment extends BaseFragment {
                     if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
                         mBtn_done.setEnabled(false);
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
-                        mTailorInfo.setOPER_INFOR(mList_processData);
+                        mTailorInfo.setOPER_INFOR(mList_padProcess);
                     } else {
                         mBtn_done.setEnabled(true);
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
-                        mList_processData = mTailorInfo.getOPER_INFOR();
                     }
                     mTailorInfo.setOrderType(mOrderType);
                     mTailorInfo.setRFID(mRFID);

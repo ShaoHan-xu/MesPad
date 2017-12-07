@@ -722,8 +722,11 @@ public class HttpHelper {
     }
 
     public static String getPadIp() {
-//        PAD_IP = NetUtil.getHostIP();
-        PAD_IP = "10.8.42.87";
+        PAD_IP = NetUtil.getHostIP();
+//        PAD_IP = "10.8.42.156";
+//        PAD_IP = "10.7.25.166";
+//        PAD_IP = "10.7.25.150";
+//        PAD_IP = "10.8.42.113";
         return PAD_IP;
     }
 

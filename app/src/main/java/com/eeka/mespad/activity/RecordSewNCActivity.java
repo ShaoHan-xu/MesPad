@@ -207,16 +207,15 @@ public class RecordSewNCActivity extends BaseActivity {
 
         @Override
         public void convert(RecyclerViewHolder holder, final RecordNCBo item, final int position) {
+            holder.getView(R.id.btn_recordNc_sub).setVisibility(View.GONE);
             TextView tv_type = holder.getView(R.id.tv_recordNc_type);
             tv_type.setText(item.getDESCRIPTION());
-            holder.getView(R.id.btn_recordNc_sub).setVisibility(View.GONE);
-            if (position == mNcCodePosition) {
-                tv_type.setBackgroundResource(R.color.divider_gray);
-            } else {
-                tv_type.setBackgroundResource(R.color.white);
-            }
 
-            tv_type.setOnClickListener(new View.OnClickListener() {
+            TextView tv_code = holder.getView(R.id.tv_recordNc_code);
+            tv_code.setVisibility(View.VISIBLE);
+            tv_code.setText(item.getNC_CODE());
+
+            holder.getView(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mNcCodePosition = position;
@@ -238,7 +237,7 @@ public class RecordSewNCActivity extends BaseActivity {
         TextView textView = (TextView) view.findViewById(R.id.tv_recordNc_type);
         textView.setBackgroundResource(0);
         textView.setText(item.getString("DESCRIPTION"));
-        textView.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String operation = item.getString("OPERATION");

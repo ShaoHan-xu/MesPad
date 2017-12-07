@@ -49,7 +49,6 @@ public class SuspendFragment extends BaseFragment {
     private SFCAdapter mSFCAdapter;
 
     private LinearLayout mLayout_component;
-    private TextView mTv_curSFC;
 
     private ContextInfoBo mContextInfo;
     private SuspendComponentBo mComponent;
@@ -59,6 +58,15 @@ public class SuspendFragment extends BaseFragment {
 
     private ViewPager mVP_img;
     private List<String> mList_img;
+
+    private TextView mTv_curSFC;
+    private TextView mTv_orderNum;
+    private TextView mTv_MTMOrderNum;
+    private TextView mTv_orderQty;
+    private TextView mTv_finishQty;
+    private TextView mTv_itemCode;
+    private TextView mTv_matDesc;
+    private TextView mTv_size;
 
     @Nullable
     @Override
@@ -81,8 +89,16 @@ public class SuspendFragment extends BaseFragment {
         super.initView();
         mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
-        mTv_curSFC = (TextView) mView.findViewById(R.id.tv_suspend_curSFC);
         mVP_img = (ViewPager) mView.findViewById(R.id.vp_suspend_componentImg);
+
+        mTv_curSFC = (TextView) mView.findViewById(R.id.tv_suspend_curSFC);
+        mTv_orderNum = (TextView) mView.findViewById(R.id.tv_suspend_orderNum);
+        mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_suspend_MTMOrderNum);
+        mTv_orderQty = (TextView) mView.findViewById(R.id.tv_suspend_orderQty);
+        mTv_finishQty = (TextView) mView.findViewById(R.id.tv_suspend_finishQty);
+        mTv_itemCode = (TextView) mView.findViewById(R.id.tv_suspend_itemCode);
+        mTv_matDesc = (TextView) mView.findViewById(R.id.tv_suspend_matDesc);
+        mTv_size = (TextView) mView.findViewById(R.id.tv_suspend_size);
 
         Button btn_binding = (Button) mView.findViewById(R.id.btn_suspend_binding);
         btn_binding.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +115,20 @@ public class SuspendFragment extends BaseFragment {
 //        mList_sfcList = new ArrayList<>();
 //        mSFCAdapter = new SFCAdapter(mContext, mList_sfcList, R.layout.item_textview);
 //        mLv_orderList.setAdapter(mSFCAdapter);
+    }
 
+    /**
+     * 刷新订单信息
+     */
+    private void refreshOrderInfo() {
+        mTv_curSFC.setText(mCurSFC);
+        mTv_orderNum.setText(mComponent.getSHOP_ORDER());
+        mTv_MTMOrderNum.setText(mComponent.getSALES_ORDER());
+        mTv_orderQty.setText(mComponent.getQTY_TO_BUILD() + "");
+        mTv_finishQty.setText(mComponent.getQTY_COMPLETE());
+        mTv_itemCode.setText(mComponent.getITEM());
+        mTv_matDesc.setText(mComponent.getITEM_DESC());
+        mTv_size.setText(mComponent.getSFC_SIZE());
     }
 
     /**
@@ -205,7 +234,7 @@ public class SuspendFragment extends BaseFragment {
                     for (String url : mList_img) {
                         urls.add(url);
                     }
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, false));
                 }
             });
 
@@ -329,9 +358,9 @@ public class SuspendFragment extends BaseFragment {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);
                 mCurSFC = mComponent.getSFC();
-                mTv_curSFC.setText(mCurSFC);
                 mCurComponent = null;
                 setupComponentView();
+                refreshOrderInfo();
 //                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), SuspendFragment.this);
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");

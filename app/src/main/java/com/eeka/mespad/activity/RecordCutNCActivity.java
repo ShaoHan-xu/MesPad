@@ -152,7 +152,7 @@ public class RecordCutNCActivity extends BaseActivity {
 
             TextView tv_type = holder.getView(R.id.tv_recordNc_type);
             tv_type.setText(item.getDESCRIPTION());
-            tv_type.setOnClickListener(new View.OnClickListener() {
+            holder.getView(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     badCount[0]++;

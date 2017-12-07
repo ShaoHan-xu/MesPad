@@ -24,6 +24,7 @@ public class SewDataBo implements Serializable {
      */
 
     private String item;
+    private String itemDesc;
     private String lastLineCategory;
     private String lastPosition;
     private String salesOrder;
@@ -35,10 +36,18 @@ public class SewDataBo implements Serializable {
     private List<SewAttr> currentOpeationInfos;
     private List<SewAttr> lastOperations;
     private List<SewAttr> nextOperation;
-    private List<SewAttr> materialPictures;// 用料图
+    private List<SewAttr> colorItems;// 用料图
 
     public List<SewAttr> getNextOperation() {
         return nextOperation;
+    }
+
+    public String getItemDesc() {
+        return itemDesc;
+    }
+
+    public void setItemDesc(String itemDesc) {
+        this.itemDesc = itemDesc;
     }
 
     public void setNextOperation(List<SewAttr> nextOperation) {
@@ -133,12 +142,12 @@ public class SewDataBo implements Serializable {
         this.currentOpeationInfos = currentOpeationInfos;
     }
 
-    public List<SewAttr> getMaterialPictures() {
-        return materialPictures;
+    public List<SewAttr> getColorItems() {
+        return colorItems;
     }
 
-    public void setMaterialPictures(List<SewAttr> materialPictures) {
-        this.materialPictures = materialPictures;
+    public void setColorItems(List<SewAttr> colorItems) {
+        this.colorItems = colorItems;
     }
 
     public static class SewAttr {

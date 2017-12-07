@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/layout_matInfo_desc"
+        android:id="@+id/layout_imageBrowser_desc"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
@@ -350,9 +350,11 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/layout_imageBrowser_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/layout_matInfo_desc">
+        android:layout_toLeftOf="@id/layout_imageBrowser_desc"
+        android:visibility="gone">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_matInfo"
@@ -360,5 +362,14 @@
             android:layout_height="match_parent" />
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_imageBrowser_images"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/divider_white"
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        android:visibility="gone" />
 
 </RelativeLayout>

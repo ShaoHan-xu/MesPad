@@ -53,7 +53,9 @@ public class SewQCFragment extends BaseFragment {
     private TextView mTv_dayOutput;
     private TextView mTv_monthOutput;
     private TextView mTv_orderNum;
+    private TextView mTv_MTMOrderNum;
     private TextView mTv_matNum;
+    private TextView mTv_matDesc;
     private TextView mTv_size;
     private TextView mTv_special;
 
@@ -89,7 +91,9 @@ public class SewQCFragment extends BaseFragment {
         mTv_dayOutput = (TextView) mView.findViewById(R.id.tv_sewQC_dayOutput);
         mTv_monthOutput = (TextView) mView.findViewById(R.id.tv_sewQC_monthOutput);
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sewQC_orderNum);
+        mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_sewQC_MTMOrderNum);
         mTv_matNum = (TextView) mView.findViewById(R.id.tv_sewQC_matNum);
+        mTv_matDesc = (TextView) mView.findViewById(R.id.tv_sewQC_matDesc);
         mTv_size = (TextView) mView.findViewById(R.id.tv_sewQC_size);
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
         mTv_special.setOnClickListener(this);
@@ -129,7 +133,9 @@ public class SewQCFragment extends BaseFragment {
         mTv_dayOutput.setText(mSewQCData.getDailyOutput() + "");
         mTv_monthOutput.setText(mSewQCData.getMonthlyOutput() + "");
         mTv_orderNum.setText(mSewQCData.getShopOrder());
+        mTv_MTMOrderNum.setText(mSewQCData.getSalesOrder());
         mTv_matNum.setText(mSewQCData.getItem());
+        mTv_matDesc.setText(mSewQCData.getItemDesc());
         mTv_size.setText(mSewQCData.getSfcSize());
         mTv_special.setText(mSewQCData.getSoMark());
 
@@ -421,11 +427,11 @@ public class SewQCFragment extends BaseFragment {
      * 获取物料属性布局
      */
     private View getMatInfo(SewQCDataBo.BomComponentBean bom) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_key_value, null);
-        TextView tv_key = (TextView) view.findViewById(R.id.tv_key);
-        TextView tv_value = (TextView) view.findViewById(R.id.tv_value);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
+        TextView tv_key = (TextView) view.findViewById(R.id.tv_userName);
+        TextView tv_value = (TextView) view.findViewById(R.id.tv_userId);
         tv_key.setText(bom.getDescription());
-        tv_value.setText(bom.getName() + "-" + bom.getAttributes().getPART_ID());
+        tv_value.setText(bom.getName());
         return view;
     }
 

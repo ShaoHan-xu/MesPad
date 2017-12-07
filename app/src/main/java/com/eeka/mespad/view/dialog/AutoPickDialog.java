@@ -23,6 +23,9 @@ public class AutoPickDialog extends BaseDialog {
     private String mItemCode;
     private String mLocationType;
 
+    /**
+     * @param locationType 库位类型 20=裁剪段，30=上裁段
+     */
     public AutoPickDialog(@NonNull Context context, String shopOrder, String itemCode, String locationType) {
         super(context);
         mShopOrder = shopOrder;

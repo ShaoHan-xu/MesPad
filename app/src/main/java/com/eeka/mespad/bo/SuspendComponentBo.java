@@ -14,9 +14,54 @@ public class SuspendComponentBo {
      */
 
     private String SFC;
+    private String SFC_SIZE;
     private String SHOP_ORDER;
+    private String SALES_ORDER;
     private String ITEM;
+    private String ITEM_DESC;
+    private int QTY_TO_BUILD;
+    private String QTY_COMPLETE;
     private List<COMPONENTSBean> COMPONENTS;
+
+    public String getSFC_SIZE() {
+        return SFC_SIZE;
+    }
+
+    public void setSFC_SIZE(String SFC_SIZE) {
+        this.SFC_SIZE = SFC_SIZE;
+    }
+
+    public String getSALES_ORDER() {
+        return SALES_ORDER;
+    }
+
+    public void setSALES_ORDER(String SALES_ORDER) {
+        this.SALES_ORDER = SALES_ORDER;
+    }
+
+    public String getITEM_DESC() {
+        return ITEM_DESC;
+    }
+
+    public void setITEM_DESC(String ITEM_DESC) {
+        this.ITEM_DESC = ITEM_DESC;
+    }
+
+    public int getQTY_TO_BUILD() {
+        return QTY_TO_BUILD;
+    }
+
+    public void setQTY_TO_BUILD(int QTY_TO_BUILD) {
+        this.QTY_TO_BUILD = QTY_TO_BUILD;
+    }
+
+    public String getQTY_COMPLETE() {
+        return QTY_COMPLETE;
+    }
+
+    public void setQTY_COMPLETE(String QTY_COMPLETE) {
+        this.QTY_COMPLETE = QTY_COMPLETE;
+    }
 
     public String getSHOP_ORDER() {
         return SHOP_ORDER;
