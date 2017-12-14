@@ -25,7 +25,7 @@ android {
         applicationId "com.eeka.mespad"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 27
+        versionCode 28
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

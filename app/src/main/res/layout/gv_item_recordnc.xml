@@ -32,8 +32,9 @@
                 style="@style/textStyle_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_recordNc_type"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginBottom="2dp"
                 android:text="code"
                 android:textSize="@dimen/textSize_describe"
                 android:visibility="gone" />

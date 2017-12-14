@@ -44,6 +44,7 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -129,11 +130,7 @@ public class MainActivity extends NFCActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
-        if (PushJson.TYPE_EXIT.equals(type)) {
-            MQTTService.actionStop(mContext);
-            finish();
-            System.exit(0);
-        } else if (PushJson.TYPE_LOGIN.equals(type) || PushJson.TYPE_LOGOUT.equals(type)) {
+        if (PushJson.TYPE_LOGIN.equals(type) || PushJson.TYPE_LOGOUT.equals(type)) {
             if (PushJson.TYPE_LOGIN.equals(type)) {
                 toast("用户刷卡上岗");
             } else {
@@ -143,6 +140,12 @@ public class MainActivity extends NFCActivity {
                 showLoading();
                 HttpHelper.getPositionLoginUsers(this);
             }
+        } else if (PushJson.TYPE_UPDATE.equals(type)) {
+            Beta.checkUpgrade();
+        } else if (PushJson.TYPE_EXIT.equals(type)) {
+            MQTTService.actionStop(mContext);
+            finish();
+            System.exit(0);
         } else {
             toast("正在刷新页面");
             mEt_orderNum.setText(push.getContent());
@@ -533,7 +536,7 @@ public class MainActivity extends NFCActivity {
     }
 
     /**
-     * 检查本地资源，如果已有资源，返回true，否则返回false
+     * 检查本地资源，如果已有资源，返回true，否则返回false,并从服务器获取资源
      */
     private boolean checkResource() {
         ContextInfoBo contextInfo = SpUtil.getContextInfo();

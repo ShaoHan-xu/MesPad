@@ -1,22 +1,20 @@
 package com.eeka.mespad.activity;
 
+
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bm.library.PhotoView;
 import com.eeka.mespad.R;
+import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.bo.TailorInfoBo;
-import com.eeka.mespad.manager.Logger;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -46,7 +44,7 @@ public class ImageBrowserActivity extends BaseActivity {
         if (scrollAble) {
             findViewById(R.id.layout_imageBrowser_image).setVisibility(View.VISIBLE);
             ViewPager viewPager = (ViewPager) findViewById(R.id.vp_matInfo);
-            viewPager.setAdapter(new ViewPagerAdapter(data));
+            viewPager.setAdapter(new ViewPagerAdapter(mContext, data, R.layout.item_photoview));
 
             PagerChangedListener listener = new PagerChangedListener(data);
             viewPager.addOnPageChangeListener(listener);
@@ -78,35 +76,26 @@ public class ImageBrowserActivity extends BaseActivity {
         return view;
     }
 
-    private class ViewPagerAdapter extends PagerAdapter {
+    private class ViewPagerAdapter extends CommonVPAdapter<Object> {
 
-        List<Object> list;
-
-        ViewPagerAdapter(List<Object> list) {
-            this.list = list;
+        ViewPagerAdapter(Context context, List<Object> data, int layoutId) {
+            super(context, data, layoutId);
         }
 
         @Override
-        public int getCount() {
-            return list == null ? 0 : list.size();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
-            final View view = LayoutInflater.from(mContext).inflate(R.layout.item_photoview, null);
+        public void convertView(View view, Object item, int position) {
             final PhotoView imageView = (PhotoView) view.findViewById(R.id.imageView);
             imageView.enable();
 
             String bmpUrl = null;
-            Object data = list.get(position);
-            if (data instanceof TailorInfoBo.MatInfoBean) {
-                TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) data;
+            if (item instanceof TailorInfoBo.MatInfoBean) {
+                TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) item;
                 bmpUrl = matInfo.getMAT_URL();
-            } else if (data instanceof TailorInfoBo.LayoutInfoBean) {
-                TailorInfoBo.LayoutInfoBean layoutInfo = (TailorInfoBo.LayoutInfoBean) data;
+            } else if (item instanceof TailorInfoBo.LayoutInfoBean) {
+                TailorInfoBo.LayoutInfoBean layoutInfo = (TailorInfoBo.LayoutInfoBean) item;
                 bmpUrl = layoutInfo.getPICTURE_URL();
-            } else if (data instanceof String) {
-                bmpUrl = (String) data;
+            } else if (item instanceof String) {
+                bmpUrl = (String) item;
             }
             Picasso.with(mContext).load(bmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
@@ -115,24 +104,8 @@ public class ImageBrowserActivity extends BaseActivity {
                     finish();
                 }
             });
-
-            container.addView(view);
-            return view;
         }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            View item = (View) object;
-            container.removeView(item);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
     }
-
 
     private class PagerChangedListener implements ViewPager.OnPageChangeListener {
 

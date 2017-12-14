@@ -548,10 +548,11 @@ public class HttpHelper {
     /**
      * 根据不良代码获取工序列表
      */
-    public static void getProcessWithNcCode(String designComponent, String sfcBo, String ncCodeBo, HttpCallback callback) {
+    public static void getProcessWithNcCode(String productComponent,String designComponent, String sfcBo, String ncCodeBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("PAD_ID", PAD_IP);
+        json.put("PROD_COMPONENT", productComponent);
         json.put("DESG_COMPONENT", designComponent);
         json.put("SFC_BO", sfcBo);
         json.put("NC_CODE_BO", ncCodeBo);

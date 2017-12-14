@@ -220,9 +220,10 @@ public class RecordSewNCActivity extends BaseActivity {
                 public void onClick(View v) {
                     mNcCodePosition = position;
                     notifyDataSetChanged();
-                    SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = mList_component.get(mProductPosition).getDesgComponents().get(mDesignPosition);
+                    SewQCDataBo.DesignComponentBean productComponent = mList_component.get(mProductPosition);
+                    SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = productComponent.getDesgComponents().get(mDesignPosition);
                     showLoading();
-                    HttpHelper.getProcessWithNcCode(desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
+                    HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
                 }
             });
         }
@@ -313,8 +314,10 @@ public class RecordSewNCActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         JSONObject item = mList_NcProcess.getJSONObject(position);
                         String operation = item.getString("OPERATION");
+                        SewQCDataBo.DesignComponentBean produComp = mList_component.get(mProductPosition);
 
                         mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
+                        mCurSelecting.setPROD_COMPONENT(produComp.getName());
                         mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());
                         mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
                         mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());

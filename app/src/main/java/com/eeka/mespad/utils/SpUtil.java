@@ -60,9 +60,6 @@ public class SpUtil {
 
     /**
      * 设置是否开启debug记录日志模式
-     *
-     * @param isDebug
-     * @return
      */
     public static void setDebugLog(boolean isDebug) {
         SharedPreferences.Editor edit = mSP.edit();
@@ -138,7 +135,7 @@ public class SpUtil {
     public static void saveCookie(String cookie) {
         SharedPreferences.Editor edit = mSP.edit();
         edit.putString("cookie", cookie);
-        edit.commit();
+        edit.apply();
     }
 
     public static String getCookie() {

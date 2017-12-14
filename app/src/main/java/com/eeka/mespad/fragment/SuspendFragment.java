@@ -59,6 +59,7 @@ public class SuspendFragment extends BaseFragment {
     private ViewPager mVP_img;
     private List<String> mList_img;
 
+    private LinearLayout mLayout_mtmOrder;
     private TextView mTv_curSFC;
     private TextView mTv_orderNum;
     private TextView mTv_MTMOrderNum;
@@ -91,6 +92,7 @@ public class SuspendFragment extends BaseFragment {
         mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
         mVP_img = (ViewPager) mView.findViewById(R.id.vp_suspend_componentImg);
 
+        mLayout_mtmOrder = (LinearLayout) mView.findViewById(R.id.layout_suspend_mtmOrder);
         mTv_curSFC = (TextView) mView.findViewById(R.id.tv_suspend_curSFC);
         mTv_orderNum = (TextView) mView.findViewById(R.id.tv_suspend_orderNum);
         mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_suspend_MTMOrderNum);
@@ -123,12 +125,19 @@ public class SuspendFragment extends BaseFragment {
     private void refreshOrderInfo() {
         mTv_curSFC.setText(mCurSFC);
         mTv_orderNum.setText(mComponent.getSHOP_ORDER());
-        mTv_MTMOrderNum.setText(mComponent.getSALES_ORDER());
         mTv_orderQty.setText(mComponent.getQTY_TO_BUILD() + "");
         mTv_finishQty.setText(mComponent.getQTY_COMPLETE());
         mTv_itemCode.setText(mComponent.getITEM());
         mTv_matDesc.setText(mComponent.getITEM_DESC());
         mTv_size.setText(mComponent.getSFC_SIZE());
+
+        String salesOrder = mComponent.getSALES_ORDER();
+        if (isEmpty(salesOrder)) {
+            mLayout_mtmOrder.setVisibility(View.GONE);
+        } else {
+            mLayout_mtmOrder.setVisibility(View.VISIBLE);
+            mTv_MTMOrderNum.setText(salesOrder);
+        }
     }
 
     /**

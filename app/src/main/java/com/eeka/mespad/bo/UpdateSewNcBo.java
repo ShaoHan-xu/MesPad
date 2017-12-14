@@ -108,6 +108,15 @@ public class UpdateSewNcBo {
         private String NC_CODE_BO;
         private String DESCRIPTION;
         private String processDesc;
+        private String PROD_COMPONENT;
+
+        public String getPROD_COMPONENT() {
+            return PROD_COMPONENT;
+        }
+
+        public void setPROD_COMPONENT(String PROD_COMPONENT) {
+            this.PROD_COMPONENT = PROD_COMPONENT;
+        }
 
         public String getProcessDesc() {
             return processDesc;

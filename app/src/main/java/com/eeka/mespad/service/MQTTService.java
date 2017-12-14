@@ -25,7 +25,6 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 
@@ -150,7 +149,17 @@ public class MQTTService extends Service {
             Logger.d("MQTT收到推送->" + "message:" + str1);
             LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
 
-            PushJson pushJson = JSON.parseObject(str1, PushJson.class);
+            PushJson pushJson;
+            if ("update".equals(str1)) {
+                //自主推送，APP更新
+                pushJson = new PushJson();
+                pushJson.setCode("0");
+                pushJson.setType(PushJson.TYPE_UPDATE);
+                pushJson.setContent("update");
+            } else {
+                //ME系统推送
+                pushJson = JSON.parseObject(str1, PushJson.class);
+            }
             if ("0".equals(pushJson.getCode())) {
                 EventBus.getDefault().post(pushJson);
             } else {

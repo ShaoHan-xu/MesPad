@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -33,7 +34,6 @@ public class SettingActivity extends BaseActivity {
 
     private static final int REQUEST_LOGIN = 1;
 
-    private Switch mDebugSwitch;
     private RelativeLayout mLayout_setSystem;
     private TextView mTv_systemCode;
 
@@ -50,13 +50,9 @@ public class SettingActivity extends BaseActivity {
         super.initView();
         findViewById(R.id.tv_setLoginUser).setOnClickListener(this);
         findViewById(R.id.tv_checkUpdate).setOnClickListener(this);
-        findViewById(R.id.layout_setSystem).setOnClickListener(this);
 
         mLayout_setSystem = (RelativeLayout) findViewById(R.id.layout_setSystem);
         mLayout_setSystem.setOnClickListener(this);
-
-        mDebugSwitch = (Switch) findViewById(R.id.switch_debug);
-        mDebugSwitch.setChecked(SpUtil.isDebugLog());
 
         TextView tv_version = (TextView) findViewById(R.id.tv_version);
         tv_version.setOnClickListener(this);
@@ -81,6 +77,14 @@ public class SettingActivity extends BaseActivity {
             }
         }
 
+        Switch mDebugSwitch = (Switch) findViewById(R.id.switch_debug);
+        mDebugSwitch.setChecked(SpUtil.isDebugLog());
+        mDebugSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SpUtil.setDebugLog(isChecked);
+            }
+        });
     }
 
     @Override
@@ -94,10 +98,6 @@ public class SettingActivity extends BaseActivity {
 //                showLoading();
 //                HttpHelper.getAPKUrl(this);
                 Beta.checkUpgrade();
-                break;
-            case R.id.layout_debugSwitch:
-                mDebugSwitch.setChecked(!mDebugSwitch.isChecked());
-                SpUtil.setDebugLog(mDebugSwitch.isChecked());
                 break;
             case R.id.tv_version:
                 if (SystemUtils.isApkInDebug(mContext)) {
