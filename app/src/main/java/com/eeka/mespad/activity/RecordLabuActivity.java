@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 记录拉布数据界面
  * Created by Lenovo on 2017/11/24.
  */
 
@@ -278,7 +279,7 @@ public class RecordLabuActivity extends BaseActivity {
         if (layoutInfor != null && layoutInfor.size() != 0) {
             String lengthStr = layoutInfor.get(0).getLENGTH();
             float length = FormatUtil.strToFloat(lengthStr);
-            return matWidth - length * layers + leftQty;
+            return matWidth - length * layers - leftQty;
         }
         return 0;
     }

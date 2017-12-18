@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray_vertical"
+    android:showDividers="middle">
+
+    <EditText
+        android:id="@+id/et_subcontractReceive_rfid"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/et_subcontractReceive_orderNum"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/et_subcontractReceive_sfc"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/et_subcontractReceive_size"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/tv_subcontractReceive_del"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="删除"
+        android:textColor="@color/text_red_default" />
+</LinearLayout>

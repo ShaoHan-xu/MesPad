@@ -125,7 +125,7 @@ public class SuspendFragment extends BaseFragment {
     private void refreshOrderInfo() {
         mTv_curSFC.setText(mCurSFC);
         mTv_orderNum.setText(mComponent.getSHOP_ORDER());
-        mTv_orderQty.setText(mComponent.getQTY_TO_BUILD() + "");
+        mTv_orderQty.setText(mComponent.getQTY_ORDERED() + "");
         mTv_finishQty.setText(mComponent.getQTY_COMPLETE());
         mTv_itemCode.setText(mComponent.getITEM());
         mTv_matDesc.setText(mComponent.getITEM_DESC());

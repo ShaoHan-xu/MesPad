@@ -89,6 +89,10 @@
             android:name=".activity.RecordLabuActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.SubcontractReceiveAty"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
     </application>
 

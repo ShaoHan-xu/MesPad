@@ -378,7 +378,6 @@ public class CutFragment extends BaseFragment {
                         }
                     }
                 }
-
             }
             showLoading();
             if ("S".equals(mOrderType)) {

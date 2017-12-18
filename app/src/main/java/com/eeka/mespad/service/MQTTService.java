@@ -90,8 +90,10 @@ public class MQTTService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (mContext != null) {
+            mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

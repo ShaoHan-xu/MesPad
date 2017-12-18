@@ -351,7 +351,6 @@ public class MainActivity extends NFCActivity {
                 }
                 ft.commit();
                 break;
-
             case TopicUtil.TOPIC_QC:
                 if (mSewQCFragment == null) {
                     mSewQCFragment = new SewQCFragment();

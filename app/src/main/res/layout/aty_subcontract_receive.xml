@@ -5,56 +5,107 @@
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
         android:padding="10dp"
-        android:text="外协收货扫描"
-        android:textColor="@color/text_black_default"
+        android:text="外协收货"
+        android:textColor="@color/white"
         android:textSize="@dimen/textSize_title"
         android:textStyle="bold" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:padding="10dp">
 
         <Button
             android:id="@+id/btn_save"
             style="@style/btnStyle_primary"
-            android:layout_marginRight="10dp"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:text="保存" />
 
-        <Button
-            android:id="@+id/btn_edit"
-            style="@style/btnStyle_primary"
-            android:text="编辑" />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/border_black"
+            android:padding="0.5dp">
+
+            <EditText
+                android:id="@+id/et_orderNum"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/searchBoxWidth"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:hint="输入RFID卡号搜索"
+                android:padding="5dp"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/btn_search"
+                style="@style/btnStyle_green"
+                android:layout_height="match_parent"
+                android:text="搜索" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_bottom"
         android:layout_below="@id/tv_title"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-        <ScrollView
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_black">
+            android:layout_weight="1.5">
+
+            <LinearLayout
+                android:id="@+id/layout_bottom1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_add"
+                    style="@style/btnStyle_green_round"
+                    android:layout_marginRight="10dp"
+                    android:text="手动添加" />
+
+                <Button
+                    android:id="@+id/btn_clear"
+                    style="@style/btnStyle_green_round"
+                    android:text="清空表格" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@id/layout_bottom1"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/border_black"
                 android:divider="@drawable/divider_gray"
                 android:orientation="vertical"
+                android:padding="0.5dp"
                 android:showDividers="middle">
 
                 <LinearLayout
@@ -90,59 +141,70 @@
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:gravity="center"
                         android:padding="10dp"
                         android:text="尺码" />
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
 
-        <ScrollView
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/lv_subcontract_receive"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:background="@drawable/border_black">
+            android:layout_weight="0.5"
+            android:background="@drawable/border_black"
+            android:divider="@drawable/divider_gray"
+            android:orientation="vertical"
+            android:padding="0.5dp"
+            android:showDividers="middle">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider_gray"
-                android:orientation="vertical"
+                android:divider="@drawable/divider_gray_vertical"
                 android:showDividers="middle">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/divider_gray_vertical"
-                    android:showDividers="middle">
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="序号" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="10dp"
-                        android:text="收货时间" />
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="数量" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="10dp"
-                        android:text="数量" />
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="10dp" />
-                </LinearLayout>
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp" />
             </LinearLayout>
-        </ScrollView>
 
+            <ListView
+                android:id="@+id/lv_subcontract_received"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

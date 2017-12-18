@@ -1,5 +1,6 @@
 package com.eeka.mespad.view.dialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
@@ -17,11 +18,11 @@ public class ErrorDialog {
 
     private static String mLastMsg;
 
-    private static Handler mHandler = new Handler(){
+    private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 0){
+            if (msg.what == 0) {
                 mDialog.dismiss();
             }
         }
@@ -46,9 +47,12 @@ public class ErrorDialog {
     }
 
     private static void showAlert(Context context, String msg, boolean error, final View.OnClickListener positiveListener, boolean autoDismiss) {
+        if (context == null) {
+            return;
+        }
         mHandler.removeCallbacksAndMessages(null);
         if (mLastMsg != null && mLastMsg.equals(msg) && mDialog != null && mDialog.isShowing()) {
-            mHandler.sendEmptyMessageDelayed(0,10000);
+            mHandler.sendEmptyMessageDelayed(0, 10000);
             return;
         }
         mLastMsg = msg;
@@ -62,7 +66,7 @@ public class ErrorDialog {
         }
 
         if (autoDismiss) {
-            mHandler.sendEmptyMessageDelayed(0,10000);
+            mHandler.sendEmptyMessageDelayed(0, 10000);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -87,7 +91,9 @@ public class ErrorDialog {
         }
         builder.setView(v);
         mDialog = builder.create();
-        mDialog.show();
+        if (!((Activity) context).isFinishing()) {
+            mDialog.show();
+        }
     }
 
     public static void dismiss() {

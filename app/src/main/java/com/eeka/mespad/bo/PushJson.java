@@ -9,6 +9,7 @@ public class PushJson {
     public static final String TYPE_LOGIN = "LOGIN";//刷卡上岗消息
     public static final String TYPE_LOGOUT = "LOGOUT";//刷卡离岗消息
     public static final String TYPE_UPDATE = "UPDATE";//APP检查更新
+    public static final String TYPE_RFID = "RFID";//NFC刷卡
 
     private String content;
     private String type;    // 0 ： 缝制  1 ： 消息提醒  2:错误消息

@@ -91,6 +91,8 @@ public class HttpHelper {
     public static final String getDictionaryData = BASE_URL + "common/getDictionaryData?";
     public static final String automaticPicking = BASE_URL + "cutpad/automaticPicking?";
     public static final String getOutlineInfo = BASE_URL + "syncCraftPic/craficInfo?";
+    public static final String findRfidInfo = BASE_URL + "sweing/findRfidInfo?";
+    public static final String saveSubcontractInfo = BASE_URL + "sweing/saveSubcontractInfo?";
 
     private static Context mContext;
 
@@ -548,7 +550,7 @@ public class HttpHelper {
     /**
      * 根据不良代码获取工序列表
      */
-    public static void getProcessWithNcCode(String productComponent,String designComponent, String sfcBo, String ncCodeBo, HttpCallback callback) {
+    public static void getProcessWithNcCode(String productComponent, String designComponent, String sfcBo, String ncCodeBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("PAD_ID", PAD_IP);
@@ -706,6 +708,24 @@ public class HttpHelper {
     }
 
     /**
+     * 获取RFID卡数据
+     */
+    public static void findRfidInfo(String rfid, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("rfId", rfid);
+        HttpRequest.post(findRfidInfo, params, getResponseHandler(findRfidInfo, callback));
+    }
+
+    /**
+     * 保存外协数据
+     */
+    public static void saveSubcontractInfo(String rfids, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("rfIds", rfids);
+        HttpRequest.post(saveSubcontractInfo, params, getResponseHandler(saveSubcontractInfo, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     private static RequestParams getBaseParams() {
@@ -723,8 +743,8 @@ public class HttpHelper {
     }
 
     public static String getPadIp() {
-        PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.8.42.156";
+//        PAD_IP = NetUtil.getHostIP();
+        PAD_IP = "10.7.25.122";
 //        PAD_IP = "10.7.25.166";
 //        PAD_IP = "10.7.25.150";
 //        PAD_IP = "10.8.42.113";
@@ -827,7 +847,7 @@ public class HttpHelper {
                     return;
                 }
                 if (SpUtil.isDebugLog()) {
-                    LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + "\n" + response);
+                    LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + "\n       " + response);
                 }
                 Logger.d(response);
             }

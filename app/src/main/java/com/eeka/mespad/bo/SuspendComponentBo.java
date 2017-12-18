@@ -19,7 +19,7 @@ public class SuspendComponentBo {
     private String SALES_ORDER;
     private String ITEM;
     private String ITEM_DESC;
-    private int QTY_TO_BUILD;
+    private int QTY_ORDERED;
     private String QTY_COMPLETE;
     private List<COMPONENTSBean> COMPONENTS;
 
@@ -47,12 +47,12 @@ public class SuspendComponentBo {
         this.ITEM_DESC = ITEM_DESC;
     }
 
-    public int getQTY_TO_BUILD() {
-        return QTY_TO_BUILD;
+    public int getQTY_ORDERED() {
+        return QTY_ORDERED;
     }
 
-    public void setQTY_TO_BUILD(int QTY_TO_BUILD) {
-        this.QTY_TO_BUILD = QTY_TO_BUILD;
+    public void setQTY_ORDERED(int QTY_ORDERED) {
+        this.QTY_ORDERED = QTY_ORDERED;
     }
 
     public String getQTY_COMPLETE() {
