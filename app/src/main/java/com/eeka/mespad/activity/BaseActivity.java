@@ -17,13 +17,18 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 /**
+ * Activity基类
  * Created by Lenovo on 2017/5/13.
  */
 
@@ -43,6 +48,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mContext = this;
         mFragmentManager = getSupportFragmentManager();
+
     }
 
     protected void initView() {

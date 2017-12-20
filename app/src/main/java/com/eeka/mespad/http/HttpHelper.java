@@ -93,7 +93,7 @@ public class HttpHelper {
     public static final String getOutlineInfo = BASE_URL + "syncCraftPic/craficInfo?";
     public static final String findRfidInfo = BASE_URL + "sweing/findRfidInfo?";
     public static final String saveSubcontractInfo = BASE_URL + "sweing/saveSubcontractInfo?";
-
+    public static final String sewSubStart = BASE_URL + "sweing/subcontractStart?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -726,6 +726,16 @@ public class HttpHelper {
     }
 
     /**
+     * 内斜开始
+     */
+    public static void sewSubStart(String rfid, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("rfId", rfid);
+        params.put("padIp", PAD_IP);
+        HttpRequest.post(sewSubStart, params, getResponseHandler(sewSubStart, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     private static RequestParams getBaseParams() {
@@ -744,10 +754,11 @@ public class HttpHelper {
 
     public static String getPadIp() {
 //        PAD_IP = NetUtil.getHostIP();
-        PAD_IP = "10.7.25.122";
-//        PAD_IP = "10.7.25.166";
-//        PAD_IP = "10.7.25.150";
+//        PAD_IP = "10.7.25.122";//上裁
+//        PAD_IP = "10.7.25.166";//上裁
+        PAD_IP = "10.7.25.150";//缝制
 //        PAD_IP = "10.8.42.113";
+//        PAD_IP = "10.8.94.144";
         return PAD_IP;
     }
 

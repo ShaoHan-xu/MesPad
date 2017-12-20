@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 
 import com.eeka.mespad.bo.PushJson;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.nfc.NdefMessageParser;
 import com.eeka.mespad.nfc.ParsedNdefRecord;
 

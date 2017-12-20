@@ -7,7 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.fragment.LoginFragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 登录界面
@@ -41,7 +44,10 @@ public class LoginActivity extends BaseActivity implements LoginFragment.OnClock
     public void onLogin(boolean success) {
         super.onLogin(success);
         if (success) {
-            MainActivity.isReLogin = true;
+            PushJson push = new PushJson();
+            push.setType(PushJson.TYPE_FINISH_MAIN);
+            EventBus.getDefault().post(push);
+
             startActivity(new Intent(mContext, MainActivity.class));
             finish();
         }

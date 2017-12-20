@@ -18,6 +18,7 @@ import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.tencent.bugly.beta.Beta;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -52,10 +53,8 @@ public class MQTTService extends Service {
     private String passWord = "admin"; //连接的密码
     private ConnectivityManager mConnectivityManager; // To check for connectivity changes
     private MqttConnectOptions options;
-    private static Context mContext;
 
     public static void actionStart(Context ctx) {
-        mContext = ctx;
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.startService(intent);
     }
@@ -77,9 +76,10 @@ public class MQTTService extends Service {
             mqttClient.unsubscribe(myTopic);
             mqttClient.unregisterResources();
             mqttClient.disconnect();
+            Logger.d("MQTT 断开连接");
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.e("mqtt 断开连接异常");
+            Logger.e("MQTT 断开连接异常");
         }
     }
 
@@ -90,10 +90,8 @@ public class MQTTService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (mContext != null) {
-            mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-            registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        }
+        mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -104,10 +102,10 @@ public class MQTTService extends Service {
         try {
             myTopic = HttpHelper.getPadIp();
             //clientId要唯一，不然会挤掉另外相同的clientId的连接
-            mClientId = SystemUtils.getIMEI(mContext);
+            mClientId = SystemUtils.getIMEI(this);
             //host为主机名，test为clientid即连接MQTT的客户端ID，一般以客户端唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
             String url = String.format(Locale.US, MQTT_URL_FORMAT, MQTT_BROKER, MQTT_PORT);
-            mqttClient = new MqttAndroidClient(mContext, url, mClientId);
+            mqttClient = new MqttAndroidClient(this, url, mClientId);
             //MQTT的连接设置
             options = new MqttConnectOptions();
             //设置是否清空session,这里如果设置为false表示服务器会保留客户端的连接记录，这里设置为true表示每次连接到服务器都以新的身份连接
@@ -151,21 +149,17 @@ public class MQTTService extends Service {
             Logger.d("MQTT收到推送->" + "message:" + str1);
             LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
 
-            PushJson pushJson;
             if ("update".equals(str1)) {
                 //自主推送，APP更新
-                pushJson = new PushJson();
-                pushJson.setCode("0");
-                pushJson.setType(PushJson.TYPE_UPDATE);
-                pushJson.setContent("update");
+                Beta.checkUpgrade();
             } else {
                 //ME系统推送
-                pushJson = JSON.parseObject(str1, PushJson.class);
-            }
-            if ("0".equals(pushJson.getCode())) {
-                EventBus.getDefault().post(pushJson);
-            } else {
-                ErrorDialog.showAlert(mContext, pushJson.getMessage(), true);
+                PushJson pushJson = JSON.parseObject(str1, PushJson.class);
+                if ("0".equals(pushJson.getCode())) {
+                    EventBus.getDefault().post(pushJson);
+                } else {
+                    ErrorDialog.showAlert(MQTTService.this, pushJson.getMessage(), true);
+                }
             }
         }
 

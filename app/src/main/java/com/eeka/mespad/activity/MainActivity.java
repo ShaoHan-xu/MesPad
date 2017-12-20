@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,6 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
-import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,12 +51,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 /**
+ * 首页
  * Created by Lenovo on 2017/6/12.
  */
 
 public class MainActivity extends NFCActivity {
-
-    public static boolean isReLogin;
 
     private DrawerLayout mDrawerLayout;
     private LoginFragment mLoginFragment;
@@ -85,9 +82,8 @@ public class MainActivity extends NFCActivity {
         initView();
         mCardInfo = new CardInfoBo();
 
-        MQTTService.actionStart(mContext);
         EventBus.getDefault().register(this);
-
+        MQTTService.actionStart(mContext);
         SpUtil.cleanDictionaryData();
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -107,20 +103,10 @@ public class MainActivity extends NFCActivity {
     };
 
     @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (isReLogin) {
-            isReLogin = false;
-            showLoading();
-            HttpHelper.initData(this);
-        }
-    }
-
-    @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         MQTTService.actionStop(mContext);
         unregisterReceiver(mConnectivityReceiver);
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -140,10 +126,9 @@ public class MainActivity extends NFCActivity {
                 showLoading();
                 HttpHelper.getPositionLoginUsers(this);
             }
-        } else if (PushJson.TYPE_UPDATE.equals(type)) {
-            Beta.checkUpgrade();
+        } else if (PushJson.TYPE_FINISH_MAIN.equals(type)) {
+            finish();
         } else if (PushJson.TYPE_EXIT.equals(type)) {
-            MQTTService.actionStop(mContext);
             finish();
             System.exit(0);
         } else {
@@ -183,9 +168,18 @@ public class MainActivity extends NFCActivity {
         HttpHelper.login(loginUser.getUSER(), loginUser.getPassword(), this);
     }
 
+    private long mLastMillis;
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return keyCode == KeyEvent.KEYCODE_BACK || super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        long curMillis = System.currentTimeMillis();
+        if (curMillis - mLastMillis <= 2000) {
+            finish();
+            System.exit(0);
+        } else {
+            mLastMillis = curMillis;
+            toast("再按一次返回键退出应用");
+        }
     }
 
     private void initLoginFragment() {
@@ -279,6 +273,14 @@ public class MainActivity extends NFCActivity {
                     button.setText("工艺图");
                     button.setId(R.id.btn_gyPic);
                     break;
+                case "SUB_START":
+                    button.setText("绣花开始");
+                    button.setId(R.id.btn_subStart);
+                    break;
+                case "SUB_COMPLETE":
+                    button.setText("绣花完成");
+                    button.setId(R.id.btn_subComplete);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -361,9 +363,6 @@ public class MainActivity extends NFCActivity {
                     ft.add(R.id.layout_content, mSewQCFragment);
                 }
                 ft.commit();
-                break;
-            case TopicUtil.TOPIC_PACKING:
-
                 break;
         }
     }
@@ -531,6 +530,16 @@ public class MainActivity extends NFCActivity {
                     mSewFragment.lookOutlinePic();
                 }
                 break;
+            case R.id.btn_subStart:
+                if (mSewFragment != null) {
+                    mSewFragment.subStart();
+                }
+                break;
+            case R.id.btn_subComplete:
+                if (mSewFragment != null) {
+                    mSewFragment.subComplete();
+                }
+                break;
         }
     }
 
@@ -625,6 +634,11 @@ public class MainActivity extends NFCActivity {
                 if (operInfo != null && operInfo.size() != 0) {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
                     mTopic = bean.getTOPIC();
+                }
+                if (TopicUtil.TOPIC_SUBCONTRACT.equals(mTopic)) {
+                    startActivity(new Intent(mContext, SubcontractReceiveAty.class));
+                    finish();
+                    return;
                 }
                 refreshView(url, resultJSON);
 

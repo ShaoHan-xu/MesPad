@@ -26,4 +26,6 @@
     <item name="btn_returnForSew" type="id" />
     <item name="btn_autoPicking" type="id" />
     <item name="btn_gyPic" type="id" />
+    <item name="btn_subStart" type="id" />
+    <item name="btn_subComplete" type="id" />
 </resources>

@@ -32,7 +32,7 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>

@@ -6,9 +6,9 @@ package com.eeka.mespad.bo;
 
 public class PushJson {
     public static final String TYPE_EXIT = "EXIT";//退出应用
+    public static final String TYPE_FINISH_MAIN = "FINISH_MAIN";//关闭首页
     public static final String TYPE_LOGIN = "LOGIN";//刷卡上岗消息
     public static final String TYPE_LOGOUT = "LOGOUT";//刷卡离岗消息
-    public static final String TYPE_UPDATE = "UPDATE";//APP检查更新
     public static final String TYPE_RFID = "RFID";//NFC刷卡
 
     private String content;

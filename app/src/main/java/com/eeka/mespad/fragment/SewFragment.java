@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
+import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.OutlinePicActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
@@ -66,6 +67,7 @@ public class SewFragment extends BaseFragment {
     private ListView mLv_nextProcess;
     private TextView mTv_lastPosition;
 
+    private String mRFID;
     private SewDataBo mSewData;
 
     @Nullable
@@ -125,10 +127,11 @@ public class SewFragment extends BaseFragment {
             MyAlertDialog.showAlert(mContext, content);
     }
 
-    public void searchOrder(String orderNum) {
+    public void searchOrder(String rfid) {
         if (isAdded())
             showLoading();
-        HttpHelper.getSewData(orderNum, this);
+        mRFID = rfid;
+        HttpHelper.getSewData(rfid, this);
     }
 
     public void gotoQC() {
@@ -193,6 +196,30 @@ public class SewFragment extends BaseFragment {
             return;
         }
         startActivity(OutlinePicActivity.getIntent(mContext, mSewData.getSfc()));
+    }
+
+    /**
+     * 厂内外协开始
+     */
+    public void subStart() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        showLoading();
+        HttpHelper.sewSubStart(mRFID, this);
+    }
+
+    /**
+     * 厂内外协完成
+     */
+    public void subComplete() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        showLoading();
+        HttpHelper.saveSubcontractInfo(mRFID, this);
     }
 
     @Override
@@ -377,10 +404,21 @@ public class SewFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getSewData.equals(url)) {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.setButtonState(R.id.btn_subStart,true);
+                activity.setButtonState(R.id.btn_subComplete,true);
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 initData();
             } else if (HttpHelper.initNcForQA.equals(url)) {
                 toast("操作成功");
+            } else if (HttpHelper.sewSubStart.equals(url)) {
+                toast("开始绣花工序");
+                MainActivity activity = (MainActivity) getActivity();
+                activity.setButtonState(R.id.btn_subStart, false);
+            } else if (HttpHelper.saveSubcontractInfo.equals(url)) {
+                toast("绣花工序完成");
+                MainActivity activity = (MainActivity) getActivity();
+                activity.setButtonState(R.id.btn_subComplete, false);
             }
         }
     }

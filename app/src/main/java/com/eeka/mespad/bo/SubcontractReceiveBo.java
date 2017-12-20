@@ -5,7 +5,7 @@ package com.eeka.mespad.bo;
  */
 
 public class SubcontractReceiveBo {
-    private String RFID;
+    private String rfid;
     private String shopOrder;
     private String sfc;
     private String size;
@@ -19,12 +19,12 @@ public class SubcontractReceiveBo {
         this.editAble = editAble;
     }
 
-    public String getRFID() {
-        return RFID;
+    public String getRfid() {
+        return rfid;
     }
 
-    public void setRFID(String RFID) {
-        this.RFID = RFID;
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
     }
 
     public String getShopOrder() {

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/btn_close"
+        style="@style/btnStyle_primary"
+        android:layout_width="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="关闭" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_close"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="vertical"
+        android:padding="0.5dp"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray_vertical"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="RFID卡号" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="工单号" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="SFC编号" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="尺码" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_subcontract_receive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</RelativeLayout>
