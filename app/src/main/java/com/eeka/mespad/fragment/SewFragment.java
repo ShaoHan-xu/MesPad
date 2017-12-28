@@ -404,10 +404,16 @@ public class SewFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getSewData.equals(url)) {
-                MainActivity activity = (MainActivity) getActivity();
-                activity.setButtonState(R.id.btn_subStart,true);
-                activity.setButtonState(R.id.btn_subComplete,true);
-                mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
+                SewDataBo sewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
+                if (mSewData != null){
+                    String sfc = sewData.getSfc();
+                    if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())){
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.setButtonState(R.id.btn_subStart,true);
+                        activity.setButtonState(R.id.btn_subComplete,true);
+                    }
+                }
+                mSewData = sewData;
                 initData();
             } else if (HttpHelper.initNcForQA.equals(url)) {
                 toast("操作成功");

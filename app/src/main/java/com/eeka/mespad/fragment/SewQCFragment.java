@@ -20,6 +20,7 @@ import com.eeka.mespad.bo.ClothSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SewQCDataBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.SpUtil;
@@ -27,7 +28,6 @@ import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +61,8 @@ public class SewQCFragment extends BaseFragment {
 
     private SewQCDataBo mSewQCData;
     private ClothSizeBo mClothSizeData;
+
+    private String mRFID;
 
     @Nullable
     @Override
@@ -208,13 +210,14 @@ public class SewQCFragment extends BaseFragment {
     }
 
     public void searchOrder(String orderNum) {
+        mRFID = orderNum;
         if (isAdded())
             showLoading();
         boolean flag = HttpHelper.findPadKeyDataForNcUI(orderNum, this);
         if (!flag) {
-            dismissLoading();
-            showErrorDialog("需要员工上岗后才能搜索工单");
+            HttpHelper.getPositionLoginUsers(this);
         }
+
     }
 
     /**
@@ -455,6 +458,15 @@ public class SewQCFragment extends BaseFragment {
                 setupSizeInfo();
             } else if (HttpHelper.saveQCClothSizeData.equals(url)) {
                 toast("保存成功");
+            } else if (HttpHelper.getPositionLoginUser_url.equals(url)) {
+                List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
+                SpUtil.savePositionUsers(positionUsers);
+                refreshLoginUsers();
+                if (positionUsers == null || positionUsers.size() == 0) {
+                    showErrorDialog("请您先登录");
+                } else {
+                    searchOrder(mRFID);
+                }
             }
         }
     }

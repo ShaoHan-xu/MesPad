@@ -753,10 +753,10 @@ public class HttpHelper {
     }
 
     public static String getPadIp() {
-//        PAD_IP = NetUtil.getHostIP();
+        PAD_IP = NetUtil.getHostIP();
 //        PAD_IP = "10.7.25.122";//上裁
 //        PAD_IP = "10.7.25.166";//上裁
-        PAD_IP = "10.7.25.150";//缝制
+//        PAD_IP = "10.7.25.150";//缝制
 //        PAD_IP = "10.8.42.113";
 //        PAD_IP = "10.8.94.144";
         return PAD_IP;

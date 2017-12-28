@@ -33,7 +33,6 @@ import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
 import com.eeka.mespad.bo.TailorInfoBo;
-import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
@@ -55,6 +54,7 @@ import java.util.List;
  */
 public class CutFragment extends BaseFragment {
     private static final int REQUEST_RECORD_NC = 0;
+    private static final int REQUEST_RECORD_LABU = 1;
     private ViewPager mVP_process;
     private VPAdapter mVPAdapter_process;
     private ViewPager mVP_matInfo;
@@ -75,13 +75,12 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_special;
     private Button mBtn_done;
 
-    public UpdateLabuBo mLabuData;//记录拉布数据里面的数据
-
     private boolean showDone;
     private String mOrderType;
     private String mRFID;
 
     private List<RecordNCBo> mList_recordNC;//记录不良
+    private boolean isRecordLabu;//是否已记录拉布数据
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -182,7 +181,7 @@ public class CutFragment extends BaseFragment {
             for (int i = 0; i < layoutArray.size(); i++) {
                 mLayout_material1.addView(getLayoutView(layoutArray.get(i), i));
                 if ("P".equals(mOrderType)) {
-                    mLayout_material1.addView(getLayoutBarCodeView(layoutArray.get(i), i));
+                    mLayout_material1.addView(getLayoutBarCodeView(layoutArray.get(i)));
                 }
             }
         }
@@ -220,6 +219,7 @@ public class CutFragment extends BaseFragment {
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 final int finalI = i;
+
                 mLayout_processTab.addView(TabViewUtil.getTabView(mContext, mTailorInfo.getOPER_INFOR().get(i), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -369,9 +369,8 @@ public class CutFragment extends BaseFragment {
                     //遍历当前工序，如果有拉布，并且没有记录拉布数据，则必须记录拉布数据才可以完工
                     for (TailorInfoBo.OPERINFORBean item : operInfo) {
                         if (!isEmpty(item.getDESCRIPTION()) && item.getDESCRIPTION().contains("拉布")) {
-                            if (mLabuData == null || mLabuData.getLAYOUTS() == null || mLabuData.getLAYOUTS().size() == 0) {
-                                toast("请先记录拉布数据");
-                                showRecordLabuDialog();
+                            if (!isRecordLabu) {
+                                showErrorDialog("请记录拉布数据");
                                 return;
                             }
                             break;
@@ -480,7 +479,7 @@ public class CutFragment extends BaseFragment {
     /**
      * 获取排料图一维码
      */
-    private View getLayoutBarCodeView(final TailorInfoBo.LayoutInfoBean item, int position) {
+    private View getLayoutBarCodeView(final TailorInfoBo.LayoutInfoBean item) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_imageview, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -517,7 +516,7 @@ public class CutFragment extends BaseFragment {
             toast("请先获取订单数据");
             return;
         }
-        startActivity(RecordLabuActivity.getIntent(mContext, mTailorInfo));
+        startActivityForResult(RecordLabuActivity.getIntent(mContext, mTailorInfo), REQUEST_RECORD_LABU);
 //        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
 //            @Override
 //            public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
@@ -685,6 +684,8 @@ public class CutFragment extends BaseFragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_RECORD_NC) {
                 mList_recordNC = (List<RecordNCBo>) data.getSerializableExtra("badList");
+            } else if (requestCode == REQUEST_RECORD_LABU) {
+                isRecordLabu = true;
             }
         }
     }
@@ -716,7 +717,7 @@ public class CutFragment extends BaseFragment {
 
                     //更新订单后需要清空之前的记录
                     mList_recordNC = new ArrayList<>();
-                    mLabuData = null;
+                    isRecordLabu = false;
                 }
             } else if (url.equals(HttpHelper.startBatchWork_url) || url.equals(HttpHelper.startCustomWork_url)) {
 //                    mBtn_done.setText("完成");

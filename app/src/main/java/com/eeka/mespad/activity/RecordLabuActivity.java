@@ -213,9 +213,11 @@ public class RecordLabuActivity extends BaseActivity {
                     for (int i = 0; i < list_items.size(); i++) {
                         mLayout_items.addView(getItemView(list_items.get(i), i));
                     }
+                    setResult(RESULT_OK);
                 }
             } else if (HttpHelper.saveOrUpdateLabuData.equals(url)) {
                 toast("保存成功");
+                setResult(RESULT_OK);
                 finish();
             }
         }

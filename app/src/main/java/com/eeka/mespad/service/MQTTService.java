@@ -142,15 +142,15 @@ public class MQTTService extends Service {
             }
         }
 
-        @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
-            //收到消息推送时会回调
-            String str1 = new String(message.getPayload());
-            Logger.d("MQTT收到推送->" + "message:" + str1);
-            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                //收到消息推送时会回调
+                String str1 = new String(message.getPayload());
+                Logger.d("MQTT收到推送->" + "message:" + str1);
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
 
             if ("update".equals(str1)) {
-                //自主推送，APP更新
+                //http://10.7.121.40:8161/admin/topics.jsp手动推送，APP更新
                 Beta.checkUpgrade();
             } else {
                 //ME系统推送
