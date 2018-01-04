@@ -25,7 +25,7 @@ android {
         applicationId "com.eeka.mespad"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 28
+        versionCode 30
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -75,12 +75,14 @@ android {
         yudu {
 //            applicationId "com.eeka.mespad.yd"
             resValue "string", "app_name", "赢领智裳_YD"
+            resValue "string", "app_channel", "YD"
         }
         longhua {
 //            applicationId "com.eeka.mespad.lh"
             // 动态添加 string.xml 字段；
             // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
             resValue "string", "app_name", "赢领智裳_LH"
+            resValue "string", "app_channel", "LH"
         }
 
     }

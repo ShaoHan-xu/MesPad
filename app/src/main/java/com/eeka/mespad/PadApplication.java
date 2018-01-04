@@ -60,6 +60,7 @@ public class PadApplication extends Application {
         Beta.enableHotfix = false;//关闭热更新功能
 //        Beta.autoDownloadOnWifi = true;//WiFi网络下自动下载安装包
 //        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        Bugly.setAppChannel(this,getString(R.string.app_channel));
         Bugly.init(getApplicationContext(), "6af52b66e6", true);
     }
 

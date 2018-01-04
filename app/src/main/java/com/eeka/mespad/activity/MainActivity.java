@@ -313,13 +313,6 @@ public class MainActivity extends NFCActivity {
             return;
         }
         FragmentTransaction ft = mFragmentManager.beginTransaction();
-        List<Fragment> fragments = mFragmentManager.getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment != null && fragment.isAdded())
-                    ft.hide(fragment);
-            }
-        }
         switch (mTopic) {
             case TopicUtil.TOPIC_CUT:
                 if (mCutFragment == null) {
@@ -330,7 +323,7 @@ public class MainActivity extends NFCActivity {
                 } else {
                     ft.add(R.id.layout_content, mCutFragment);
                 }
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 break;
             case TopicUtil.TOPIC_SEW:
                 if (mSewFragment == null)
@@ -340,7 +333,7 @@ public class MainActivity extends NFCActivity {
                 } else {
                     ft.add(R.id.layout_content, mSewFragment);
                 }
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 break;
             case TopicUtil.TOPIC_SUSPEND:
                 if (mSuspendFragment == null) {
@@ -351,7 +344,7 @@ public class MainActivity extends NFCActivity {
                 } else {
                     ft.add(R.id.layout_content, mSuspendFragment);
                 }
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 break;
             case TopicUtil.TOPIC_QC:
                 if (mSewQCFragment == null) {
@@ -362,7 +355,7 @@ public class MainActivity extends NFCActivity {
                 } else {
                     ft.add(R.id.layout_content, mSewQCFragment);
                 }
-                ft.commit();
+                ft.commitAllowingStateLoss();
                 break;
         }
     }
@@ -372,26 +365,6 @@ public class MainActivity extends NFCActivity {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
-            case R.id.tv_caijian:
-                mTopic = TopicUtil.TOPIC_CUT;
-                changeFragment();
-                mDrawerLayout.closeDrawer(Gravity.START);
-                break;
-            case R.id.tv_diaogua:
-                mTopic = TopicUtil.TOPIC_SUSPEND;
-                changeFragment();
-                mDrawerLayout.closeDrawer(Gravity.START);
-                break;
-            case R.id.tv_sew:
-                mTopic = TopicUtil.TOPIC_SEW;
-                changeFragment();
-                mDrawerLayout.closeDrawer(Gravity.START);
-                break;
-            case R.id.tv_sewQC:
-                mTopic = TopicUtil.TOPIC_QC;
-                changeFragment();
-                mDrawerLayout.closeDrawer(Gravity.START);
-                break;
             case R.id.tv_setting:
                 mDrawerLayout.closeDrawer(Gravity.START);
                 startActivity(new Intent(mContext, SettingActivity.class));

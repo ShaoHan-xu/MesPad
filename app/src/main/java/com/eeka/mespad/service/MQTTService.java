@@ -54,7 +54,10 @@ public class MQTTService extends Service {
     private ConnectivityManager mConnectivityManager; // To check for connectivity changes
     private MqttConnectOptions options;
 
+    private static Context mContext;
+
     public static void actionStart(Context ctx) {
+        mContext = ctx;
         Intent intent = new Intent(ctx, MQTTService.class);
         ctx.startService(intent);
     }
@@ -158,7 +161,7 @@ public class MQTTService extends Service {
                 if ("0".equals(pushJson.getCode())) {
                     EventBus.getDefault().post(pushJson);
                 } else {
-                    ErrorDialog.showAlert(MQTTService.this, pushJson.getMessage(), true);
+                    ErrorDialog.showAlert(mContext, pushJson.getMessage(), true);
                 }
             }
         }

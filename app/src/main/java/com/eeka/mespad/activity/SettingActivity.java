@@ -100,9 +100,9 @@ public class SettingActivity extends BaseActivity {
                 Beta.checkUpgrade();
                 break;
             case R.id.tv_version:
-                if (SystemUtils.isApkInDebug(mContext)) {
+//                if (SystemUtils.isApkInDebug(mContext)) {
                     openSystemEnvironment();
-                }
+//                }
                 break;
             case R.id.layout_setSystem:
                 setSystemCode();
