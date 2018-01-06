@@ -142,6 +142,7 @@ public class SewFragment extends BaseFragment {
         ErrorDialog.showConfirmAlert(mContext, "发现当前实物有不良，需要去质检站？", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoading();
                 PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
                 HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), SewFragment.this);
             }

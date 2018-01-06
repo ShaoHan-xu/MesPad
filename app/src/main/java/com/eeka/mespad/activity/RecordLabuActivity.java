@@ -72,6 +72,8 @@ public class RecordLabuActivity extends BaseActivity {
             tv_chuangci.setText(layoutInfo.getLAYOUT());
             TextView tv_layoutLength = (TextView) findViewById(R.id.tv_recordLabu_layoutLength);
             tv_layoutLength.setText(layoutInfo.getLENGTH() + layoutInfo.getLENGTH_UNIT());
+            TextView tv_planQty = (TextView) findViewById(R.id.tv_recordLabu_planLabuCount);
+            tv_planQty.setText(layoutInfo.getLAYERS());
             ImageView imageView = (ImageView) findViewById(R.id.iv_recordLabu_matImg);
             Picasso.with(mContext).load(layoutInfo.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         }

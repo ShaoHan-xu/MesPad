@@ -213,7 +213,7 @@
                             <TextView
                                 android:id="@+id/tv_recordLabu_planLabuCount"
                                 style="@style/textStyle_default"
-                                android:text="50" />
+                                 />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

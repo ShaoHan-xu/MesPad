@@ -489,6 +489,12 @@ public class CutFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyAlertDialog.showBarCode(mContext, item.getLAYOUT());
+            }
+        });
         return view;
     }
 
@@ -506,8 +512,6 @@ public class CutFragment extends BaseFragment {
         startActivityForResult(RecordCutNCActivity.getIntent(mContext, mTailorInfo, mList_recordNC), REQUEST_RECORD_NC);
     }
 
-    private RecordLabuDialog mLabuDialog;
-
     /**
      * 记录拉布数据
      */
@@ -517,19 +521,6 @@ public class CutFragment extends BaseFragment {
             return;
         }
         startActivityForResult(RecordLabuActivity.getIntent(mContext, mTailorInfo), REQUEST_RECORD_LABU);
-//        mLabuDialog = new RecordLabuDialog(mContext, mTailorInfo, mLabuData, mOrderType, new RecordLabuDialog.OnRecordLabuCallback() {
-//            @Override
-//            public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
-//                mLabuData = labuData;
-//                showLoading();
-//                if (done) {
-//                    HttpHelper.saveLabuDataAndComplete(labuData, CutFragment.this);
-//                } else {
-//                    HttpHelper.saveLabuData(labuData, CutFragment.this);
-//                }
-//            }
-//        });
-//        mLabuDialog.show();
     }
 
     /**
@@ -727,17 +718,6 @@ public class CutFragment extends BaseFragment {
 //                    mBtn_done.setText("开始");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
                 toast("工序已完成");
-            } else if (url.equals(HttpHelper.saveLabuData)) {
-                toast("保存成功");
-                if (mLabuDialog != null && mLabuDialog.isShowing()) {
-                    mLabuDialog.saveSuccess();
-                }
-            } else if (url.equals(HttpHelper.saveLabuDataAndComplete)) {
-                toast("保存成功");
-                if (mLabuDialog != null && mLabuDialog.isShowing()) {
-                    mLabuDialog.saveSuccess();
-                    mLabuDialog.dismiss();
-                }
             } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {
                 toast("注销在制品成功，可重新开始");
             }
