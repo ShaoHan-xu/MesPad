@@ -67,7 +67,7 @@ public class LogUtil {
             folder.mkdirs();
         }
         File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
-        String content = TIMESTAMP_FMT.format(new Date()) + message + "\n";
+        String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
         BufferedWriter out = null;
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "GBK"));

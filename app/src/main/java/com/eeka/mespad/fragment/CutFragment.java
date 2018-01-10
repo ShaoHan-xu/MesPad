@@ -78,6 +78,7 @@ public class CutFragment extends BaseFragment {
     private boolean showDone;
     private String mOrderType;
     private String mRFID;
+    private String mRI;
 
     private List<RecordNCBo> mList_recordNC;//记录不良
     private boolean isRecordLabu;//是否已记录拉布数据
@@ -110,6 +111,7 @@ public class CutFragment extends BaseFragment {
         showLoading();
         mOrderType = orderType;
         mRFID = orderNum;
+        mRI = RI;
         HttpHelper.viewCutPadInfo(orderType, orderNum, resourceBo, RI, this);
     }
 
@@ -239,6 +241,7 @@ public class CutFragment extends BaseFragment {
         TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_cut_orderNum);
         TextView tv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_cut_MTMOrderNum);
         TextView tv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
+        TextView tv_processLot = (TextView) mView.findViewById(R.id.tv_sew_processLot);
         TextView tv_qty = (TextView) mView.findViewById(R.id.tv_sew_qty);
         TextView tv_matDesc = (TextView) mView.findViewById(R.id.tv_cut_matDesc);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
@@ -246,6 +249,7 @@ public class CutFragment extends BaseFragment {
         tv_MTMOrderNum.setText(orderInfo.getSALES_ORDER());
         tv_matDesc.setText(orderInfo.getITEM_DESC());
         tv_style.setText(orderInfo.getITEM());
+        tv_processLot.setText(mRI);
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
         mTv_special.setText(orderInfo.getSO_REMARK());
 

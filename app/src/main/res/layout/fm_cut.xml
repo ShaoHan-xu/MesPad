@@ -317,6 +317,22 @@
                         <TextView
                             style="@style/textStyle_gray"
                             android:layout_marginRight="8dp"
+                            android:text="批次号" />
+
+                        <TextView
+                            android:id="@+id/tv_sew_processLot"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
                             android:text="物料描述" />
 
                         <TextView
