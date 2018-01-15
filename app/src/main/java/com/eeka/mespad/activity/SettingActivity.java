@@ -101,7 +101,7 @@ public class SettingActivity extends BaseActivity {
                 break;
             case R.id.tv_version:
 //                if (SystemUtils.isApkInDebug(mContext)) {
-                    openSystemEnvironment();
+//                    openSystemEnvironment();
 //                }
                 break;
             case R.id.layout_setSystem:
