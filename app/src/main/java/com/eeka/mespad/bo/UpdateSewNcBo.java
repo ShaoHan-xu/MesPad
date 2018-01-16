@@ -104,10 +104,10 @@ public class UpdateSewNcBo {
          */
 
         private String ncCodeRef;
-        private String operation;
+        private String operation;//返修工序描述
         private String NC_CODE_BO;
         private String DESCRIPTION;
-        private String processDesc;
+        private String processDesc;//返修工序
         private String PROD_COMPONENT;
 
         public String getPROD_COMPONENT() {

@@ -162,6 +162,18 @@ public class RecordSewNCActivity extends BaseActivity {
             bean.setNcCodeRef(ncCodeBo);
             bean.setOperation(mList_selected.get(0).getOperation());
             mList_selected.add(bean);
+        } else {
+            List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
+            for (int i = 0; i < mList_selected.size(); i++) {
+                UpdateSewNcBo.NcCodeOperationListBean bean = mList_selected.get(i);
+                UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
+                item.setSequence(i + 1);
+                item.setReworkOperation(bean.getOperation());
+                item.setOperationDesc(bean.getProcessDesc());
+                item.setPartId(bean.getPROD_COMPONENT());
+                process.add(item);
+            }
+            data.setReworkOperationList(process);
         }
         data.setNcCodeOperationList(mList_selected);
         HttpHelper.recordSewNc(data, this);
