@@ -51,12 +51,14 @@ public class PadApplication extends Application {
 
         //配置初始用户及站点
         UserInfoBo loginUser = SpUtil.getLoginUser();
-        if (loginUser == null)
+        if (loginUser == null) {
             SpUtil.saveLoginUser(new UserInfoBo("PAD_USER", "mes123456"));
 //            SpUtil.saveLoginUser(new UserInfoBo("SHAWN", "sap12345"));
+        }
         String site = SpUtil.getSite();
-        if (TextUtils.isEmpty(site))
+        if (TextUtils.isEmpty(site)) {
             SpUtil.saveSite("8081");
+        }
     }
 
     private void initBugly() {
