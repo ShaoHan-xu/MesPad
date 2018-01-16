@@ -9,6 +9,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 
@@ -35,16 +36,18 @@ public class PadApplication extends Application {
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
-//        String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
-//        if (!TextUtils.isEmpty(systemCode)) {
-//            if ("D".equals(systemCode)) {
-//                BASE_URL = BASE_URL_D;
-//            } else if ("Q".equals(systemCode)) {
-//                BASE_URL = BASE_URL_Q;
-//            } else if ("P".equals(systemCode)) {
-//                BASE_URL = BASE_URL_P;
-//            }
-//        }
+        if (SystemUtils.isApkInDebug(mContext)) {
+            String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
+            if (!TextUtils.isEmpty(systemCode)) {
+                if ("D".equals(systemCode)) {
+                    BASE_URL = BASE_URL_D;
+                } else if ("Q".equals(systemCode)) {
+                    BASE_URL = BASE_URL_Q;
+                } else if ("P".equals(systemCode)) {
+                    BASE_URL = BASE_URL_P;
+                }
+            }
+        }
 
         //配置初始用户及站点
         UserInfoBo loginUser = SpUtil.getLoginUser();
@@ -60,7 +63,7 @@ public class PadApplication extends Application {
         Beta.enableHotfix = false;//关闭热更新功能
 //        Beta.autoDownloadOnWifi = true;//WiFi网络下自动下载安装包
 //        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        Bugly.setAppChannel(this,getString(R.string.app_channel));
+        Bugly.setAppChannel(this, getString(R.string.app_channel));
         Bugly.init(getApplicationContext(), "6af52b66e6", true);
     }
 

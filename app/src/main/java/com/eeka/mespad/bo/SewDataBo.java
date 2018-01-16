@@ -194,6 +194,15 @@ public class SewDataBo implements Serializable {
             private String VIDEO_URL;
             private String QUALITY_REQUIREMENT;//质量要求
             private String OPERATION_INSTRUCTION;//工艺说明
+            private String NC_DESCRIPTION;//不合格点
+
+            public String getNC_DESCRIPTION() {
+                return NC_DESCRIPTION;
+            }
+
+            public void setNC_DESCRIPTION(String NC_DESCRIPTION) {
+                this.NC_DESCRIPTION = NC_DESCRIPTION;
+            }
 
             public String getVIDEO_URL() {
                 return VIDEO_URL;

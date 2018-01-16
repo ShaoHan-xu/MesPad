@@ -27,12 +27,12 @@ public class SubcontractDetailDialog extends BaseDialog {
     public SubcontractDetailDialog(@NonNull Context context, @NonNull List<SubcontractReceiveBo> list) {
         super(context);
         mDta = list;
-        init(context);
+        init();
     }
 
     @Override
-    protected void init(Context context) {
-        super.init(context);
+    protected void init() {
+        super.init();
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_subcontract_detail, null);
         setContentView(view);
         view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {

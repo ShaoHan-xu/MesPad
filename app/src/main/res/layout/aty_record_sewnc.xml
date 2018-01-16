@@ -61,12 +61,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_recordSewNC_choseRepairProcess"
+            android:id="@+id/btn_recordSewNC_done"
             style="@style/btnStyle_primary"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
             android:layout_marginRight="10dp"
-            android:text="选择返修工序" />
+            android:text="保存" />
 
         <Button
             android:id="@+id/btn_cancel"
@@ -89,37 +89,28 @@
         android:layout_below="@id/layout_componentInfo"
         android:layout_marginBottom="1dp">
 
-        <ScrollView
-            android:id="@+id/scrollView_recordSewNC_selected"
-            android:layout_width="@dimen/width_sewNCSelected"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_recordSewNC_selected"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="5dp"
-            android:background="@color/white">
-
-            <LinearLayout
-                android:id="@+id/layout_recordSewNC_selected"
-                android:layout_width="@dimen/width_sewNCSelected"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/divider_white"
-                android:orientation="vertical"
-                android:padding="5dp"
-                android:showDividers="middle|end" />
-        </ScrollView>
+            android:layout_marginLeft="10dp"
+            android:padding="1dp"
+            android:background="@drawable/border_black" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/scrollView_recordSewNC_selected">
+            android:layout_toLeftOf="@id/recyclerView_recordSewNC_selected">
 
             <HorizontalScrollView
                 android:id="@+id/hsv_recordSewNC_NcProcess"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:visibility="gone"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/border_black">
+                android:background="@drawable/border_black"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/layout_recordSewNC_NcProcess"
@@ -134,9 +125,9 @@
                 android:id="@+id/recyclerView_NCType"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="0.5dp"
                 android:layout_above="@id/hsv_recordSewNC_NcProcess"
-                android:background="@drawable/border_black" />
+                android:background="@drawable/border_black"
+                android:padding="0.5dp" />
 
         </RelativeLayout>
     </RelativeLayout>

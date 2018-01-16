@@ -31,12 +31,12 @@ public class AutoPickDialog extends BaseDialog {
         mShopOrder = shopOrder;
         mItemCode = itemCode;
         mLocationType = locationType;
-        init(context);
+        init();
     }
 
     @Override
-    protected void init(Context context) {
-        super.init(context);
+    protected void init() {
+        super.init();
         mView = LayoutInflater.from(mContext).inflate(R.layout.dlg_auto_pick, null);
         setContentView(mView);
         setCanceledOnTouchOutside(true);

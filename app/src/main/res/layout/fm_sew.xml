@@ -109,26 +109,16 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
-                <View
-                    style="@style/line"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp" />
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/tv_sew_ncDetail"
+                    style="@style/textStyle_default"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/textStyle_gray"
-                        android:paddingRight="8dp"
-                        android:text="上一站位" />
-
-                    <TextView
-                        android:id="@+id/tv_sew_lastPosition"
-                        style="@style/textStyle_default" />
-                </LinearLayout>
-
+                    android:background="@color/text_red_default"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="查看不合格点"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 

@@ -55,7 +55,9 @@ public class SettingActivity extends BaseActivity {
         mLayout_setSystem.setOnClickListener(this);
 
         TextView tv_version = (TextView) findViewById(R.id.tv_version);
-        tv_version.setOnClickListener(this);
+        if (SystemUtils.isApkInDebug(mContext)) {
+            tv_version.setOnClickListener(this);
+        }
         StringBuilder sb = new StringBuilder("版本：");
         sb.append(SystemUtils.getAppVersionName(mContext));
         sb.append("(").append(SystemUtils.getAppVersionCode(mContext)).append(")");
@@ -100,9 +102,7 @@ public class SettingActivity extends BaseActivity {
                 Beta.checkUpgrade();
                 break;
             case R.id.tv_version:
-//                if (SystemUtils.isApkInDebug(mContext)) {
-//                    openSystemEnvironment();
-//                }
+                openSystemEnvironment();
                 break;
             case R.id.layout_setSystem:
                 setSystemCode();

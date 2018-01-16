@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +25,8 @@ import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
+import com.eeka.mespad.dragRecyclerViewHelper.RecyclerListAdapter;
+import com.eeka.mespad.dragRecyclerViewHelper.SimpleItemTouchHelperCallback;
 import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
@@ -52,7 +56,6 @@ public class RecordSewNCActivity extends BaseActivity {
     private List<RecordNCBo> mList_NcCode;
     private NcAdapter mNcAdapter;
     private JSONArray mList_NcProcess;
-    private LinearLayout mLayout_selected;
 
     private String mSFCBo;
     private int mProductPosition, mDesignPosition;
@@ -63,6 +66,9 @@ public class RecordSewNCActivity extends BaseActivity {
     private List<SewQCDataBo.DesignComponentBean> mList_component;
 
     private int mRecordType;
+
+    private ItemTouchHelper mItemTouchHelper;
+    private RecyclerListAdapter mSelectedAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,20 +86,47 @@ public class RecordSewNCActivity extends BaseActivity {
         mLayout_productComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_productComponent);
         mLayout_designComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_designComponent);
         mLayout_NcProcess = (LinearLayout) findViewById(R.id.layout_recordSewNC_NcProcess);
-        mLayout_selected = (LinearLayout) findViewById(R.id.layout_recordSewNC_selected);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_NCType);
 
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_NCType);
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
         mNcAdapter = new NcAdapter(mContext, mList_NcCode, R.layout.gv_item_recordnc, layoutManager);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mNcAdapter);
 
+        mList_selected = new ArrayList<>();
+        mSelectedAdapter = new RecyclerListAdapter(mList_selected, new RecyclerListAdapter.OnDragStartListener() {
+            @Override
+            public void onDragStarted(RecyclerView.ViewHolder viewHolder) {
+//                开始拖拽了
+                mItemTouchHelper.startDrag(viewHolder);
+            }
+        });
+        RecyclerView selected = (RecyclerView) findViewById(R.id.recyclerView_recordSewNC_selected);
+        selected.setHasFixedSize(true);
+        selected.setAdapter(mSelectedAdapter);
+        selected.setLayoutManager(new LinearLayoutManager(mContext));
+
+        /**
+         * ★★★★★★★★★★★★★★★★★★★★★★★
+         * 要使用ItemTouchHelper，你需要创建一个ItemTouchHelper.Callback。
+         * 这个接口可以让你监听“move(上下移动)”与 “swipe（左右滑动）”事件。这里还是
+         * ★控制view被选中
+         * 的状态以及★重写默认动画的地方。
+         *
+         * 如果你只是想要一个基本的实现，有一个
+         * 帮助类可以使用：SimpleCallback,但是为了了解其工作机制，我们还是自己实现。
+         */
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSelectedAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+//        将定义好的mItemTouchHelper应用于我们的recyclerView，使得recyclerView获得move和swipe的效果
+        mItemTouchHelper.attachToRecyclerView(selected);
+
         mRecordType = getIntent().getIntExtra(KEY_TYPE, 0);
-        Button btn_nextStep = (Button) findViewById(R.id.btn_recordSewNC_choseRepairProcess);
+        Button btn_nextStep = (Button) findViewById(R.id.btn_recordSewNC_done);
         btn_nextStep.setOnClickListener(this);
-        if (mRecordType == SewQCFragment.TYPE_QA) {
-            btn_nextStep.setText("保存");
-        }
+//        if (mRecordType == SewQCFragment.TYPE_QA) {
+//            btn_nextStep.setText("保存");
+//        }
         findViewById(R.id.btn_cancel).setOnClickListener(this);
     }
 
@@ -102,16 +135,16 @@ public class RecordSewNCActivity extends BaseActivity {
         super.onClick(v);
         if (v.getId() == R.id.btn_cancel) {
             finish();
-        } else if (v.getId() == R.id.btn_recordSewNC_choseRepairProcess) {
+        } else if (v.getId() == R.id.btn_recordSewNC_done) {
             if (mList_selected == null || mList_selected.size() == 0) {
                 showErrorDialog("请选择不良代码及对应工序");
                 return;
             }
-            if (mRecordType == SewQCFragment.TYPE_QA) {
-                done();
-            } else {
-                startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component, mList_selected), REQUEST_REPAIR);
-            }
+//            if (mRecordType == SewQCFragment.TYPE_QA) {
+            done();
+//            } else {
+//                startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component, mList_selected), REQUEST_REPAIR);
+//            }
         }
     }
 
@@ -123,11 +156,13 @@ public class RecordSewNCActivity extends BaseActivity {
         if (resource != null) {
             data.setResourceRef(resource.getRESOURCE_BO());
         }
-        UpdateSewNcBo.NcCodeOperationListBean bean = new UpdateSewNcBo.NcCodeOperationListBean();
-        String ncCodeBo = "NCCodeBO:" + SpUtil.getSite() + ",NC2QC";
-        bean.setNcCodeRef(ncCodeBo);
-        bean.setOperation(mList_selected.get(0).getOperation());
-        mList_selected.add(bean);
+        if (mRecordType == SewQCFragment.TYPE_QA) {
+            UpdateSewNcBo.NcCodeOperationListBean bean = new UpdateSewNcBo.NcCodeOperationListBean();
+            String ncCodeBo = "NCCodeBO:" + SpUtil.getSite() + ",NC2QC";
+            bean.setNcCodeRef(ncCodeBo);
+            bean.setOperation(mList_selected.get(0).getOperation());
+            mList_selected.add(bean);
+        }
         data.setNcCodeOperationList(mList_selected);
         HttpHelper.recordSewNc(data, this);
     }
@@ -136,7 +171,6 @@ public class RecordSewNCActivity extends BaseActivity {
     protected void initData() {
         super.initData();
         mNcCodePosition = -1;
-        mList_selected = new ArrayList<>();
         String sfc = getIntent().getStringExtra(KEY_SFC);
         mTv_orderNum.setText(sfc);
         mSFCBo = "SFCBO:" + SpUtil.getSite() + "," + sfc;
@@ -219,80 +253,10 @@ public class RecordSewNCActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     mNcCodePosition = position;
-                    notifyDataSetChanged();
                     SewQCDataBo.DesignComponentBean productComponent = mList_component.get(mProductPosition);
                     SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = productComponent.getDesgComponents().get(mDesignPosition);
                     showLoading();
                     HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
-                }
-            });
-        }
-    }
-
-    /**
-     * 获取不良工序布局
-     */
-    private View getNcProcessView(final JSONObject item, final int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.gv_item_recordnc, null);
-        view.findViewById(R.id.btn_recordNc_sub).setVisibility(View.GONE);
-        TextView textView = (TextView) view.findViewById(R.id.tv_recordNc_type);
-        textView.setBackgroundResource(0);
-        textView.setText(item.getString("DESCRIPTION"));
-        view.findViewById(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String operation = item.getString("OPERATION");
-                RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
-                for (UpdateSewNcBo.NcCodeOperationListBean selected : mList_selected) {
-                    if (operation.equals(selected.getOperation()) && recordNCBo.getNC_CODE_BO().equals(selected.getNC_CODE_BO())) {
-                        mList_selected.remove(selected);
-                        refreshSelectedView();
-                        v.setBackgroundResource(0);
-                        return;
-                    }
-                }
-
-                mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
-                mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());
-                mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
-                mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
-                mCurSelecting.setOperation(operation);
-                mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
-                mList_selected.add(mCurSelecting);
-                refreshNcProcessView(position);
-                refreshSelectedView();
-            }
-        });
-        return view;
-    }
-
-    private void refreshNcProcessView(int position) {
-        int childCount = mLayout_NcProcess.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            View childAt = mLayout_NcProcess.getChildAt(i);
-            childAt.findViewById(R.id.tv_recordNc_type).setBackgroundResource(R.color.white);
-        }
-        mLayout_NcProcess.getChildAt(position).findViewById(R.id.tv_recordNc_type).setBackgroundResource(R.color.divider_gray);
-    }
-
-    /**
-     * 刷新已选择不良代码及工序的布局
-     */
-    private void refreshSelectedView() {
-        mLayout_selected.removeAllViews();
-        for (final UpdateSewNcBo.NcCodeOperationListBean item : mList_selected) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sewnc_selected, null);
-            TextView tv_code = (TextView) view.findViewById(R.id.tv_recordSewNC_selected_code);
-            TextView tv_process = (TextView) view.findViewById(R.id.tv_recordSewNC_selected_process);
-            tv_code.setText(item.getDESCRIPTION());
-            tv_process.setText(item.getProcessDesc());
-            mLayout_selected.addView(view);
-
-            view.findViewById(R.id.btn_recordSewNC_delSelected).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mList_selected.remove(item);
-                    refreshSelectedView();
                 }
             });
         }
@@ -323,9 +287,8 @@ public class RecordSewNCActivity extends BaseActivity {
                         mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
                         mCurSelecting.setOperation(operation);
                         mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
-                        mList_selected.add(mCurSelecting);
 
-                        refreshSelectedView();
+                        mSelectedAdapter.addItem(mCurSelecting);
                     }
                 }).show();
             } else if (HttpHelper.recordSewNc.equals(url)) {

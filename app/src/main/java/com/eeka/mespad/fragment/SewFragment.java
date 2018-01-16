@@ -30,6 +30,7 @@ import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.eeka.mespad.view.dialog.NCDetailDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +66,7 @@ public class SewFragment extends BaseFragment {
     private ProcessListAdapter mNextProcessAdapter;
     private ListView mLv_curProcess;
     private ListView mLv_nextProcess;
-    private TextView mTv_lastPosition;
+    private TextView mTv_ncDetail;
 
     private String mRFID;
     private SewDataBo mSewData;
@@ -98,7 +99,8 @@ public class SewFragment extends BaseFragment {
         mTv_craftDesc = (TextView) mView.findViewById(R.id.tv_sew_craftDesc);
         mTv_qualityReq = (TextView) mView.findViewById(R.id.tv_sew_qualityReq);
         mTv_special = (TextView) mView.findViewById(R.id.tv_sew_special);
-        mTv_lastPosition = (TextView) mView.findViewById(R.id.tv_sew_lastPosition);
+        mTv_ncDetail = (TextView) mView.findViewById(R.id.tv_sew_ncDetail);
+        mTv_ncDetail.setOnClickListener(this);
 
         mLayout_processTab = (LinearLayout) mView.findViewById(R.id.layout_sew_processList);
         mLayout_matInfo = (LinearLayout) mView.findViewById(R.id.layout_sew_matInfo);
@@ -122,6 +124,8 @@ public class SewFragment extends BaseFragment {
             content = mTv_qualityReq.getText().toString();
         } else if (v.getId() == R.id.layout_sew_special) {
             content = mTv_special.getText().toString();
+        } else if (v.getId() == R.id.tv_sew_ncDetail) {
+            new NCDetailDialog(mSewData.getCurrentOpeationInfos(),mContext).show();
         }
         if (!isEmpty(content))
             MyAlertDialog.showAlert(mContext, content);
@@ -230,6 +234,7 @@ public class SewFragment extends BaseFragment {
             toast("数据错误");
             return;
         }
+        mTv_ncDetail.setVisibility(View.GONE);
         mTv_qualityReq.setText(null);
         mTv_craftDesc.setText(null);
         mTv_SFC.setText(mSewData.getSfc());
@@ -243,7 +248,7 @@ public class SewFragment extends BaseFragment {
         } else {
             mTv_special.setText(remark.replace("#line#", "\n"));
         }
-        mTv_lastPosition.setText(mSewData.getLastLineCategory() + "," + mSewData.getLastPosition());
+
         String salesOrder = mSewData.getSalesOrder();
         if (!isEmpty(salesOrder)) {
             mLayout_MTMOrderNum.setVisibility(View.VISIBLE);
@@ -287,16 +292,21 @@ public class SewFragment extends BaseFragment {
         }
 
         mLayout_processTab.removeAllViews();
-        final List<SewDataBo.SewAttr> opeationInfos = mSewData.getCurrentOpeationInfos();
+        final List<SewDataBo.SewAttr> curOperation = mSewData.getCurrentOpeationInfos();
         if (mCurProcessAdapter == null) {
-            mCurProcessAdapter = new ProcessListAdapter(mContext, opeationInfos, R.layout.item_textview);
+            mCurProcessAdapter = new ProcessListAdapter(mContext, curOperation, R.layout.item_textview);
             mLv_curProcess.setAdapter(mCurProcessAdapter);
         } else {
-            mCurProcessAdapter.notifyDataSetChanged(opeationInfos);
+            mCurProcessAdapter.notifyDataSetChanged(curOperation);
         }
-        if (opeationInfos != null) {
-            for (int i = 0; i < opeationInfos.size(); i++) {
-                SewDataBo.SewAttr opera = opeationInfos.get(i);
+        if (curOperation != null) {
+            boolean hasNC = false;
+            for (int i = 0; i < curOperation.size(); i++) {
+                SewDataBo.SewAttr opera = curOperation.get(i);
+                String ncDescription = opera.getAttributes().getNC_DESCRIPTION();
+                if (!isEmpty(ncDescription)) {
+                    hasNC = true;
+                }
                 final int finalI = i;
                 mLayout_processTab.addView(TabViewUtil.getTabView(mContext, opera, new View.OnClickListener() {
                     @Override
@@ -305,8 +315,10 @@ public class SewFragment extends BaseFragment {
                     }
                 }));
             }
-
-            mVP_sop.setAdapter(new CommonVPAdapter<SewDataBo.SewAttr>(mContext, opeationInfos, R.layout.item_imageview) {
+            if (hasNC) {
+                mTv_ncDetail.setVisibility(View.VISIBLE);
+            }
+            mVP_sop.setAdapter(new CommonVPAdapter<SewDataBo.SewAttr>(mContext, curOperation, R.layout.item_imageview) {
                 @Override
                 public void convertView(View view, SewDataBo.SewAttr item, final int position) {
                     ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
@@ -315,7 +327,7 @@ public class SewFragment extends BaseFragment {
                         @Override
                         public void onClick(View v) {
                             ArrayList<String> urls = new ArrayList<>();
-                            for (SewDataBo.SewAttr data : opeationInfos) {
+                            for (SewDataBo.SewAttr data : curOperation) {
                                 urls.add(data.getAttributes().getSOP_URL());
                             }
                             startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
@@ -324,7 +336,7 @@ public class SewFragment extends BaseFragment {
                 }
             });
 
-            if (opeationInfos.size() != 0) {
+            if (curOperation.size() != 0) {
                 refreshProcessView(0);
             }
         }
@@ -406,12 +418,12 @@ public class SewFragment extends BaseFragment {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getSewData.equals(url)) {
                 SewDataBo sewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
-                if (mSewData != null){
+                if (mSewData != null) {
                     String sfc = sewData.getSfc();
-                    if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())){
+                    if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())) {
                         MainActivity activity = (MainActivity) getActivity();
-                        activity.setButtonState(R.id.btn_subStart,true);
-                        activity.setButtonState(R.id.btn_subComplete,true);
+                        activity.setButtonState(R.id.btn_subStart, true);
+                        activity.setButtonState(R.id.btn_subComplete, true);
                     }
                 }
                 mSewData = sewData;

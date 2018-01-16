@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.Window;
 
+import com.eeka.mespad.utils.SystemUtils;
+
 /**
  * Dialog基类，用于封装一些常用的方法和字段
  * Created by Lenovo on 2017/11/9.
@@ -18,11 +20,18 @@ public class BaseDialog extends Dialog {
 
     public BaseDialog(@NonNull Context context) {
         super(context);
+        mContext = context;
     }
 
-    protected void init(Context context) {
-        mContext = context;
+    protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCanceledOnTouchOutside(false);
     }
+
+    @Override
+    public void show() {
+        super.show();
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.8), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+    }
+
 }
