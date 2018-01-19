@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -289,15 +288,13 @@ public class RecordSewNCActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         JSONObject item = mList_NcProcess.getJSONObject(position);
-                        String operation = item.getString("OPERATION");
-                        SewQCDataBo.DesignComponentBean produComp = mList_component.get(mProductPosition);
 
                         mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
-                        mCurSelecting.setPROD_COMPONENT(produComp.getName());
+                        mCurSelecting.setPROD_COMPONENT(item.getString("PART_ID"));
                         mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());
                         mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
                         mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
-                        mCurSelecting.setOperation(operation);
+                        mCurSelecting.setOperation(item.getString("OPERATION"));
                         mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
 
                         mSelectedAdapter.addItem(mCurSelecting);

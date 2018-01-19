@@ -754,7 +754,7 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.10.28.144";
+//        PAD_IP = "10.10.28.190";
         return PAD_IP;
     }
 
