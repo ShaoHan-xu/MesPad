@@ -42,6 +42,10 @@ import cn.finalteam.okhttpfinal.LogUtil;
  */
 
 public class MQTTService extends Service {
+    //生产系统MQ
+//    private static final String MQTT_BROKER = "10.10.200.11"; // Broker URL or IP Address
+//    private static final String MQTT_PORT = "8161"; // Broker Port
+    //测试系统MQ
     private static final String MQTT_BROKER = "10.7.121.40"; // Broker URL or IP Address
     private static final String MQTT_PORT = "1883"; // Broker Port
     private static final String MQTT_URL_FORMAT = "tcp://%s:%s"; // URL Format normally don't change
@@ -145,12 +149,12 @@ public class MQTTService extends Service {
             }
         }
 
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                //收到消息推送时会回调
-                String str1 = new String(message.getPayload());
-                Logger.d("MQTT收到推送->" + "message:" + str1);
-                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
+        @Override
+        public void messageArrived(String topic, MqttMessage message) throws Exception {
+            //收到消息推送时会回调
+            String str1 = new String(message.getPayload());
+            Logger.d("MQTT收到推送->" + "message:" + str1);
+            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT, str1);
 
             if ("update".equals(str1)) {
                 //http://10.7.121.40:8161/admin/topics.jsp手动推送，APP更新

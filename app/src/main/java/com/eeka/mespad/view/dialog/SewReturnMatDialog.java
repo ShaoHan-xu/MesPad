@@ -70,7 +70,6 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
         String code = DictionaryDataBo.CODE_BlReason;
         List<DictionaryDataBo> list = SpUtil.getDictionaryData(code);
         if (list == null || list.size() == 0) {
-            LoadingDialog.show(mContext);
             HttpHelper.getDictionaryData(code, this);
         } else {
             initData(list);
