@@ -67,7 +67,7 @@ public class SewReturnMatDialog extends Dialog implements View.OnClickListener, 
         initView();
 
         mType = TYPE_RETURN;
-        String code = DictionaryDataBo.CODE_BlReason;
+        String code = DictionaryDataBo.CODE_TlReason;
         List<DictionaryDataBo> list = SpUtil.getDictionaryData(code);
         if (list == null || list.size() == 0) {
             HttpHelper.getDictionaryData(code, this);

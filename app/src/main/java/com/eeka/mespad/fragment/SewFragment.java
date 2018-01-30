@@ -66,6 +66,7 @@ public class SewFragment extends BaseFragment {
     private ProcessListAdapter mNextProcessAdapter;
     private ListView mLv_curProcess;
     private ListView mLv_nextProcess;
+    private TextView mTv_lastPosition;
     private TextView mTv_ncDetail;
 
     private String mRFID;
@@ -99,6 +100,7 @@ public class SewFragment extends BaseFragment {
         mTv_craftDesc = (TextView) mView.findViewById(R.id.tv_sew_craftDesc);
         mTv_qualityReq = (TextView) mView.findViewById(R.id.tv_sew_qualityReq);
         mTv_special = (TextView) mView.findViewById(R.id.tv_sew_special);
+        mTv_lastPosition = (TextView) mView.findViewById(R.id.tv_sew_lastPosition);
         mTv_ncDetail = (TextView) mView.findViewById(R.id.tv_sew_ncDetail);
         mTv_ncDetail.setOnClickListener(this);
 
@@ -125,7 +127,7 @@ public class SewFragment extends BaseFragment {
         } else if (v.getId() == R.id.layout_sew_special) {
             content = mTv_special.getText().toString();
         } else if (v.getId() == R.id.tv_sew_ncDetail) {
-            new NCDetailDialog(mSewData.getCurrentOpeationInfos(),mContext).show();
+            new NCDetailDialog(mSewData.getCurrentOpeationInfos(), mContext).show();
         }
         if (!isEmpty(content))
             MyAlertDialog.showAlert(mContext, content);
@@ -242,6 +244,7 @@ public class SewFragment extends BaseFragment {
         mTv_matDesc.setText(mSewData.getItemDesc());
         mTv_style.setText(mSewData.getItem());
         mTv_size.setText(mSewData.getSize());
+        mTv_lastPosition.setText(mSewData.getLastLineCategory() + "," + mSewData.getLastPosition());
         String remark = mSewData.getSoRemark();
         if (isEmpty(remark)) {
             mTv_special.setText(null);

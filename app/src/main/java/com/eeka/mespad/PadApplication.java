@@ -36,7 +36,7 @@ public class PadApplication extends Application {
         initOkHttp();
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
-        if (SystemUtils.isApkInDebug(mContext)) {
+        if (SystemUtils.isApkInDebug(this)) {
             String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
             if (!TextUtils.isEmpty(systemCode)) {
                 if ("D".equals(systemCode)) {
