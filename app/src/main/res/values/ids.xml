@@ -28,4 +28,5 @@
     <item name="btn_gyPic" type="id" />
     <item name="btn_subStart" type="id" />
     <item name="btn_subComplete" type="id" />
+    <item name="btn_cutRecord" type="id" />
 </resources>

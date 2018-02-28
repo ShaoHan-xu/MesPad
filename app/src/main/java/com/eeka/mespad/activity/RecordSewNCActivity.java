@@ -26,7 +26,7 @@ import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.dragRecyclerViewHelper.RecyclerListAdapter;
 import com.eeka.mespad.dragRecyclerViewHelper.SimpleItemTouchHelperCallback;
-import com.eeka.mespad.fragment.SewQCFragment;
+import com.eeka.mespad.fragment.QCFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
@@ -123,7 +123,7 @@ public class RecordSewNCActivity extends BaseActivity {
         mRecordType = getIntent().getIntExtra(KEY_TYPE, 0);
         Button btn_nextStep = (Button) findViewById(R.id.btn_recordSewNC_done);
         btn_nextStep.setOnClickListener(this);
-//        if (mRecordType == SewQCFragment.TYPE_QA) {
+//        if (mRecordType == QCFragment.TYPE_QA) {
 //            btn_nextStep.setText("保存");
 //        }
         findViewById(R.id.btn_cancel).setOnClickListener(this);
@@ -139,7 +139,7 @@ public class RecordSewNCActivity extends BaseActivity {
                 showErrorDialog("请选择不良代码及对应工序");
                 return;
             }
-//            if (mRecordType == SewQCFragment.TYPE_QA) {
+//            if (mRecordType == QCFragment.TYPE_QA) {
             done();
 //            } else {
 //                startActivityForResult(RepairActivity.getIntent(mContext, mSFCBo, mList_component, mList_selected), REQUEST_REPAIR);
@@ -155,7 +155,7 @@ public class RecordSewNCActivity extends BaseActivity {
         if (resource != null) {
             data.setResourceRef(resource.getRESOURCE_BO());
         }
-        if (mRecordType == SewQCFragment.TYPE_QA) {
+        if (mRecordType == QCFragment.TYPE_QA) {
             UpdateSewNcBo.NcCodeOperationListBean bean = new UpdateSewNcBo.NcCodeOperationListBean();
             String ncCodeBo = "NCCodeBO:" + SpUtil.getSite() + ",NC2QC";
             bean.setNcCodeRef(ncCodeBo);

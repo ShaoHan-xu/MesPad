@@ -32,10 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 缝制质检
+ * 质检
  * Created by Lenovo on 2017/8/8.
  */
-public class SewQCFragment extends BaseFragment {
+public class QCFragment extends BaseFragment {
 
     public static int TYPE_QC = 0;
     public static int TYPE_QA = 1;

@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.CutRecordQtyBo;
 import com.eeka.mespad.bo.GetLabuDataBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SaveLabuDataBo;
@@ -94,6 +95,8 @@ public class HttpHelper {
     public static final String findRfidInfo = BASE_URL + "sweing/findRfidInfo?";
     public static final String saveSubcontractInfo = BASE_URL + "sweing/saveSubcontractInfo?";
     public static final String sewSubStart = BASE_URL + "sweing/subcontractStart?";
+    public static final String getCutRecordData = BASE_URL + "cutpad/viewCutRecordList?";
+    public static final String saveCutRecordData = BASE_URL + "cutpad/saveCutRecord?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -726,13 +729,37 @@ public class HttpHelper {
     }
 
     /**
-     * 内斜开始
+     * 内协开始
      */
     public static void sewSubStart(String rfid, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("rfId", rfid);
         params.put("padIp", PAD_IP);
         HttpRequest.post(sewSubStart, params, getResponseHandler(sewSubStart, callback));
+    }
+
+
+    /**
+     * 获取裁剪段记录数据
+     */
+    public static void getCutRecordData(String rfid, String shopOrder, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("RFID", rfid);
+        json.put("SHOP_ORDER", shopOrder);
+        json.put("padIp", PAD_IP);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getCutRecordData, params, getResponseHandler(getCutRecordData, callback));
+    }
+
+    /**
+     * 保存裁剪段记录数据
+     */
+    public static void saveCutRecordData(CutRecordQtyBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("padIp", PAD_IP);
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveCutRecordData, params, getResponseHandler(saveCutRecordData, callback));
     }
 
     /**
@@ -754,7 +781,6 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.10.28.205";
         return PAD_IP;
     }
 

@@ -93,31 +93,31 @@ public class NetUtil {
 
     /**
      * 在连接到网络基础之上,判断设备是否是SIM网络连接
-     *
-     * @param context
-     * @return
      */
     public static boolean IsMobileNetConnect(Context context) {
         try {
             ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo.State state = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
-            if (NetworkInfo.State.CONNECTED == state)
-                return true;
-            else
-                return false;
+            return NetworkInfo.State.CONNECTED == state;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
+    private static String mHostIp = null;
+
+    public static void setHostIp(String ip) {
+        mHostIp = ip;
+    }
+
     /**
      * 获取ip地址
-     *
-     * @return
      */
     public static String getHostIP() {
-        String hostIp = null;
+        if (mHostIp != null) {
+            return mHostIp;
+        }
         try {
             Enumeration nis = NetworkInterface.getNetworkInterfaces();
             InetAddress ia = null;
@@ -131,7 +131,7 @@ public class NetUtil {
                     }
                     String ip = ia.getHostAddress();
                     if (!"127.0.0.1".equals(ip)) {
-                        hostIp = ia.getHostAddress();
+                        mHostIp = ia.getHostAddress();
                         break;
                     }
                 }
@@ -140,8 +140,7 @@ public class NetUtil {
             Logger.d("SocketException");
             e.printStackTrace();
         }
-        return hostIp;
-
+        return mHostIp;
     }
 
 }

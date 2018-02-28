@@ -25,6 +25,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class LoginFragment extends BaseFragment {
     public static final int TYPE_CLOCK = 0;
     public static final int TYPE_LOGIN = 1;
 
-    private EditText mEt_user, mEt_pwd, mEt_site;
+    private EditText mET_IP, mEt_user, mEt_pwd, mEt_site;
     private OnLoginCallback mLoginCallback;
     private OnClockCallback mClockCallback;
     private int mType;
@@ -65,8 +66,11 @@ public class LoginFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        TextView tv_IP = (TextView) mView.findViewById(R.id.tv_login_IP);
-        tv_IP.setText(NetUtil.getHostIP());
+        mET_IP = (EditText) mView.findViewById(R.id.et_login_IP);
+        mET_IP.setText(NetUtil.getHostIP());
+        if (SystemUtils.isApkInDebug(mContext)) {
+            mET_IP.setEnabled(true);
+        }
         mEt_user = (EditText) mView.findViewById(R.id.et_login_user);
         mEt_pwd = (EditText) mView.findViewById(R.id.et_login_pwd);
         mEt_site = (EditText) mView.findViewById(R.id.et_login_site);
@@ -179,6 +183,7 @@ public class LoginFragment extends BaseFragment {
                 String pwd = mEt_pwd.getText().toString();
                 userInfo.setPassword(pwd);
                 SpUtil.saveLoginUser(userInfo);
+                NetUtil.setHostIp(mET_IP.getText().toString());
                 if (mLoginCallback != null)
                     mLoginCallback.onLogin(true);
             } else if (HttpHelper.positionLogin_url.equals(url)) {

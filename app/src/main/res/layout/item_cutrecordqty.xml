@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:divider="@drawable/divider_gray_vertical"
         android:orientation="horizontal"
+        android:gravity="center"
         android:showDividers="middle">
 
         <TextView
@@ -17,8 +18,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="裁床组" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_deviceNo"
@@ -26,8 +26,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="设备编号" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_orderNo"
@@ -35,8 +34,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="工单号" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_bedNo"
@@ -44,8 +42,16 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="床次" />
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/tv_cutRecordQty_process"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/ic_arrow_down"
+            android:gravity="center"
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_matNo"
@@ -53,8 +59,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="物料编号" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_matType"
@@ -62,8 +67,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="物料类型" />
+            android:padding="8dp" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_recordUser"
@@ -71,17 +75,18 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
-            android:text="记录人" />
+            android:padding="8dp" />
 
-        <TextView
-            android:id="@+id/tv_cutRecordQty_recordData"
+        <EditText
+            android:id="@+id/et_cutRecordQty_recordQty"
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:background="@null"
             android:gravity="center"
+            android:inputType="number"
             android:padding="8dp"
-            android:text="数据录入" />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_del"

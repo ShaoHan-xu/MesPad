@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,8 +33,8 @@ import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.LoginFragment;
+import com.eeka.mespad.fragment.QCFragment;
 import com.eeka.mespad.fragment.SewFragment;
-import com.eeka.mespad.fragment.SewQCFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.service.MQTTService;
@@ -62,7 +61,7 @@ public class MainActivity extends NFCActivity {
     private CutFragment mCutFragment;
     private SuspendFragment mSuspendFragment;
     private SewFragment mSewFragment;
-    private SewQCFragment mSewQCFragment;
+    private QCFragment mQCFragment;
 
     private LinearLayout mLayout_controlPanel;
 
@@ -281,6 +280,10 @@ public class MainActivity extends NFCActivity {
                     button.setText("绣花完成");
                     button.setId(R.id.btn_subComplete);
                     break;
+                case "CUT_RECORD":
+                    button.setText("裁剪计件");
+                    button.setId(R.id.btn_cutRecord);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -347,13 +350,13 @@ public class MainActivity extends NFCActivity {
                 ft.commitAllowingStateLoss();
                 break;
             case TopicUtil.TOPIC_QC:
-                if (mSewQCFragment == null) {
-                    mSewQCFragment = new SewQCFragment();
+                if (mQCFragment == null) {
+                    mQCFragment = new QCFragment();
                 }
-                if (mSewQCFragment.isAdded()) {
-                    ft.show(mSewQCFragment);
+                if (mQCFragment.isAdded()) {
+                    ft.show(mQCFragment);
                 } else {
-                    ft.add(R.id.layout_content, mSewQCFragment);
+                    ft.add(R.id.layout_content, mQCFragment);
                 }
                 ft.commitAllowingStateLoss();
                 break;
@@ -390,12 +393,12 @@ public class MainActivity extends NFCActivity {
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mCutFragment.recordNC();
                 } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
-                    mSewQCFragment.recordNC(SewQCFragment.TYPE_QC);
+                    mQCFragment.recordNC(QCFragment.TYPE_QC);
                 }
                 break;
             case R.id.btn_QaNcRecord:
                 if (TopicUtil.TOPIC_QC.equals(mTopic)) {
-                    mSewQCFragment.recordNC(SewQCFragment.TYPE_QA);
+                    mQCFragment.recordNC(QCFragment.TYPE_QA);
                 }
                 break;
             case R.id.btn_video:
@@ -473,8 +476,8 @@ public class MainActivity extends NFCActivity {
                         mSewFragment.unBind();
                     }
                 } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
-                    if (mSewQCFragment != null) {
-                        mSewQCFragment.unBind();
+                    if (mQCFragment != null) {
+                        mQCFragment.unBind();
                     }
                 }
                 break;
@@ -513,6 +516,11 @@ public class MainActivity extends NFCActivity {
                     mSewFragment.subComplete();
                 }
                 break;
+            case R.id.btn_cutRecord:
+                if (mCutFragment != null) {
+                    mCutFragment.recordQty();
+                }
+                break;
         }
     }
 
@@ -546,7 +554,7 @@ public class MainActivity extends NFCActivity {
                     mSuspendFragment.searchOrder(cardNum);
                     break;
                 case TopicUtil.TOPIC_QC:
-                    mSewQCFragment.searchOrder(cardNum);
+                    mQCFragment.searchOrder(cardNum);
                     break;
             }
         }
@@ -689,7 +697,7 @@ public class MainActivity extends NFCActivity {
                 mSuspendFragment.refreshLoginUsers();
                 break;
             case TopicUtil.TOPIC_QC:
-                mSewQCFragment.refreshLoginUsers();
+                mQCFragment.refreshLoginUsers();
                 break;
         }
     }

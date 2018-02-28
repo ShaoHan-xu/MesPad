@@ -39,6 +39,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
+import com.eeka.mespad.view.dialog.CutRecordQtyDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.RecordLabuDialog;
@@ -513,6 +514,10 @@ public class CutFragment extends BaseFragment {
     }
 
     public void recordNC() {
+        if (mTailorInfo == null) {
+            showErrorDialog("请先获取订单数据");
+            return;
+        }
         startActivityForResult(RecordCutNCActivity.getIntent(mContext, mTailorInfo, mList_recordNC), REQUEST_RECORD_NC);
     }
 
@@ -559,6 +564,21 @@ public class CutFragment extends BaseFragment {
         if (mBtn_done != null) {
             mBtn_done.setVisibility(View.VISIBLE);
         }
+    }
+
+    CutRecordQtyDialog mRecordQtyDialog;
+
+    /**
+     * 裁剪计件
+     */
+    public void recordQty() {
+        if (mTailorInfo == null) {
+            showErrorDialog("请先获取订单数据");
+            return;
+        }
+        List<TailorInfoBo.OPERINFORBean> list = mTailorInfo.getOPER_INFOR();
+        mRecordQtyDialog = new CutRecordQtyDialog(mContext, mRFID, mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER(), list);
+        mRecordQtyDialog.show();
     }
 
     private class ViewPagerChangedListener implements ViewPager.OnPageChangeListener {

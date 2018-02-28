@@ -34,10 +34,11 @@
                 android:layout_height="wrap_content"
                 android:text="站位：" />
 
-            <TextView
-                android:id="@+id/tv_login_IP"
+            <EditText
+                android:id="@+id/et_login_IP"
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
+                android:enabled="false"
                 android:layout_height="wrap_content"
                 android:textStyle="bold" />
 
