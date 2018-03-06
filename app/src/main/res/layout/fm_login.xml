@@ -39,6 +39,8 @@
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
                 android:enabled="false"
+                android:digits="1234567890."
+                android:inputType="number"
                 android:layout_height="wrap_content"
                 android:textStyle="bold" />
 

@@ -20,6 +20,7 @@ public class CutRecordQtyBo {
      * SHOP_ORDER : 2017122501
      */
 
+    private String RFID;
     private String LAYOUT_TYPE;
     private String OPERATION;
     private String LAYOUT;
@@ -28,6 +29,14 @@ public class CutRecordQtyBo {
     private String RESOURCE;
     private String SHOP_ORDER;
     private List<RecordQtyItemBo> RECORD_LIST;
+
+    public String getRFID() {
+        return RFID;
+    }
+
+    public void setRFID(String RFID) {
+        this.RFID = RFID;
+    }
 
     public String getLAYOUT_TYPE() {
         return LAYOUT_TYPE;

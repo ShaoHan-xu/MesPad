@@ -13,6 +13,7 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.BTReasonBo;
+import com.eeka.mespad.bo.TailorInfoBo;
 
 import java.util.List;
 
@@ -48,6 +49,8 @@ public class SelectorPopWindow<T> extends PopupWindow {
             public void convert(ViewHolder holder, T item, int position) {
                 if (item instanceof BTReasonBo) {
                     holder.setText(R.id.textView, ((BTReasonBo) item).getREASON_DESC());
+                } else if (item instanceof TailorInfoBo.OPERINFORBean) {
+                    holder.setText(R.id.textView, ((TailorInfoBo.OPERINFORBean) item).getDESCRIPTION());
                 } else {
                     holder.setText(R.id.textView, item.toString());
                 }

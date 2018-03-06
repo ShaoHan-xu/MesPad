@@ -1,5 +1,6 @@
 package com.eeka.mespad.view.dialog;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,8 +37,9 @@ import java.util.List;
  * Created by xushaohan on 2018/2/24.
  */
 
-public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListener {
+public class CutRecordQtyDialog extends Dialog implements View.OnClickListener {
 
+    private Context mContext;
     private CutRecordQtyBo mData;
     private List<CutRecordQtyBo.RecordQtyItemBo> mList_data;
     private ItemAdapter mAdapter;
@@ -47,15 +50,16 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
 
     public CutRecordQtyDialog(@NonNull Context context, String rfid, String shopOrder, List<TailorInfoBo.OPERINFORBean> processList) {
         super(context);
+        mContext = context;
         mRFID = rfid;
         mShopOrder = shopOrder;
         mList_process = processList;
         init();
     }
 
-    @Override
     protected void init() {
-        super.init();
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setCanceledOnTouchOutside(false);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_cutrecordqty, null);
         setContentView(view);
 
@@ -86,7 +90,7 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
                         //如果之前未保存过数据，添加一条空数据待用户录入
                         mList_data.add(new CutRecordQtyBo.RecordQtyItemBo());
                     } else {
-                        mList_data = recordList;
+                        mList_data.addAll(recordList);
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {
@@ -121,23 +125,15 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
             TextView tv_recordUser = holder.getView(R.id.tv_cutRecordQty_recordUser);
             tv_recordUser.setText(item.getUSER_ID());
             EditText et_recordQty = holder.getView(R.id.et_cutRecordQty_recordQty);
+            RecordQtyChangeListener listener = (RecordQtyChangeListener) et_recordQty.getTag();
+            et_recordQty.removeTextChangedListener(listener);
             et_recordQty.setText(item.getRECORD());
-            et_recordQty.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    item.setRECORD(s.toString());
-                }
-            });
+            if (listener == null) {
+                listener = new RecordQtyChangeListener();
+                et_recordQty.setTag(listener);
+            }
+            listener.setPosition(position);
+            et_recordQty.addTextChangedListener(listener);
 
             TextView tv_process = holder.getView(R.id.tv_cutRecordQty_process);
             tv_process.setText(item.getOPERATION_DESC());
@@ -157,6 +153,31 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
         }
     }
 
+    private class RecordQtyChangeListener implements TextWatcher {
+
+        private int mPosition;
+
+        public void setPosition(int position){
+            mPosition = position;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mList_data.get(mPosition).setRECORD(s.toString());
+            mAdapter.notifyItemChanged(mPosition);
+        }
+    }
+
     private void showPopWindow(final View v, final int index) {
         SelectorPopWindow<TailorInfoBo.OPERINFORBean> ppw = new SelectorPopWindow<>(mContext, mList_process, new AdapterView.OnItemClickListener() {
             @Override
@@ -164,7 +185,7 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
                 TailorInfoBo.OPERINFORBean operation = mList_process.get(position);
                 ((TextView) v).setText(operation.getDESCRIPTION());
 
-                CutRecordQtyBo.RecordQtyItemBo itemBo = mData.getRECORD_LIST().get(index);
+                CutRecordQtyBo.RecordQtyItemBo itemBo = mList_data.get(index);
                 itemBo.setOPERATION(operation.getOPERATION());
                 itemBo.setOPERATION_DESC(operation.getDESCRIPTION());
             }
@@ -188,8 +209,7 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
     }
 
     private void save() {
-        List<CutRecordQtyBo.RecordQtyItemBo> recordList = mData.getRECORD_LIST();
-        for (CutRecordQtyBo.RecordQtyItemBo item : recordList) {
+        for (CutRecordQtyBo.RecordQtyItemBo item : mList_data) {
             if (TextUtils.isEmpty(item.getUSER_ID())) {
                 ErrorDialog.showAlert(mContext, "请刷卡录入记录人");
                 return;
@@ -198,12 +218,15 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
                 return;
             }
         }
+        mData.setRFID(mRFID);
+        mData.setRECORD_LIST(mList_data);
         LoadingDialog.show(mContext);
         HttpHelper.saveCutRecordData(mData, new HttpCallback() {
             @Override
             public void onSuccess(String url, JSONObject resultJSON) {
                 if (HttpHelper.isSuccess(resultJSON)) {
                     Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
+                    dismiss();
                 } else {
                     ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
                 }
@@ -216,5 +239,28 @@ public class CutRecordQtyDialog extends BaseDialog implements View.OnClickListen
                 LoadingDialog.dismiss();
             }
         });
+    }
+
+    public void inputRecordUser(String userId) {
+        for (int i = 0; i < mList_data.size(); i++) {
+            CutRecordQtyBo.RecordQtyItemBo item = mList_data.get(i);
+            if (i == mList_data.size() - 1) {
+                item.setUSER_ID(userId);
+                mAdapter.notifyDataSetChanged();
+                break;
+            }
+            if (TextUtils.isEmpty(item.getUSER_ID())) {
+                item.setUSER_ID(userId);
+                mAdapter.notifyDataSetChanged();
+                break;
+            }
+
+        }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        getWindow().setLayout(SystemUtils.getScreenWidth(mContext), SystemUtils.getScreenHeight(mContext));
     }
 }

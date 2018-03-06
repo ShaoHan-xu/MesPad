@@ -738,7 +738,6 @@ public class HttpHelper {
         HttpRequest.post(sewSubStart, params, getResponseHandler(sewSubStart, callback));
     }
 
-
     /**
      * 获取裁剪段记录数据
      */

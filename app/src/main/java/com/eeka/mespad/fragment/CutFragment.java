@@ -42,7 +42,6 @@ import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CutRecordQtyDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
-import com.eeka.mespad.view.dialog.RecordLabuDialog;
 import com.eeka.mespad.view.dialog.StickyDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
 import com.squareup.picasso.Picasso;
@@ -566,7 +565,15 @@ public class CutFragment extends BaseFragment {
         }
     }
 
-    CutRecordQtyDialog mRecordQtyDialog;
+    private CutRecordQtyDialog mRecordQtyDialog;
+
+    public boolean inputRecordUser(String userId) {
+        boolean showing = mRecordQtyDialog.isShowing();
+        if (showing) {
+            mRecordQtyDialog.inputRecordUser(userId);
+        }
+        return showing;
+    }
 
     /**
      * 裁剪计件
