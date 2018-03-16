@@ -254,6 +254,16 @@
                             android:layout_marginLeft="10dp" />
                     </LinearLayout>
 
+                    <TextView
+                        android:id="@+id/tv_sewQC_ncTag"
+                        style="@style/textStyle_default"
+                        android:layout_marginTop="10dp"
+                        android:padding="5dp"
+                        android:visibility="gone"
+                        android:text="该件来自普通站位"
+                        android:textColor="@color/text_red_default"
+                        android:textSize="@dimen/textSize_itemTitle" />
+
                 </LinearLayout>
 
             </LinearLayout>

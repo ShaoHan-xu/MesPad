@@ -9,6 +9,8 @@
         android:layout_height="wrap_content"
         android:divider="@drawable/divider_gray_vertical"
         android:orientation="horizontal"
+        android:layout_marginLeft="-4dp"
+        android:layout_marginRight="2dp"
         android:gravity="center"
         android:showDividers="middle">
 

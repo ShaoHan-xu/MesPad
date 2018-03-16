@@ -36,6 +36,15 @@ public class SewQCDataBo {
     private List<BomComponentBean> bomComponent;
     //    private List<ClothingSizeBean> clothingSize;
     private List<DesignComponentBean> designComponent;
+    private List<String> ncCode;
+
+    public List<String> getNcCode() {
+        return ncCode;
+    }
+
+    public void setNcCode(List<String> ncCode) {
+        this.ncCode = ncCode;
+    }
 
     public String getSalesOrder() {
         return salesOrder;

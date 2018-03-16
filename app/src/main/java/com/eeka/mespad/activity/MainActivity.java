@@ -640,7 +640,7 @@ public class MainActivity extends NFCActivity {
                     case TopicUtil.TOPIC_CUT:
                         if ("M".equals(orderType)) {
                             //刷的是员工卡，如果是“裁剪计件”在录入记录人则不向下执行
-                            if (mCutFragment.inputRecordUser(mCardInfo.getValue())) {
+                            if (mCutFragment.inputRecordUser(mCardInfo.getCardNum())) {
                                 return;
                             } else {
                                 clockIn(mCardInfo.getCardNum());

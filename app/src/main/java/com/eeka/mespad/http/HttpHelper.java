@@ -97,6 +97,7 @@ public class HttpHelper {
     public static final String sewSubStart = BASE_URL + "sweing/subcontractStart?";
     public static final String getCutRecordData = BASE_URL + "cutpad/viewCutRecordList?";
     public static final String saveCutRecordData = BASE_URL + "cutpad/saveCutRecord?";
+    public static final String getUserInfo = BASE_URL + "cutpad/userCardRecognition?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -759,6 +760,18 @@ public class HttpHelper {
         params.put("padIp", PAD_IP);
         params.put("params", JSON.toJSONString(data));
         HttpRequest.post(saveCutRecordData, params, getResponseHandler(saveCutRecordData, callback));
+    }
+
+    /**
+     * 通过RFID卡号获取用户ID和名字
+     */
+    public static void getUserInfo(String cardNum, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("RFID", cardNum);
+        json.put("padIp", PAD_IP);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getUserInfo, params, getResponseHandler(getUserInfo, callback));
     }
 
     /**
