@@ -20,6 +20,25 @@ public class UpdateSewNcBo {
     private List<ReworkOperationListBean> reworkOperationList;
     private List<NcCodeOperationListBean> ncCodeOperationList;
 
+    private String padIp;
+    private String userId;
+
+    public String getPadIp() {
+        return padIp;
+    }
+
+    public void setPadIp(String padIp) {
+        this.padIp = padIp;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getSfcRef() {
         return sfcRef;
     }

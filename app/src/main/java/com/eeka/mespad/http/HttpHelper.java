@@ -97,6 +97,7 @@ public class HttpHelper {
     public static final String sewSubStart = BASE_URL + "sweing/subcontractStart?";
     public static final String getCutRecordData = BASE_URL + "cutpad/viewCutRecordList?";
     public static final String saveCutRecordData = BASE_URL + "cutpad/saveCutRecord?";
+    public static final String getUserInfo = BASE_URL + "cutpad/userCardRecognition?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -266,7 +267,7 @@ public class HttpHelper {
     public static void startBatchWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(paramsBo));
-        HttpRequest.post(startBatchWork_url, params, getResponseHandler(startBatchWork_url, callback));
+        HttpRequest.post(startBatchWork_url, params, 60 * 1000, getResponseHandler(startBatchWork_url, callback));
     }
 
     /**
@@ -277,7 +278,7 @@ public class HttpHelper {
     public static void startCustomWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(paramsBo));
-        HttpRequest.post(startCustomWork_url, params, getResponseHandler(startCustomWork_url, callback));
+        HttpRequest.post(startCustomWork_url, params, 60 * 1000, getResponseHandler(startCustomWork_url, callback));
     }
 
     /**
@@ -288,7 +289,7 @@ public class HttpHelper {
     public static void completeCustomWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(paramsBo));
-        HttpRequest.post(completeCustomWork_url, params, getResponseHandler(completeCustomWork_url, callback));
+        HttpRequest.post(completeCustomWork_url, params, 60 * 1000, getResponseHandler(completeCustomWork_url, callback));
     }
 
     /**
@@ -299,7 +300,7 @@ public class HttpHelper {
     public static void completeBatchWork(StartWorkParamsBo paramsBo, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(paramsBo));
-        HttpRequest.post(completeBatchWork_url, params, getResponseHandler(completeBatchWork_url, callback));
+        HttpRequest.post(completeBatchWork_url, params, 60 * 1000, getResponseHandler(completeBatchWork_url, callback));
     }
 
     /**
@@ -582,6 +583,7 @@ public class HttpHelper {
      * 保存缝制质检不良数据
      */
     public static void recordSewNc(UpdateSewNcBo data, HttpCallback callback) {
+        data.setPadIp(PAD_IP);
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(data));
         HttpRequest.post(recordSewNc, params, getResponseHandler(recordSewNc, callback));
@@ -759,6 +761,18 @@ public class HttpHelper {
         params.put("padIp", PAD_IP);
         params.put("params", JSON.toJSONString(data));
         HttpRequest.post(saveCutRecordData, params, getResponseHandler(saveCutRecordData, callback));
+    }
+
+    /**
+     * 通过RFID卡号获取用户ID和名字
+     */
+    public static void getUserInfo(String cardNum, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("RFID", cardNum);
+        json.put("padIp", PAD_IP);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getUserInfo, params, getResponseHandler(getUserInfo, callback));
     }
 
     /**

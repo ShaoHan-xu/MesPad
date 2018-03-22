@@ -42,6 +42,7 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,7 +87,6 @@ public class MainActivity extends NFCActivity {
         SpUtil.cleanDictionaryData();
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
     }
 
     /**
@@ -179,12 +179,6 @@ public class MainActivity extends NFCActivity {
             mLastMillis = curMillis;
             toast("再按一次返回键退出应用");
         }
-    }
-
-    private void initLoginFragment() {
-        mLoginFragment = new LoginFragment();
-        mLoginFragment.setOnLoginCallback(this);
-        mLoginFragment.setOnClockCallback(this);
     }
 
     private void initButton(List<PositionInfoBo.BUTTONINFORBean> buttons) {
@@ -367,6 +361,7 @@ public class MainActivity extends NFCActivity {
     public void onClick(View v) {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         switch (v.getId()) {
             case R.id.tv_setting:
                 mDrawerLayout.closeDrawer(Gravity.START);
@@ -390,6 +385,10 @@ public class MainActivity extends NFCActivity {
                 startActivity(new Intent(mContext, WorkOrderListActivity.class));
                 break;
             case R.id.btn_NcRecord:
+                if (loginUsers == null || loginUsers.size() == 0) {
+                    ErrorDialog.showAlert(mContext, "请先登录再操作");
+                    break;
+                }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mCutFragment.recordNC();
                 } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
@@ -415,7 +414,6 @@ public class MainActivity extends NFCActivity {
                 showLoginDialog();
                 break;
             case R.id.btn_logout:
-                List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
                 if (loginUsers != null && loginUsers.size() != 0) {
                     showLogoutDialog();
                 } else {
@@ -640,7 +638,7 @@ public class MainActivity extends NFCActivity {
                     case TopicUtil.TOPIC_CUT:
                         if ("M".equals(orderType)) {
                             //刷的是员工卡，如果是“裁剪计件”在录入记录人则不向下执行
-                            if (mCutFragment.inputRecordUser(mCardInfo.getValue())) {
+                            if (mCutFragment.inputRecordUser(mCardInfo.getCardNum())) {
                                 return;
                             } else {
                                 clockIn(mCardInfo.getCardNum());

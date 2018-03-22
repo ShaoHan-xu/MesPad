@@ -3,27 +3,20 @@ package com.eeka.mespad.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.adapter.CommonRecyclerAdapter;
-import com.eeka.mespad.adapter.RecyclerViewHolder;
-import com.eeka.mespad.bo.BTReasonBo;
 import com.eeka.mespad.bo.CutRecordQtyBo;
-import com.eeka.mespad.bo.ReturnMaterialInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
@@ -37,12 +30,12 @@ import java.util.List;
  * Created by xushaohan on 2018/2/24.
  */
 
-public class CutRecordQtyDialog extends Dialog implements View.OnClickListener {
+public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, HttpCallback {
 
     private Context mContext;
     private CutRecordQtyBo mData;
     private List<CutRecordQtyBo.RecordQtyItemBo> mList_data;
-    private ItemAdapter mAdapter;
+    private LinearLayout mLayout_list;
 
     private String mRFID;
     private String mShopOrder;
@@ -67,114 +60,66 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener {
         view.findViewById(R.id.btn_add).setOnClickListener(this);
         view.findViewById(R.id.btn_save).setOnClickListener(this);
 
-        RecyclerView list = (RecyclerView) view.findViewById(R.id.recyclerView_cutRecordQty);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        list.setLayoutManager(layoutManager);
-        mList_data = new ArrayList<>();
-        mAdapter = new ItemAdapter(mContext, mList_data, R.layout.item_cutrecordqty, layoutManager);
-        list.setAdapter(mAdapter);
+        mLayout_list = (LinearLayout) view.findViewById(R.id.layout_cutRecordQty);
 
-        initData();
+        LoadingDialog.show(mContext);
+        HttpHelper.getCutRecordData(mRFID, mShopOrder, this);
     }
 
-    private void initData() {
-        LoadingDialog.show(mContext);
-        HttpHelper.getCutRecordData(mRFID, mShopOrder, new HttpCallback() {
-            @Override
-            public void onSuccess(String url, JSONObject resultJSON) {
-                if (HttpHelper.isSuccess(resultJSON)) {
-                    String resultStr = HttpHelper.getResultStr(resultJSON);
-                    mData = JSON.parseObject(resultStr, CutRecordQtyBo.class);
-                    List<CutRecordQtyBo.RecordQtyItemBo> recordList = mData.getRECORD_LIST();
-                    if (recordList == null || recordList.size() == 0) {
-                        //如果之前未保存过数据，添加一条空数据待用户录入
-                        mList_data.add(new CutRecordQtyBo.RecordQtyItemBo());
-                    } else {
-                        mList_data.addAll(recordList);
-                    }
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
-                }
-                LoadingDialog.dismiss();
-            }
+    private View getItemView(CutRecordQtyBo.RecordQtyItemBo item, int position) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_cutrecordqty, null);
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_bedNo)).setText(mData.getWORK_CENTER());
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_deviceNo)).setText(mData.getRESOURCE());
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_orderNo)).setText(mData.getSHOP_ORDER());
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_cutNo)).setText(mData.getWORK_CENTER());
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_matNo)).setText(mData.getMATERIAL());
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_matType)).setText(mData.getLAYOUT_TYPE());
 
+        TextView tv_recordUser = (TextView) view.findViewById(R.id.tv_cutRecordQty_recordUser);
+        tv_recordUser.setText(item.getUSER_NAME());
+        EditText et_recordQty = (EditText) view.findViewById(R.id.et_cutRecordQty_recordQty);
+        et_recordQty.setText(item.getRECORD());
+
+        TextView tv_process = (TextView) view.findViewById(R.id.tv_cutRecordQty_process);
+        tv_process.setTag(position);
+        tv_process.setText(item.getOPERATION_DESC());
+        tv_process.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(String url, int code, String message) {
-                LoadingDialog.dismiss();
-                ErrorDialog.showAlert(mContext, message);
+            public void onClick(View v) {
+                showPopWindow(v, (Integer) v.getTag());
             }
         });
-    }
 
-    private class ItemAdapter extends CommonRecyclerAdapter<CutRecordQtyBo.RecordQtyItemBo> {
-
-        ItemAdapter(Context context, List<CutRecordQtyBo.RecordQtyItemBo> list, int layoutId, RecyclerView.LayoutManager layoutManager) {
-            super(context, list, layoutId, layoutManager);
-        }
-
-        @Override
-        public void convert(RecyclerViewHolder holder, final CutRecordQtyBo.RecordQtyItemBo item, final int position) {
-            holder.setText(R.id.tv_cutRecordQty_bedNo, mData.getWORK_CENTER());
-            holder.setText(R.id.tv_cutRecordQty_deviceNo, mData.getRESOURCE());
-            holder.setText(R.id.tv_cutRecordQty_orderNo, mData.getSHOP_ORDER());
-            holder.setText(R.id.tv_cutRecordQty_cutNo, mData.getLAYOUT());
-            holder.setText(R.id.tv_cutRecordQty_matNo, mData.getMATERIAL());
-            holder.setText(R.id.tv_cutRecordQty_matType, mData.getLAYOUT_TYPE());
-
-            TextView tv_recordUser = holder.getView(R.id.tv_cutRecordQty_recordUser);
-            tv_recordUser.setText(item.getUSER_ID());
-            EditText et_recordQty = holder.getView(R.id.et_cutRecordQty_recordQty);
-            RecordQtyChangeListener listener = (RecordQtyChangeListener) et_recordQty.getTag();
-            et_recordQty.removeTextChangedListener(listener);
-            et_recordQty.setText(item.getRECORD());
-            if (listener == null) {
-                listener = new RecordQtyChangeListener();
-                et_recordQty.setTag(listener);
+        TextView tv_del = (TextView) view.findViewById(R.id.tv_cutRecordQty_del);
+        tv_del.setTag(position);
+        tv_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItem((Integer) v.getTag());
             }
-            listener.setPosition(position);
-            et_recordQty.addTextChangedListener(listener);
+        });
 
-            TextView tv_process = holder.getView(R.id.tv_cutRecordQty_process);
-            tv_process.setText(item.getOPERATION_DESC());
-            tv_process.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showPopWindow(v, position);
-                }
-            });
-
-            holder.getView(R.id.tv_cutRecordQty_del).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeData(position);
-                }
-            });
-        }
+        return view;
     }
 
-    private class RecordQtyChangeListener implements TextWatcher {
+    private void addItem() {
+        CutRecordQtyBo.RecordQtyItemBo itemBo = new CutRecordQtyBo.RecordQtyItemBo();
+        mList_data.add(itemBo);
+        mLayout_list.addView(getItemView(itemBo, mList_data.size() - 1));
+    }
 
-        private int mPosition;
+    private void removeItem(int position) {
+        mList_data.remove(position);
+        mLayout_list.removeViewAt(position);
 
-        public void setPosition(int position){
-            mPosition = position;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            mList_data.get(mPosition).setRECORD(s.toString());
-            mAdapter.notifyItemChanged(mPosition);
+        if (position < mList_data.size()) {
+            for (int i = position; i < mLayout_list.getChildCount(); i++) {
+                View view = mLayout_list.getChildAt(i);
+                TextView tv_del = (TextView) view.findViewById(R.id.tv_cutRecordQty_del);
+                tv_del.setTag(i);
+                TextView tv_process = (TextView) view.findViewById(R.id.tv_cutRecordQty_process);
+                tv_process.setTag(i);
+            }
         }
     }
 
@@ -200,7 +145,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.btn_add:
-                mAdapter.addData(new CutRecordQtyBo.RecordQtyItemBo());
+                addItem();
                 break;
             case R.id.btn_save:
                 save();
@@ -209,58 +154,90 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener {
     }
 
     private void save() {
-        for (CutRecordQtyBo.RecordQtyItemBo item : mList_data) {
-            if (TextUtils.isEmpty(item.getUSER_ID())) {
+        int childCount = mLayout_list.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = mLayout_list.getChildAt(i);
+            CutRecordQtyBo.RecordQtyItemBo itemBo = mList_data.get(i);
+            if (TextUtils.isEmpty(itemBo.getOPERATION())) {
+                ErrorDialog.showAlert(mContext, "请选择要记录的工序");
+                return;
+            }
+            if (TextUtils.isEmpty(itemBo.getUSER_ID())) {
                 ErrorDialog.showAlert(mContext, "请刷卡录入记录人");
                 return;
-            } else if (TextUtils.isEmpty(item.getRECORD())) {
+            }
+            EditText et_recordQty = (EditText) view.findViewById(R.id.et_cutRecordQty_recordQty);
+            String recordQty = et_recordQty.getText().toString();
+            if (TextUtils.isEmpty(recordQty)) {
                 ErrorDialog.showAlert(mContext, "请填写记录数据");
                 return;
             }
+            itemBo.setRECORD(recordQty);
         }
         mData.setRFID(mRFID);
         mData.setRECORD_LIST(mList_data);
         LoadingDialog.show(mContext);
-        HttpHelper.saveCutRecordData(mData, new HttpCallback() {
-            @Override
-            public void onSuccess(String url, JSONObject resultJSON) {
-                if (HttpHelper.isSuccess(resultJSON)) {
-                    Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
-                    dismiss();
-                } else {
-                    ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
-                }
-                LoadingDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(String url, int code, String message) {
-                ErrorDialog.showAlert(mContext, message);
-                LoadingDialog.dismiss();
-            }
-        });
+        HttpHelper.saveCutRecordData(mData, this);
     }
 
-    public void inputRecordUser(String userId) {
-        for (int i = 0; i < mList_data.size(); i++) {
-            CutRecordQtyBo.RecordQtyItemBo item = mList_data.get(i);
-            if (i == mList_data.size() - 1) {
-                item.setUSER_ID(userId);
-                mAdapter.notifyDataSetChanged();
-                break;
-            }
-            if (TextUtils.isEmpty(item.getUSER_ID())) {
-                item.setUSER_ID(userId);
-                mAdapter.notifyDataSetChanged();
-                break;
-            }
-
-        }
+    public void getUserInfo(String cardNum) {
+        LoadingDialog.show(mContext);
+        HttpHelper.getUserInfo(cardNum, this);
     }
 
     @Override
     public void show() {
         super.show();
         getWindow().setLayout(SystemUtils.getScreenWidth(mContext), SystemUtils.getScreenHeight(mContext));
+    }
+
+    @Override
+    public void onSuccess(String url, JSONObject resultJSON) {
+        if (HttpHelper.isSuccess(resultJSON)) {
+            if (HttpHelper.getCutRecordData.equals(url)) {
+                String resultStr = HttpHelper.getResultStr(resultJSON);
+                mData = JSON.parseObject(resultStr, CutRecordQtyBo.class);
+                List<CutRecordQtyBo.RecordQtyItemBo> recordList = mData.getRECORD_LIST();
+                mList_data = new ArrayList<>();
+                if (recordList == null || recordList.size() == 0) {
+                    //如果之前未保存过数据，添加一条空数据待用户录入
+                    mList_data.add(new CutRecordQtyBo.RecordQtyItemBo());
+                } else {
+                    mList_data.addAll(recordList);
+                }
+                mLayout_list.removeAllViews();
+                for (int i = 0; i < mList_data.size(); i++) {
+                    CutRecordQtyBo.RecordQtyItemBo item = mList_data.get(i);
+                    mLayout_list.addView(getItemView(item, i));
+                }
+            } else if (HttpHelper.saveCutRecordData.equals(url)) {
+                Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
+                dismiss();
+            } else if (HttpHelper.getUserInfo.equals(url)) {
+                JSONObject result = resultJSON.getJSONObject("result");
+                String userId = result.getString("USER_ID");
+                String userName = result.getString("USER_NAME");
+                for (int i = 0; i < mList_data.size(); i++) {
+                    CutRecordQtyBo.RecordQtyItemBo item = mList_data.get(i);
+                    if (TextUtils.isEmpty(item.getUSER_ID()) || i == mList_data.size() - 1) {
+                        item.setUSER_ID(userId);
+                        item.setUSER_NAME(userName);
+                        View childAt = mLayout_list.getChildAt(i);
+                        TextView tv_user = (TextView) childAt.findViewById(R.id.tv_cutRecordQty_recordUser);
+                        tv_user.setText(userName);
+                        break;
+                    }
+                }
+            }
+        } else {
+            ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
+        }
+        LoadingDialog.dismiss();
+    }
+
+    @Override
+    public void onFailure(String url, int code, String message) {
+        ErrorDialog.showAlert(mContext, message);
+        LoadingDialog.dismiss();
     }
 }

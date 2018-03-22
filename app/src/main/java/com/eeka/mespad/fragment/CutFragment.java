@@ -567,10 +567,10 @@ public class CutFragment extends BaseFragment {
 
     private CutRecordQtyDialog mRecordQtyDialog;
 
-    public boolean inputRecordUser(String userId) {
+    public boolean inputRecordUser(String cardNum) {
         boolean showing = mRecordQtyDialog.isShowing();
         if (showing) {
-            mRecordQtyDialog.inputRecordUser(userId);
+            mRecordQtyDialog.getUserInfo(cardNum);
         }
         return showing;
     }

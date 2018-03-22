@@ -58,6 +58,7 @@ public class QCFragment extends BaseFragment {
     private TextView mTv_matDesc;
     private TextView mTv_size;
     private TextView mTv_special;
+    private TextView mTv_ncTag;
 
     private SewQCDataBo mSewQCData;
     private ClothSizeBo mClothSizeData;
@@ -97,6 +98,7 @@ public class QCFragment extends BaseFragment {
         mTv_matNum = (TextView) mView.findViewById(R.id.tv_sewQC_matNum);
         mTv_matDesc = (TextView) mView.findViewById(R.id.tv_sewQC_matDesc);
         mTv_size = (TextView) mView.findViewById(R.id.tv_sewQC_size);
+        mTv_ncTag = (TextView) mView.findViewById(R.id.tv_sewQC_ncTag);
         mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
         mTv_special.setOnClickListener(this);
 
@@ -140,6 +142,21 @@ public class QCFragment extends BaseFragment {
         mTv_matDesc.setText(mSewQCData.getItemDesc());
         mTv_size.setText(mSewQCData.getSfcSize());
         mTv_special.setText(mSewQCData.getSoMark());
+
+        boolean hasNC = false;
+        if (mSewQCData.getNcCode() != null) {
+            for (String nc : mSewQCData.getNcCode()) {
+                if ("NC2QC".equals(nc)) {
+                    hasNC = true;
+                    break;
+                }
+            }
+        }
+        if (hasNC) {
+            mTv_ncTag.setVisibility(View.VISIBLE);
+        } else {
+            mTv_ncTag.setVisibility(View.GONE);
+        }
 
         mLayout_matInfo.removeAllViews();
         List<SewQCDataBo.BomComponentBean> bomComponent = mSewQCData.getBomComponent();

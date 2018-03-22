@@ -21,6 +21,7 @@ import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 
@@ -132,6 +133,11 @@ public class RepairActivity extends BaseActivity {
         if (containsCount >= list.size()) {
             data.setReworkOperationList(process);
             showLoading();
+            List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+            if (loginUsers != null && loginUsers.size() != 0) {
+                String userId = loginUsers.get(0).getUSER();
+                data.setUserId(userId);
+            }
             HttpHelper.recordSewNc(data, this);
         } else {
             showErrorDialog("返修工序需要包含所有被记录不良的工序");

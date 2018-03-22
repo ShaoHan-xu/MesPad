@@ -104,6 +104,7 @@ public class CutRecordQtyBo {
 
     public static class RecordQtyItemBo {
         private String USER_ID;
+        private String USER_NAME;
         private String OPERATION;
         private String OPERATION_DESC;
         private String RECORD;
@@ -122,6 +123,14 @@ public class CutRecordQtyBo {
 
         public void setUSER_ID(String USER_ID) {
             this.USER_ID = USER_ID;
+        }
+
+        public String getUSER_NAME() {
+            return USER_NAME;
+        }
+
+        public void setUSER_NAME(String USER_NAME) {
+            this.USER_NAME = USER_NAME;
         }
 
         public String getOPERATION() {

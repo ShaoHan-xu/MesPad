@@ -2,7 +2,6 @@ package com.eeka.mespad;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.util.TypeUtils;
@@ -25,7 +24,7 @@ public class PadApplication extends Application {
     public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
     public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
-    public static String BASE_URL = BASE_URL_Q;
+    public static String BASE_URL = BASE_URL_D;
 
     @Override
     public void onCreate() {
@@ -65,14 +64,13 @@ public class PadApplication extends Application {
         Beta.enableHotfix = false;//关闭热更新功能
 //        Beta.autoDownloadOnWifi = true;//WiFi网络下自动下载安装包
 //        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        Bugly.setAppChannel(this, getString(R.string.app_channel));
-        Bugly.init(getApplicationContext(), "6af52b66e6", true);
+        Bugly.setAppChannel(this, getString(R.string.app_channel));//设置渠道
+        Bugly.init(getApplicationContext(), "6af52b66e6", false);
     }
 
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
-        builder.setTimeout(60 * 1000);
-        builder.setDebug(true);
+        builder.setDebug(false);
         OkHttpFinal.getInstance().init(this, builder.build());
     }
 

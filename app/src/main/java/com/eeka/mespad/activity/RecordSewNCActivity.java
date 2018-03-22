@@ -24,6 +24,7 @@ import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.dragRecyclerViewHelper.RecyclerListAdapter;
 import com.eeka.mespad.dragRecyclerViewHelper.SimpleItemTouchHelperCallback;
 import com.eeka.mespad.fragment.QCFragment;
@@ -175,6 +176,12 @@ public class RecordSewNCActivity extends BaseActivity {
             data.setReworkOperationList(process);
         }
         data.setNcCodeOperationList(mList_selected);
+
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+        if (loginUsers != null && loginUsers.size() != 0) {
+            String userId = loginUsers.get(0).getUSER();
+            data.setUserId(userId);
+        }
         HttpHelper.recordSewNc(data, this);
     }
 
