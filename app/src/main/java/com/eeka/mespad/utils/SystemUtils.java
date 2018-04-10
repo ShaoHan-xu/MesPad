@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -368,5 +369,17 @@ public class SystemUtils {
         } else {
             ErrorDialog.showAlert(context, "当前工序无视频");
         }
+    }
+
+    public static int REQUEST_BLUETOOTH = 999;
+
+    /**
+     * 打开蓝牙设置界面
+     */
+    public static void startBluetoothSettingView(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_BLUETOOTH_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);    //Show a system activity that allows the user to turn on Bluetooth.
+        ((Activity) context).startActivityForResult(intent, REQUEST_BLUETOOTH);
     }
 }

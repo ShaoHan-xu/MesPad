@@ -3,6 +3,6 @@
     android:id="@+id/layout_outline"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="@drawable/divider_gray_vertical"
+    android:divider="@drawable/divider_gray"
     android:orientation="horizontal"
     android:showDividers="middle"/>

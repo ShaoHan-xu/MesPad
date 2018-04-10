@@ -360,7 +360,7 @@
                     android:id="@+id/layout_sew_processList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:divider="@drawable/divider_gray_vertical"
+                    android:divider="@drawable/divider_gray"
                     android:orientation="horizontal"
                     android:showDividers="middle|end" />
             </HorizontalScrollView>

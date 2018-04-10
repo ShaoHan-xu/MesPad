@@ -29,6 +29,7 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.LineColorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.NCDetailDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
@@ -227,6 +228,17 @@ public class SewFragment extends BaseFragment {
         }
         showLoading();
         HttpHelper.saveSubcontractInfo(mRFID, this);
+    }
+
+    /**
+     * 显示线迹
+     */
+    public void showLineColor() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        new LineColorDialog(mContext, mSewData.getShopOrder()).show();
     }
 
     @Override

@@ -24,7 +24,7 @@ public class PadApplication extends Application {
     public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
     public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
-    public static String BASE_URL = BASE_URL_D;
+    public static String BASE_URL = BASE_URL_P;
 
     @Override
     public void onCreate() {
@@ -70,7 +70,7 @@ public class PadApplication extends Application {
 
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
-        builder.setDebug(false);
+        builder.setDebug(true);
         OkHttpFinal.getInstance().init(this, builder.build());
     }
 

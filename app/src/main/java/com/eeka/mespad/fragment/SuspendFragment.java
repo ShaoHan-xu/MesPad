@@ -1,7 +1,10 @@
 package com.eeka.mespad.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
@@ -22,10 +25,12 @@ import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bluetoothPrint.BluetoothPrintHelper;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
@@ -69,9 +74,11 @@ public class SuspendFragment extends BaseFragment {
     private TextView mTv_matDesc;
     private TextView mTv_size;
 
+    private Button mBtn_binding;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_suspend, null);
         return mView;
     }
@@ -88,22 +95,22 @@ public class SuspendFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        mLv_orderList = (ListView) mView.findViewById(R.id.lv_sfcList);
-        mLayout_component = (LinearLayout) mView.findViewById(R.id.layout_component);
-        mVP_img = (ViewPager) mView.findViewById(R.id.vp_suspend_componentImg);
+        mLv_orderList = mView.findViewById(R.id.lv_sfcList);
+        mLayout_component = mView.findViewById(R.id.layout_component);
+        mVP_img = mView.findViewById(R.id.vp_suspend_componentImg);
 
-        mLayout_mtmOrder = (LinearLayout) mView.findViewById(R.id.layout_suspend_mtmOrder);
-        mTv_curSFC = (TextView) mView.findViewById(R.id.tv_suspend_curSFC);
-        mTv_orderNum = (TextView) mView.findViewById(R.id.tv_suspend_orderNum);
-        mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_suspend_MTMOrderNum);
-        mTv_orderQty = (TextView) mView.findViewById(R.id.tv_suspend_orderQty);
-        mTv_finishQty = (TextView) mView.findViewById(R.id.tv_suspend_finishQty);
-        mTv_itemCode = (TextView) mView.findViewById(R.id.tv_suspend_itemCode);
-        mTv_matDesc = (TextView) mView.findViewById(R.id.tv_suspend_matDesc);
-        mTv_size = (TextView) mView.findViewById(R.id.tv_suspend_size);
+        mLayout_mtmOrder = mView.findViewById(R.id.layout_suspend_mtmOrder);
+        mTv_curSFC = mView.findViewById(R.id.tv_suspend_curSFC);
+        mTv_orderNum = mView.findViewById(R.id.tv_suspend_orderNum);
+        mTv_MTMOrderNum = mView.findViewById(R.id.tv_suspend_MTMOrderNum);
+        mTv_orderQty = mView.findViewById(R.id.tv_suspend_orderQty);
+        mTv_finishQty = mView.findViewById(R.id.tv_suspend_finishQty);
+        mTv_itemCode = mView.findViewById(R.id.tv_suspend_itemCode);
+        mTv_matDesc = mView.findViewById(R.id.tv_suspend_matDesc);
+        mTv_size = mView.findViewById(R.id.tv_suspend_size);
 
-        Button btn_binding = (Button) mView.findViewById(R.id.btn_suspend_binding);
-        btn_binding.setOnClickListener(new View.OnClickListener() {
+        mBtn_binding = mView.findViewById(R.id.btn_suspend_binding);
+        mBtn_binding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 binding();
@@ -123,6 +130,7 @@ public class SuspendFragment extends BaseFragment {
      * 刷新订单信息
      */
     private void refreshOrderInfo() {
+        mBtn_binding.setEnabled(true);
         mTv_curSFC.setText(mCurSFC);
         mTv_orderNum.setText(mComponent.getSHOP_ORDER());
         mTv_orderQty.setText(mComponent.getQTY_ORDERED() + "");
@@ -191,6 +199,7 @@ public class SuspendFragment extends BaseFragment {
      */
     public void binding() {
         if (mCurComponent != null) {
+            mBtn_binding.setEnabled(false);
             showLoading();
             HttpHelper.hangerBinding(mCurComponent.getComponentId(), mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
 
@@ -233,16 +242,13 @@ public class SuspendFragment extends BaseFragment {
 
         @Override
         public void convertView(View view, String item, final int position) {
-            ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+            ImageView imageView = view.findViewById(R.id.imageView);
             String url = mList_img.get(position);
             Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ArrayList<String> urls = new ArrayList<>();
-                    for (String url : mList_img) {
-                        urls.add(url);
-                    }
+                    ArrayList<String> urls = new ArrayList<>(mList_img);
                     startActivity(ImageBrowserActivity.getIntent(mContext, urls, false));
                 }
             });
@@ -278,10 +284,10 @@ public class SuspendFragment extends BaseFragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, 0);
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
-        Button btn_component = (Button) view.findViewById(R.id.btn_componentName);
+        Button btn_component = view.findViewById(R.id.btn_componentName);
         btn_component.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        ImageView iv_finished = (ImageView) view.findViewById(R.id.iv_part_finished);
-        TextView tv_helpDesc = (TextView) view.findViewById(R.id.tv_helpDesc);
+        ImageView iv_finished = view.findViewById(R.id.iv_part_finished);
+        TextView tv_helpDesc = view.findViewById(R.id.tv_helpDesc);
         btn_component.setText(component.getComponentName());
         String isNeedSubContract = component.getIsNeedSubContract();//是否需要外协
         String isSubContractCompleted = component.getIsSubContractCompleted();//外协是否已完成
@@ -311,7 +317,7 @@ public class SuspendFragment extends BaseFragment {
                 int childCount = mLayout_component.getChildCount();
                 for (int i = 0; i < childCount; i++) {
                     View childAt = mLayout_component.getChildAt(i);
-                    Button button = (Button) childAt.findViewById(R.id.btn_componentName);
+                    Button button = childAt.findViewById(R.id.btn_componentName);
                     SuspendComponentBo.COMPONENTSBean componentsBean = components.get(i);
                     if ("true".equals(componentsBean.getIsBound())) {
                         button.setEnabled(false);
@@ -352,17 +358,6 @@ public class SuspendFragment extends BaseFragment {
                         break;
                     }
                 }
-                //默认选中第一个
-//                if (mCurComponent == null && mComponent != null) {
-//                    List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
-//                    if (components != null && components.size() != 0) {
-//                        mCurComponent = components.get(0);
-//                        HttpHelper.getComponentPic(mCurSFC, mCurComponent.getComponentId(), this);
-//                        View childAt = mLayout_component.getChildAt(0);
-//                        Button btn_component = (Button) childAt.findViewById(R.id.btn_componentName);
-//                        btn_component.setEnabled(false);
-//                    }
-//                }
             } else if (HttpHelper.getSfcComponents.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);
@@ -370,6 +365,7 @@ public class SuspendFragment extends BaseFragment {
                 mCurComponent = null;
                 setupComponentView();
                 refreshOrderInfo();
+                printSFC();
 //                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), SuspendFragment.this);
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
@@ -383,4 +379,41 @@ public class SuspendFragment extends BaseFragment {
         }
     }
 
+    private Thread mPrintThread;
+    private String mPrintData;
+    private boolean stopFlag;//线程停止标识,=true表示停止线程
+    private boolean printFlag = true;
+
+    /**
+     * 打印SFC
+     */
+    private void printSFC() {
+        String pData = mCurSFC.substring(4, mCurSFC.length());
+        if (!pData.equals(mPrintData)) {
+            mPrintData = pData;
+            printFlag = true;
+        } else {
+            printFlag = false;
+        }
+        if (mPrintThread == null) {
+            mPrintThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (!stopFlag) {
+                        if (printFlag) {
+                            printFlag = false;
+                            BluetoothPrintHelper.Print(mContext, mPrintData);
+                        }
+                    }
+                }
+            });
+            mPrintThread.start();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        stopFlag = true;
+        super.onDestroy();
+    }
 }

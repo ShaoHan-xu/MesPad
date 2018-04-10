@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/divider_gray"
-            android:divider="@drawable/divider_gray_vertical"
+            android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="middle">
 

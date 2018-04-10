@@ -278,6 +278,10 @@ public class MainActivity extends NFCActivity {
                     button.setText("裁剪计件");
                     button.setId(R.id.btn_cutRecord);
                     break;
+                case "LINE_BUTTON":
+                    button.setText("线迹显示");
+                    button.setId(R.id.btn_lineColor);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -517,6 +521,11 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_cutRecord:
                 if (mCutFragment != null) {
                     mCutFragment.recordQty();
+                }
+                break;
+            case R.id.btn_lineColor:
+                if (mSewFragment != null) {
+                    mSewFragment.showLineColor();
                 }
                 break;
         }

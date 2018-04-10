@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:divider="@drawable/divider_gray_vertical"
+            android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="middle|end" />
 
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:divider="@drawable/divider_gray_vertical"
+            android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="middle|end" />
 

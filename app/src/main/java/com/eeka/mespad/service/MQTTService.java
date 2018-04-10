@@ -43,10 +43,9 @@ import cn.finalteam.okhttpfinal.LogUtil;
 
 public class MQTTService extends Service {
     //生产系统MQ
-//    private static final String MQTT_BROKER = "10.10.200.11"; // Broker URL or IP Address
-//    private static final String MQTT_PORT = "8161"; // Broker Port
+    private static final String MQTT_BROKER = "10.10.200.11"; // Broker URL or IP Address
     //测试系统MQ
-    private static final String MQTT_BROKER = "10.7.121.40"; // Broker URL or IP Address
+//    private static final String MQTT_BROKER = "10.7.121.40"; // Broker URL or IP Address
     private static final String MQTT_PORT = "1883"; // Broker Port
     private static final String MQTT_URL_FORMAT = "tcp://%s:%s"; // URL Format normally don't change
     private String myTopic = NetUtil.getHostIP();
@@ -142,7 +141,7 @@ public class MQTTService extends Service {
         @Override
         public void connectionLost(Throwable cause) {
             //连接丢失后，一般在这里面进行重连
-            Logger.d("mqtt connectionLost");
+            Logger.d("mqtt connectionLost,cause:" + cause.getMessage());
             LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost");
             if (isNetworkAvailable()) {
                 startReconnect();
@@ -237,7 +236,7 @@ public class MQTTService extends Service {
 
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-            Logger.d("连接失败");
+            Logger.e("连接失败,exception:" + exception.getMessage());
         }
     };
 

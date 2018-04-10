@@ -37,6 +37,7 @@ import okhttp3.Response;
 
 public class HttpHelper {
     private static final String STATE = "status";
+    private static final String MESSAGE = "message";
     public static boolean IS_COOKIE_OUT;
     public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
     private static String PAD_IP;
@@ -98,6 +99,7 @@ public class HttpHelper {
     public static final String getCutRecordData = BASE_URL + "cutpad/viewCutRecordList?";
     public static final String saveCutRecordData = BASE_URL + "cutpad/saveCutRecord?";
     public static final String getUserInfo = BASE_URL + "cutpad/userCardRecognition?";
+    public static final String getStitchInventory = BASE_URL + "stitchPad/getStitchInventory?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -776,6 +778,15 @@ public class HttpHelper {
     }
 
     /**
+     * 获取线色数据
+     */
+    public static void getStitchInventory(String orderNo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("orderNo", orderNo);
+        HttpRequest.post(getStitchInventory, params, getResponseHandler(getStitchInventory, callback));
+    }
+
+    /**
      * 获取固定请求参数<br>
      */
     private static RequestParams getBaseParams() {
@@ -799,6 +810,10 @@ public class HttpHelper {
 
     public static boolean isSuccess(JSONObject json) {
         return "Y".equals(json.getString(STATE));
+    }
+
+    public static String getMessage(JSONObject json) {
+        return json.getString(MESSAGE);
     }
 
     public static String getResultStr(JSONObject json) {
