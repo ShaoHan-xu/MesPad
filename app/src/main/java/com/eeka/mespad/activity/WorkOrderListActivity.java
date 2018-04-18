@@ -27,13 +27,13 @@ import java.util.List;
  * 作业订单查看页面
  * Created by Lenovo on 2017/7/6.
  */
-
 public class WorkOrderListActivity extends BaseActivity implements RecordLabuDialog.OnRecordLabuCallback {
 
     private static final int TYPE_UNDO = 0;//未完成
     private static final int TYPE_DONE = 1;//已完成
 
-    private Button mBtn_undo, mBtn_done, mBtn_search;
+    private Button mBtn_undo;
+    private Button mBtn_done;
     private EditText mEt_search;
     private TextView mTv_statusTag;
 
@@ -57,13 +57,13 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
     protected void initView() {
         super.initView();
 
-        mEt_search = (EditText) findViewById(R.id.et_orderList_search);
-        mBtn_undo = (Button) findViewById(R.id.btn_orderList_undo);
-        mBtn_done = (Button) findViewById(R.id.btn_orderList_done);
-        mBtn_search = (Button) findViewById(R.id.btn_orderList_search);
-        mTv_statusTag = (TextView) findViewById(R.id.tv_orderList_status);
+        mEt_search = findViewById(R.id.et_orderList_search);
+        mBtn_undo = findViewById(R.id.btn_orderList_undo);
+        mBtn_done = findViewById(R.id.btn_orderList_done);
+        Button mBtn_search = findViewById(R.id.btn_orderList_search);
+        mTv_statusTag = findViewById(R.id.tv_orderList_status);
 
-        mListView = (ListView) findViewById(R.id.lv_sfcList);
+        mListView = findViewById(R.id.lv_sfcList);
 
         mBtn_undo.setOnClickListener(this);
         mBtn_done.setOnClickListener(this);
@@ -138,7 +138,7 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
 
     private class OrderAdapter extends CommonAdapter<WorkOrderBo> {
 
-        public OrderAdapter(Context context, List<WorkOrderBo> list, int layoutId) {
+        OrderAdapter(Context context, List<WorkOrderBo> list, int layoutId) {
             super(context, list, layoutId);
         }
 

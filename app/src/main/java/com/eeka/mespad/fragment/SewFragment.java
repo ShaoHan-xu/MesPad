@@ -2,6 +2,7 @@ package com.eeka.mespad.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.BitmapUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
@@ -75,7 +77,7 @@ public class SewFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_sew, null);
         return mView;
     }
@@ -90,27 +92,27 @@ public class SewFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        mLayout_MTMOrderNum = (LinearLayout) mView.findViewById(R.id.layout_sew_salesOrder);
-        mTv_SFC = (TextView) mView.findViewById(R.id.tv_sew_sfc);
-        mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sew_orderNum);
-        mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_sew_MTMOrderNum);
-        mTv_matDesc = (TextView) mView.findViewById(R.id.tv_sew_matDesc);
-        mTv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
-        mTv_size = (TextView) mView.findViewById(R.id.tv_sew_size);
-        mTv_workEfficiency = (TextView) mView.findViewById(R.id.tv_sew_workEfficiency);
-        mTv_craftDesc = (TextView) mView.findViewById(R.id.tv_sew_craftDesc);
-        mTv_qualityReq = (TextView) mView.findViewById(R.id.tv_sew_qualityReq);
-        mTv_special = (TextView) mView.findViewById(R.id.tv_sew_special);
-        mTv_lastPosition = (TextView) mView.findViewById(R.id.tv_sew_lastPosition);
-        mTv_ncDetail = (TextView) mView.findViewById(R.id.tv_sew_ncDetail);
+        mLayout_MTMOrderNum = mView.findViewById(R.id.layout_sew_salesOrder);
+        mTv_SFC = mView.findViewById(R.id.tv_sew_sfc);
+        mTv_orderNum = mView.findViewById(R.id.tv_sew_orderNum);
+        mTv_MTMOrderNum = mView.findViewById(R.id.tv_sew_MTMOrderNum);
+        mTv_matDesc = mView.findViewById(R.id.tv_sew_matDesc);
+        mTv_style = mView.findViewById(R.id.tv_sew_style);
+        mTv_size = mView.findViewById(R.id.tv_sew_size);
+        mTv_workEfficiency = mView.findViewById(R.id.tv_sew_workEfficiency);
+        mTv_craftDesc = mView.findViewById(R.id.tv_sew_craftDesc);
+        mTv_qualityReq = mView.findViewById(R.id.tv_sew_qualityReq);
+        mTv_special = mView.findViewById(R.id.tv_sew_special);
+        mTv_lastPosition = mView.findViewById(R.id.tv_sew_lastPosition);
+        mTv_ncDetail = mView.findViewById(R.id.tv_sew_ncDetail);
         mTv_ncDetail.setOnClickListener(this);
 
-        mLayout_processTab = (LinearLayout) mView.findViewById(R.id.layout_sew_processList);
-        mLayout_matInfo = (LinearLayout) mView.findViewById(R.id.layout_sew_matInfo);
-        mVP_sop = (ViewPager) mView.findViewById(R.id.vp_sew_sop);
+        mLayout_processTab = mView.findViewById(R.id.layout_sew_processList);
+        mLayout_matInfo = mView.findViewById(R.id.layout_sew_matInfo);
+        mVP_sop = mView.findViewById(R.id.vp_sew_sop);
         mVP_sop.addOnPageChangeListener(new ViewPagerChangedListener());
-        mLv_curProcess = (ListView) mView.findViewById(R.id.lv_sew_curProcess);
-        mLv_nextProcess = (ListView) mView.findViewById(R.id.lv_sew_nextProcess);
+        mLv_curProcess = mView.findViewById(R.id.lv_sew_curProcess);
+        mLv_nextProcess = mView.findViewById(R.id.lv_sew_nextProcess);
 
         mView.findViewById(R.id.layout_sew_craftDesc).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
@@ -256,7 +258,7 @@ public class SewFragment extends BaseFragment {
         mTv_matDesc.setText(mSewData.getItemDesc());
         mTv_style.setText(mSewData.getItem());
         mTv_size.setText(mSewData.getSize());
-        mTv_lastPosition.setText(mSewData.getLastLineCategory() + "," + mSewData.getLastPosition());
+        mTv_lastPosition.setText(String.format("%s,%s", mSewData.getLastLineCategory(), mSewData.getLastPosition()));
         String remark = mSewData.getSoRemark();
         if (isEmpty(remark)) {
             mTv_special.setText(null);
@@ -279,7 +281,7 @@ public class SewFragment extends BaseFragment {
                 float v = aFloat * 100;
                 BigDecimal bd = new BigDecimal(v);
                 float v1 = bd.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                mTv_workEfficiency.setText(v1 + "%");
+                mTv_workEfficiency.setText(String.format("%s%%", v1));
             } catch (Exception e) {
                 try {
                     throw new DataFormatException("缝制数据：效率转换异常");
@@ -289,6 +291,12 @@ public class SewFragment extends BaseFragment {
             }
         }
 
+        for (int i = 0; i < mLayout_matInfo.getChildCount(); i++) {
+            View view = mLayout_matInfo.getChildAt(i);
+            ImageView imageView = view.findViewById(R.id.iv_materials);
+//            BitmapUtil.clearImgMemory(imageView);
+            imageView.setImageBitmap(null);
+        }
         mLayout_matInfo.removeAllViews();
         List<SewDataBo.SewAttr> matInfos = mSewData.getColorItems();
         if (matInfos != null) {
@@ -336,7 +344,7 @@ public class SewFragment extends BaseFragment {
             mVP_sop.setAdapter(new CommonVPAdapter<SewDataBo.SewAttr>(mContext, curOperation, R.layout.item_imageview) {
                 @Override
                 public void convertView(View view, SewDataBo.SewAttr item, final int position) {
-                    ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+                    ImageView imageView = view.findViewById(R.id.imageView);
                     Picasso.with(mContext).load(item.getAttributes().getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -377,9 +385,9 @@ public class SewFragment extends BaseFragment {
      */
     private View getMatView(SewDataBo.SewAttr item, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
-        ImageView imageView = (ImageView) view.findViewById(R.id.iv_materials);
-        Picasso.with(mContext).load(item.getAttributes().getMAT_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-        TextView textView = (TextView) view.findViewById(R.id.tv_matNum);
+        ImageView imageView = view.findViewById(R.id.iv_materials);
+        Picasso.with(mContext).load(item.getAttributes().getMAT_URL()).resize(200, 200).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+        TextView textView = view.findViewById(R.id.tv_matNum);
         textView.setText(item.getDescription());
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -437,6 +445,7 @@ public class SewFragment extends BaseFragment {
                     String sfc = sewData.getSfc();
                     if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())) {
                         MainActivity activity = (MainActivity) getActivity();
+                        assert activity != null;
                         activity.setButtonState(R.id.btn_subStart, true);
                         activity.setButtonState(R.id.btn_subComplete, true);
                     }
@@ -448,10 +457,12 @@ public class SewFragment extends BaseFragment {
             } else if (HttpHelper.sewSubStart.equals(url)) {
                 toast("开始绣花工序");
                 MainActivity activity = (MainActivity) getActivity();
+                assert activity != null;
                 activity.setButtonState(R.id.btn_subStart, false);
             } else if (HttpHelper.saveSubcontractInfo.equals(url)) {
                 toast("绣花工序完成");
                 MainActivity activity = (MainActivity) getActivity();
+                assert activity != null;
                 activity.setButtonState(R.id.btn_subComplete, false);
             }
         }

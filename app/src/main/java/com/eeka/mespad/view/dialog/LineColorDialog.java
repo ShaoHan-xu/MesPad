@@ -92,7 +92,7 @@ public class LineColorDialog extends BaseDialog {
             holder.setText(R.id.tv_lineColor_partName, item.getPOSITION_NAME());
 
             TextView textView = holder.getView(R.id.tv_lineColor_isExteriorStitch);
-            if ("Y".equals(item.getIS_EXTERIOR_STITCH())) {
+            if ("1".equals(item.getIS_EXTERIOR_STITCH())) {
                 textView.setText("外观线迹");
             } else {
                 textView.setText("常规用线");

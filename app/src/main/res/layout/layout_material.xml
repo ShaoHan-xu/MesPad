@@ -10,14 +10,13 @@
         android:layout_alignParentBottom="true"
         android:ellipsize="marquee"
         android:gravity="center"
-        android:lines="1" />
+        android:singleLine="true" />
 
     <ImageView
         android:id="@+id/iv_materials"
         android:layout_width="120dp"
         android:layout_height="match_parent"
         android:layout_above="@id/tv_matNum"
-        android:scaleType="centerCrop"
-        android:src="@drawable/loading" />
+        android:scaleType="centerCrop" />
 
 </RelativeLayout>

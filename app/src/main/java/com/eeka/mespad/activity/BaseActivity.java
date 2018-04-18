@@ -21,6 +21,7 @@ import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -118,7 +119,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void toast(String msg, int duration) {
-        Toast.makeText(mContext, msg, duration).show();
+        ToastUtil.showToast(this, msg, duration);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -56,9 +57,7 @@ public class CutFragment extends BaseFragment {
     private static final int REQUEST_RECORD_NC = 0;
     private static final int REQUEST_RECORD_LABU = 1;
     private ViewPager mVP_process;
-    private VPAdapter mVPAdapter_process;
     private ViewPager mVP_matInfo;
-    private VPAdapter mVPAdapter_matInfo;
     private List<TailorInfoBo.OPERINFORBean> mList_padProcess;//工序列表数据
 
     private LinearLayout mLayout_material1;//排料图
@@ -92,7 +91,7 @@ public class CutFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_cut, null);
         return mView;
     }
@@ -117,22 +116,22 @@ public class CutFragment extends BaseFragment {
 
     protected void initView() {
         super.initView();
-        mVP_process = (ViewPager) mView.findViewById(R.id.vp_main_processDesc);
-        mVP_matInfo = (ViewPager) mView.findViewById(R.id.vp_main_matInfo);
+        mVP_process = mView.findViewById(R.id.vp_main_processDesc);
+        mVP_matInfo = mView.findViewById(R.id.vp_main_matInfo);
 
-        mLayout_material1 = (LinearLayout) mView.findViewById(R.id.layout_material1);
-        mLayout_material2 = (LinearLayout) mView.findViewById(R.id.layout_material2);
-        mLayout_sizeInfo = (LinearLayout) mView.findViewById(R.id.layout_sizeInfo);
-        mLayout_processTab = (LinearLayout) mView.findViewById(R.id.layout_processTab);
-        mLayout_matTab = (LinearLayout) mView.findViewById(R.id.layout_matTab);
-        mTv_nextProcess = (TextView) mView.findViewById(R.id.tv_nextProcess);
-        mTv_qualityDesc = (TextView) mView.findViewById(R.id.tv_qualityDescribe);
-        mTv_special = (TextView) mView.findViewById(R.id.tv_special);
+        mLayout_material1 = mView.findViewById(R.id.layout_material1);
+        mLayout_material2 = mView.findViewById(R.id.layout_material2);
+        mLayout_sizeInfo = mView.findViewById(R.id.layout_sizeInfo);
+        mLayout_processTab = mView.findViewById(R.id.layout_processTab);
+        mLayout_matTab = mView.findViewById(R.id.layout_matTab);
+        mTv_nextProcess = mView.findViewById(R.id.tv_nextProcess);
+        mTv_qualityDesc = mView.findViewById(R.id.tv_qualityDescribe);
+        mTv_special = mView.findViewById(R.id.tv_special);
 
-        mLv_process = (ListView) mView.findViewById(R.id.lv_processList);
+        mLv_process = mView.findViewById(R.id.lv_processList);
         mLv_process.setOnItemClickListener(new ProcessClickListener());
 
-        mBtn_done = (Button) mView.findViewById(R.id.btn_done);
+        mBtn_done = mView.findViewById(R.id.btn_done);
         if (showDone) {
             mBtn_done.setVisibility(View.VISIBLE);
         }
@@ -164,7 +163,7 @@ public class CutFragment extends BaseFragment {
             TabViewUtil.refreshTabView(mLayout_matTab, 0);
         }
 
-        mVPAdapter_matInfo = new VPAdapter<>(itemArray);
+        VPAdapter mVPAdapter_matInfo = new VPAdapter<>(itemArray);
         mVP_matInfo.setAdapter(mVPAdapter_matInfo);
         mVP_matInfo.addOnPageChangeListener(new ViewPagerChangedListener(ViewPagerChangedListener.TYPE_MAT));
 
@@ -203,7 +202,7 @@ public class CutFragment extends BaseFragment {
         }
 
         List<TailorInfoBo.OPERINFORBean> list = mTailorInfo.getOPER_INFOR();
-        mVPAdapter_process = new VPAdapter<>(list);
+        VPAdapter mVPAdapter_process = new VPAdapter<>(list);
         mVP_process.setAdapter(mVPAdapter_process);
         mVP_process.addOnPageChangeListener(new ViewPagerChangedListener(ViewPagerChangedListener.TYPE_PROCESS));
 
@@ -238,12 +237,12 @@ public class CutFragment extends BaseFragment {
             mTv_nextProcess.setText(nextOperInfo.getOPER_DESC());
         }
 
-        TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_cut_orderNum);
-        TextView tv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_cut_MTMOrderNum);
-        TextView tv_style = (TextView) mView.findViewById(R.id.tv_sew_style);
-        TextView tv_processLot = (TextView) mView.findViewById(R.id.tv_sew_processLot);
-        TextView tv_qty = (TextView) mView.findViewById(R.id.tv_sew_qty);
-        TextView tv_matDesc = (TextView) mView.findViewById(R.id.tv_cut_matDesc);
+        TextView tv_orderNum = mView.findViewById(R.id.tv_cut_orderNum);
+        TextView tv_MTMOrderNum = mView.findViewById(R.id.tv_cut_MTMOrderNum);
+        TextView tv_style = mView.findViewById(R.id.tv_sew_style);
+        TextView tv_processLot = mView.findViewById(R.id.tv_sew_processLot);
+        TextView tv_qty = mView.findViewById(R.id.tv_sew_qty);
+        TextView tv_matDesc = mView.findViewById(R.id.tv_cut_matDesc);
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
         tv_MTMOrderNum.setText(orderInfo.getSALES_ORDER());
@@ -255,7 +254,7 @@ public class CutFragment extends BaseFragment {
 
         if ("P".equals(mOrderType)) {
             mView.findViewById(R.id.layout_cut_layers).setVisibility(View.VISIBLE);
-            TextView tv_layers = (TextView) mView.findViewById(R.id.tv_sew_layers);
+            TextView tv_layers = mView.findViewById(R.id.tv_sew_layers);
             tv_layers.setText(orderInfo.getLAYERS() + "");
         } else {
             mView.findViewById(R.id.layout_cut_layers).setVisibility(View.GONE);
@@ -416,8 +415,8 @@ public class CutFragment extends BaseFragment {
     private View getMaterialsView(final Object data, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         view.setTag(position);
-        ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
-        TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
+        ImageView iv_material = view.findViewById(R.id.iv_materials);
+        TextView tv_material = view.findViewById(R.id.tv_matNum);
         if (data instanceof TailorInfoBo.LayoutInfoBean) {
             TailorInfoBo.LayoutInfoBean item = (TailorInfoBo.LayoutInfoBean) data;
             Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
@@ -460,8 +459,8 @@ public class CutFragment extends BaseFragment {
     private View getLayoutView(final TailorInfoBo.LayoutInfoBean item, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         view.setTag(position);
-        ImageView iv_material = (ImageView) view.findViewById(R.id.iv_materials);
-        TextView tv_material = (TextView) view.findViewById(R.id.tv_matNum);
+        ImageView iv_material = view.findViewById(R.id.iv_materials);
+        TextView tv_material = view.findViewById(R.id.tv_matNum);
         Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
         iv_material.setTag(position);
         tv_material.setText(item.getLAYOUT());
@@ -485,7 +484,7 @@ public class CutFragment extends BaseFragment {
      */
     private View getLayoutBarCodeView(final TailorInfoBo.LayoutInfoBean item) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_imageview, null);
-        ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+        ImageView imageView = view.findViewById(R.id.imageView);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         try {
             Bitmap barCode = EncodingHandler.createBarCode(item.getLAYOUT(), 400, 200);
@@ -504,8 +503,8 @@ public class CutFragment extends BaseFragment {
 
     private View getSizeInfoView(TailorInfoBo.CUTSIZESBean sizeInfo) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sizeinfo, null);
-        TextView tv_yardage = (TextView) view.findViewById(R.id.tv_item_yardage);
-        TextView tv_count = (TextView) view.findViewById(R.id.tv_item_count);
+        TextView tv_yardage = view.findViewById(R.id.tv_item_yardage);
+        TextView tv_count = view.findViewById(R.id.tv_item_count);
         tv_yardage.setText(sizeInfo.getSIZE_CODE());
         int layers = mTailorInfo.getSHOP_ORDER_INFOR().getLAYERS();
         tv_count.setText((sizeInfo.getSIZE_AMOUNT() * layers) + "");
@@ -632,15 +631,16 @@ public class CutFragment extends BaseFragment {
             return data == null ? 0 : data.size();
         }
 
+        @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
-            final TextView textView = (TextView) view.findViewById(R.id.textView);
+            final TextView textView = view.findViewById(R.id.textView);
             textView.setGravity(Gravity.LEFT);
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
                 TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;
-                textView.setText("1、" + matInfo.getGRAND_CATEGORY_DESC() + "\n2、" + matInfo.getMID_CATEGORY_DESC());
+                textView.setText(String.format("1、%s\n2、%s", matInfo.getGRAND_CATEGORY_DESC(), matInfo.getMID_CATEGORY_DESC()));
             } else if (object instanceof TailorInfoBo.OPERINFORBean) {
                 TailorInfoBo.OPERINFORBean operInfo = (TailorInfoBo.OPERINFORBean) object;
                 String quality = operInfo.getOPERATION_INSTRUCTION();
@@ -662,14 +662,14 @@ public class CutFragment extends BaseFragment {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             View item = (View) object;
             container.removeView(item);
 
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 

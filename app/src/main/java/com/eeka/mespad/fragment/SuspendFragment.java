@@ -402,7 +402,7 @@ public class SuspendFragment extends BaseFragment {
                     while (!stopFlag) {
                         if (printFlag) {
                             printFlag = false;
-                            BluetoothPrintHelper.Print(mContext, mPrintData);
+                            BluetoothPrintHelper.Print(getActivity(), mPrintData);
                         }
                     }
                 }

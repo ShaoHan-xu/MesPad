@@ -82,12 +82,12 @@ public class RecordSewNCActivity extends BaseActivity {
     @Override
     protected void initView() {
         super.initView();
-        mTv_orderNum = (TextView) findViewById(R.id.tv_recordSewNC_workNum);
-        mLayout_productComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_productComponent);
-        mLayout_designComponent = (LinearLayout) findViewById(R.id.layout_recordSewNC_designComponent);
-        mLayout_NcProcess = (LinearLayout) findViewById(R.id.layout_recordSewNC_NcProcess);
+        mTv_orderNum = findViewById(R.id.tv_recordSewNC_workNum);
+        mLayout_productComponent = findViewById(R.id.layout_recordSewNC_productComponent);
+        mLayout_designComponent = findViewById(R.id.layout_recordSewNC_designComponent);
+        mLayout_NcProcess = findViewById(R.id.layout_recordSewNC_NcProcess);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView_NCType);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_NCType);
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
         mNcAdapter = new NcAdapter(mContext, mList_NcCode, R.layout.gv_item_recordnc, layoutManager);
         recyclerView.setLayoutManager(layoutManager);
@@ -101,20 +101,20 @@ public class RecordSewNCActivity extends BaseActivity {
                 mItemTouchHelper.startDrag(viewHolder);
             }
         });
-        RecyclerView selected = (RecyclerView) findViewById(R.id.recyclerView_recordSewNC_selected);
+        RecyclerView selected = findViewById(R.id.recyclerView_recordSewNC_selected);
         selected.setHasFixedSize(true);
         selected.setAdapter(mSelectedAdapter);
         selected.setLayoutManager(new LinearLayoutManager(mContext));
 
-        /**
-         * ★★★★★★★★★★★★★★★★★★★★★★★
-         * 要使用ItemTouchHelper，你需要创建一个ItemTouchHelper.Callback。
-         * 这个接口可以让你监听“move(上下移动)”与 “swipe（左右滑动）”事件。这里还是
-         * ★控制view被选中
-         * 的状态以及★重写默认动画的地方。
-         *
-         * 如果你只是想要一个基本的实现，有一个
-         * 帮助类可以使用：SimpleCallback,但是为了了解其工作机制，我们还是自己实现。
+        /*
+          ★★★★★★★★★★★★★★★★★★★★★★★
+          要使用ItemTouchHelper，你需要创建一个ItemTouchHelper.Callback。
+          这个接口可以让你监听“move(上下移动)”与 “swipe（左右滑动）”事件。这里还是
+          ★控制view被选中
+          的状态以及★重写默认动画的地方。
+
+          如果你只是想要一个基本的实现，有一个
+          帮助类可以使用：SimpleCallback,但是为了了解其工作机制，我们还是自己实现。
          */
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mSelectedAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -122,7 +122,7 @@ public class RecordSewNCActivity extends BaseActivity {
         mItemTouchHelper.attachToRecyclerView(selected);
 
         mRecordType = getIntent().getIntExtra(KEY_TYPE, 0);
-        Button btn_nextStep = (Button) findViewById(R.id.btn_recordSewNC_done);
+        Button btn_nextStep = findViewById(R.id.btn_recordSewNC_done);
         btn_nextStep.setOnClickListener(this);
 //        if (mRecordType == QCFragment.TYPE_QA) {
 //            btn_nextStep.setText("保存");

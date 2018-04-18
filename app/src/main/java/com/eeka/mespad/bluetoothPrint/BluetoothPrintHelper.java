@@ -1,12 +1,13 @@
 package com.eeka.mespad.bluetoothPrint;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.eeka.mespad.utils.SystemUtils;
+import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import java.util.Set;
@@ -15,7 +16,7 @@ import zpSDK.zpSDK.zpSDK;
 
 public class BluetoothPrintHelper {
 
-    public static void Print(Context context, String Pdata) {
+    public static void Print(Activity context, String Pdata) {
         if (TextUtils.isEmpty(Pdata)) {
             ErrorDialog.showAlert(context, "请输入要打印的内容");
             return;
@@ -26,7 +27,7 @@ public class BluetoothPrintHelper {
 
         zpSDK.zp_page_clear();
         if (!zpSDK.zp_page_create(70, 10)) {
-            Toast.makeText(context, "无法创建打印纸，请更换打印纸", Toast.LENGTH_LONG).show();
+            ToastUtil.showToast(context, "无法创建打印纸，请更换打印纸", Toast.LENGTH_LONG);
             return;
         }
 //        int mid = Pdata.length() / 2;
@@ -43,23 +44,23 @@ public class BluetoothPrintHelper {
         zpSDK.zp_close();
     }
 
-    private static boolean OpenPrinter(Context context) {
+    private static boolean OpenPrinter(Activity context) {
         BluetoothAdapter myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (myBluetoothAdapter == null) {
-            Toast.makeText(context, "该设备不支持蓝牙功能", Toast.LENGTH_LONG).show();
+            ToastUtil.showToast(context, "该设备不支持蓝牙功能", Toast.LENGTH_LONG);
             return false;
         }
 
         if (!myBluetoothAdapter.isEnabled()) {
-            Toast.makeText(context, "请打开蓝牙开关,并配对蓝牙打印机K319...", Toast.LENGTH_LONG).show();
+            ToastUtil.showToast(context, "请打开蓝牙开关,并配对蓝牙打印机K319...", Toast.LENGTH_LONG);
             SystemUtils.startBluetoothSettingView(context);
             return false;
         }
 
         Set<BluetoothDevice> bondedDevices = myBluetoothAdapter.getBondedDevices();
         if (bondedDevices.size() <= 0) {
-            Toast.makeText(context, "未配对蓝牙打印机,请配对K319...", Toast.LENGTH_LONG).show();
-            SystemUtils.startBluetoothSettingView(context);
+            ToastUtil.showToast(context, "未配对蓝牙打印机,请配对K319...", Toast.LENGTH_LONG);
+//            SystemUtils.startBluetoothSettingView(context);
             return false;
         }
         BluetoothDevice myDevice = null;
@@ -70,13 +71,15 @@ public class BluetoothPrintHelper {
             }
         }
         if (myDevice == null) {
-            Toast.makeText(context, "未配对蓝牙打印机,请配对K319...", Toast.LENGTH_LONG).show();
-            SystemUtils.startBluetoothSettingView(context);
+            ToastUtil.showToast(context, "未配对蓝牙打印机,请配对K319...", Toast.LENGTH_LONG);
+//            SystemUtils.startBluetoothSettingView(context);
             return false;
         }
         if (!zpSDK.zp_open(myBluetoothAdapter, myDevice)) {
-            Toast.makeText(context, zpSDK.ErrorMessage, Toast.LENGTH_LONG).show();
-            return false;
+            if (!zpSDK.zp_open(myBluetoothAdapter, myDevice)) {
+                ToastUtil.showToast(context, zpSDK.ErrorMessage, Toast.LENGTH_LONG);
+                return false;
+            }
         }
         return true;
     }

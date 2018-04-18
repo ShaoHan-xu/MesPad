@@ -83,23 +83,23 @@ public class QCFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        mLayout_sizeInfo = (LinearLayout) mView.findViewById(R.id.layout_sewQC_sizeInfo);
-        mLayout_productComponent = (LinearLayout) mView.findViewById(R.id.layout_sewQC_productComponent);
-        mLayout_designComponent = (LinearLayout) mView.findViewById(R.id.layout_sewQC_designComponent);
-        mLayout_matInfo = (LinearLayout) mView.findViewById(R.id.layout_sewQC_matInfo);
+        mLayout_sizeInfo = mView.findViewById(R.id.layout_sewQC_sizeInfo);
+        mLayout_productComponent = mView.findViewById(R.id.layout_sewQC_productComponent);
+        mLayout_designComponent = mView.findViewById(R.id.layout_sewQC_designComponent);
+        mLayout_matInfo = mView.findViewById(R.id.layout_sewQC_matInfo);
 
-        mTv_componentDesc = (TextView) mView.findViewById(R.id.tv_sewQC_componentDesc);
-        mTv_SFC = (TextView) mView.findViewById(R.id.tv_sewQC_SFC);
-        mTv_curProcess = (TextView) mView.findViewById(R.id.tv_sewQC_curProcess);
-        mTv_dayOutput = (TextView) mView.findViewById(R.id.tv_sewQC_dayOutput);
-        mTv_monthOutput = (TextView) mView.findViewById(R.id.tv_sewQC_monthOutput);
-        mTv_orderNum = (TextView) mView.findViewById(R.id.tv_sewQC_orderNum);
-        mTv_MTMOrderNum = (TextView) mView.findViewById(R.id.tv_sewQC_MTMOrderNum);
-        mTv_matNum = (TextView) mView.findViewById(R.id.tv_sewQC_matNum);
-        mTv_matDesc = (TextView) mView.findViewById(R.id.tv_sewQC_matDesc);
-        mTv_size = (TextView) mView.findViewById(R.id.tv_sewQC_size);
-        mTv_ncTag = (TextView) mView.findViewById(R.id.tv_sewQC_ncTag);
-        mTv_special = (TextView) mView.findViewById(R.id.tv_sewQC_special);
+        mTv_componentDesc = mView.findViewById(R.id.tv_sewQC_componentDesc);
+        mTv_SFC = mView.findViewById(R.id.tv_sewQC_SFC);
+        mTv_curProcess = mView.findViewById(R.id.tv_sewQC_curProcess);
+        mTv_dayOutput = mView.findViewById(R.id.tv_sewQC_dayOutput);
+        mTv_monthOutput = mView.findViewById(R.id.tv_sewQC_monthOutput);
+        mTv_orderNum = mView.findViewById(R.id.tv_sewQC_orderNum);
+        mTv_MTMOrderNum = mView.findViewById(R.id.tv_sewQC_MTMOrderNum);
+        mTv_matNum = mView.findViewById(R.id.tv_sewQC_matNum);
+        mTv_matDesc = mView.findViewById(R.id.tv_sewQC_matDesc);
+        mTv_size = mView.findViewById(R.id.tv_sewQC_size);
+        mTv_ncTag = mView.findViewById(R.id.tv_sewQC_ncTag);
+        mTv_special = mView.findViewById(R.id.tv_sewQC_special);
         mTv_special.setOnClickListener(this);
 
         mTv_componentDesc.setOnClickListener(this);
@@ -316,11 +316,11 @@ public class QCFragment extends BaseFragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
-        TextView tv_sizeAttr = (TextView) view.findViewById(R.id.tv_sewQc_sizeAttr);
-        TextView tv_refSize = (TextView) view.findViewById(R.id.tv_sewQc_refSize);
-        TextView tv_refTolerance = (TextView) view.findViewById(R.id.tv_sewQc_refTolerance);
-        TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
-        EditText et_finishedSize = (EditText) view.findViewById(R.id.et_sewQc_finishedSize);
+        TextView tv_sizeAttr = view.findViewById(R.id.tv_sewQc_sizeAttr);
+        TextView tv_refSize = view.findViewById(R.id.tv_sewQc_refSize);
+        TextView tv_refTolerance = view.findViewById(R.id.tv_sewQc_refTolerance);
+        TextView tv_realTolerance = view.findViewById(R.id.tv_sewQc_realTolerance);
+        EditText et_finishedSize = view.findViewById(R.id.et_sewQc_finishedSize);
 //        et_finishedSize.setTag(position);
 //        et_finishedSize.setOnFocusChangeListener(new FocusChangedListener());
 
@@ -403,7 +403,7 @@ public class QCFragment extends BaseFragment {
         public void afterTextChanged(Editable s) {
             ClothSizeBo.DCPARRMSBean sizeInfo = mClothSizeData.getDC_PARRMS().get(position);
             View view = mLayout_sizeInfo.getChildAt(position);
-            TextView tv_realTolerance = (TextView) view.findViewById(R.id.tv_sewQc_realTolerance);
+            TextView tv_realTolerance = view.findViewById(R.id.tv_sewQc_realTolerance);
             String text = s.toString();
             if (isEmpty(text)) {
                 sizeInfo.setCOLLECTED_VALUE(null);
@@ -448,8 +448,8 @@ public class QCFragment extends BaseFragment {
      */
     private View getMatInfo(SewQCDataBo.BomComponentBean bom) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
-        TextView tv_key = (TextView) view.findViewById(R.id.tv_userName);
-        TextView tv_value = (TextView) view.findViewById(R.id.tv_userId);
+        TextView tv_key = view.findViewById(R.id.tv_userName);
+        TextView tv_value = view.findViewById(R.id.tv_userId);
         tv_key.setText(bom.getDescription());
         tv_value.setText(bom.getName());
         return view;

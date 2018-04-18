@@ -58,7 +58,6 @@ import java.util.List;
 public class MainActivity extends NFCActivity {
 
     private DrawerLayout mDrawerLayout;
-    private LoginFragment mLoginFragment;
     private CutFragment mCutFragment;
     private SuspendFragment mSuspendFragment;
     private SewFragment mSewFragment;
@@ -142,8 +141,8 @@ public class MainActivity extends NFCActivity {
     @Override
     protected void initView() {
         super.initView();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        mLayout_controlPanel = (LinearLayout) findViewById(R.id.layout_controlPanel);
+        mDrawerLayout = findViewById(R.id.drawerLayout);
+        mLayout_controlPanel = findViewById(R.id.layout_controlPanel);
 
         findViewById(R.id.tv_caijian).setOnClickListener(this);
         findViewById(R.id.tv_diaogua).setOnClickListener(this);
@@ -154,8 +153,8 @@ public class MainActivity extends NFCActivity {
         findViewById(R.id.btn_searchOrder).setOnClickListener(this);
         findViewById(R.id.btn_searchPosition).setOnClickListener(this);
 
-        mEt_orderNum = (EditText) findViewById(R.id.et_orderNum);
-        mEt_position = (EditText) findViewById(R.id.et_position);
+        mEt_orderNum = findViewById(R.id.et_orderNum);
+        mEt_position = findViewById(R.id.et_position);
         mEt_position.setText(HttpHelper.getPadIp());
     }
 
@@ -365,12 +364,48 @@ public class MainActivity extends NFCActivity {
     public void onClick(View v) {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
-        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         switch (v.getId()) {
             case R.id.tv_setting:
                 mDrawerLayout.closeDrawer(Gravity.START);
                 startActivity(new Intent(mContext, SettingActivity.class));
-                break;
+                return;
+            case R.id.btn_video:
+                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                    mSewFragment.playVideo();
+                } else if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+                    mCutFragment.playVideo();
+                } else {
+                    toast("该站位无视频");
+                }
+                return;
+            case R.id.btn_login:
+            case R.id.tv_startWorkAlert:
+                showLoginDialog();
+                return;
+            case R.id.btn_searchOrder:
+                isSearchOrder = true;
+                if (checkResource())
+                    searchOrder();
+                return;
+            case R.id.btn_searchPosition:
+                String position1 = mEt_position.getText().toString();
+                if (!isEmpty(position1)) {
+//                    HttpHelper.PAD_IP = position1;
+                } else {
+                    toast("请输入完整的站位");
+                }
+                showLoading();
+                HttpHelper.initData(this);
+                return;
+        }
+
+        //以下所有按钮需要用户登录后才能操作
+        List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
+        if (loginUsers == null || loginUsers.size() == 0) {
+            ErrorDialog.showAlert(mContext, "请先登录再操作");
+            return;
+        }
+        switch (v.getId()) {
             case R.id.btn_materialReturn:
                 if (mCutFragment != null) {
                     mCutFragment.returnAndFeedingMat(true);
@@ -389,10 +424,6 @@ public class MainActivity extends NFCActivity {
                 startActivity(new Intent(mContext, WorkOrderListActivity.class));
                 break;
             case R.id.btn_NcRecord:
-                if (loginUsers == null || loginUsers.size() == 0) {
-                    ErrorDialog.showAlert(mContext, "请先登录再操作");
-                    break;
-                }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mCutFragment.recordNC();
                 } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
@@ -404,24 +435,9 @@ public class MainActivity extends NFCActivity {
                     mQCFragment.recordNC(QCFragment.TYPE_QA);
                 }
                 break;
-            case R.id.btn_video:
-                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
-                    mSewFragment.playVideo();
-                } else if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
-                    mCutFragment.playVideo();
-                } else {
-                    toast("该站位无视频");
-                }
-                break;
-            case R.id.btn_login:
-            case R.id.tv_startWorkAlert:
-                showLoginDialog();
-                break;
             case R.id.btn_logout:
-                if (loginUsers != null && loginUsers.size() != 0) {
+                if (loginUsers.size() != 0) {
                     showLogoutDialog();
-                } else {
-                    showErrorDialog("目前没有人在岗位登录");
                 }
                 break;
             case R.id.btn_signOff:
@@ -436,21 +452,6 @@ public class MainActivity extends NFCActivity {
                         }
                         break;
                 }
-                break;
-            case R.id.btn_searchOrder:
-                isSearchOrder = true;
-                if (checkResource())
-                    searchOrder();
-                break;
-            case R.id.btn_searchPosition:
-                String position1 = mEt_position.getText().toString();
-                if (!isEmpty(position1)) {
-//                    HttpHelper.PAD_IP = position1;
-                } else {
-                    toast("请输入完整的站位");
-                }
-                showLoading();
-                HttpHelper.initData(this);
                 break;
             case R.id.btn_start:
                 switch (mTopic) {
@@ -730,20 +731,6 @@ public class MainActivity extends NFCActivity {
             }
         }
         refreshLoginUser();
-    }
-
-    @Override
-    public void onLogin(boolean success) {
-        super.onLogin(success);
-        if (success) {
-            if (mLoginFragment.isAdded()) {
-                FragmentTransaction ft = mFragmentManager.beginTransaction();
-                ft.remove(mLoginFragment);
-                ft.commit();
-            }
-
-            initData();
-        }
     }
 
     @Override
