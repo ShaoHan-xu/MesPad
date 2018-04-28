@@ -18,6 +18,7 @@ import com.eeka.mespad.bo.LineColorBo;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SystemUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -111,4 +112,9 @@ public class LineColorDialog extends BaseDialog {
         }
     }
 
+    @Override
+    public void show() {
+        super.show();
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.9), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+    }
 }

@@ -1,54 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="#E2E2E2"
-    android:divider="@drawable/divider_gray"
-    android:orientation="horizontal"
-    android:showDividers="middle">
+    android:layout_height="81dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_lineColor_code"
-        style="@style/textStyle_default"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="编号" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:divider="@drawable/divider_gray"
+        android:orientation="horizontal"
+        android:showDividers="middle">
 
-    <TextView
-        android:id="@+id/tv_lineColor_desc"
-        style="@style/textStyle_default"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="规格颜色描述" />
+        <TextView
+            android:id="@+id/tv_lineColor_code"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="编号" />
 
-    <TextView
-        android:id="@+id/tv_lineColor_partName"
-        style="@style/textStyle_default"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="部位" />
+        <TextView
+            android:id="@+id/tv_lineColor_desc"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="规格颜色描述" />
 
-    <TextView
-        android:id="@+id/tv_lineColor_isExteriorStitch"
-        style="@style/textStyle_default"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="是否为外观线迹" />
+        <TextView
+            android:id="@+id/tv_lineColor_partName"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="部位" />
 
-    <ImageView
-        android:id="@+id/iv_lineColor_img"
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+        <TextView
+            android:id="@+id/tv_lineColor_isExteriorStitch"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="是否为外观线迹" />
+
+        <ImageView
+            android:id="@+id/iv_lineColor_img"
+            android:layout_width="120dp"
+            android:layout_height="80dp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@drawable/divider_gray" />
 </LinearLayout>

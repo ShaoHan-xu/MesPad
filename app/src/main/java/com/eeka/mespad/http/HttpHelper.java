@@ -100,6 +100,7 @@ public class HttpHelper {
     public static final String saveCutRecordData = BASE_URL + "cutpad/saveCutRecord?";
     public static final String getUserInfo = BASE_URL + "cutpad/userCardRecognition?";
     public static final String getStitchInventory = BASE_URL + "stitchPad/getStitchInventory?";
+    public static final String getEmbroiderInfor = BASE_URL + "cutpad/viewEmbroiderPadInfor?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -784,6 +785,20 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("orderNo", orderNo);
         HttpRequest.post(getStitchInventory, params, getResponseHandler(getStitchInventory, callback));
+    }
+
+    /**
+     * 获取线色数据
+     */
+    public static void getEmbroiderInfor(String SFC, String processLotBo, String theme, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("PAD_IP", PAD_IP);
+        json.put("SFC", SFC);
+        json.put("PROCESS_LOT_BO", processLotBo);
+        json.put("THEME", theme);
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getEmbroiderInfor, params, getResponseHandler(getEmbroiderInfor, callback));
     }
 
     /**

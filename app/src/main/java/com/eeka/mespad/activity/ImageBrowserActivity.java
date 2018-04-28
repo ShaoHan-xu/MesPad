@@ -43,7 +43,7 @@ public class ImageBrowserActivity extends BaseActivity {
         boolean scrollAble = getIntent().getBooleanExtra("scrollAble", true);
         if (scrollAble) {
             findViewById(R.id.layout_imageBrowser_image).setVisibility(View.VISIBLE);
-            ViewPager viewPager = (ViewPager) findViewById(R.id.vp_matInfo);
+            ViewPager viewPager = findViewById(R.id.vp_matInfo);
             viewPager.setAdapter(new ViewPagerAdapter(mContext, data, R.layout.item_photoview));
 
             PagerChangedListener listener = new PagerChangedListener(data);
@@ -70,7 +70,7 @@ public class ImageBrowserActivity extends BaseActivity {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, MATCH_PARENT);
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
-        final PhotoView imageView = (PhotoView) view.findViewById(R.id.imageView);
+        final PhotoView imageView = view.findViewById(R.id.imageView);
         imageView.enable();
         Picasso.with(mContext).load(url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         return view;
@@ -84,20 +84,25 @@ public class ImageBrowserActivity extends BaseActivity {
 
         @Override
         public void convertView(View view, Object item, int position) {
-            final PhotoView imageView = (PhotoView) view.findViewById(R.id.imageView);
+            final PhotoView imageView = view.findViewById(R.id.imageView);
             imageView.enable();
 
-            String bmpUrl = null;
-            if (item instanceof TailorInfoBo.MatInfoBean) {
-                TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) item;
-                bmpUrl = matInfo.getMAT_URL();
-            } else if (item instanceof TailorInfoBo.LayoutInfoBean) {
-                TailorInfoBo.LayoutInfoBean layoutInfo = (TailorInfoBo.LayoutInfoBean) item;
-                bmpUrl = layoutInfo.getPICTURE_URL();
-            } else if (item instanceof String) {
-                bmpUrl = (String) item;
+            if (item instanceof Integer) {
+                int bmpUrl = (int) item;
+                Picasso.with(mContext).load(bmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+            } else {
+                String bmpUrl = null;
+                if (item instanceof TailorInfoBo.MatInfoBean) {
+                    TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) item;
+                    bmpUrl = matInfo.getMAT_URL();
+                } else if (item instanceof TailorInfoBo.LayoutInfoBean) {
+                    TailorInfoBo.LayoutInfoBean layoutInfo = (TailorInfoBo.LayoutInfoBean) item;
+                    bmpUrl = layoutInfo.getPICTURE_URL();
+                } else if (item instanceof String) {
+                    bmpUrl = (String) item;
+                }
+                Picasso.with(mContext).load(bmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
             }
-            Picasso.with(mContext).load(bmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -146,12 +151,12 @@ public class ImageBrowserActivity extends BaseActivity {
     private void refreshMatAttrView(TailorInfoBo.MatInfoBean matInfo) {
         findViewById(R.id.layout_imageBrowser_desc).setVisibility(View.VISIBLE);
         findViewById(R.id.layout_matInfo_matDesc).setVisibility(View.VISIBLE);
-        TextView tv_no = (TextView) findViewById(R.id.tv_matInfo_matNo);
-        TextView tv_desc = (TextView) findViewById(R.id.tv_matInfo_matDesc);
-        TextView tv_big = (TextView) findViewById(R.id.tv_matInfo_matBig);
-        TextView tv_bigDesc = (TextView) findViewById(R.id.tv_matInfo_matBigDesc);
-        TextView tv_mid = (TextView) findViewById(R.id.tv_matInfo_matMid);
-        TextView tv_midDesc = (TextView) findViewById(R.id.tv_matInfo_matMidDesc);
+        TextView tv_no = findViewById(R.id.tv_matInfo_matNo);
+        TextView tv_desc = findViewById(R.id.tv_matInfo_matDesc);
+        TextView tv_big = findViewById(R.id.tv_matInfo_matBig);
+        TextView tv_bigDesc = findViewById(R.id.tv_matInfo_matBigDesc);
+        TextView tv_mid = findViewById(R.id.tv_matInfo_matMid);
+        TextView tv_midDesc = findViewById(R.id.tv_matInfo_matMidDesc);
 
         tv_no.setText(matInfo.getMAT_NO());
         tv_desc.setText(matInfo.getMAT_DESC());
@@ -167,13 +172,13 @@ public class ImageBrowserActivity extends BaseActivity {
     private void refreshLayAttrView(TailorInfoBo.LayoutInfoBean layoutInfo) {
         findViewById(R.id.layout_imageBrowser_desc).setVisibility(View.VISIBLE);
         findViewById(R.id.layout_matInfo_layDesc).setVisibility(View.VISIBLE);
-        TextView tv_name = (TextView) findViewById(R.id.tv_matInfo_layName);
-        TextView tv_no = (TextView) findViewById(R.id.tv_matInfo_layNo);
-        TextView tv_length = (TextView) findViewById(R.id.tv_matInfo_layLength);
-        TextView tv_width = (TextView) findViewById(R.id.tv_matInfo_layWidth);
-        TextView tv_layers = (TextView) findViewById(R.id.tv_matInfo_layLayers);
-        TextView tv_amount = (TextView) findViewById(R.id.tv_matInfo_layAmount);
-        TextView tv_sizeRatio = (TextView) findViewById(R.id.tv_matInfo_sizeRatio);
+        TextView tv_name = findViewById(R.id.tv_matInfo_layName);
+        TextView tv_no = findViewById(R.id.tv_matInfo_layNo);
+        TextView tv_length = findViewById(R.id.tv_matInfo_layLength);
+        TextView tv_width = findViewById(R.id.tv_matInfo_layWidth);
+        TextView tv_layers = findViewById(R.id.tv_matInfo_layLayers);
+        TextView tv_amount = findViewById(R.id.tv_matInfo_layAmount);
+        TextView tv_sizeRatio = findViewById(R.id.tv_matInfo_sizeRatio);
 
         tv_name.setText(layoutInfo.getLAYOUT());
         tv_no.setText(layoutInfo.getITEM());

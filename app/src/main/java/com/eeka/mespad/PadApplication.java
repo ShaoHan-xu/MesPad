@@ -26,6 +26,8 @@ public class PadApplication extends Application {
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
     public static String BASE_URL = BASE_URL_P;
 
+    public static String MQTT_BROKER = "10.10.200.11"; //生产系统MQ地址
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,10 +42,13 @@ public class PadApplication extends Application {
             if (!TextUtils.isEmpty(systemCode)) {
                 if ("D".equals(systemCode)) {
                     BASE_URL = BASE_URL_D;
+                    MQTT_BROKER = "10.7.121.40";
                 } else if ("Q".equals(systemCode)) {
                     BASE_URL = BASE_URL_Q;
+                    MQTT_BROKER = "10.7.121.40";
                 } else if ("P".equals(systemCode)) {
                     BASE_URL = BASE_URL_P;
+                    MQTT_BROKER = "10.10.200.11";
                 }
             }
         }

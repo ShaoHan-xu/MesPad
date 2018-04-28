@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
@@ -42,10 +43,7 @@ import cn.finalteam.okhttpfinal.LogUtil;
  */
 
 public class MQTTService extends Service {
-    //生产系统MQ
-    private static final String MQTT_BROKER = "10.10.200.11"; // Broker URL or IP Address
-    //测试系统MQ
-//    private static final String MQTT_BROKER = "10.7.121.40"; // Broker URL or IP Address
+
     private static final String MQTT_PORT = "1883"; // Broker Port
     private static final String MQTT_URL_FORMAT = "tcp://%s:%s"; // URL Format normally don't change
     private String myTopic = NetUtil.getHostIP();
@@ -110,7 +108,7 @@ public class MQTTService extends Service {
             //clientId要唯一，不然会挤掉另外相同的clientId的连接
             mClientId = SystemUtils.getIMEI(this);
             //host为主机名，test为clientid即连接MQTT的客户端ID，一般以客户端唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
-            String url = String.format(Locale.US, MQTT_URL_FORMAT, MQTT_BROKER, MQTT_PORT);
+            String url = String.format(Locale.US, MQTT_URL_FORMAT, PadApplication.MQTT_BROKER, MQTT_PORT);
             mqttClient = new MqttAndroidClient(this, url, mClientId);
             //MQTT的连接设置
             options = new MqttConnectOptions();

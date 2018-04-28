@@ -745,10 +745,12 @@ public class CutFragment extends BaseFragment {
 //                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
                 toast("开始作业");
+                ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
             } else if (url.equals(HttpHelper.completeBatchWork_url) || url.equals(HttpHelper.completeCustomWork_url)) {
 //                    mBtn_done.setText("开始");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
                 toast("工序已完成");
+                mBtn_done.setEnabled(false);
             } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {
                 toast("注销在制品成功，可重新开始");
             }

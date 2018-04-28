@@ -107,6 +107,10 @@
             android:name=".activity.SubcontractReceiveAty"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".activity.EmbroiderActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
     </application>
 

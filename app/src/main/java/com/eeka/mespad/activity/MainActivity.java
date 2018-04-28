@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -281,6 +282,14 @@ public class MainActivity extends NFCActivity {
                     button.setText("线迹显示");
                     button.setId(R.id.btn_lineColor);
                     break;
+                case "CUT_PICTURE":
+                    button.setText("裁剪图片");
+                    button.setId(R.id.btn_cutBmp);
+                    break;
+                case "XH_MESSAGE":
+                    button.setText("绣花信息");
+                    button.setId(R.id.btn_embroiderInfo);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -396,6 +405,23 @@ public class MainActivity extends NFCActivity {
                 }
                 showLoading();
                 HttpHelper.initData(this);
+                return;
+            case R.id.btn_cutBmp:
+                List<Integer> bmpRes = new ArrayList<>();
+                bmpRes.add(R.drawable.clothingparts1);
+                bmpRes.add(R.drawable.clothingparts2);
+                bmpRes.add(R.drawable.clothingparts3);
+                bmpRes.add(R.drawable.clothingparts4);
+                bmpRes.add(R.drawable.clothingparts5);
+                bmpRes.add(R.drawable.clothingparts6);
+                startActivity(ImageBrowserActivity.getIntent(mContext, bmpRes, true));
+                return;
+            case R.id.btn_embroiderInfo:
+                if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+                    startActivity(EmbroiderActivity.getIntent(mContext, null, mCardInfo.getValue(), mTopic));
+                } else if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                    mSewFragment.showEmbroiderInfo();
+                }
                 return;
         }
 

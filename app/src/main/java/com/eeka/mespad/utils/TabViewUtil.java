@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.EmbroiderBo;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.TailorInfoBo;
@@ -22,7 +23,7 @@ public class TabViewUtil {
      */
     public static <T> View getTabView(Context context, T data, View.OnClickListener listener) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_tab, null);
-        TextView tv_tabName = (TextView) view.findViewById(R.id.textView);
+        TextView tv_tabName = view.findViewById(R.id.textView);
         tv_tabName.setOnClickListener(listener);
         String content = null;
         if (data instanceof SewQCDataBo.DesignComponentBean) {//生产部件
@@ -40,6 +41,9 @@ public class TabViewUtil {
         } else if (data instanceof SewDataBo.SewAttr) {//缝制工序标签
             SewDataBo.SewAttr sewData = (SewDataBo.SewAttr) data;
             content = sewData.getDescription();
+        }else if (data instanceof EmbroiderBo){
+            EmbroiderBo item = (EmbroiderBo) data;
+            content = item.getDESCRIPTION();
         }
 
         //标签的字数超过10时，自动在一半的位置换行

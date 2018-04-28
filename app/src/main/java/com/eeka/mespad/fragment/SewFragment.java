@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.activity.EmbroiderActivity;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.OutlinePicActivity;
@@ -240,7 +241,18 @@ public class SewFragment extends BaseFragment {
             toast("请先获取缝制数据");
             return;
         }
-        new LineColorDialog(mContext, mSewData.getShopOrder()).show();
+        new LineColorDialog(mContext, mSewData.getSalesOrder()).show();
+    }
+
+    /**
+     * 绣花信息
+     */
+    public void showEmbroiderInfo() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        startActivity(EmbroiderActivity.getIntent(mContext, mSewData.getSfc(), null, "UI020"));
     }
 
     @Override
