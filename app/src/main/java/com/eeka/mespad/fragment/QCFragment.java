@@ -13,11 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
 import com.eeka.mespad.bo.ClothSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.ReworkItemBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -27,6 +29,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.eeka.mespad.view.dialog.ReworkInfoDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +62,7 @@ public class QCFragment extends BaseFragment {
     private TextView mTv_size;
     private TextView mTv_special;
     private TextView mTv_ncTag;
+    private TextView mTv_reworkInfo;
 
     private SewQCDataBo mSewQCData;
     private ClothSizeBo mClothSizeData;
@@ -100,6 +104,8 @@ public class QCFragment extends BaseFragment {
         mTv_size = mView.findViewById(R.id.tv_sewQC_size);
         mTv_ncTag = mView.findViewById(R.id.tv_sewQC_ncTag);
         mTv_special = mView.findViewById(R.id.tv_sewQC_special);
+        mTv_reworkInfo = mView.findViewById(R.id.tv_sewQC_reworkInfo);
+        mTv_reworkInfo.setOnClickListener(this);
         mTv_special.setOnClickListener(this);
 
         mTv_componentDesc.setOnClickListener(this);
@@ -110,20 +116,31 @@ public class QCFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        if (v.getId() == R.id.tv_sewQC_special) {
-            String content = mTv_special.getText().toString();
-            if (!isEmpty(content)) {
-                MyAlertDialog.showAlert(mContext, content);
+        switch (v.getId()) {
+            case R.id.tv_sewQC_special: {
+                String content = mTv_special.getText().toString();
+                if (!isEmpty(content)) {
+                    MyAlertDialog.showAlert(mContext, content);
+                }
+                break;
             }
-        } else if (v.getId() == R.id.tv_sewQC_componentDesc) {
-            String content = mTv_componentDesc.getText().toString();
-            if (!isEmpty(content)) {
-                MyAlertDialog.showAlert(mContext, content);
+            case R.id.tv_sewQC_componentDesc: {
+                String content = mTv_componentDesc.getText().toString();
+                if (!isEmpty(content)) {
+                    MyAlertDialog.showAlert(mContext, content);
+                }
+                break;
             }
-        } else if (v.getId() == R.id.btn_sewQc_refresh) {
-            getClothSizeData();
-        } else if (v.getId() == R.id.btn_sewQc_save) {
-            saveClothSizeData();
+            case R.id.btn_sewQc_refresh:
+                getClothSizeData();
+                break;
+            case R.id.btn_sewQc_save:
+                saveClothSizeData();
+                break;
+            case R.id.tv_sewQC_reworkInfo:
+                showLoading();
+                HttpHelper.getReworkInfo(mSewQCData.getSfcRef(), this);
+                break;
         }
     }
 
@@ -156,6 +173,12 @@ public class QCFragment extends BaseFragment {
             mTv_ncTag.setVisibility(View.VISIBLE);
         } else {
             mTv_ncTag.setVisibility(View.GONE);
+        }
+
+        if ("1".equals(mSewQCData.getReworkFlag())) {
+            mTv_reworkInfo.setVisibility(View.VISIBLE);
+        } else {
+            mTv_reworkInfo.setVisibility(View.GONE);
         }
 
         mLayout_matInfo.removeAllViews();
@@ -483,6 +506,12 @@ public class QCFragment extends BaseFragment {
                     showErrorDialog("请您先登录");
                 } else {
                     searchOrder(mRFID);
+                }
+            } else if (HttpHelper.getReworkInfo.equals(url)) {
+                JSONArray result = resultJSON.getJSONArray("result");
+                if (result != null) {
+                    List<ReworkItemBo> list = JSON.parseArray(result.toString(), ReworkItemBo.class);
+                    new ReworkInfoDialog(mContext, list).show();
                 }
             }
         }

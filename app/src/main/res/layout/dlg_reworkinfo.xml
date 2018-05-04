@@ -19,9 +19,11 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:background="@drawable/border_black"
         android:orientation="vertical"
         android:padding="0.5dp">
@@ -30,7 +32,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gray_disable"
-            android:orientation="horizontal">
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
 
             <TextView
                 style="@style/textStyle_default"
@@ -41,7 +45,14 @@
                 android:padding="5dp"
                 android:text="工序" />
 
-            <View style="@style/line_vertical" />
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="不良代码" />
 
             <TextView
                 style="@style/textStyle_default"
@@ -50,7 +61,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="不合格点" />
+                android:text="备注" />
 
         </LinearLayout>
 
@@ -59,7 +70,7 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/layout_ncDetail"
+                android:id="@+id/layout_reworkinfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@color/divider_gray"

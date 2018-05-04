@@ -35,7 +35,7 @@ public class NCDetailDialog extends BaseDialog {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_ncdetail, null);
         setContentView(view);
 
-        LinearLayout layout_items = (LinearLayout) view.findViewById(R.id.layout_ncDetail);
+        LinearLayout layout_items = view.findViewById(R.id.layout_ncDetail);
         for (SewDataBo.SewAttr item : mItems) {
             String ncDescription = item.getAttributes().getNC_DESCRIPTION();
             if (TextUtils.isEmpty(ncDescription)) {

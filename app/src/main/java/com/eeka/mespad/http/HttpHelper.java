@@ -101,6 +101,7 @@ public class HttpHelper {
     public static final String getUserInfo = BASE_URL + "cutpad/userCardRecognition?";
     public static final String getStitchInventory = BASE_URL + "stitchPad/getStitchInventory?";
     public static final String getEmbroiderInfor = BASE_URL + "cutpad/viewEmbroiderPadInfor?";
+    public static final String getReworkInfo = BASE_URL + "/sweing/findReworkInfoBySfcRef?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -788,7 +789,7 @@ public class HttpHelper {
     }
 
     /**
-     * 获取线色数据
+     * 获取绣花信息
      */
     public static void getEmbroiderInfor(String SFC, String processLotBo, String theme, HttpCallback callback) {
         RequestParams params = getBaseParams();
@@ -799,6 +800,15 @@ public class HttpHelper {
         json.put("THEME", theme);
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(getEmbroiderInfor, params, getResponseHandler(getEmbroiderInfor, callback));
+    }
+
+    /**
+     * 获取返修信息
+     */
+    public static void getReworkInfo(String sfcRef, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("sfcRef", sfcRef);
+        HttpRequest.post(getReworkInfo, params, getResponseHandler(getReworkInfo, callback));
     }
 
     /**

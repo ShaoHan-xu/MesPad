@@ -259,10 +259,21 @@
                         style="@style/textStyle_default"
                         android:layout_marginTop="10dp"
                         android:padding="5dp"
-                        android:visibility="gone"
                         android:text="该件来自普通站位"
                         android:textColor="@color/text_red_default"
-                        android:textSize="@dimen/textSize_itemTitle" />
+                        android:textSize="@dimen/textSize_itemTitle"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_sewQC_reworkInfo"
+                        style="@style/textStyle_default"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/text_red_default"
+                        android:padding="5dp"
+                        android:text="返修衣架回质检"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/textSize_itemTitle"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

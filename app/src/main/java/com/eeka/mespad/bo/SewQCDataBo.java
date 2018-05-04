@@ -31,12 +31,30 @@ public class SewQCDataBo {
     private String sfc;
     private String currentOperation;
     private String soMark;
+    private String sfcRef;
+    private String reworkFlag;
     private int dailyOutput;
     private int monthlyOutput;
     private List<BomComponentBean> bomComponent;
     //    private List<ClothingSizeBean> clothingSize;
     private List<DesignComponentBean> designComponent;
     private List<String> ncCode;
+
+    public String getSfcRef() {
+        return sfcRef;
+    }
+
+    public void setSfcRef(String sfcRef) {
+        this.sfcRef = sfcRef;
+    }
+
+    public String getReworkFlag() {
+        return reworkFlag;
+    }
+
+    public void setReworkFlag(String reworkFlag) {
+        this.reworkFlag = reworkFlag;
+    }
 
     public List<String> getNcCode() {
         return ncCode;

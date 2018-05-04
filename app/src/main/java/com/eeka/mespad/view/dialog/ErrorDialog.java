@@ -1,5 +1,6 @@
 package com.eeka.mespad.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,10 +15,15 @@ import com.eeka.mespad.R;
 
 public class ErrorDialog {
 
+    public enum TYPE {
+        ERROR, ALERT, WARING
+    }
+
     private static AlertDialog mDialog;
 
     private static String mLastMsg;
 
+    @SuppressLint("HandlerLeak")
     private static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -36,17 +42,17 @@ public class ErrorDialog {
     }
 
     public static void showAlert(Context context, String msg, boolean autoDismiss) {
-        showAlert(context, msg, true, null, autoDismiss);
+        showAlert(context, msg, TYPE.ERROR, null, autoDismiss);
     }
 
     /**
      * 确认提示弹框
      */
     public static void showConfirmAlert(Context context, String msg, View.OnClickListener listener) {
-        showAlert(context, msg, false, listener, false);
+        showAlert(context, msg, TYPE.ALERT, listener, false);
     }
 
-    private static void showAlert(Context context, String msg, boolean error, final View.OnClickListener positiveListener, boolean autoDismiss) {
+    public static void showAlert(Context context, String msg, TYPE type, final View.OnClickListener positiveListener, boolean autoDismiss) {
         if (context == null) {
             return;
         }
@@ -58,7 +64,7 @@ public class ErrorDialog {
         mLastMsg = msg;
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_alert, null);
-        TextView tipTextView = (TextView) v.findViewById(R.id.tv_alertMsg);
+        TextView tipTextView = v.findViewById(R.id.tv_alertMsg);
         tipTextView.setText(msg);
 
         if (mDialog != null && mDialog.isShowing()) {
@@ -70,8 +76,10 @@ public class ErrorDialog {
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        if (error) {
+        if (type == TYPE.ERROR) {
             builder.setTitle("出现错误:");
+        } else if (type == TYPE.WARING) {
+            builder.setTitle("警告：");
         } else {
             builder.setTitle("温馨提示：");
         }

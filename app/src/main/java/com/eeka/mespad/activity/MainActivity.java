@@ -125,6 +125,8 @@ public class MainActivity extends NFCActivity {
                 showLoading();
                 HttpHelper.getPositionLoginUsers(this);
             }
+        } else if (PushJson.TYPE_WARNING.equals(type)) {
+            ErrorDialog.showAlert(mContext, push.getMessage());
         } else if (PushJson.TYPE_FINISH_MAIN.equals(type)) {
             finish();
         } else if (PushJson.TYPE_EXIT.equals(type)) {
@@ -602,7 +604,7 @@ public class MainActivity extends NFCActivity {
         mLogoutDialog = new Dialog(mContext);
         mLogoutDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_logout, null);
-        RecyclerView listView = (RecyclerView) view.findViewById(R.id.lv_logout);
+        RecyclerView listView = view.findViewById(R.id.lv_logout);
         LinearLayoutManager manager = new LinearLayoutManager(mContext);
         listView.setLayoutManager(manager);
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
