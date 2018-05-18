@@ -287,27 +287,34 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/layout_sewQC_productComponent"
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/divider_gray"
-                    android:orientation="horizontal"
-                    android:showDividers="middle|end">
+                    android:layout_height="wrap_content">
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_sewQC_productComponent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/divider_gray"
+                        android:orientation="horizontal"
+                        android:showDividers="middle|end" />
+                </HorizontalScrollView>
 
                 <View style="@style/line" />
 
-                <LinearLayout
-                    android:id="@+id/layout_sewQC_designComponent"
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/divider_gray"
-                    android:orientation="horizontal"
-                    android:showDividers="middle|end">
+                    android:layout_height="wrap_content">
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/layout_sewQC_designComponent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/divider_gray"
+                        android:orientation="horizontal"
+                        android:showDividers="middle|end" />
+
+                </HorizontalScrollView>
 
                 <View style="@style/line" />
 

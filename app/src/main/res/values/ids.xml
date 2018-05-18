@@ -32,4 +32,5 @@
     <item name="btn_lineColor" type="id" />
     <item name="btn_cutBmp" type="id" />
     <item name="btn_embroiderInfo" type="id" />
+    <item name="btn_pocketSize" type="id" />
 </resources>

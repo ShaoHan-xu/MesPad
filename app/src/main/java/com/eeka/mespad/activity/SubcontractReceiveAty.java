@@ -82,9 +82,9 @@ public class SubcontractReceiveAty extends NFCActivity {
     protected void initView() {
         super.initView();
 
-        mEt_orderNum = (EditText) findViewById(R.id.et_orderNum);
-        ListView mLv_receive = (ListView) findViewById(R.id.lv_subcontract_receive);
-        ListView mLv_complete = (ListView) findViewById(R.id.lv_subcontract_received);
+        mEt_orderNum = findViewById(R.id.et_orderNum);
+        ListView mLv_receive = findViewById(R.id.lv_subcontract_receive);
+        ListView mLv_complete = findViewById(R.id.lv_subcontract_received);
 
         mList_receive = new ArrayList<>();
         mReceAdapter = new ReceAdapter(mContext, mList_receive, R.layout.item_subcontract_receive);

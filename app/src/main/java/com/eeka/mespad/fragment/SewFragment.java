@@ -35,6 +35,7 @@ import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LineColorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.NCDetailDialog;
+import com.eeka.mespad.view.dialog.PocketSizeDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.squareup.picasso.Picasso;
 
@@ -253,6 +254,17 @@ public class SewFragment extends BaseFragment {
             return;
         }
         startActivity(EmbroiderActivity.getIntent(mContext, mSewData.getSfc(), null, "UI020"));
+    }
+
+    /**
+     * 袋口尺寸信息
+     */
+    public void showPocketSizeInfo() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        new PocketSizeDialog(mContext, mSewData.getShopOrder()).show();
     }
 
     @Override

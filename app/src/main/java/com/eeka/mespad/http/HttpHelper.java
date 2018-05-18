@@ -38,11 +38,11 @@ import okhttp3.Response;
 public class HttpHelper {
     private static final String STATE = "status";
     private static final String MESSAGE = "message";
-    public static boolean IS_COOKIE_OUT;
-    public static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
+    private static boolean IS_COOKIE_OUT;
+    private static final String COOKIE_OUT = "SecurityException: Authorization failed.";//cookie过期
     private static String PAD_IP;
 
-    public static String BASE_URL = PadApplication.BASE_URL;
+    private static String BASE_URL = PadApplication.BASE_URL;
 
     public static final String getApkUrl = BASE_URL + "common/getAppUpgradeUrl?";
     public static final String login_url = BASE_URL + "login?";
@@ -102,6 +102,7 @@ public class HttpHelper {
     public static final String getStitchInventory = BASE_URL + "stitchPad/getStitchInventory?";
     public static final String getEmbroiderInfor = BASE_URL + "cutpad/viewEmbroiderPadInfor?";
     public static final String getReworkInfo = BASE_URL + "/sweing/findReworkInfoBySfcRef?";
+    public static final String getPocketSize = BASE_URL + "/ReportController/reportViewByLogic?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -809,6 +810,21 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("sfcRef", sfcRef);
         HttpRequest.post(getReworkInfo, params, getResponseHandler(getReworkInfo, callback));
+    }
+
+    /**
+     * 获取袋口尺寸信息
+     */
+    public static void getPocketSize(String shopOrder, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("SITE", SpUtil.getSite());
+        json.put("LOGIC_NO", "query.cadSizeInfo");
+        JSONObject json1 = new JSONObject();
+        json1.put("SHOP_ORDER", shopOrder);
+        json.put("PARAMS", json1);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getPocketSize, params, getResponseHandler(getPocketSize, callback));
     }
 
     /**

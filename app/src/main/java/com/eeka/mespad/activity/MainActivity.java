@@ -30,6 +30,7 @@ import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PushJson;
+import com.eeka.mespad.bo.ReworkWarnMsgBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.LoginFragment;
@@ -43,6 +44,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -126,7 +128,11 @@ public class MainActivity extends NFCActivity {
                 HttpHelper.getPositionLoginUsers(this);
             }
         } else if (PushJson.TYPE_WARNING.equals(type)) {
-            ErrorDialog.showAlert(mContext, push.getMessage());
+            String message = push.getMessage();
+            if (!isEmpty(message)) {
+                List<ReworkWarnMsgBo> data = JSON.parseArray(message, ReworkWarnMsgBo.class);
+                new ReworkWarnMsgDialog(mContext, data).show();
+            }
         } else if (PushJson.TYPE_FINISH_MAIN.equals(type)) {
             finish();
         } else if (PushJson.TYPE_EXIT.equals(type)) {
@@ -192,6 +198,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "POCKET_SIZE":
+                    button.setText("袋口尺寸");
+                    button.setId(R.id.btn_pocketSize);
+                    break;
                 case "MATERIALRETURN":
                     button.setText("退料");
                     button.setId(R.id.btn_materialReturn);
@@ -434,6 +444,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_pocketSize:
+                if (mSewFragment != null) {
+                    mSewFragment.showPocketSizeInfo();
+                }
+                break;
             case R.id.btn_materialReturn:
                 if (mCutFragment != null) {
                     mCutFragment.returnAndFeedingMat(true);

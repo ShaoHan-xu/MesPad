@@ -26,7 +26,7 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 27
-        versionCode 50
+        versionCode 53
 
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -76,15 +76,17 @@ android {
     productFlavors {
         yudu {
 //            applicationId "com.eeka.mespad.yd"
+            // 动态添加 string.xml 字段；
+            // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
             resValue "string", "app_name", "赢领智尚_YD"
             resValue "string", "app_channel", "YD"
+            resValue "string", "system_code", "P"
         }
         longhua {
 //            applicationId "com.eeka.mespad.lh"
-            // 动态添加 string.xml 字段；
-            // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
             resValue "string", "app_name", "赢领智尚_LH"
             resValue "string", "app_channel", "LH"
+            resValue "string", "system_code", "Q"
         }
 
     }

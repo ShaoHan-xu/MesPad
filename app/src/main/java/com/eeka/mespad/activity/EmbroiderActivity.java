@@ -20,6 +20,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+/**
+ * 绣花界面
+ */
 public class EmbroiderActivity extends BaseActivity {
 
     private String mSFC;

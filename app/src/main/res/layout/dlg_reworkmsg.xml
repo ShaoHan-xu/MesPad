@@ -3,27 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@color/colorPrimary">
-
-        <ImageView
-            android:id="@+id/btn_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:padding="5dp"
-            android:src="@drawable/ic_close" />
-    </RelativeLayout>
+    <Button
+        android:id="@+id/btn_ok"
+        style="@style/btnStyle_green"
+        android:layout_width="120dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="已查看" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_ok"
         android:layout_centerInParent="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_margin="50dp"
         android:background="@drawable/border_black"
         android:orientation="vertical"
         android:padding="0.5dp">
@@ -43,7 +37,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="工序" />
+                android:text="不良工序描述" />
 
             <TextView
                 style="@style/textStyle_default"
@@ -52,7 +46,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="不良代码" />
+                android:text="不良代码描述" />
 
             <TextView
                 style="@style/textStyle_default"
@@ -61,7 +55,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="备注" />
+                android:text="员工姓名" />
 
         </LinearLayout>
 
@@ -70,12 +64,12 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/layout_reworkinfo"
+                android:id="@+id/layout_reworkMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/divider_gray"
                 android:orientation="vertical"
-                android:showDividers="middle" />
+                android:showDividers="middle|end" />
 
         </ScrollView>
     </LinearLayout>

@@ -1,4 +1,8 @@
 <resources>
+    <string name="buglyAPPID">6af52b66e6</string>
+    <string name="user">PAD_USER</string>
+    <string name="password">mes123456</string>
+
     <string name="loading">加载中...</string>
     <string name="efficiency">当前效率</string>
     <string name="float.2">%.2f</string>
