@@ -103,8 +103,7 @@
 
             <TextView
                 android:id="@+id/tv_embroider_part"
-                style="@style/textStyle_default"
-                android:text="TT001" />
+                style="@style/textStyle_default" />
 
         </LinearLayout>
 

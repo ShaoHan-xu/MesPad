@@ -60,7 +60,7 @@ public class RecordLabuActivity extends BaseActivity {
             params.setUSER_ID(positionUsers.get(0).getUSER());
         }
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mData.getSHOP_ORDER_INFOR();
-        TextView tv_orderNum = (TextView) findViewById(R.id.tv_recordLabu_orderNum);
+        TextView tv_orderNum = findViewById(R.id.tv_recordLabu_orderNum);
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
         params.setSHOP_ORDER_BO(orderInfo.getSHOP_ORDER_BO());
         params.setZ_LAYOUT_BO(orderInfo.getZ_LAYOUT_BO());
@@ -68,25 +68,25 @@ public class RecordLabuActivity extends BaseActivity {
         List<TailorInfoBo.LayoutInfoBean> layoutInfos = mData.getLAYOUT_INFOR();
         if (layoutInfos != null && layoutInfos.size() != 0) {
             TailorInfoBo.LayoutInfoBean layoutInfo = layoutInfos.get(0);
-            TextView tv_chuangci = (TextView) findViewById(R.id.tv_recordLabu_chuangCi);
+            TextView tv_chuangci = findViewById(R.id.tv_recordLabu_chuangCi);
             tv_chuangci.setText(layoutInfo.getLAYOUT());
-            TextView tv_layoutLength = (TextView) findViewById(R.id.tv_recordLabu_layoutLength);
-            tv_layoutLength.setText(layoutInfo.getLENGTH() + layoutInfo.getLENGTH_UNIT());
-            TextView tv_planQty = (TextView) findViewById(R.id.tv_recordLabu_planLabuCount);
+            TextView tv_layoutLength = findViewById(R.id.tv_recordLabu_layoutLength);
+            tv_layoutLength.setText(String.format("%s%s", layoutInfo.getLENGTH(), layoutInfo.getLENGTH_UNIT()));
+            TextView tv_planQty = findViewById(R.id.tv_recordLabu_planLabuCount);
             tv_planQty.setText(layoutInfo.getLAYERS());
-            ImageView imageView = (ImageView) findViewById(R.id.iv_recordLabu_matImg);
+            ImageView imageView = findViewById(R.id.iv_recordLabu_matImg);
             Picasso.with(mContext).load(layoutInfo.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         }
 
         PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
-        TextView tv_caiChuangNum = (TextView) findViewById(R.id.tv_recordLabu_cutNum);
+        TextView tv_caiChuangNum = findViewById(R.id.tv_recordLabu_cutNum);
         tv_caiChuangNum.setText(resource.getRESOURCE());
         params.setRESOURCE_BO(resource.getRESOURCE_BO());
 
         List<TailorInfoBo.MatInfoBean> matInfos = mData.getMAT_INFOR();
         if (matInfos != null && matInfos.size() != 0) {
             TailorInfoBo.MatInfoBean matInfo = matInfos.get(0);
-            TextView tv_matNum = (TextView) findViewById(R.id.tv_recordLabu_matNum);
+            TextView tv_matNum = findViewById(R.id.tv_recordLabu_matNum);
             tv_matNum.setText(matInfo.getMAT_NO());
 
             params.setITEM_BO(matInfo.getITEM_BO());
@@ -94,13 +94,13 @@ public class RecordLabuActivity extends BaseActivity {
 
         List<TailorInfoBo.CUTSIZESBean> sizeArray = mData.getCUT_SIZES();
         if (sizeArray != null) {
-            LinearLayout layout_sizeInfo = (LinearLayout) findViewById(R.id.layout_sizeInfo);
+            LinearLayout layout_sizeInfo = findViewById(R.id.layout_sizeInfo);
             for (int i = 0; i < sizeArray.size(); i++) {
                 layout_sizeInfo.addView(getSizeInfoView(sizeArray.get(i)));
             }
         }
 
-        mLayout_items = (LinearLayout) findViewById(R.id.layout_recordLabu_items);
+        mLayout_items = findViewById(R.id.layout_recordLabu_items);
         findViewById(R.id.btn_add).setOnClickListener(this);
         findViewById(R.id.btn_save).setOnClickListener(this);
         findViewById(R.id.btn_cancel).setOnClickListener(this);
@@ -132,11 +132,11 @@ public class RecordLabuActivity extends BaseActivity {
         List<SaveLabuDataBo.DCSBean> list_item = new ArrayList<>();
         for (int i = 0; i < mLayout_items.getChildCount(); i++) {
             View view = mLayout_items.getChildAt(i);
-            EditText et_juanHao = (EditText) view.findViewById(R.id.et_recordLabu_juanHao);
+            EditText et_juanHao = view.findViewById(R.id.et_recordLabu_juanHao);
             String juanHaoStr = et_juanHao.getText().toString();
             for (int j = i + 1; j < mLayout_items.getChildCount(); j++) {
                 View view1 = mLayout_items.getChildAt(j);
-                EditText et_juanHao1 = (EditText) view1.findViewById(R.id.et_recordLabu_juanHao);
+                EditText et_juanHao1 = view1.findViewById(R.id.et_recordLabu_juanHao);
                 String juanHaoStr1 = et_juanHao1.getText().toString();
                 if (juanHaoStr.equals(juanHaoStr1)) {
                     dismissLoading();
@@ -145,10 +145,10 @@ public class RecordLabuActivity extends BaseActivity {
                 }
             }
 
-            EditText et_matWidth = (EditText) view.findViewById(R.id.et_recordLabu_matLength);
-            EditText et_layers = (EditText) view.findViewById(R.id.et_recordLabu_layers);
-            EditText et_leftQty = (EditText) view.findViewById(R.id.et_recordLabu_leftQty);
-            TextView tv_duanMa = (TextView) view.findViewById(R.id.tv_recordLabu_dm);
+            EditText et_matWidth = view.findViewById(R.id.et_recordLabu_matLength);
+            EditText et_layers = view.findViewById(R.id.et_recordLabu_layers);
+            EditText et_leftQty = view.findViewById(R.id.et_recordLabu_leftQty);
+            TextView tv_duanMa = view.findViewById(R.id.tv_recordLabu_dm);
 
             String matWidthStr = et_matWidth.getText().toString();
             String layersStr = et_layers.getText().toString();
@@ -227,12 +227,12 @@ public class RecordLabuActivity extends BaseActivity {
 
     private View getItemView(LabuDataInfoBo.SPREADINGDATABean item, int position) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_recordlabu_item, null);
-        EditText et_juanHao = (EditText) view.findViewById(R.id.et_recordLabu_juanHao);
-        EditText et_matLength = (EditText) view.findViewById(R.id.et_recordLabu_matLength);
-        EditText et_layers = (EditText) view.findViewById(R.id.et_recordLabu_layers);
-        EditText et_leftQty = (EditText) view.findViewById(R.id.et_recordLabu_leftQty);
-        TextView tv_dm = (TextView) view.findViewById(R.id.tv_recordLabu_dm);
-        ImageView iv_del = (ImageView) view.findViewById(R.id.iv_recordLabu_del);
+        EditText et_juanHao = view.findViewById(R.id.et_recordLabu_juanHao);
+        EditText et_matLength = view.findViewById(R.id.et_recordLabu_matLength);
+        EditText et_layers = view.findViewById(R.id.et_recordLabu_layers);
+        EditText et_leftQty = view.findViewById(R.id.et_recordLabu_leftQty);
+        TextView tv_dm = view.findViewById(R.id.tv_recordLabu_dm);
+        ImageView iv_del = view.findViewById(R.id.iv_recordLabu_del);
         if (item != null) {
             et_juanHao.setText(item.getINVENTORY());
             et_matLength.setText(item.getMAT_LENGTH());
@@ -257,10 +257,10 @@ public class RecordLabuActivity extends BaseActivity {
 
     private void refreshItemView(int position) {
         View view = mLayout_items.getChildAt(position);
-        EditText et_matLength = (EditText) view.findViewById(R.id.et_recordLabu_matLength);
-        EditText et_layers = (EditText) view.findViewById(R.id.et_recordLabu_layers);
-        EditText et_leftQty = (EditText) view.findViewById(R.id.et_recordLabu_leftQty);
-        TextView tv_dm = (TextView) view.findViewById(R.id.tv_recordLabu_dm);
+        EditText et_matLength = view.findViewById(R.id.et_recordLabu_matLength);
+        EditText et_layers = view.findViewById(R.id.et_recordLabu_layers);
+        EditText et_leftQty = view.findViewById(R.id.et_recordLabu_leftQty);
+        TextView tv_dm = view.findViewById(R.id.tv_recordLabu_dm);
 
         String matWidthStr = et_matLength.getText().toString();
         String layersStr = et_layers.getText().toString();
@@ -314,8 +314,8 @@ public class RecordLabuActivity extends BaseActivity {
 
     private View getSizeInfoView(TailorInfoBo.CUTSIZESBean sizeInfo) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sizeinfo, null);
-        TextView tv_yardage = (TextView) view.findViewById(R.id.tv_item_yardage);
-        TextView tv_count = (TextView) view.findViewById(R.id.tv_item_count);
+        TextView tv_yardage = view.findViewById(R.id.tv_item_yardage);
+        TextView tv_count = view.findViewById(R.id.tv_item_count);
         tv_yardage.setText(sizeInfo.getSIZE_CODE());
         tv_count.setText(sizeInfo.getSIZE_AMOUNT() + "");
         return view;

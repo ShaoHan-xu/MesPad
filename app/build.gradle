@@ -26,7 +26,7 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 27
-        versionCode 53
+        versionCode 55
 
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

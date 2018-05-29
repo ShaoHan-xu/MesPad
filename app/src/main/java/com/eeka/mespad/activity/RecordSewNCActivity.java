@@ -31,6 +31,7 @@ import com.eeka.mespad.fragment.QCFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.RepairSelectorDialog;
 
 import java.io.Serializable;
@@ -295,7 +296,12 @@ public class RecordSewNCActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         JSONObject item = mList_NcProcess.getJSONObject(position);
-
+                        for (UpdateSewNcBo.NcCodeOperationListBean selected:mList_selected) {
+                            if (selected.getOperation().equals(item.getString("OPERATION"))){
+                                ErrorDialog.showAlert(mContext,"该工序已记录过不良，无法多次记录");
+                                return;
+                            }
+                        }
                         mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
                         mCurSelecting.setPROD_COMPONENT(item.getString("PART_ID"));
                         mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());

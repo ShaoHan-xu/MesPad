@@ -14,11 +14,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
-import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.WorkOrderBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SystemUtils;
-import com.eeka.mespad.view.dialog.RecordLabuDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ import java.util.List;
  * 作业订单查看页面
  * Created by Lenovo on 2017/7/6.
  */
-public class WorkOrderListActivity extends BaseActivity implements RecordLabuDialog.OnRecordLabuCallback {
+public class WorkOrderListActivity extends BaseActivity {
 
     private static final int TYPE_UNDO = 0;//未完成
     private static final int TYPE_DONE = 1;//已完成
@@ -208,8 +206,4 @@ public class WorkOrderListActivity extends BaseActivity implements RecordLabuDia
         toast(message);
     }
 
-    @Override
-    public void recordLabuCallback(UpdateLabuBo labuData, boolean done) {
-
-    }
 }
