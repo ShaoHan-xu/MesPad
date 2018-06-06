@@ -43,6 +43,7 @@ import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CutRecordQtyDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.eeka.mespad.view.dialog.PatternDialog;
 import com.eeka.mespad.view.dialog.StickyDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
 import com.squareup.picasso.Picasso;
@@ -509,6 +510,14 @@ public class CutFragment extends BaseFragment {
         int layers = mTailorInfo.getSHOP_ORDER_INFOR().getLAYERS();
         tv_count.setText((sizeInfo.getSIZE_AMOUNT() * layers) + "");
         return view;
+    }
+
+    public void showPattern() {
+        if (mTailorInfo == null) {
+            showErrorDialog("请先获取订单数据");
+            return;
+        }
+        new PatternDialog(mContext, mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER()).show();
     }
 
     public void recordNC() {

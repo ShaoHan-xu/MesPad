@@ -75,7 +75,7 @@ public class PocketSizeDialog extends BaseDialog {
             View child = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
             TextView textView = child.findViewById(R.id.textView);
             textView.setText(item.getVALUE());
-            mLayout_item.addView(textView);
+            mLayout_item.addView(child);
         }
     }
 

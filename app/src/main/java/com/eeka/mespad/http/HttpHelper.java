@@ -103,6 +103,7 @@ public class HttpHelper {
     public static final String getEmbroiderInfor = BASE_URL + "cutpad/viewEmbroiderPadInfor?";
     public static final String getReworkInfo = BASE_URL + "/sweing/findReworkInfoBySfcRef?";
     public static final String getPocketSize = BASE_URL + "/ReportController/reportViewByLogic?";
+    public static final String getPattern = BASE_URL + "/cutpad/viewembroiderPicture?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -810,6 +811,17 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("sfcRef", sfcRef);
         HttpRequest.post(getReworkInfo, params, getResponseHandler(getReworkInfo, callback));
+    }
+
+    /**
+     * 获取纸样图案
+     */
+    public static void getPattern(String shopOrder, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("SHOP_ORDER", shopOrder);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getPattern, params, getResponseHandler(getPattern, callback));
     }
 
     /**

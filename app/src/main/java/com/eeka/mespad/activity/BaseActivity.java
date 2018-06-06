@@ -1,5 +1,6 @@
 package com.eeka.mespad.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by Lenovo on 2017/5/13.
  */
 
+@SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener, HttpCallback, LoginFragment.OnLoginCallback, LoginFragment.OnClockCallback {
 
     protected Context mContext;
@@ -53,10 +55,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void initView() {
-
-    }
-
-    protected void bindListener() {
 
     }
 
@@ -103,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initProgressDialog() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_loading, null);
-        mTv_loadingMsg = (TextView) view.findViewById(R.id.tv_loading_msg);
+        mTv_loadingMsg =  view.findViewById(R.id.tv_loading_msg);
 
         mProDialog = new Dialog(mContext);
         mProDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -162,7 +160,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onLogin(boolean success) {
-
     }
 
     @Override

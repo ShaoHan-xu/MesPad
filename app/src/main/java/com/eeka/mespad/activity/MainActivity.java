@@ -302,6 +302,10 @@ public class MainActivity extends NFCActivity {
                     button.setText("绣花信息");
                     button.setId(R.id.btn_embroiderInfo);
                     break;
+                case "PATTERN_MESSAGE":
+                    button.setText("显示纸样");
+                    button.setId(R.id.btn_pattern);
+                    break;
                 case "COMPLETE":
                     if (mCutFragment != null)
                         mCutFragment.showCompleteButton();
@@ -444,6 +448,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_pattern:
+                if (mCutFragment != null) {
+                    mCutFragment.showPattern();
+                }
+                break;
             case R.id.btn_pocketSize:
                 if (mSewFragment != null) {
                     mSewFragment.showPocketSizeInfo();

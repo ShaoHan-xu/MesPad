@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.EmbroiderBo;
+import com.eeka.mespad.bo.PatternBo;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.TailorInfoBo;
@@ -44,6 +45,9 @@ public class TabViewUtil {
         }else if (data instanceof EmbroiderBo){
             EmbroiderBo item = (EmbroiderBo) data;
             content = item.getDESCRIPTION();
+        }else if (data instanceof PatternBo){
+            PatternBo item = (PatternBo) data;
+            content = item.getOPERATION();
         }
 
         //标签的字数超过10时，自动在一半的位置换行

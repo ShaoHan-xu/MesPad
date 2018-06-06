@@ -307,11 +307,7 @@ public class SewFragment extends BaseFragment {
                 float v1 = bd.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
                 mTv_workEfficiency.setText(String.format("%s%%", v1));
             } catch (Exception e) {
-                try {
-                    throw new DataFormatException("缝制数据：效率转换异常");
-                } catch (DataFormatException e1) {
-                    e1.printStackTrace();
-                }
+                e.printStackTrace();
             }
         }
 

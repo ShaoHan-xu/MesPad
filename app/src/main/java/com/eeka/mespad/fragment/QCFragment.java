@@ -81,7 +81,6 @@ public class QCFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         initView();
-        initData();
     }
 
     @Override

@@ -58,10 +58,6 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
         refreshLoginUsers();
     }
 
-    protected void bindListener() {
-
-    }
-
     protected void initData() {
 
     }
