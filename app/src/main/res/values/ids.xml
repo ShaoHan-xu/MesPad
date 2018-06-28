@@ -34,4 +34,6 @@
     <item name="btn_embroiderInfo" type="id" />
     <item name="btn_pocketSize" type="id" />
     <item name="btn_pattern" type="id" />
+    <item name="btn_productOn" type="id" />
+    <item name="btn_productOff" type="id" />
 </resources>

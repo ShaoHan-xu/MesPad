@@ -36,6 +36,7 @@ import com.eeka.mespad.view.dialog.LineColorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.NCDetailDialog;
 import com.eeka.mespad.view.dialog.PocketSizeDialog;
+import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.squareup.picasso.Picasso;
 
@@ -143,6 +144,33 @@ public class SewFragment extends BaseFragment {
             showLoading();
         mRFID = rfid;
         HttpHelper.getSewData(rfid, this);
+    }
+
+    /**
+     * 成衣上架
+     */
+    public void productOn() {
+        if (isEmpty(mRFID)) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchOrder(mRFID);
+            }
+        }).show();
+    }
+
+    /**
+     * 成衣下架
+     */
+    public void productOff() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        new ProductOnOffDialog(mContext, mRFID, mSewData.getSfc(), true, null).show();
     }
 
     public void gotoQC() {

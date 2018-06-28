@@ -508,7 +508,7 @@ public class CutFragment extends BaseFragment {
         TextView tv_count = view.findViewById(R.id.tv_item_count);
         tv_yardage.setText(sizeInfo.getSIZE_CODE());
         int layers = mTailorInfo.getSHOP_ORDER_INFOR().getLAYERS();
-        tv_count.setText((sizeInfo.getSIZE_AMOUNT() * layers) + "");
+        tv_count.setText(String.format("%d", sizeInfo.getSIZE_AMOUNT() * layers));
         return view;
     }
 

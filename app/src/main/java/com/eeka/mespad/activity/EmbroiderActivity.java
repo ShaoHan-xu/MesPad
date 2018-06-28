@@ -36,7 +36,7 @@ public class EmbroiderActivity extends BaseActivity {
     private TextView mTv_desc;
     private TextView mTv_request;
     private TextView mTv_artist;
-    private ImageView mIv_emborider;
+    private ImageView mIv_embroider;
     private ImageView mIv_pattern;
 
     @Override
@@ -58,7 +58,7 @@ public class EmbroiderActivity extends BaseActivity {
         mTv_request = findViewById(R.id.tv_embroider_qualityRequest);
         mTv_artist = findViewById(R.id.tv_embroider_artist);
 
-        mIv_emborider = findViewById(R.id.iv_embroider_embroider);
+        mIv_embroider = findViewById(R.id.iv_embroider_embroider);
         mIv_pattern = findViewById(R.id.iv_embroider_pattern);
     }
 
@@ -108,7 +108,7 @@ public class EmbroiderActivity extends BaseActivity {
         mTv_request.setText(item.getQUALITY_REQUIREMENT());
         mTv_artist.setText(item.getPATT_DESC());
 
-        Picasso.with(mContext).load(item.getIMAGE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_emborider);
+        Picasso.with(mContext).load(item.getIMAGE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_embroider);
         Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_pattern);
     }
 

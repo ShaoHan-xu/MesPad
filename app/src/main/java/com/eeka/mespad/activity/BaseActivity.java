@@ -101,7 +101,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initProgressDialog() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_loading, null);
-        mTv_loadingMsg =  view.findViewById(R.id.tv_loading_msg);
+        mTv_loadingMsg = view.findViewById(R.id.tv_loading_msg);
 
         mProDialog = new Dialog(mContext);
         mProDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -33,7 +33,6 @@ import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.ReworkWarnMsgBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
-import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.fragment.QCFragment;
 import com.eeka.mespad.fragment.SewFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
@@ -135,6 +134,8 @@ public class MainActivity extends NFCActivity {
             }
         } else if (PushJson.TYPE_FINISH_MAIN.equals(type)) {
             finish();
+        } else if (PushJson.TYPE_TOAST.equals(type)) {
+            toast(push.getMessage());
         } else if (PushJson.TYPE_EXIT.equals(type)) {
             finish();
             System.exit(0);
@@ -198,6 +199,14 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "PRODUCT_ON":
+                    button.setText("成衣上架");
+                    button.setId(R.id.btn_productOn);
+                    break;
+                case "PRODUCT_OFF":
+                    button.setText("成衣下架");
+                    button.setId(R.id.btn_productOff);
+                    break;
                 case "POCKET_SIZE":
                     button.setText("袋口尺寸");
                     button.setId(R.id.btn_pocketSize);
@@ -448,6 +457,16 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_productOn:
+                if (mSewFragment != null) {
+                    mSewFragment.productOn();
+                }
+                break;
+            case R.id.btn_productOff:
+                if (mSewFragment != null) {
+                    mSewFragment.productOff();
+                }
+                break;
             case R.id.btn_pattern:
                 if (mCutFragment != null) {
                     mCutFragment.showPattern();
@@ -608,7 +627,7 @@ public class MainActivity extends NFCActivity {
                     getCardInfo(cardNum);
                     break;
                 case TopicUtil.TOPIC_SEW:
-                    mSewFragment.searchOrder(mCardInfo.getCardNum());
+                    mSewFragment.searchOrder(cardNum);
                     break;
                 case TopicUtil.TOPIC_SUSPEND:
                     mSuspendFragment.searchOrder(cardNum);

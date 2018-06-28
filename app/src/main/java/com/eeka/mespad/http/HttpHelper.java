@@ -44,7 +44,6 @@ public class HttpHelper {
 
     private static String BASE_URL = PadApplication.BASE_URL;
 
-    public static final String getApkUrl = BASE_URL + "common/getAppUpgradeUrl?";
     public static final String login_url = BASE_URL + "login?";
     public static final String logout_url = BASE_URL + "logout?";
     public static final String loginByCard_url = BASE_URL + "loginByCard?";
@@ -104,20 +103,14 @@ public class HttpHelper {
     public static final String getReworkInfo = BASE_URL + "/sweing/findReworkInfoBySfcRef?";
     public static final String getPocketSize = BASE_URL + "/ReportController/reportViewByLogic?";
     public static final String getPattern = BASE_URL + "/cutpad/viewembroiderPicture?";
+    public static final String productOff = BASE_URL + "hanger/productOff?";
+    public static final String productOn = BASE_URL + "hanger/productOn?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
 
     static {
         mContext = PadApplication.mContext;
-    }
-
-    /**
-     * 获取apk安装包路径
-     */
-    public static void getAPKUrl(HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        HttpRequest.post(getApkUrl, params, getResponseHandler(getApkUrl, callback));
     }
 
     /**
@@ -339,24 +332,6 @@ public class HttpHelper {
     }
 
     /**
-     * 记录拉布数据
-     */
-    public static void saveLabuData(UpdateLabuBo data, HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        params.put("params", JSON.toJSONString(data));
-        HttpRequest.post(saveLabuData, params, getResponseHandler(saveLabuData, callback));
-    }
-
-    /**
-     * 记录拉布数据并完成
-     */
-    public static void saveLabuDataAndComplete(UpdateLabuBo data, HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        params.put("params", JSON.toJSONString(data));
-        HttpRequest.post(saveLabuDataAndComplete, params, getResponseHandler(saveLabuDataAndComplete, callback));
-    }
-
-    /**
      * 获取不良数据列表
      */
     public static void getBadList(HttpCallback callback) {
@@ -402,10 +377,11 @@ public class HttpHelper {
     /**
      * 衣架绑定
      */
-    public static void hangerBinding(String partId, String subcontract, HttpCallback callback) {
+    public static void hangerBinding(String partId, String washLabel, String subcontract, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("PART_ID", partId);
         json.put("PAD_IP", PAD_IP);
+        json.put("WATER_MARK_NUMBER", washLabel);
         json.put("SUBCONTRACT", subcontract);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
@@ -822,6 +798,36 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(getPattern, params, getResponseHandler(getPattern, callback));
+    }
+
+    /**
+     * 成衣上架
+     */
+    public static void productOn(String hangerId, String washLabel, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("HANGER_ID", hangerId);
+        json.put("WATER_MARK_NUMBER", washLabel);
+        json.put("PAD_IP", getPadIp());
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        json.put("USER_ID", positionUsers.get(0).getUSER());
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(productOn, params, getResponseHandler(productOn, callback));
+    }
+
+    /**
+     * 成衣下架
+     */
+    public static void productOff(String hangerId, String SFC, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("HANGER_ID", hangerId);
+        json.put("SFC", SFC);
+        json.put("PAD_IP", getPadIp());
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        json.put("USER_ID", positionUsers.get(0).getUSER());
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(productOff, params, getResponseHandler(productOff, callback));
     }
 
     /**

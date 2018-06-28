@@ -2,6 +2,7 @@ package com.eeka.mespad.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -71,7 +72,7 @@ public class QCFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_sewqc, null);
         return mView;
     }
@@ -350,13 +351,13 @@ public class QCFragment extends BaseFragment {
         if (isEmpty(description)) {
             tv_sizeAttr.setText("Measure Attribute");
         } else {
-            tv_sizeAttr.setText(description + sizeInfo.getUNIT());
+            tv_sizeAttr.setText(String.format("%s%s", description, sizeInfo.getUNIT()));
         }
         String content = tv_sizeAttr.getText().toString();
         if (content.length() > 6) {
             String st = content.substring(0, content.length() / 2);
             String en = content.substring(content.length() / 2, content.length());
-            tv_sizeAttr.setText(st + "\n" + en);
+            tv_sizeAttr.setText(String.format("%s\n%s", st, en));
         }
 
         String refSize = sizeInfo.getVALUE();
@@ -377,7 +378,7 @@ public class QCFragment extends BaseFragment {
             float fRefTolerance = FormatUtil.strToFloat(refTolerance);
             String format = String.format("%.1f", realTolerance);
             if (realTolerance > 0) {
-                tv_realTolerance.setText("+" + format);
+                tv_realTolerance.setText(String.format("+%s", format));
             } else {
                 tv_realTolerance.setText(format);
             }
@@ -407,7 +408,7 @@ public class QCFragment extends BaseFragment {
 
         int position;
 
-        public TextChangedListener(int position) {
+        TextChangedListener(int position) {
             this.position = position;
         }
 
@@ -449,7 +450,7 @@ public class QCFragment extends BaseFragment {
             float fRefTolerance = FormatUtil.strToFloat(sizeInfo.getSTANDARD());
             String format = String.format("%.1f", realTolerance);
             if (realTolerance > 0) {
-                tv_realTolerance.setText("+" + format);
+                tv_realTolerance.setText(String.format("+%s", format));
             } else {
                 tv_realTolerance.setText(format);
             }

@@ -32,10 +32,30 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
+                    <HorizontalScrollView
+                        android:id="@+id/hsv_suspend_img"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/border_black"
+                        android:padding="0.5dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:id="@+id/layout_suspend_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:divider="@drawable/divider_gray"
+                            android:orientation="horizontal"
+                            android:showDividers="middle|end" />
+
+                    </HorizontalScrollView>
+
                     <android.support.v4.view.ViewPager
                         android:id="@+id/vp_suspend_componentImg"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:layout_above="@id/hsv_suspend_img" />
 
                 </RelativeLayout>
 
@@ -55,18 +75,50 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:padding="5dp">
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="工艺说明"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/tv_suspend_craftDesc"
-                    style="@style/textStyle_default" />
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="工艺说明"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_suspend_craftDesc"
+                        style="@style/textStyle_default" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_marginBottom="5dp"
+                        android:text="洗水唛" />
+
+                    <EditText
+                        android:id="@+id/et_suspend_washLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border_black"
+                        android:padding="5dp"
+                        android:singleLine="true" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

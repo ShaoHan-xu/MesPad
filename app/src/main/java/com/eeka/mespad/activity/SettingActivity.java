@@ -51,10 +51,10 @@ public class SettingActivity extends BaseActivity {
         findViewById(R.id.tv_setLoginUser).setOnClickListener(this);
         findViewById(R.id.tv_checkUpdate).setOnClickListener(this);
 
-        mLayout_setSystem = (RelativeLayout) findViewById(R.id.layout_setSystem);
+        mLayout_setSystem = findViewById(R.id.layout_setSystem);
         mLayout_setSystem.setOnClickListener(this);
 
-        TextView tv_version = (TextView) findViewById(R.id.tv_version);
+        TextView tv_version = findViewById(R.id.tv_version);
         if (SystemUtils.isApkInDebug(mContext)) {
             tv_version.setOnClickListener(this);
         }
@@ -67,7 +67,7 @@ public class SettingActivity extends BaseActivity {
         }
         tv_version.setText(sb.toString());
 
-        mTv_systemCode = (TextView) findViewById(R.id.tv_setting_system);
+        mTv_systemCode = findViewById(R.id.tv_setting_system);
         String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
         if (!TextUtils.isEmpty(systemCode)) {
             if ("D".equals(systemCode)) {
@@ -79,7 +79,7 @@ public class SettingActivity extends BaseActivity {
             }
         }
 
-        Switch mDebugSwitch = (Switch) findViewById(R.id.switch_debug);
+        Switch mDebugSwitch = findViewById(R.id.switch_debug);
         mDebugSwitch.setChecked(SpUtil.isDebugLog());
         mDebugSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -182,16 +182,6 @@ public class SettingActivity extends BaseActivity {
         });
 
         builder.show();
-    }
-
-    @Override
-    public void onSuccess(String url, JSONObject resultJSON) {
-        super.onSuccess(url, resultJSON);
-        if (HttpHelper.getApkUrl.equals(url)) {
-            if (HttpHelper.isSuccess(resultJSON)) {
-                UpdateManager.downloadApk(mContext, resultJSON.getString("result"));
-            }
-        }
     }
 
     @Override

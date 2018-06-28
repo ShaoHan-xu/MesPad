@@ -1,8 +1,6 @@
 package com.eeka.mespad.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,10 +30,10 @@ import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.eeka.mespad.view.dialog.SuspendAlertDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -73,8 +73,18 @@ public class SuspendFragment extends BaseFragment {
     private TextView mTv_itemCode;
     private TextView mTv_matDesc;
     private TextView mTv_size;
+    private HorizontalScrollView mHSV_imgBar;
+    private LinearLayout mLayout_imgBar;
+    private EditText mEt_washLabel;
 
     private Button mBtn_binding;
+
+    //赋值避免空指针
+    private String mCurRFID = "";
+    private String mLastRFID = "";//上一次刷卡的卡号
+    private String mShopOrder = "";
+    private String mItemCode = "";
+    private String mSize = "";
 
     @Nullable
     @Override
@@ -108,6 +118,9 @@ public class SuspendFragment extends BaseFragment {
         mTv_itemCode = mView.findViewById(R.id.tv_suspend_itemCode);
         mTv_matDesc = mView.findViewById(R.id.tv_suspend_matDesc);
         mTv_size = mView.findViewById(R.id.tv_suspend_size);
+        mHSV_imgBar = mView.findViewById(R.id.hsv_suspend_img);
+        mLayout_imgBar = mView.findViewById(R.id.layout_suspend_img);
+        mEt_washLabel = mView.findViewById(R.id.et_suspend_washLabel);
 
         mBtn_binding = mView.findViewById(R.id.btn_suspend_binding);
         mBtn_binding.setOnClickListener(new View.OnClickListener() {
@@ -152,11 +165,11 @@ public class SuspendFragment extends BaseFragment {
      * 设置固定布局：工艺说明、当前工序
      */
     private void setupBaseView(JSONObject json) {
-//        mOperationBo = json.getString("HANDLE");
-        mOperationBo = "OperationBO:8081,SCBD001,A";
-//        TextView tv_curProcess = (TextView) mView.findViewById(R.id.tv_suspend_curProcess);
-//        tv_curProcess.setText(json.getString("OPERATION"));
-        final TextView tv_craftDesc = (TextView) mView.findViewById(R.id.tv_suspend_craftDesc);
+        mOperationBo = json.getString("HANDLE");
+//        mOperationBo = "OperationBO:8081,SCBD001,A";
+        TextView tv_curProcess = mView.findViewById(R.id.tv_suspend_curProcess);
+        tv_curProcess.setText(json.getString("OPERATION"));
+        final TextView tv_craftDesc = mView.findViewById(R.id.tv_suspend_craftDesc);
         String instruction = json.getString("OPERATION_INSTRUCTION");
         if (isEmpty(instruction)) {
             tv_craftDesc.setText(null);
@@ -188,10 +201,11 @@ public class SuspendFragment extends BaseFragment {
         mList_img = null;
     }
 
-    public void searchOrder(String orderNum) {
+    public void searchOrder(String rfid) {
         if (isAdded())
             showLoading();
-        HttpHelper.getSfcComponents(mOperationBo, mContextInfo.getHANDLE(), orderNum, this);
+        mCurRFID = rfid;
+        HttpHelper.getSfcComponents(mOperationBo, mContextInfo.getHANDLE(), rfid, this);
     }
 
     /**
@@ -201,16 +215,8 @@ public class SuspendFragment extends BaseFragment {
         if (mCurComponent != null) {
             mBtn_binding.setEnabled(false);
             showLoading();
-            HttpHelper.hangerBinding(mCurComponent.getComponentId(), mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
-
-//            String msg = "确认绑定衣架 " + "mCurSFC" + " 的部件 " + mCurComponent.getComponentName() + " 吗？";
-//            ErrorDialog.showConfirmAlert(mContext, msg, new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    showLoading();
-//                    HttpHelper.hangerBinding(mCurComponent.getComponentId(), mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
-//                }
-//            });
+            String washLabel = mEt_washLabel.getText().toString();
+            HttpHelper.hangerBinding(mCurComponent.getComponentId(), washLabel, mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
         } else {
             showErrorDialog("没有选择部件，无法执行绑定操作");
         }
@@ -347,7 +353,6 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.getSuspendBaseData.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 setupBaseView(result);
-//                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), this);
             } else if (HttpHelper.getSuspendUndoList.equals(url)) {
                 mList_sfcList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), String.class);
                 mSFCAdapter.notifyDataSetChanged(mList_sfcList);
@@ -361,22 +366,81 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.getSfcComponents.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);
-                mCurSFC = mComponent.getSFC();
-                mCurComponent = null;
-                setupComponentView();
-                refreshOrderInfo();
-                printSFC();
-//                HttpHelper.getSuspendUndoList(mOperationBo, mContextInfo.getWORK_CENTER(), SuspendFragment.this);
+                String shopOrder = mComponent.getSHOP_ORDER();
+                String itemCode = mComponent.getITEM();
+                String size = mComponent.getSFC_SIZE();
+                if (isEmpty(size)) {
+                    size = "";
+                }
+//                if (mCurRFID.equals(mLastRFID) && mShopOrder.equals(shopOrder) && mItemCode.equals(itemCode) && size.equals(mSize)) {
+                    sureOrderInfoComplete();
+//                } else {
+//                    if (mSuspendAlertDialog != null && mSuspendAlertDialog.isShowing()) {
+//                        mSuspendAlertDialog.dismiss();
+//                    } else {
+//                        mSuspendAlertDialog = new SuspendAlertDialog(mContext, shopOrder, itemCode, size, new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                sureOrderInfoComplete();
+//                            }
+//                        });
+//                        mSuspendAlertDialog.show();
+//                    }
+//                }
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mList_img = JSON.parseArray(result.getJSONArray("PICTURE_URL").toString(), String.class);
                 mVP_img.setAdapter(new ImgAdapter(mContext, mList_img, R.layout.item_imageview));
+                if (mList_img.size() > 1) {
+                    mHSV_imgBar.setVisibility(View.VISIBLE);
+                    setImgBar();
+                } else {
+                    mHSV_imgBar.setVisibility(View.GONE);
+                }
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }
         }
+
+    }
+
+    private SuspendAlertDialog mSuspendAlertDialog;
+
+    /**
+     * 设置图片导航
+     */
+    private void setImgBar() {
+        mLayout_imgBar.removeAllViews();
+        for (int i = 0; i < mList_img.size(); i++) {
+            String url = mList_img.get(i);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_img_100, null);
+            ImageView imageView = view.findViewById(R.id.imageView);
+            Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
+            imageView.setTag(i);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = (int) v.getTag();
+                    ArrayList<String> urls = new ArrayList<>(mList_img);
+                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+                }
+            });
+            mLayout_imgBar.addView(view);
+        }
+    }
+
+    private void sureOrderInfoComplete() {
+        mLastRFID = mCurRFID;
+        mShopOrder = mComponent.getSHOP_ORDER();
+        mItemCode = mComponent.getITEM();
+        mSize = mComponent.getSFC_SIZE();
+        mCurSFC = mComponent.getSFC();
+        mCurComponent = null;
+        setupComponentView();
+        refreshOrderInfo();
+        printSFC();
     }
 
     private Thread mPrintThread;
