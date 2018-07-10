@@ -24,8 +24,12 @@ public class PadApplication extends Application {
     public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
     public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
+    public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
+    public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统
+    public static final String WEB_URL_P = "http://10.10.200.16:8000/eeka-ws/";//P系统
     public static String BASE_URL;
-    public static String MQTT_BROKER; //生产系统MQ地址
+    public static String WEB_URL;
+    public static String MQTT_BROKER; //MQ地址
 
     @Override
     public void onCreate() {
@@ -37,21 +41,28 @@ public class PadApplication extends Application {
         TypeUtils.compatibleWithJavaBean = true;//配置fastJson：JSON.toJsonString时首字母自动变小写的问题
 
         String systemCode = getString(R.string.system_code);
-        if (SystemUtils.isApkInDebug(this)) {
+        if (SystemUtils.isApkInDebug(this)) {//debug版本提供更换系统环境功能
             String systemCodeTemp = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
             if (!TextUtils.isEmpty(systemCodeTemp)) {
                 systemCode = systemCodeTemp;
             }
         }
+        //根据不同的系统环境，配置不同的站点、服务器地址，MQ地址
         if (!TextUtils.isEmpty(systemCode)) {
             if ("D".equals(systemCode)) {
+                SpUtil.saveSite("8081");
                 BASE_URL = BASE_URL_D;
-                MQTT_BROKER = "10.7.121.40";
+                WEB_URL = WEB_URL_D;
+                MQTT_BROKER = "10.10.200.40";
             } else if ("Q".equals(systemCode)) {
+                SpUtil.saveSite("8082");
                 BASE_URL = BASE_URL_Q;
+                WEB_URL = WEB_URL_Q;
                 MQTT_BROKER = "10.7.121.40";
             } else if ("P".equals(systemCode)) {
+                SpUtil.saveSite("8081");
                 BASE_URL = BASE_URL_P;
+                WEB_URL = WEB_URL_P;
                 MQTT_BROKER = "10.10.200.11";
             }
         }
@@ -61,10 +72,6 @@ public class PadApplication extends Application {
         if (loginUser == null) {
             SpUtil.saveLoginUser(new UserInfoBo(getString(R.string.user), getString(R.string.password)));
 //            SpUtil.saveLoginUser(new UserInfoBo("SHAWN", "sap12345"));
-        }
-        String site = SpUtil.getSite();
-        if (TextUtils.isEmpty(site)) {
-            SpUtil.saveSite("8081");
         }
     }
 

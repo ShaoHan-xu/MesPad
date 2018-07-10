@@ -75,50 +75,19 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="5dp">
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="工艺说明"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:text="工艺说明"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_suspend_craftDesc"
+                    style="@style/textStyle_default" />
 
-                    <TextView
-                        android:id="@+id/tv_suspend_craftDesc"
-                        style="@style/textStyle_default" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <TextView
-                        style="@style/textStyle_default"
-                        android:layout_marginBottom="5dp"
-                        android:text="洗水唛" />
-
-                    <EditText
-                        android:id="@+id/et_suspend_washLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/border_black"
-                        android:padding="5dp"
-                        android:singleLine="true" />
-
-                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

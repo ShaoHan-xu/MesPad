@@ -57,7 +57,7 @@
                 style="@style/textStyle_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="卡号：" />
+                android:text="工号：" />
 
             <EditText
                 android:id="@+id/et_login_user"
@@ -120,8 +120,7 @@
                 android:layout_toLeftOf="@id/iv_login_morePosition"
                 android:layout_toRightOf="@id/tag_position"
                 android:gravity="center"
-                android:singleLine="true"
-                android:text="TEST" />
+                android:singleLine="true"/>
         </RelativeLayout>
 
         <Button

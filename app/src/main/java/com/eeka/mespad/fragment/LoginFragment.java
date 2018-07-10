@@ -66,20 +66,20 @@ public class LoginFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        mET_IP = (EditText) mView.findViewById(R.id.et_login_IP);
+        mET_IP = mView.findViewById(R.id.et_login_IP);
         mET_IP.setText(NetUtil.getHostIP());
         if (SystemUtils.isApkInDebug(mContext)) {
             mET_IP.setEnabled(true);
         }
-        mEt_user = (EditText) mView.findViewById(R.id.et_login_user);
-        mEt_pwd = (EditText) mView.findViewById(R.id.et_login_pwd);
-        mEt_site = (EditText) mView.findViewById(R.id.et_login_site);
+        mEt_user = mView.findViewById(R.id.et_login_user);
+        mEt_pwd = mView.findViewById(R.id.et_login_pwd);
+        mEt_site = mView.findViewById(R.id.et_login_site);
 
-        Button btn_done = (Button) mView.findViewById(R.id.btn_login);
+        Button btn_done = mView.findViewById(R.id.btn_login);
         btn_done.setOnClickListener(this);
         if (mType == TYPE_LOGIN) {
-            TextView tv_alert = (TextView) mView.findViewById(R.id.tv_login_alert);
-            TextView tv_user = (TextView) mView.findViewById(R.id.tv_login_user_tag);
+            TextView tv_alert = mView.findViewById(R.id.tv_login_alert);
+            TextView tv_user = mView.findViewById(R.id.tv_login_user_tag);
             tv_alert.setText("请设置系统登录账户");
             tv_user.setText("账号：");
             btn_done.setText("完成");
@@ -118,7 +118,7 @@ public class LoginFragment extends BaseFragment {
      */
     private void showSiteList(View view) {
         View ppwView = LayoutInflater.from(mContext).inflate(R.layout.ppw_selector, null);
-        ListView listView = (ListView) ppwView.findViewById(R.id.lv_ppw_selector);
+        ListView listView = ppwView.findViewById(R.id.lv_ppw_selector);
         final List<String> sites = new ArrayList<>();
         sites.add("8080");
         sites.add("8081");
@@ -153,7 +153,7 @@ public class LoginFragment extends BaseFragment {
             if (mType == TYPE_LOGIN) {
                 toast("请输入账户名");
             } else {
-                toast("请输入卡号");
+                toast("请输入工号");
             }
             return;
         }

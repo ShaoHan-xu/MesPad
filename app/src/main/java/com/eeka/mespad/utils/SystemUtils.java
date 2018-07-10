@@ -19,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.eeka.mespad.BuildConfig;
 import com.eeka.mespad.manager.Logger;
@@ -302,6 +303,14 @@ public class SystemUtils {
     public static String getIMEI(Context context) {
 //        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         return android.provider.Settings.System.getString(context.getContentResolver(), android.provider.Settings.System.ANDROID_ID);
+    }
+
+    /**
+     * 显示软键盘
+     */
+    public static void showSoftInputFromWindow(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     /**

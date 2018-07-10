@@ -478,6 +478,7 @@ public class HttpHelper {
         json.put("OPERATION_BO", operationBo);
         json.put("POSITION_BO", positionBo);
         json.put("RFID", RFID);
+        json.put("PAD_IP",PAD_IP);
         params.put("params", json.toJSONString());
         HttpRequest.post(getSfcComponents, params, getResponseHandler(getSfcComponents, callback));
     }

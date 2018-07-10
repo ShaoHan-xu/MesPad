@@ -110,6 +110,15 @@ public class SuspendComponentBo {
         private String isSubContractCompleted;
         private String operationRef;
         private String isBound;
+        private String isMaster;//是否主部件，用于判断是否需要绑定洗水唛
+
+        public String getIsMaster() {
+            return isMaster;
+        }
+
+        public void setIsMaster(String isMaster) {
+            this.isMaster = isMaster;
+        }
 
         public String getIsBound() {
             return isBound;

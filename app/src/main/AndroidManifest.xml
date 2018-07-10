@@ -63,6 +63,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activity.WebActivity"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".activity.NFCActivity"
             android:screenOrientation="landscape" />
         <activity
