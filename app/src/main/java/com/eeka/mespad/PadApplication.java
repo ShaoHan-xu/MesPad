@@ -27,8 +27,15 @@ public class PadApplication extends Application {
     public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
     public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统
     public static final String WEB_URL_P = "http://10.10.200.16:8000/eeka-ws/";//P系统
+    public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
+    public static final String URL_MTM_P = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
+    public static final String URL_MTM_Q = "https://115.159.95.145:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
+    public static String MQTT_D = "10.7.121.40"; //MQ地址
+    public static String MQTT_Q = "10.7.121.40"; //MQ地址
+    public static String MQTT_P = "10.10.200.40"; //MQ地址
     public static String BASE_URL;
     public static String WEB_URL;
+    public static String MTM_URL;
     public static String MQTT_BROKER; //MQ地址
 
     @Override
@@ -47,27 +54,35 @@ public class PadApplication extends Application {
                 systemCode = systemCodeTemp;
             }
         }
-        //根据不同的系统环境，配置不同的站点、服务器地址，MQ地址
+        //根据不同的系统环境，配置不同的服务器地址
         if (!TextUtils.isEmpty(systemCode)) {
             if ("D".equals(systemCode)) {
-                SpUtil.saveSite("8081");
                 BASE_URL = BASE_URL_D;
                 WEB_URL = WEB_URL_D;
-                MQTT_BROKER = "10.10.200.40";
+                MQTT_BROKER = MQTT_D;
+                MTM_URL = URL_MTM_D;
             } else if ("Q".equals(systemCode)) {
-                SpUtil.saveSite("8082");
                 BASE_URL = BASE_URL_Q;
                 WEB_URL = WEB_URL_Q;
-                MQTT_BROKER = "10.7.121.40";
+                MQTT_BROKER = MQTT_Q;
+                MTM_URL = URL_MTM_Q;
             } else if ("P".equals(systemCode)) {
-                SpUtil.saveSite("8081");
                 BASE_URL = BASE_URL_P;
                 WEB_URL = WEB_URL_P;
-                MQTT_BROKER = "10.10.200.11";
+                MQTT_BROKER = MQTT_P;
+                MTM_URL = URL_MTM_P;
             }
         }
 
-        //配置初始用户及站点
+        //根据渠道设置工厂站点
+        String channel = getString(R.string.app_channel);
+        if ("LH".equals(channel)) {
+            SpUtil.saveSite("8082");
+        } else if ("YD".equals(channel)) {
+            SpUtil.saveSite("8081");
+        }
+
+        //配置初始用户
         UserInfoBo loginUser = SpUtil.getLoginUser();
         if (loginUser == null) {
             SpUtil.saveLoginUser(new UserInfoBo(getString(R.string.user), getString(R.string.password)));

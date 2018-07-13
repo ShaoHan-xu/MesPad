@@ -17,7 +17,7 @@
         android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_alertMsg"
+            android:id="@+id/tv_txtAlertMsg"
             style="@style/textStyle_default"
             android:layout_gravity="center_horizontal"
             android:textSize="30sp" />

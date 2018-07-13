@@ -64,7 +64,7 @@ public class ErrorDialog {
         mLastMsg = msg;
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_alert, null);
-        TextView tipTextView = v.findViewById(R.id.tv_alertMsg);
+        TextView tipTextView = v.findViewById(R.id.tv_txtAlertMsg);
         tipTextView.setText(msg);
 
         if (mDialog != null && mDialog.isShowing()) {

@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -143,8 +144,9 @@ public class MainActivity extends NFCActivity {
             toast("正在刷新页面");
             mEt_orderNum.setText(push.getContent());
             isSearchOrder = true;
-            if (checkResource())
+            if (checkResource()) {
                 searchOrder();
+            }
         }
     }
 
@@ -199,6 +201,14 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "MANUAL_COMPLETE":
+                    button.setText("手工完成");
+                    button.setId(R.id.btn_manualComplete);
+                    break;
+                case "MANUAL_START":
+                    button.setText("手工开始");
+                    button.setId(R.id.btn_manualStart);
+                    break;
                 case "PRODUCT_ON":
                     button.setText("成衣上架");
                     button.setId(R.id.btn_productOn);
@@ -347,50 +357,41 @@ public class MainActivity extends NFCActivity {
             return;
         }
         FragmentTransaction ft = mFragmentManager.beginTransaction();
+        Fragment fragment = null;
         switch (mTopic) {
+            case TopicUtil.TOPIC_MANUAL:
+                if (mSewFragment == null)
+                    mSewFragment = new SewFragment();
+                fragment = mSewFragment;
+                break;
             case TopicUtil.TOPIC_CUT:
-                if (mCutFragment == null) {
+                if (mCutFragment == null)
                     mCutFragment = new CutFragment();
-                }
-                if (mCutFragment.isAdded()) {
-                    ft.show(mCutFragment);
-                } else {
-                    ft.add(R.id.layout_content, mCutFragment);
-                }
-                ft.commitAllowingStateLoss();
+                fragment = mCutFragment;
                 break;
             case TopicUtil.TOPIC_SEW:
                 if (mSewFragment == null)
                     mSewFragment = new SewFragment();
-                if (mSewFragment.isAdded()) {
-                    ft.show(mSewFragment);
-                } else {
-                    ft.add(R.id.layout_content, mSewFragment);
-                }
-                ft.commitAllowingStateLoss();
+                fragment = mSewFragment;
                 break;
             case TopicUtil.TOPIC_SUSPEND:
-                if (mSuspendFragment == null) {
+                if (mSuspendFragment == null)
                     mSuspendFragment = new SuspendFragment();
-                }
-                if (mSuspendFragment.isAdded()) {
-                    ft.show(mSuspendFragment);
-                } else {
-                    ft.add(R.id.layout_content, mSuspendFragment);
-                }
-                ft.commitAllowingStateLoss();
+                fragment = mSuspendFragment;
                 break;
             case TopicUtil.TOPIC_QC:
-                if (mQCFragment == null) {
+                if (mQCFragment == null)
                     mQCFragment = new QCFragment();
-                }
-                if (mQCFragment.isAdded()) {
-                    ft.show(mQCFragment);
-                } else {
-                    ft.add(R.id.layout_content, mQCFragment);
-                }
-                ft.commitAllowingStateLoss();
+                fragment = mQCFragment;
                 break;
+        }
+        if (fragment != null) {
+            if (fragment.isAdded()) {
+                ft.show(fragment);
+            } else {
+                ft.add(R.id.layout_content, fragment);
+            }
+            ft.commitAllowingStateLoss();
         }
     }
 
@@ -457,6 +458,18 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_manualStart:
+                if (mSewFragment != null) {
+                    String searchKey = mEt_orderNum.getText().toString();
+                    mSewFragment.manualStart(searchKey);
+                }
+                break;
+            case R.id.btn_manualComplete:
+                if (mSewFragment != null) {
+                    String searchKey = mEt_orderNum.getText().toString();
+                    mSewFragment.manualComplete(searchKey);
+                }
+                break;
             case R.id.btn_productOn:
                 if (mSewFragment != null) {
                     mSewFragment.productOn();
@@ -623,6 +636,9 @@ public class MainActivity extends NFCActivity {
         } else {
             mCardInfo.setCardNum(cardNum);
             switch (mTopic) {
+                case TopicUtil.TOPIC_MANUAL:
+                    mSewFragment.searchOrder(cardNum);
+                    break;
                 case TopicUtil.TOPIC_CUT:
                     getCardInfo(cardNum);
                     break;
@@ -671,7 +687,7 @@ public class MainActivity extends NFCActivity {
         mLogoutDialog.setContentView(view);
         mLogoutDialog.show();
         Window window = mLogoutDialog.getWindow();
-        window.setLayout((int) (SystemUtils.getScreenWidth(this) * 0.5), (int) (SystemUtils.getScreenHeight(this) * 0.5));
+        window.setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.5), (int) (SystemUtils.getScreenHeight(mContext) * 0.5));
     }
 
     @Override

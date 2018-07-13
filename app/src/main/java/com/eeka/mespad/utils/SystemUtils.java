@@ -55,37 +55,11 @@ public class SystemUtils {
         return dm.density;
     }
 
-    @SuppressLint("NewApi")
-    public static int getScreenWidth(Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
-            return activity.getWindowManager().getDefaultDisplay().getWidth();
-        } else {
-            Point size = new Point();
-            activity.getWindowManager().getDefaultDisplay().getSize(size);
-            return size.x;
-        }
-    }
-
-    @SuppressLint("NewApi")
-    public static int getScreenHeight(Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
-            return activity.getWindowManager().getDefaultDisplay().getHeight();
-        } else {
-            Point size = new Point();
-            activity.getWindowManager().getDefaultDisplay().getSize(size);
-            return size.y;
-        }
-    }
-
     /**
      * 获得屏幕宽度
-     *
-     * @param context
-     * @return
      */
     public static int getScreenWidth(Context context) {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.widthPixels;
@@ -93,13 +67,9 @@ public class SystemUtils {
 
     /**
      * 获得屏幕高度
-     *
-     * @param context
-     * @return
      */
     public static int getScreenHeight(Context context) {
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
@@ -114,10 +84,7 @@ public class SystemUtils {
         class CpuFilter implements FileFilter {
             @Override
             public boolean accept(File pathname) {
-                if (Pattern.matches("cpu[0-9]", pathname.getName())) {
-                    return true;
-                }
-                return false;
+                return Pattern.matches("cpu[0-9]", pathname.getName());
             }
         }
 
@@ -199,7 +166,7 @@ public class SystemUtils {
             Logger.d(totalMemoryString);
             String[] memArray = totalMemoryString.split(" +");
 
-            totalMemory = Integer.valueOf(memArray[1]).intValue();
+            totalMemory = Integer.valueOf(memArray[1]);
             localBufferedReader.close();
         } catch (IOException e) {
             Logger.e(e);
@@ -315,9 +282,6 @@ public class SystemUtils {
 
     /**
      * 收起键盘
-     *
-     * @param context
-     * @param view
      */
     public static void hideKeyboard(Context context, View view) {
         InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -338,9 +302,6 @@ public class SystemUtils {
 
     /**
      * 开启视频播放界面
-     *
-     * @param context
-     * @param videoUrl
      */
     public static void playVideo(final Context context, String videoUrl) {
         String videoPath = null;
@@ -380,8 +341,6 @@ public class SystemUtils {
         }
     }
 
-    public static int REQUEST_BLUETOOTH = 999;
-
     /**
      * 打开蓝牙设置界面
      */
@@ -389,6 +348,7 @@ public class SystemUtils {
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_BLUETOOTH_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);    //Show a system activity that allows the user to turn on Bluetooth.
+        int REQUEST_BLUETOOTH = 999;
         ((Activity) context).startActivityForResult(intent, REQUEST_BLUETOOTH);
     }
 }

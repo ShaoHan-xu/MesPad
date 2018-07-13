@@ -23,8 +23,8 @@ public class MyAlertDialog {
 
     public static void showAlert(Context context, String msg) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dlg_alert, null);
-        TextView tipTextView = (TextView) v.findViewById(R.id.tv_alertMsg);
+        View v = inflater.inflate(R.layout.dlg_txtalert, null);
+        TextView tipTextView = v.findViewById(R.id.tv_txtAlertMsg);
         tipTextView.setText(msg);
 
         final Dialog dialog = new Dialog(context);
@@ -47,9 +47,9 @@ public class MyAlertDialog {
         }
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dlg_imageview, null);
-        TextView textView = (TextView) v.findViewById(R.id.textView);
+        TextView textView = v.findViewById(R.id.textView);
         textView.setText(msg);
-        ImageView imageView = (ImageView) v.findViewById(R.id.imageView);
+        ImageView imageView = v.findViewById(R.id.imageView);
         try {
 //            Bitmap barCode = EncodingHandler.create2Code(msg,400);
             Bitmap barCode = EncodingHandler.createBarCode(msg, 800, 400);

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +27,7 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bluetoothPrint.BluetoothPrintHelper;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
@@ -35,6 +35,10 @@ import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.SuspendAlertDialog;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,13 +79,12 @@ public class SuspendFragment extends BaseFragment {
     private TextView mTv_size;
     private HorizontalScrollView mHSV_imgBar;
     private LinearLayout mLayout_imgBar;
-    private EditText mEt_washLabel;
+    private String mWashLabel;
+    private boolean mWashLabelScanned;//是否已经扫了洗水唛
 
     private Button mBtn_binding;
 
     //赋值避免空指针
-    private String mCurRFID = "";
-    private String mLastRFID = "";//上一次刷卡的卡号
     private String mShopOrder = "";
     private String mItemCode = "";
     private String mSize = "";
@@ -97,6 +100,8 @@ public class SuspendFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContext = getActivity();
+
+        EventBus.getDefault().register(this);
 
         initView();
         initData();
@@ -120,7 +125,6 @@ public class SuspendFragment extends BaseFragment {
         mTv_size = mView.findViewById(R.id.tv_suspend_size);
         mHSV_imgBar = mView.findViewById(R.id.hsv_suspend_img);
         mLayout_imgBar = mView.findViewById(R.id.layout_suspend_img);
-        mEt_washLabel = mView.findViewById(R.id.et_suspend_washLabel);
 
         mBtn_binding = mView.findViewById(R.id.btn_suspend_binding);
         mBtn_binding.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +141,16 @@ public class SuspendFragment extends BaseFragment {
 //        mList_sfcList = new ArrayList<>();
 //        mSFCAdapter = new SFCAdapter(mContext, mList_sfcList, R.layout.item_textview);
 //        mLv_orderList.setAdapter(mSFCAdapter);
+    }
+
+    /**
+     * 收到推送消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushMsgReceive(String washLabel) {
+        mWashLabel = washLabel;
+        mWashLabelScanned = true;
+        binding();
     }
 
     /**
@@ -166,7 +180,6 @@ public class SuspendFragment extends BaseFragment {
      */
     private void setupBaseView(JSONObject json) {
         mOperationBo = json.getString("HANDLE");
-//        mOperationBo = "OperationBO:8081,SCBD001,A";
         TextView tv_curProcess = mView.findViewById(R.id.tv_suspend_curProcess);
         tv_curProcess.setText(json.getString("OPERATION"));
         final TextView tv_craftDesc = mView.findViewById(R.id.tv_suspend_craftDesc);
@@ -204,7 +217,6 @@ public class SuspendFragment extends BaseFragment {
     public void searchOrder(String rfid) {
         if (isAdded())
             showLoading();
-        mCurRFID = rfid;
         HttpHelper.getSfcComponents(mOperationBo, mContextInfo.getHANDLE(), rfid, this);
     }
 
@@ -212,14 +224,23 @@ public class SuspendFragment extends BaseFragment {
      * 绑定
      */
     public void binding() {
-        if (mCurComponent != null) {
-            mBtn_binding.setEnabled(false);
-            showLoading();
-            String washLabel = mEt_washLabel.getText().toString();
-            HttpHelper.hangerBinding(mCurComponent.getComponentId(), washLabel, mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
-        } else {
-            showErrorDialog("没有选择部件，无法执行绑定操作");
+        if (mCurComponent == null) {
+            showErrorDialog("请点击选择要绑定的部件");
+            return;
         }
+        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+        if (positionUsers == null || positionUsers.size() == 0) {
+            showErrorDialog("请刷卡登录员工");
+            return;
+        }
+        //绑定洗水唛
+//        if ("true".equals(mCurComponent.getIsMaster()) && !mWashLabelScanned) {
+//            new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName()).show();
+//            return;
+//        }
+        mBtn_binding.setEnabled(false);
+        showLoading();
+        HttpHelper.hangerBinding(mCurComponent.getComponentId(), mWashLabel, mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
     }
 
     /**
@@ -318,6 +339,7 @@ public class SuspendFragment extends BaseFragment {
             public void onClick(View v) {
                 mCurComponent = component;
 //                showLoading();
+                mWashLabelScanned = false;
                 HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
                 List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
                 int childCount = mLayout_component.getChildCount();
@@ -372,21 +394,22 @@ public class SuspendFragment extends BaseFragment {
                 if (isEmpty(size)) {
                     size = "";
                 }
-//                if (mCurRFID.equals(mLastRFID) && mShopOrder.equals(shopOrder) && mItemCode.equals(itemCode) && size.equals(mSize)) {
+                if (mShopOrder.equals(shopOrder) && mItemCode.equals(itemCode) && mSize.equals(size)) {
                     sureOrderInfoComplete();
-//                } else {
-//                    if (mSuspendAlertDialog != null && mSuspendAlertDialog.isShowing()) {
-//                        mSuspendAlertDialog.dismiss();
-//                    } else {
-//                        mSuspendAlertDialog = new SuspendAlertDialog(mContext, shopOrder, itemCode, size, new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                sureOrderInfoComplete();
-//                            }
-//                        });
-//                        mSuspendAlertDialog.show();
-//                    }
-//                }
+                } else {
+                    if (mSuspendAlertDialog != null && mSuspendAlertDialog.isShowing()) {
+                        //连续刷两次卡的情况，先把之前的弹框消掉
+                        mSuspendAlertDialog.dismiss();
+                    } else {
+                        mSuspendAlertDialog = new SuspendAlertDialog(mContext, shopOrder, itemCode, size, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sureOrderInfoComplete();
+                            }
+                        });
+                        mSuspendAlertDialog.show();
+                    }
+                }
             } else if (HttpHelper.getComponentPic.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mList_img = JSON.parseArray(result.getJSONArray("PICTURE_URL").toString(), String.class);
@@ -402,8 +425,9 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }
+        } else {
+            mBtn_binding.setEnabled(true);
         }
-
     }
 
     private SuspendAlertDialog mSuspendAlertDialog;
@@ -432,10 +456,19 @@ public class SuspendFragment extends BaseFragment {
     }
 
     private void sureOrderInfoComplete() {
-        mLastRFID = mCurRFID;
         mShopOrder = mComponent.getSHOP_ORDER();
         mItemCode = mComponent.getITEM();
         mSize = mComponent.getSFC_SIZE();
+        //返回null时赋值，避免再次刷卡效验数据时空指针错误
+        if (isEmpty(mShopOrder)) {
+            mShopOrder = "";
+        }
+        if (isEmpty(mItemCode)) {
+            mItemCode = "";
+        }
+        if (isEmpty(mSize)) {
+            mSize = "";
+        }
         mCurSFC = mComponent.getSFC();
         mCurComponent = null;
         setupComponentView();

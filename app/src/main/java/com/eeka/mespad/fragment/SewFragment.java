@@ -15,18 +15,22 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.EmbroiderActivity;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.OutlinePicActivity;
+import com.eeka.mespad.activity.WebActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
+import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.INARequestBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.utils.BitmapUtil;
+import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
@@ -43,7 +47,6 @@ import com.squareup.picasso.Picasso;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * 缝制界面
@@ -117,6 +120,7 @@ public class SewFragment extends BaseFragment {
         mLv_curProcess = mView.findViewById(R.id.lv_sew_curProcess);
         mLv_nextProcess = mView.findViewById(R.id.lv_sew_nextProcess);
 
+        mTv_MTMOrderNum.setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_craftDesc).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_special).setOnClickListener(this);
@@ -126,14 +130,23 @@ public class SewFragment extends BaseFragment {
     public void onClick(View v) {
         super.onClick(v);
         String content = null;
-        if (v.getId() == R.id.layout_sew_craftDesc) {
-            content = mTv_craftDesc.getText().toString();
-        } else if (v.getId() == R.id.layout_sew_qualityReq) {
-            content = mTv_qualityReq.getText().toString();
-        } else if (v.getId() == R.id.layout_sew_special) {
-            content = mTv_special.getText().toString();
-        } else if (v.getId() == R.id.tv_sew_ncDetail) {
-            new NCDetailDialog(mSewData.getCurrentOpeationInfos(), mContext).show();
+        switch (v.getId()) {
+            case R.id.layout_sew_craftDesc:
+                content = mTv_craftDesc.getText().toString();
+                break;
+            case R.id.layout_sew_qualityReq:
+                content = mTv_qualityReq.getText().toString();
+                break;
+            case R.id.layout_sew_special:
+                content = mTv_special.getText().toString();
+                break;
+            case R.id.tv_sew_ncDetail:
+                new NCDetailDialog(mSewData.getCurrentOpeationInfos(), mContext).show();
+                break;
+            case R.id.tv_sew_MTMOrderNum:
+                String url = PadApplication.MTM_URL + mSewData.getSalesOrder();
+                startActivity(WebActivity.getIntent(mContext, url));
+                break;
         }
         if (!isEmpty(content))
             MyAlertDialog.showAlert(mContext, content);
@@ -144,6 +157,82 @@ public class SewFragment extends BaseFragment {
             showLoading();
         mRFID = rfid;
         HttpHelper.getSewData(rfid, this);
+    }
+
+    /**
+     * 手工开始
+     */
+    public void manualStart(String rfid) {
+        mRFID = rfid;
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        WebServiceUtils.inaIn(bo, new WebServiceCallback());
+    }
+
+    private void inaDoing() {
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        WebServiceUtils.inaDoing(bo, new WebServiceCallback());
+    }
+
+    /**
+     * 手工完成
+     */
+    public void manualComplete(String rfid) {
+        mRFID = rfid;
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        WebServiceUtils.inaOut(bo, new WebServiceCallback());
+    }
+
+    private class WebServiceCallback implements WebServiceUtils.HttpCallBack {
+
+        @Override
+        public void onSuccess(String method, JSONObject result) {
+            if (WebServiceUtils.INA_IN.equals(method)) {
+                toast("衣架进站成功");
+                inaDoing();
+            } else if (WebServiceUtils.INA_OUT.equals(method)) {
+                toast("衣架出站成功");
+            } else if (WebServiceUtils.INA_DOING.equals(method)) {
+                toast("doing感应成功");
+            }
+        }
+
+        @Override
+        public void onFail(String errMsg) {
+            showErrorDialog(errMsg);
+        }
+    }
+
+    private INARequestBo getINARequestParams() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo == null) {
+            ErrorDialog.showAlert(mContext, "站位数据为空，请重启应用获取");
+            return null;
+        }
+        INARequestBo bo = new INARequestBo();
+        bo.setSite(SpUtil.getSite());
+        bo.setLineId(contextInfo.getLINE_CATEGORY());
+        bo.setStationId(contextInfo.getPOSITION());
+        bo.setInTime(System.currentTimeMillis() + "");
+        bo.setOutTime(System.currentTimeMillis() + "");
+        bo.setDoTime(System.currentTimeMillis() + "");
+        bo.setHangerId(mRFID);
+//        bo.setSite("8081");
+//        bo.setLineId("1105");
+//        bo.setStationId("11");
+//        bo.setInTime(System.currentTimeMillis() + "");
+//        bo.setOutTime(System.currentTimeMillis() + "");
+//        bo.setDoTime(System.currentTimeMillis() + "");
+//        bo.setHangerId("800117700002");
+        return bo;
     }
 
     /**
@@ -493,7 +582,6 @@ public class SewFragment extends BaseFragment {
                     String sfc = sewData.getSfc();
                     if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())) {
                         MainActivity activity = (MainActivity) getActivity();
-                        assert activity != null;
                         activity.setButtonState(R.id.btn_subStart, true);
                         activity.setButtonState(R.id.btn_subComplete, true);
                     }
@@ -505,12 +593,10 @@ public class SewFragment extends BaseFragment {
             } else if (HttpHelper.sewSubStart.equals(url)) {
                 toast("开始绣花工序");
                 MainActivity activity = (MainActivity) getActivity();
-                assert activity != null;
                 activity.setButtonState(R.id.btn_subStart, false);
             } else if (HttpHelper.saveSubcontractInfo.equals(url)) {
                 toast("绣花工序完成");
                 MainActivity activity = (MainActivity) getActivity();
-                assert activity != null;
                 activity.setButtonState(R.id.btn_subComplete, false);
             }
         }
