@@ -6,15 +6,19 @@ import android.bluetooth.BluetoothDevice;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
+import java.lang.reflect.Method;
 import java.util.Set;
 
 import zpSDK.zpSDK.zpSDK;
 
-public class BluetoothPrintHelper {
+public class BluetoothHelper {
+    private static final int DEVICE_TYPE_KEYBOARD = 1344;//蓝牙外输设备
+    private static final int DEVICE_TYPE_PRINTER = 1664;//蓝牙打印机
 
     public static void Print(Activity context, String Pdata) {
         if (TextUtils.isEmpty(Pdata)) {
@@ -58,14 +62,9 @@ public class BluetoothPrintHelper {
         }
 
         Set<BluetoothDevice> bondedDevices = myBluetoothAdapter.getBondedDevices();
-        if (bondedDevices.size() <= 0) {
-            ToastUtil.showToast(context, "未配对蓝牙打印机,请配对K319...", Toast.LENGTH_LONG);
-//            SystemUtils.startBluetoothSettingView(context);
-            return false;
-        }
         BluetoothDevice myDevice = null;
         for (BluetoothDevice device : bondedDevices) {
-            if (device.getName().contains("K319")) {
+            if (device.getBluetoothClass().getDeviceClass() == DEVICE_TYPE_PRINTER) {
                 myDevice = device;
                 break;
             }
@@ -84,4 +83,48 @@ public class BluetoothPrintHelper {
         return true;
     }
 
+    /**
+     * 是否连接输入设备
+     */
+    public static boolean isConnectedInputDevice(Activity context) {
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter == null) {
+            ToastUtil.showToast(context, "该设备不支持蓝牙功能", Toast.LENGTH_LONG);
+            return false;
+        }
+
+        if (!adapter.isEnabled()) {
+            ToastUtil.showToast(context, "请打开蓝牙开关,并配对相应蓝牙设备.", Toast.LENGTH_LONG);
+            SystemUtils.startBluetoothSettingView(context);
+            return false;
+        }
+
+        Class<BluetoothAdapter> bluetoothAdapterClass = BluetoothAdapter.class;//得到BluetoothAdapter的Class对象
+        try {//得到连接状态的方法
+            Method method = bluetoothAdapterClass.getDeclaredMethod("getConnectionState", (Class[]) null);
+            //打开权限
+            method.setAccessible(true);
+            int state = (int) method.invoke(adapter, (Object[]) null);
+
+            if (state == BluetoothAdapter.STATE_CONNECTED) {
+                Set<BluetoothDevice> devices = adapter.getBondedDevices();
+
+                for (BluetoothDevice device : devices) {
+                    int deviceClass = device.getBluetoothClass().getDeviceClass();
+                    if (deviceClass == DEVICE_TYPE_KEYBOARD) {
+                        Method isConnectedMethod = BluetoothDevice.class.getDeclaredMethod("isConnected", (Class[]) null);
+                        method.setAccessible(true);
+                        boolean isConnected = (boolean) isConnectedMethod.invoke(device, (Object[]) null);
+                        if (isConnected) {
+                            Logger.d("已连接蓝牙设备名称：" + device.getName() + ", 型号：" + deviceClass);
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

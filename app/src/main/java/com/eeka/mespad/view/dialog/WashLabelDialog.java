@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -33,6 +34,8 @@ public class WashLabelDialog extends BaseDialog {
         init();
     }
 
+    private String mLastNum;
+
     @Override
     protected void init() {
         super.init();
@@ -46,7 +49,22 @@ public class WashLabelDialog extends BaseDialog {
         mEt_washLabel = view.findViewById(R.id.et_washLabel_washLabel);
         mEt_washLabel.requestFocus();
         SystemUtils.showSoftInputFromWindow(mContext);
-        mEt_washLabel.addTextChangedListener(mTextWatcher);
+        mEt_washLabel.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                    String orderNum = mEt_washLabel.getText().toString();
+                    if (!TextUtils.isEmpty(mLastNum)) {
+                        mLastNum = orderNum.replaceFirst(mLastNum, "");
+                    } else {
+                        mLastNum = orderNum;
+                    }
+                    mEt_washLabel.setText(mLastNum);
+                    return true;
+                }
+                return false;
+            }
+        });
         view.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,35 +85,6 @@ public class WashLabelDialog extends BaseDialog {
             }
         });
     }
-
-    private long mLastMillis;
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            long curMillis = System.currentTimeMillis();
-            if (mLastMillis == 0 || curMillis - mLastMillis >= 1000) {
-                //第一次录入或者重新扫码录入，记录时间，清除原有内容
-                mLastMillis = curMillis;
-                if (!TextUtils.isEmpty(s.toString())) {
-                    String s1 = String.valueOf(s.charAt(s.length() - 1));
-                    mEt_washLabel.removeTextChangedListener(mTextWatcher);
-                    mEt_washLabel.setText(s1);
-                    mEt_washLabel.setSelection(s1.length());
-                    mEt_washLabel.addTextChangedListener(mTextWatcher);
-                }
-            }
-        }
-    };
 
     @Override
     public void show() {

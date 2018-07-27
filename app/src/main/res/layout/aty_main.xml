@@ -21,7 +21,21 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/border_black"
+            android:orientation="horizontal"
             android:padding="0.5dp">
+
+            <TextView
+                android:id="@+id/tv_main_searchType"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_green"
+                android:drawableRight="@drawable/ic_arrow_down_white"
+                android:gravity="center"
+                android:paddingRight="10dp"
+                android:text="卡号"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_content"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/et_orderNum"
@@ -31,6 +45,12 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:hint="输入RFID卡号搜索"
+                android:nextClusterForward="@id/et_orderNum"
+                android:nextFocusDown="@id/et_orderNum"
+                android:nextFocusForward="@id/et_orderNum"
+                android:nextFocusLeft="@id/et_orderNum"
+                android:nextFocusRight="@id/et_orderNum"
+                android:nextFocusUp="@id/et_orderNum"
                 android:padding="5dp"
                 android:singleLine="true" />
 
@@ -142,8 +162,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="80dp"

@@ -82,6 +82,15 @@ public class UpdateSewNcBo {
         private int sequence;
         private String operationDesc;
         private String partId;
+        private String resourceNo;
+
+        public String getResourceNo() {
+            return resourceNo;
+        }
+
+        public void setResourceNo(String resourceNo) {
+            this.resourceNo = resourceNo;
+        }
 
         public String getPartId() {
             return partId;
@@ -124,10 +133,28 @@ public class UpdateSewNcBo {
 
         private String ncCodeRef;
         private String operation;//返修工序描述
+        private String NC_CODE;
         private String NC_CODE_BO;
         private String DESCRIPTION;
         private String processDesc;//返修工序
         private String PROD_COMPONENT;
+        private String resourceNo;
+
+        public String getNC_CODE() {
+            return NC_CODE;
+        }
+
+        public void setNC_CODE(String NC_CODE) {
+            this.NC_CODE = NC_CODE;
+        }
+
+        public String getResourceNo() {
+            return resourceNo;
+        }
+
+        public void setResourceNo(String resourceNo) {
+            this.resourceNo = resourceNo;
+        }
 
         public String getPROD_COMPONENT() {
             return PROD_COMPONENT;

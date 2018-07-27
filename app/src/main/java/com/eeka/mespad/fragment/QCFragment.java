@@ -22,6 +22,7 @@ import com.eeka.mespad.bo.ClothSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ReworkItemBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
+import com.eeka.mespad.bo.SewAttr;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
@@ -30,6 +31,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
+import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.ReworkInfoDialog;
 
 import java.util.ArrayList;
@@ -144,13 +146,30 @@ public class QCFragment extends BaseFragment {
         }
     }
 
+    private OfflineDialog mOfflineDialog;
+
     private void setupView() {
         if (mSewQCData == null) {
             toast("数据错误");
             return;
         }
         mTv_SFC.setText(mSewQCData.getSfc());
-        mTv_curProcess.setText(mSewQCData.getCurrentOperation());
+        List<SewAttr> currentOperations = mSewQCData.getCurrentOperation();
+        if (currentOperations != null && currentOperations.size() != 0) {
+            String currentOperation = currentOperations.get(0).getDescription();
+            mTv_curProcess.setText(currentOperation);
+            for (int i = 0; i < currentOperations.size(); i++) {
+                SewAttr opera = currentOperations.get(i);
+                if ("TQTXJ002".equals(opera.getName())) {
+                    if (mOfflineDialog != null) {
+                        mOfflineDialog.dismiss();
+                        mOfflineDialog = null;
+                    }
+                    mOfflineDialog = new OfflineDialog(mContext, mSewQCData.getSfc(), mRFID, mSewQCData.getShopOrder(), opera.getName(), opera.getDescription());
+                    mOfflineDialog.show();
+                }
+            }
+        }
         mTv_dayOutput.setText(mSewQCData.getDailyOutput() + "");
         mTv_monthOutput.setText(mSewQCData.getMonthlyOutput() + "");
         mTv_orderNum.setText(mSewQCData.getShopOrder());
@@ -265,11 +284,14 @@ public class QCFragment extends BaseFragment {
      */
     private void getClothSizeData() {
         if (mSewQCData != null) {
-            if (isAdded())
-                showLoading();
-            String currentOperation = mSewQCData.getCurrentOperation();
-            String operationBo = "OperationBO:" + SpUtil.getSite() + "," + currentOperation + ",A";
-            HttpHelper.getClothSize(mSewQCData.getSfc(), operationBo, this);
+            List<SewAttr> currentOperations = mSewQCData.getCurrentOperation();
+            if (currentOperations != null && currentOperations.size() != 0) {
+                String currentOperation = currentOperations.get(0).getName();
+                String operationBo = "OperationBO:" + SpUtil.getSite() + "," + currentOperation + ",A";
+                if (isAdded())
+                    showLoading();
+                HttpHelper.getClothSize(mSewQCData.getSfc(), operationBo, this);
+            }
         }
     }
 
@@ -283,9 +305,12 @@ public class QCFragment extends BaseFragment {
             data.setSFC(mSewQCData.getSfc());
             PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
             data.setRESOURCE_BO(resource.getRESOURCE_BO());
-            String currentOperation = mSewQCData.getCurrentOperation();
-            String operationBo = "OperationBO:" + SpUtil.getSite() + "," + currentOperation + ",A";
-            data.setOPERATION_BO(operationBo);
+            List<SewAttr> currentOperations = mSewQCData.getCurrentOperation();
+            if (currentOperations != null && currentOperations.size() != 0) {
+                String currentOperation = currentOperations.get(0).getName();
+                String operationBo = "OperationBO:" + SpUtil.getSite() + "," + currentOperation + ",A";
+                data.setOPERATION_BO(operationBo);
+            }
 
             List<SaveClothSizeBo.Item> items = new ArrayList<>();
             for (ClothSizeBo.DCPARRMSBean bean : mClothSizeData.getDC_PARRMS()) {

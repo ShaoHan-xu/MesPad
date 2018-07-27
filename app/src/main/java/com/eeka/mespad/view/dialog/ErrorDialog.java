@@ -6,12 +6,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.util.LogWriter;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.PushJson;
+import com.eeka.mespad.manager.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+
+import cn.finalteam.okhttpfinal.LogUtil;
 
 public class ErrorDialog {
 
@@ -56,7 +64,12 @@ public class ErrorDialog {
         if (context == null) {
             return;
         }
+        if (!TextUtils.isEmpty(msg) && msg.contains("1920x1200")) {
+            LogUtil.writeToFile(LogUtil.LOGTYPE_EXCEPTION, "异常报错：" + msg + ",className：" + context.getClass().getName());
+            return;
+        }
         mHandler.removeCallbacksAndMessages(null);
+        //衣架卡出站口时INA每7秒会推送一次错误报告，所以此处处理相同消息时重新计时10秒后弹框消失
         if (mLastMsg != null && mLastMsg.equals(msg) && mDialog != null && mDialog.isShowing()) {
             mHandler.sendEmptyMessageDelayed(0, 10000);
             return;
@@ -97,6 +110,14 @@ public class ErrorDialog {
                 }
             });
         }
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                PushJson push = new PushJson();
+                push.setType(PushJson.TYPE_ErrDialogDismiss);
+                EventBus.getDefault().post(push);
+            }
+        });
         builder.setView(v);
         mDialog = builder.create();
         if (!((Activity) context).isFinishing()) {

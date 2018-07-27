@@ -68,12 +68,14 @@ public class LoginFragment extends BaseFragment {
         super.initView();
         mET_IP = mView.findViewById(R.id.et_login_IP);
         mET_IP.setText(NetUtil.getHostIP());
-        if (SystemUtils.isApkInDebug(mContext)) {
-            mET_IP.setEnabled(true);
-        }
         mEt_user = mView.findViewById(R.id.et_login_user);
         mEt_pwd = mView.findViewById(R.id.et_login_pwd);
         mEt_site = mView.findViewById(R.id.et_login_site);
+
+        if (SystemUtils.isApkInDebug(mContext)) {
+            mET_IP.setEnabled(true);
+            mEt_site.setEnabled(true);
+        }
 
         Button btn_done = mView.findViewById(R.id.btn_login);
         btn_done.setOnClickListener(this);

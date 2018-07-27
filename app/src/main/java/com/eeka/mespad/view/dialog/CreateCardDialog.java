@@ -28,7 +28,6 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
     private Context mContext;
     private View mView;
 
-    private TextView mTv_site;
     private EditText mEt_sfc, mEt_hangerId;
     private TextView mTv_sfc;
     private TextView mTv_hangerId;
@@ -56,22 +55,22 @@ public class CreateCardDialog extends Dialog implements View.OnClickListener, Ht
     }
 
     private void initView() {
-        mTv_site = (TextView) mView.findViewById(R.id.tv_createCard_site);
-        mEt_sfc = (EditText) mView.findViewById(R.id.et_createCard_sfc);
-        mEt_hangerId = (EditText) mView.findViewById(R.id.et_createCard_hangerId);
-        mTv_sfc = (TextView) mView.findViewById(R.id.tv_createCard_sfc);
-        mTv_hangerId = (TextView) mView.findViewById(R.id.tv_createCard_hangerId);
-        mTv_orderNum = (TextView) mView.findViewById(R.id.tv_createCard_orderNum);
-        mTv_operation = (TextView) mView.findViewById(R.id.tv_createCard_operation);
-        mTv_operationDesc = (TextView) mView.findViewById(R.id.tv_createCard_operationDesc);
-        mEt_rfidNum = (EditText) mView.findViewById(R.id.et_createCard_rfidNum);
+        TextView mTv_site = mView.findViewById(R.id.tv_createCard_site);
+        mEt_sfc = mView.findViewById(R.id.et_createCard_sfc);
+        mEt_hangerId = mView.findViewById(R.id.et_createCard_hangerId);
+        mTv_sfc = mView.findViewById(R.id.tv_createCard_sfc);
+        mTv_hangerId = mView.findViewById(R.id.tv_createCard_hangerId);
+        mTv_orderNum = mView.findViewById(R.id.tv_createCard_orderNum);
+        mTv_operation = mView.findViewById(R.id.tv_createCard_operation);
+        mTv_operationDesc = mView.findViewById(R.id.tv_createCard_operationDesc);
+        mEt_rfidNum = mView.findViewById(R.id.et_createCard_rfidNum);
 
         mView.findViewById(R.id.btn_createCard_search).setOnClickListener(this);
         mView.findViewById(R.id.btn_createCard_createCard).setOnClickListener(this);
         mView.findViewById(R.id.btn_createCard_unbind).setOnClickListener(this);
         mView.findViewById(R.id.btn_cancel).setOnClickListener(this);
 
-        mTv_site.setText("站点：" + SpUtil.getSite());
+        mTv_site.setText(String.format("站点：%s", SpUtil.getSite()));
         mEt_sfc.setText(mSFC);
 
         if (!TextUtils.isEmpty(mSFC)) {

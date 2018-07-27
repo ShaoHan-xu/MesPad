@@ -22,6 +22,7 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
 
     private String mHangerId;
     private String mSFC;
+    private EditText mEt_hangerId;
     private EditText mEt_washLabel;
     private boolean OFF;//是否是下架
     private View.OnClickListener mListener;
@@ -41,12 +42,13 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_product_on_off, null);
         setContentView(view);
 
-        TextView tv_hanger = view.findViewById(R.id.tv_productOnOff_hangerId);
-        tv_hanger.setText(mHangerId);
+        mEt_hangerId = view.findViewById(R.id.et_productOnOff_hangerId);
+        mEt_hangerId.setText(mHangerId);
 
         TextView tv_title = view.findViewById(R.id.tv_productOnOff_title);
         if (OFF) {
             tv_title.setText("成衣下架");
+            mEt_hangerId.setEnabled(false);
             view.findViewById(R.id.layout_productOnOff_washLabel).setVisibility(View.GONE);
             TextView tv_sfc = view.findViewById(R.id.tv_productOnOff_sfc);
             tv_sfc.setText(mSFC);
@@ -83,6 +85,7 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
             Toast.makeText(mContext, "请输入洗水唛", Toast.LENGTH_SHORT).show();
         } else {
             LoadingDialog.show(mContext);
+            mHangerId = mEt_hangerId.getText().toString();
             HttpHelper.productOn(mHangerId, washLabel, this);
         }
     }

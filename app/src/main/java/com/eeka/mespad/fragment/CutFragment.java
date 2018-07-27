@@ -107,6 +107,12 @@ public class CutFragment extends BaseFragment {
         SystemUtils.playVideo(mContext, videoUrl);
     }
 
+    public void searchOrderByOrderNum(String orderNum, String resourceBo) {
+        showLoading();
+        mRFID = orderNum;
+
+    }
+
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
         showLoading();
         mOrderType = orderType;
@@ -512,6 +518,9 @@ public class CutFragment extends BaseFragment {
         return view;
     }
 
+    /**
+     * 显示纸样图案
+     */
     public void showPattern() {
         if (mTailorInfo == null) {
             showErrorDialog("请先获取订单数据");

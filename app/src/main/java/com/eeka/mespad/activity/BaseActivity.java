@@ -90,7 +90,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         }
         mTv_loadingMsg.setText(msg);
         mProDialog.setCancelable(cancelAble);
-        mProDialog.show();
+        if (!isFinishing()) {
+            mProDialog.show();
+        }
     }
 
     protected void dismissLoading() {

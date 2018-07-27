@@ -2,6 +2,7 @@ package com.eeka.mespad;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.util.TypeUtils;
@@ -92,8 +93,8 @@ public class PadApplication extends Application {
 
     private void initBugly() {
         Beta.enableHotfix = false;//关闭热更新功能
-//        Beta.autoDownloadOnWifi = true;//WiFi网络下自动下载安装包
-//        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        Beta.autoDownloadOnWifi = true;//WiFi网络下自动下载安装包
+        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         Bugly.setAppChannel(this, getString(R.string.app_channel));//设置渠道
         Bugly.init(getApplicationContext(), getString(R.string.buglyAPPID), false);
     }

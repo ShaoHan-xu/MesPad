@@ -85,22 +85,22 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
     }
 
     private void initView() {
-        TextView tv_title = (TextView) mView.findViewById(R.id.tv_dlg_title);
+        TextView tv_title = mView.findViewById(R.id.tv_dlg_title);
         if (mType == TYPE_RETURN) {
             tv_title.setText("退料申请");
         } else {
             tv_title.setText("补料申请");
         }
 
-        mLayout_material = (LinearLayout) mView.findViewById(R.id.layout_returnMaterial_material);
+        mLayout_material = mView.findViewById(R.id.layout_returnMaterial_material);
 
-        Button mBtn_save = (Button) mView.findViewById(R.id.btn_returnMaterial_save);
-        Button mBtn_submit = (Button) mView.findViewById(R.id.btn_returnMaterial_submit);
+        Button mBtn_save = mView.findViewById(R.id.btn_returnMaterial_save);
+        Button mBtn_submit = mView.findViewById(R.id.btn_returnMaterial_submit);
         mBtn_save.setOnClickListener(this);
         mBtn_submit.setOnClickListener(this);
         mView.findViewById(R.id.btn_dlg_close).setOnClickListener(this);
 
-        TextView tv_orderNum = (TextView) mView.findViewById(R.id.tv_returnMaterial_orderNum);
+        TextView tv_orderNum = mView.findViewById(R.id.tv_returnMaterial_orderNum);
         tv_orderNum.setText(mReturnMaterialInfo.getOrderNum());
 
         mLayout_material.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -182,8 +182,8 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
         for (int i = 0; i < childCount; i++) {
             View childView = mLayout_material.getChildAt(i);
 
-            EditText et_value = (EditText) childView.findViewById(R.id.et_returnMaterial_value);
-            TextView tv_reason = (TextView) childView.findViewById(R.id.tv_returnMaterial_reason);
+            EditText et_value = childView.findViewById(R.id.et_returnMaterial_value);
+            TextView tv_reason = childView.findViewById(R.id.tv_returnMaterial_reason);
 
             String reason = tv_reason.getText().toString();
             String value = et_value.getText().toString();
@@ -214,11 +214,11 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
      */
     private View getMaterialInfoView(@NonNull ReturnMaterialInfoBo.MaterialInfoBo materialInfo, final int position) {
         final View view = LayoutInflater.from(mContext).inflate(R.layout.layout_return_material, null);
-        ImageView iv_materialImg = (ImageView) view.findViewById(R.id.iv_returnMaterial_img);
-        TextView tv_num = (TextView) view.findViewById(R.id.tv_returnMaterial_materialNum);
-        TextView tv_unit = (TextView) view.findViewById(R.id.tv_returnMaterial_unit);
-        TextView tv_valueSubTitle = (TextView) view.findViewById(R.id.tv_returnMaterial_value_subTitle);
-        TextView tv_reasonSubTitle = (TextView) view.findViewById(R.id.tv_returnMaterial_reason_subTitle);
+        ImageView iv_materialImg = view.findViewById(R.id.iv_returnMaterial_img);
+        TextView tv_num = view.findViewById(R.id.tv_returnMaterial_materialNum);
+        TextView tv_unit = view.findViewById(R.id.tv_returnMaterial_unit);
+        TextView tv_valueSubTitle = view.findViewById(R.id.tv_returnMaterial_value_subTitle);
+        TextView tv_reasonSubTitle = view.findViewById(R.id.tv_returnMaterial_reason_subTitle);
         if (mType == TYPE_RETURN) {
             tv_valueSubTitle.setText("退料");
             tv_reasonSubTitle.setText("退料原因");
@@ -233,9 +233,9 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
             tv_unit.setTextColor(mContext.getResources().getColor(R.color.text_red_default));
         }
         tv_num.setText(materialInfo.getITEM());
-        EditText et_value = (EditText) view.findViewById(R.id.et_returnMaterial_value);
+        EditText et_value = view.findViewById(R.id.et_returnMaterial_value);
         Picasso.with(mContext).load(materialInfo.getPicUrl()).into(iv_materialImg);
-        TextView tv_reason = (TextView) view.findViewById(R.id.tv_returnMaterial_reason);
+        TextView tv_reason = view.findViewById(R.id.tv_returnMaterial_reason);
 
         tv_reason.setText(materialInfo.getReason());
         et_value.setText(materialInfo.getQTY());

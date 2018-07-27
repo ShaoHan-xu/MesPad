@@ -24,7 +24,7 @@ import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
-import com.eeka.mespad.bluetoothPrint.BluetoothPrintHelper;
+import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -34,6 +34,7 @@ import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.SuspendAlertDialog;
+import com.eeka.mespad.view.dialog.WashLabelDialog;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -149,7 +150,6 @@ public class SuspendFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(String washLabel) {
         mWashLabel = washLabel;
-        mWashLabelScanned = true;
         binding();
     }
 
@@ -230,14 +230,15 @@ public class SuspendFragment extends BaseFragment {
         }
         List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
         if (positionUsers == null || positionUsers.size() == 0) {
-            showErrorDialog("请刷卡登录员工");
+            showErrorDialog("请员工刷卡登录");
             return;
         }
         //绑定洗水唛
-//        if ("true".equals(mCurComponent.getIsMaster()) && !mWashLabelScanned) {
-//            new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName()).show();
-//            return;
-//        }
+        if ("true".equals(mCurComponent.getIsMaster()) && !mWashLabelScanned) {
+            new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName()).show();
+            mWashLabelScanned = true;
+            return;
+        }
         mBtn_binding.setEnabled(false);
         showLoading();
         HttpHelper.hangerBinding(mCurComponent.getComponentId(), mWashLabel, mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
@@ -339,6 +340,7 @@ public class SuspendFragment extends BaseFragment {
             public void onClick(View v) {
                 mCurComponent = component;
 //                showLoading();
+                mWashLabel = null;
                 mWashLabelScanned = false;
                 HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
                 List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
@@ -388,6 +390,15 @@ public class SuspendFragment extends BaseFragment {
             } else if (HttpHelper.getSfcComponents.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);
+                //把主部件放到第一位
+                List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
+                for (int i = 0; i < components.size(); i++) {
+                    SuspendComponentBo.COMPONENTSBean item = components.get(i);
+                    if ("true".equals(item.getIsMaster())) {
+                        components.add(0, components.remove(i));
+                        break;
+                    }
+                }
                 String shopOrder = mComponent.getSHOP_ORDER();
                 String itemCode = mComponent.getITEM();
                 String size = mComponent.getSFC_SIZE();
@@ -499,7 +510,7 @@ public class SuspendFragment extends BaseFragment {
                     while (!stopFlag) {
                         if (printFlag) {
                             printFlag = false;
-                            BluetoothPrintHelper.Print(getActivity(), mPrintData);
+                            BluetoothHelper.Print(getActivity(), mPrintData);
                         }
                     }
                 }

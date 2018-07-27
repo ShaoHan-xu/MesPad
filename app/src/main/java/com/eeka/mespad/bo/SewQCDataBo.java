@@ -29,7 +29,7 @@ public class SewQCDataBo {
     private String itemDesc;
     private String sfcSize;
     private String sfc;
-    private String currentOperation;
+    private List<SewAttr> currentOperation;
     private String soMark;
     private String sfcRef;
     private String reworkFlag;
@@ -112,11 +112,11 @@ public class SewQCDataBo {
         this.sfc = sfc;
     }
 
-    public String getCurrentOperation() {
+    public List<SewAttr> getCurrentOperation() {
         return currentOperation;
     }
 
-    public void setCurrentOperation(String currentOperation) {
+    public void setCurrentOperation(List<SewAttr> currentOperation) {
         this.currentOperation = currentOperation;
     }
 

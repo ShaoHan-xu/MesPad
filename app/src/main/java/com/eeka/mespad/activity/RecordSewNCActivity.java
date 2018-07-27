@@ -50,6 +50,8 @@ public class RecordSewNCActivity extends BaseActivity {
     private static final String KEY_SFC = "key_sfc";
     private static final String KEY_TYPE = "key_type";
 
+    private static final List<String> UNCHECK_NCCODE = new ArrayList<>();//直接去线下返修站的不良代码集合
+
     private TextView mTv_orderNum;
     private LinearLayout mLayout_productComponent;
     private LinearLayout mLayout_designComponent;
@@ -164,17 +166,25 @@ public class RecordSewNCActivity extends BaseActivity {
             bean.setOperation(mList_selected.get(0).getOperation());
             mList_selected.add(bean);
         } else {
+            boolean needRework = true;
             List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
             for (int i = 0; i < mList_selected.size(); i++) {
                 UpdateSewNcBo.NcCodeOperationListBean bean = mList_selected.get(i);
+                if (UNCHECK_NCCODE.contains(bean.getNC_CODE())) {
+                    needRework = false;
+                    break;
+                }
                 UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
                 item.setSequence(i + 1);
                 item.setReworkOperation(bean.getOperation());
                 item.setOperationDesc(bean.getProcessDesc());
                 item.setPartId(bean.getPROD_COMPONENT());
+                item.setResourceNo(bean.getResourceNo());
                 process.add(item);
             }
-            data.setReworkOperationList(process);
+            if (needRework) {
+                data.setReworkOperationList(process);
+            }
         }
         data.setNcCodeOperationList(mList_selected);
 
@@ -189,6 +199,7 @@ public class RecordSewNCActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        UNCHECK_NCCODE.add("TY11");
         mNcCodePosition = -1;
         String sfc = getIntent().getStringExtra(KEY_SFC);
         mTv_orderNum.setText(sfc);
@@ -274,8 +285,18 @@ public class RecordSewNCActivity extends BaseActivity {
                     mNcCodePosition = position;
                     SewQCDataBo.DesignComponentBean productComponent = mList_component.get(mProductPosition);
                     SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = productComponent.getDesgComponents().get(mDesignPosition);
-                    showLoading();
-                    HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
+                    if (UNCHECK_NCCODE.contains(item.getNC_CODE())) {
+                        mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
+                        mCurSelecting.setPROD_COMPONENT(productComponent.getName());
+                        mCurSelecting.setNC_CODE(item.getNC_CODE());
+                        mCurSelecting.setNcCodeRef(item.getNC_CODE_BO());
+                        mCurSelecting.setDESCRIPTION(item.getDESCRIPTION());
+
+                        mSelectedAdapter.addItem(mCurSelecting);
+                    } else {
+                        showLoading();
+                        HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
+                    }
                 }
             });
         }
@@ -296,15 +317,16 @@ public class RecordSewNCActivity extends BaseActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         JSONObject item = mList_NcProcess.getJSONObject(position);
-                        for (UpdateSewNcBo.NcCodeOperationListBean selected:mList_selected) {
-                            if (selected.getOperation().equals(item.getString("OPERATION"))){
-                                ErrorDialog.showAlert(mContext,"该工序已记录过不良，无法多次记录");
+                        for (UpdateSewNcBo.NcCodeOperationListBean selected : mList_selected) {
+                            if (selected.getOperation().equals(item.getString("OPERATION"))) {
+                                ErrorDialog.showAlert(mContext, "该工序已记录过不良，无法多次记录");
                                 return;
                             }
                         }
                         mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
                         mCurSelecting.setPROD_COMPONENT(item.getString("PART_ID"));
-                        mCurSelecting.setNC_CODE_BO(recordNCBo.getNC_CODE_BO());
+                        mCurSelecting.setResourceNo(item.getString("RESOURCE"));
+                        mCurSelecting.setNC_CODE(recordNCBo.getNC_CODE());
                         mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
                         mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
                         mCurSelecting.setOperation(item.getString("OPERATION"));

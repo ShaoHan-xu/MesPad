@@ -120,6 +120,7 @@
                 android:layout_toLeftOf="@id/iv_login_morePosition"
                 android:layout_toRightOf="@id/tag_position"
                 android:gravity="center"
+                android:enabled="false"
                 android:singleLine="true"/>
         </RelativeLayout>
 

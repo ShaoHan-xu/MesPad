@@ -28,6 +28,7 @@ import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.INARequestBo;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.SewAttr;
 import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.http.WebServiceUtils;
@@ -39,6 +40,7 @@ import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LineColorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.NCDetailDialog;
+import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.PocketSizeDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
@@ -225,13 +227,6 @@ public class SewFragment extends BaseFragment {
         bo.setOutTime(System.currentTimeMillis() + "");
         bo.setDoTime(System.currentTimeMillis() + "");
         bo.setHangerId(mRFID);
-//        bo.setSite("8081");
-//        bo.setLineId("1105");
-//        bo.setStationId("11");
-//        bo.setInTime(System.currentTimeMillis() + "");
-//        bo.setOutTime(System.currentTimeMillis() + "");
-//        bo.setDoTime(System.currentTimeMillis() + "");
-//        bo.setHangerId("800117700002");
         return bo;
     }
 
@@ -239,10 +234,6 @@ public class SewFragment extends BaseFragment {
      * 成衣上架
      */
     public void productOn() {
-        if (isEmpty(mRFID)) {
-            showErrorDialog("请先获取衣架数据");
-            return;
-        }
         new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,12 +298,12 @@ public class SewFragment extends BaseFragment {
             return;
         }
         int currentItem = mVP_sop.getCurrentItem();
-        List<SewDataBo.SewAttr> infos = mSewData.getCurrentOpeationInfos();
+        List<SewAttr> infos = mSewData.getCurrentOpeationInfos();
         if (infos == null || infos.size() == 0) {
             toast("当前站位无工序");
             return;
         }
-        SewDataBo.SewAttr sewAttr = infos.get(currentItem);
+        SewAttr sewAttr = infos.get(currentItem);
         SystemUtils.playVideo(mContext, sewAttr.getAttributes().getVIDEO_URL());
     }
 
@@ -435,15 +426,15 @@ public class SewFragment extends BaseFragment {
             imageView.setImageBitmap(null);
         }
         mLayout_matInfo.removeAllViews();
-        List<SewDataBo.SewAttr> matInfos = mSewData.getColorItems();
+        List<SewAttr> matInfos = mSewData.getColorItems();
         if (matInfos != null) {
             for (int i = 0; i < matInfos.size(); i++) {
-                SewDataBo.SewAttr matInfo = matInfos.get(i);
+                SewAttr matInfo = matInfos.get(i);
                 mLayout_matInfo.addView(getMatView(matInfo, i));
             }
         }
 
-        List<SewDataBo.SewAttr> nextOperations = mSewData.getNextOperation();
+        List<SewAttr> nextOperations = mSewData.getNextOperation();
         if (mNextProcessAdapter == null) {
             mNextProcessAdapter = new ProcessListAdapter(mContext, nextOperations, R.layout.item_textview);
             mLv_nextProcess.setAdapter(mNextProcessAdapter);
@@ -452,7 +443,7 @@ public class SewFragment extends BaseFragment {
         }
 
         mLayout_processTab.removeAllViews();
-        final List<SewDataBo.SewAttr> curOperation = mSewData.getCurrentOpeationInfos();
+        final List<SewAttr> curOperation = mSewData.getCurrentOpeationInfos();
         if (mCurProcessAdapter == null) {
             mCurProcessAdapter = new ProcessListAdapter(mContext, curOperation, R.layout.item_textview);
             mLv_curProcess.setAdapter(mCurProcessAdapter);
@@ -462,7 +453,15 @@ public class SewFragment extends BaseFragment {
         if (curOperation != null) {
             boolean hasNC = false;
             for (int i = 0; i < curOperation.size(); i++) {
-                SewDataBo.SewAttr opera = curOperation.get(i);
+                SewAttr opera = curOperation.get(i);
+                if ("TQTXJ002".equals(opera.getName())) {
+                    if (mOfflineDialog != null) {
+                        mOfflineDialog.dismiss();
+                        mOfflineDialog = null;
+                    }
+                    mOfflineDialog = new OfflineDialog(mContext, mSewData.getSfc(), mRFID, mSewData.getShopOrder(), opera.getName(), opera.getDescription());
+                    mOfflineDialog.show();
+                }
                 String ncDescription = opera.getAttributes().getNC_DESCRIPTION();
                 if (!isEmpty(ncDescription)) {
                     hasNC = true;
@@ -478,16 +477,16 @@ public class SewFragment extends BaseFragment {
             if (hasNC) {
                 mTv_ncDetail.setVisibility(View.VISIBLE);
             }
-            mVP_sop.setAdapter(new CommonVPAdapter<SewDataBo.SewAttr>(mContext, curOperation, R.layout.item_imageview) {
+            mVP_sop.setAdapter(new CommonVPAdapter<SewAttr>(mContext, curOperation, R.layout.item_imageview) {
                 @Override
-                public void convertView(View view, SewDataBo.SewAttr item, final int position) {
+                public void convertView(View view, SewAttr item, final int position) {
                     ImageView imageView = view.findViewById(R.id.imageView);
                     Picasso.with(mContext).load(item.getAttributes().getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ArrayList<String> urls = new ArrayList<>();
-                            for (SewDataBo.SewAttr data : curOperation) {
+                            for (SewAttr data : curOperation) {
                                 urls.add(data.getAttributes().getSOP_URL());
                             }
                             startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
@@ -502,17 +501,19 @@ public class SewFragment extends BaseFragment {
         }
     }
 
+    private OfflineDialog mOfflineDialog;
+
     /**
      * 工序列表适配器
      */
-    private class ProcessListAdapter extends CommonAdapter<SewDataBo.SewAttr> {
+    private class ProcessListAdapter extends CommonAdapter<SewAttr> {
 
-        ProcessListAdapter(Context context, List<SewDataBo.SewAttr> list, int layoutId) {
+        ProcessListAdapter(Context context, List<SewAttr> list, int layoutId) {
             super(context, list, layoutId);
         }
 
         @Override
-        public void convert(ViewHolder holder, SewDataBo.SewAttr item, int position) {
+        public void convert(ViewHolder holder, SewAttr item, int position) {
             holder.setText(R.id.textView, item.getDescription());
         }
     }
@@ -520,7 +521,7 @@ public class SewFragment extends BaseFragment {
     /**
      * 获取物料布局
      */
-    private View getMatView(SewDataBo.SewAttr item, final int position) {
+    private View getMatView(SewAttr item, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         ImageView imageView = view.findViewById(R.id.iv_materials);
         Picasso.with(mContext).load(item.getAttributes().getMAT_URL()).resize(200, 200).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
@@ -530,8 +531,8 @@ public class SewFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 ArrayList<String> urls = new ArrayList<>();
-                List<SewDataBo.SewAttr> matInfos = mSewData.getColorItems();
-                for (SewDataBo.SewAttr matInfo : matInfos) {
+                List<SewAttr> matInfos = mSewData.getColorItems();
+                for (SewAttr matInfo : matInfos) {
                     urls.add(matInfo.getAttributes().getMAT_URL());
                 }
                 startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
@@ -561,7 +562,7 @@ public class SewFragment extends BaseFragment {
      * 刷新工序相关的界面，包括工序图、工艺说明、品质要求、
      */
     private void refreshProcessView(int position) {
-        SewDataBo.SewAttr item = mSewData.getCurrentOpeationInfos().get(position);
+        SewAttr item = mSewData.getCurrentOpeationInfos().get(position);
         String craftDesc = item.getAttributes().getOPERATION_INSTRUCTION();
         if (!isEmpty(craftDesc))
             mTv_craftDesc.setText(craftDesc.replace("#line#", "\n"));

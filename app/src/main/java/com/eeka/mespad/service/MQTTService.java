@@ -139,8 +139,13 @@ public class MQTTService extends Service {
         @Override
         public void connectionLost(Throwable cause) {
             //连接丢失后，一般在这里面进行重连
-            Logger.d("mqtt connectionLost,cause:" + cause.getMessage());
-            LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost");
+            if (cause != null) {
+                Logger.d("mqtt connectionLost,cause:" + cause.getMessage());
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost,cause:" + cause.getMessage());
+            } else {
+                Logger.d("mqtt connectionLost,cause:null");
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost,cause:null");
+            }
             if (isNetworkAvailable()) {
                 startReconnect();
             }

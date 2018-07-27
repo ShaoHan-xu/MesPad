@@ -23,6 +23,7 @@ public class LogUtil {
     public static final int LOGTYPE_HTTPRESPONSE = 2;//http网络请求返回数据记录目录，开启debug模式才会记录
     public static final int LOGTYPE_HTTPFAIL = 3;//http请求失败时返回的数据
     public static final int LOGTYPE_MQTT_STATUS = 4;//mqtt状态记录，掉线/重连
+    public static final int LOGTYPE_EXCEPTION = 5;//各种异常记录
 
     private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ");
     private static String mLogDir;
@@ -62,26 +63,21 @@ public class LogUtil {
             folder = new File(mLogDir, "HttpFail");
         } else if (logType == LOGTYPE_MQTT_STATUS) {
             folder = new File(mLogDir, "mqttStatus");
+        } else if (logType == LOGTYPE_EXCEPTION) {
+            folder = new File(mLogDir, "exception");
         }
         if (!folder.exists()) {
             folder.mkdirs();
         }
         File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
         String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
-        BufferedWriter out = null;
         try {
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f, true), "GBK"));
-            out.write(content);
+            OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f, true), "GBK");
+            BufferedWriter writer = new BufferedWriter(write);
+            writer.write(content);
+            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

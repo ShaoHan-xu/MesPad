@@ -12,21 +12,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
+import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
@@ -43,6 +49,7 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
+import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
 
@@ -70,6 +77,7 @@ public class MainActivity extends NFCActivity {
 
     private PositionInfoBo mPositionInfo;
 
+    private TextView mTv_searchType;
     private EditText mEt_orderNum;
     private EditText mEt_position;
     private String mTopic;
@@ -105,6 +113,8 @@ public class MainActivity extends NFCActivity {
 
     @Override
     protected void onDestroy() {
+        dismissLoading();
+        ErrorDialog.dismiss();
         EventBus.getDefault().unregister(this);
         MQTTService.actionStop(mContext);
         unregisterReceiver(mConnectivityReceiver);
@@ -137,6 +147,13 @@ public class MainActivity extends NFCActivity {
             finish();
         } else if (PushJson.TYPE_TOAST.equals(type)) {
             toast(push.getMessage());
+        } else if (PushJson.TYPE_ErrDialogDismiss.equals(type)) {
+            if (TopicUtil.TOPIC_MANUAL.equals(mTopic)) {
+                if (BluetoothHelper.isConnectedInputDevice(this)) {
+                    mEt_orderNum.requestFocus();
+                    SystemUtils.showSoftInputFromWindow(this);
+                }
+            }
         } else if (PushJson.TYPE_EXIT.equals(type)) {
             finish();
             System.exit(0);
@@ -165,10 +182,33 @@ public class MainActivity extends NFCActivity {
         findViewById(R.id.btn_searchOrder).setOnClickListener(this);
         findViewById(R.id.btn_searchPosition).setOnClickListener(this);
 
-        mEt_orderNum = findViewById(R.id.et_orderNum);
+        mTv_searchType = findViewById(R.id.tv_main_searchType);
+        mTv_searchType.setOnClickListener(this);
         mEt_position = findViewById(R.id.et_position);
         mEt_position.setText(HttpHelper.getPadIp());
+        mEt_orderNum = findViewById(R.id.et_orderNum);
+        mEt_orderNum.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                    String orderNum = mEt_orderNum.getText().toString();
+                    if (!isEmpty(mLastNum)) {
+                        mLastNum = orderNum.replaceFirst(mLastNum, "");
+                    } else {
+                        mLastNum = orderNum;
+                    }
+                    mEt_orderNum.setText(mLastNum);
+                    isSearchOrder = true;
+                    if (checkResource())
+                        searchOrder();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
+
+    private String mLastNum;//上次搜索的卡号
 
     @Override
     protected void initData() {
@@ -336,7 +376,6 @@ public class MainActivity extends NFCActivity {
         }
     }
 
-
     /**
      * 设置配置的按钮的状态/设置可点击与不可点击
      */
@@ -395,11 +434,43 @@ public class MainActivity extends NFCActivity {
         }
     }
 
+    /**
+     * 显示搜索类型选择弹框
+     */
+    private void showSearchTypeWindow() {
+        final List<String> list = new ArrayList<>();
+        list.add("卡号");
+        list.add("工单号");
+        final ListPopupWindow ppw = new ListPopupWindow(mContext);
+        ppw.setAdapter(new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, list));
+        ppw.setWidth(UnitUtil.dip2px(mContext, 120));
+        ppw.setHeight(ListPopupWindow.WRAP_CONTENT);
+        ppw.setAnchorView(mTv_searchType);
+        ppw.setModal(true);
+        ppw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String s = list.get(position);
+                mTv_searchType.setText(s);
+                if ("卡号".equals(s)) {
+                    mEt_orderNum.setHint("请输入卡号搜索");
+                } else if ("工单号".equals(s)) {
+                    mEt_orderNum.setHint("请输入工单号搜索");
+                }
+                ppw.dismiss();
+            }
+        });
+        ppw.show();
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
+            case R.id.tv_main_searchType:
+                showSearchTypeWindow();
+                break;
             case R.id.tv_setting:
                 mDrawerLayout.closeDrawer(Gravity.START);
                 startActivity(new Intent(mContext, SettingActivity.class));
@@ -640,7 +711,12 @@ public class MainActivity extends NFCActivity {
                     mSewFragment.searchOrder(cardNum);
                     break;
                 case TopicUtil.TOPIC_CUT:
-                    getCardInfo(cardNum);
+                    String searchType = mTv_searchType.getText().toString();
+                    if ("工单号".equals(searchType)) {
+                        mCutFragment.searchOrderByOrderNum(cardNum, mPositionInfo.getRESR_INFOR().getRESOURCE_BO());
+                    } else {
+                        getCardInfo(cardNum);
+                    }
                     break;
                 case TopicUtil.TOPIC_SEW:
                     mSewFragment.searchOrder(cardNum);
@@ -711,6 +787,11 @@ public class MainActivity extends NFCActivity {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
                     mTopic = bean.getTOPIC();
                 }
+//                if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+//                    mTv_searchType.setVisibility(View.VISIBLE);
+//                } else {
+//                    mTv_searchType.setVisibility(View.GONE);
+//                }
                 if (TopicUtil.TOPIC_SUBCONTRACT.equals(mTopic)) {
                     startActivity(new Intent(mContext, SubcontractReceiveAty.class));
                     finish();

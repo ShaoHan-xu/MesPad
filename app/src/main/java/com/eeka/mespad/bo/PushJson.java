@@ -12,9 +12,10 @@ public class PushJson {
     public static final String TYPE_RFID = "RFID";//NFC刷卡
     public static final String TYPE_WARNING = "WARNING";//警告
     public static final String TYPE_TOAST = "TOAST";//toast
+    public static final String TYPE_ErrDialogDismiss = "ErrDialogDismiss";//错误弹框消失
 
     private String content;
-    private String type;    // 0 ： 缝制  1 ： 消息提醒  2:错误消息
+    private String type;
     private String info;    //显示在状态栏的信息，负责提醒用户用，具体数据视具体情况而定
     private String code;    //代表消息推送成功与否
     private String message; //code值不成功时的错误提示信息
