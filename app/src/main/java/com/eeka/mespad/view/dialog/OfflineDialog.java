@@ -77,7 +77,7 @@ public class OfflineDialog extends BaseDialog implements View.OnClickListener {
             @Override
             public void onSuccess(String url, JSONObject resultJSON) {
                 if (HttpHelper.isSuccess(resultJSON)) {
-                    Toast.makeText(mContext, "下线成功", Toast.LENGTH_SHORT).show();
+                    ErrorDialog.showAlert(mContext,resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, true);
                     dismiss();
                 } else {
                     ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));

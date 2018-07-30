@@ -83,6 +83,8 @@ public class SewFragment extends BaseFragment {
     private String mRFID;
     private SewDataBo mSewData;
 
+    private MainActivity mActivity;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -94,7 +96,14 @@ public class SewFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mActivity = (MainActivity) getActivity();
+
         initView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -170,6 +179,7 @@ public class SewFragment extends BaseFragment {
         if (bo == null) {
             return;
         }
+        showLoading();
         WebServiceUtils.inaIn(bo, new WebServiceCallback());
     }
 
@@ -178,6 +188,7 @@ public class SewFragment extends BaseFragment {
         if (bo == null) {
             return;
         }
+        showLoading();
         WebServiceUtils.inaDoing(bo, new WebServiceCallback());
     }
 
@@ -190,6 +201,7 @@ public class SewFragment extends BaseFragment {
         if (bo == null) {
             return;
         }
+        showLoading();
         WebServiceUtils.inaOut(bo, new WebServiceCallback());
     }
 
@@ -197,18 +209,25 @@ public class SewFragment extends BaseFragment {
 
         @Override
         public void onSuccess(String method, JSONObject result) {
+            dismissLoading();
             if (WebServiceUtils.INA_IN.equals(method)) {
-                toast("衣架进站成功");
                 inaDoing();
             } else if (WebServiceUtils.INA_OUT.equals(method)) {
-                toast("衣架出站成功");
+                String nextLine = result.getString("nextLineId");
+                String nextPosition = result.getString("nextStationId");
+                StringBuilder message = new StringBuilder();
+                message.append("操作成功，下一个站位").append(nextLine).append("线").append(nextPosition).append("站位");
+                ErrorDialog.showAlert(mContext, message.toString(), ErrorDialog.TYPE.ALERT, null, true);
+                mActivity.setButtonState(R.id.btn_manualComplete, false);
             } else if (WebServiceUtils.INA_DOING.equals(method)) {
-                toast("doing感应成功");
+                toast("开始手工作业");
+                mActivity.setButtonState(R.id.btn_manualStart, false);
             }
         }
 
         @Override
         public void onFail(String errMsg) {
+            dismissLoading();
             showErrorDialog(errMsg);
         }
     }
@@ -580,11 +599,12 @@ public class SewFragment extends BaseFragment {
             if (HttpHelper.getSewData.equals(url)) {
                 SewDataBo sewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 if (mSewData != null) {
+                    mActivity.setButtonState(R.id.btn_manualStart, true);
+                    mActivity.setButtonState(R.id.btn_manualComplete, true);
                     String sfc = sewData.getSfc();
                     if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())) {
-                        MainActivity activity = (MainActivity) getActivity();
-                        activity.setButtonState(R.id.btn_subStart, true);
-                        activity.setButtonState(R.id.btn_subComplete, true);
+                        mActivity.setButtonState(R.id.btn_subStart, true);
+                        mActivity.setButtonState(R.id.btn_subComplete, true);
                     }
                 }
                 mSewData = sewData;

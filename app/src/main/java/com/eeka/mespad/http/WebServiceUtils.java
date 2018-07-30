@@ -104,6 +104,10 @@ public class WebServiceUtils {
                                 String message = soap.getProperty("message").toString();
                                 jsonObject.put("code", code);
                                 jsonObject.put("message", message);
+                                if (soap.hasProperty("nextLineId"))
+                                    jsonObject.put("nextLineId", soap.getProperty("nextLineId").toString());
+                                if (soap.hasProperty("nextStationId"))
+                                    jsonObject.put("nextStationId", soap.getProperty("nextStationId").toString());
                             }
                             String code = jsonObject.getString("code");
                             if ("0".equals(code)) {

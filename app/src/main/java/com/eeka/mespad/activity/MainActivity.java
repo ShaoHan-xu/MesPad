@@ -1,5 +1,6 @@
 package com.eeka.mespad.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -97,7 +100,26 @@ public class MainActivity extends NFCActivity {
         SpUtil.cleanDictionaryData();
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        if (BluetoothHelper.isConnectedScannerDevice(this)) {
+            //如果平板连接着蓝牙输入设备，则在应用启动1秒后拉起使输入框获取焦点，拉起键盘
+            //否则扫码输入时第一位会获取不到
+            mHandler.sendEmptyMessageDelayed(WHAT_KEYBOARD, 1000);
+        }
     }
+
+    private static final int WHAT_KEYBOARD = 0;
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == WHAT_KEYBOARD) {
+                mEt_orderNum.requestFocus();
+                SystemUtils.showSoftInputFromWindow(mContext);
+            }
+        }
+    };
 
     /**
      * 网络状态发生变化接收器
@@ -148,11 +170,8 @@ public class MainActivity extends NFCActivity {
         } else if (PushJson.TYPE_TOAST.equals(type)) {
             toast(push.getMessage());
         } else if (PushJson.TYPE_ErrDialogDismiss.equals(type)) {
-            if (TopicUtil.TOPIC_MANUAL.equals(mTopic)) {
-                if (BluetoothHelper.isConnectedInputDevice(this)) {
-                    mEt_orderNum.requestFocus();
-                    SystemUtils.showSoftInputFromWindow(this);
-                }
+            if (BluetoothHelper.isConnectedScannerDevice(this)) {
+                mHandler.sendEmptyMessage(WHAT_KEYBOARD);
             }
         } else if (PushJson.TYPE_EXIT.equals(type)) {
             finish();

@@ -84,9 +84,9 @@ public class BluetoothHelper {
     }
 
     /**
-     * 是否连接输入设备
+     * 是否连接蓝牙扫码设备
      */
-    public static boolean isConnectedInputDevice(Activity context) {
+    public static boolean isConnectedScannerDevice(Activity context) {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter == null) {
             ToastUtil.showToast(context, "该设备不支持蓝牙功能", Toast.LENGTH_LONG);

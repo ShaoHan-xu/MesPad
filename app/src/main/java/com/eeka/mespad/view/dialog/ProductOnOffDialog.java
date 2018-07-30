@@ -98,7 +98,7 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         if (HttpHelper.isSuccess(resultJSON)) {
-            Toast.makeText(mContext, "操作成功", Toast.LENGTH_SHORT).show();
+            ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, true);
             if (mListener != null)
                 mListener.onClick(null);
             dismiss();
