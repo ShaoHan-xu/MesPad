@@ -473,14 +473,14 @@ public class SewFragment extends BaseFragment {
             boolean hasNC = false;
             for (int i = 0; i < curOperation.size(); i++) {
                 SewAttr opera = curOperation.get(i);
-                if ("TQTXJ002".equals(opera.getName())) {
-                    if (mOfflineDialog != null) {
-                        mOfflineDialog.dismiss();
-                        mOfflineDialog = null;
-                    }
-                    mOfflineDialog = new OfflineDialog(mContext, mSewData.getSfc(), mRFID, mSewData.getShopOrder(), opera.getName(), opera.getDescription());
-                    mOfflineDialog.show();
-                }
+//                if ("TQTXJ002".equals(opera.getName())) {
+//                    if (mOfflineDialog != null) {
+//                        mOfflineDialog.dismiss();
+//                        mOfflineDialog = null;
+//                    }
+//                    mOfflineDialog = new OfflineDialog(mContext, mSewData.getSfc(), mRFID, mSewData.getShopOrder(), opera.getName(), opera.getDescription());
+//                    mOfflineDialog.show();
+//                }
                 String ncDescription = opera.getAttributes().getNC_DESCRIPTION();
                 if (!isEmpty(ncDescription)) {
                     hasNC = true;

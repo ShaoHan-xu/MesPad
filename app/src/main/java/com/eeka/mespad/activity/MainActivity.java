@@ -101,7 +101,7 @@ public class MainActivity extends NFCActivity {
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        if (BluetoothHelper.isConnectedScannerDevice(this)) {
+        if (BluetoothHelper.isConnectedScannerDevice()) {
             //如果平板连接着蓝牙输入设备，则在应用启动1秒后拉起使输入框获取焦点，拉起键盘
             //否则扫码输入时第一位会获取不到
             mHandler.sendEmptyMessageDelayed(WHAT_KEYBOARD, 1000);
@@ -170,7 +170,7 @@ public class MainActivity extends NFCActivity {
         } else if (PushJson.TYPE_TOAST.equals(type)) {
             toast(push.getMessage());
         } else if (PushJson.TYPE_ErrDialogDismiss.equals(type)) {
-            if (BluetoothHelper.isConnectedScannerDevice(this)) {
+            if (BluetoothHelper.isConnectedScannerDevice()) {
                 mHandler.sendEmptyMessage(WHAT_KEYBOARD);
             }
         } else if (PushJson.TYPE_EXIT.equals(type)) {

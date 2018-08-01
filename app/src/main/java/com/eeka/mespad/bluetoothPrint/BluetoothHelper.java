@@ -86,16 +86,16 @@ public class BluetoothHelper {
     /**
      * 是否连接蓝牙扫码设备
      */
-    public static boolean isConnectedScannerDevice(Activity context) {
+    public static boolean isConnectedScannerDevice() {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter == null) {
-            ToastUtil.showToast(context, "该设备不支持蓝牙功能", Toast.LENGTH_LONG);
+//            ToastUtil.showToast(context, "该设备不支持蓝牙功能", Toast.LENGTH_LONG);
             return false;
         }
 
         if (!adapter.isEnabled()) {
-            ToastUtil.showToast(context, "请打开蓝牙开关,并配对相应蓝牙设备.", Toast.LENGTH_LONG);
-            SystemUtils.startBluetoothSettingView(context);
+//            ToastUtil.showToast(context, "请打开蓝牙开关,并配对相应蓝牙设备.", Toast.LENGTH_LONG);
+//            SystemUtils.startBluetoothSettingView(context);
             return false;
         }
 

@@ -234,11 +234,11 @@ public class SuspendFragment extends BaseFragment {
             return;
         }
         //绑定洗水唛
-        if ("true".equals(mCurComponent.getIsMaster()) && !mWashLabelScanned) {
-            new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName()).show();
-            mWashLabelScanned = true;
-            return;
-        }
+//        if ("true".equals(mCurComponent.getIsMaster()) && !mWashLabelScanned) {
+//            new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName()).show();
+//            mWashLabelScanned = true;
+//            return;
+//        }
         mBtn_binding.setEnabled(false);
         showLoading();
         HttpHelper.hangerBinding(mCurComponent.getComponentId(), mWashLabel, mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
