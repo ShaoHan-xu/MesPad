@@ -105,6 +105,7 @@ public class HttpHelper {
     public static final String getPattern = BASE_URL + "/cutpad/viewembroiderPicture?";
     public static final String productOff = BASE_URL + "hanger/productOff?";
     public static final String productOn = BASE_URL + "hanger/productOn?";
+    public static final String viewCutPadInforByShopOrder = BASE_URL + "cutpad/viewCutPadInforByInput?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -478,7 +479,7 @@ public class HttpHelper {
         json.put("OPERATION_BO", operationBo);
         json.put("POSITION_BO", positionBo);
         json.put("RFID", RFID);
-        json.put("PAD_IP",PAD_IP);
+        json.put("PAD_IP", PAD_IP);
         params.put("params", json.toJSONString());
         HttpRequest.post(getSfcComponents, params, getResponseHandler(getSfcComponents, callback));
     }
@@ -799,6 +800,18 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(getPattern, params, getResponseHandler(getPattern, callback));
+    }
+
+    /**
+     * 通过工单号获取工单信息
+     */
+    public static void viewCutPadInfoByShopOrder(String shopOrder, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("PAD_IP", PAD_IP);
+        json.put("INPUT", shopOrder);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(viewCutPadInforByShopOrder, params, getResponseHandler(viewCutPadInforByShopOrder, callback));
     }
 
     /**

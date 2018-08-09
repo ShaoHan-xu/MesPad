@@ -39,7 +39,7 @@ public class TabViewUtil {
             content = item.getDESCRIPTION();
         } else if (data instanceof TailorInfoBo.MatInfoBean) {//物料标签
             TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) data;
-            content = matInfo.getMAT_NO();
+            content = matInfo.getMAT_DESC();
         } else if (data instanceof SewAttr) {//缝制工序标签
             SewAttr sewData = (SewAttr) data;
             content = sewData.getDescription();

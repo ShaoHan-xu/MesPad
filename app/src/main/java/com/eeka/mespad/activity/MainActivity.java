@@ -177,8 +177,17 @@ public class MainActivity extends NFCActivity {
             finish();
             System.exit(0);
         } else {
+            String content = push.getContent();
+            if (TopicUtil.TOPIC_SUSPEND.equals(mTopic) && mSuspendFragment.inputRFID(content)) {
+                //上裁站刷卡绑定RFID
+                return;
+            }
+            if (TopicUtil.TOPIC_SEW.equals(mTopic) && mSewFragment.inputRFID(content)) {
+                //缝制段刷卡通过RFID卡号重新上架
+                return;
+            }
             toast("正在刷新页面");
-            mEt_orderNum.setText(push.getContent());
+            mEt_orderNum.setText(content);
             isSearchOrder = true;
             if (checkResource()) {
                 searchOrder();
@@ -732,7 +741,7 @@ public class MainActivity extends NFCActivity {
                 case TopicUtil.TOPIC_CUT:
                     String searchType = mTv_searchType.getText().toString();
                     if ("工单号".equals(searchType)) {
-                        mCutFragment.searchOrderByOrderNum(cardNum, mPositionInfo.getRESR_INFOR().getRESOURCE_BO());
+                        mCutFragment.searchOrderByOrderNum(cardNum);
                     } else {
                         getCardInfo(cardNum);
                     }
@@ -806,11 +815,11 @@ public class MainActivity extends NFCActivity {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
                     mTopic = bean.getTOPIC();
                 }
-//                if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
-//                    mTv_searchType.setVisibility(View.VISIBLE);
-//                } else {
-//                    mTv_searchType.setVisibility(View.GONE);
-//                }
+                if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+                    mTv_searchType.setVisibility(View.VISIBLE);
+                } else {
+                    mTv_searchType.setVisibility(View.GONE);
+                }
                 if (TopicUtil.TOPIC_SUBCONTRACT.equals(mTopic)) {
                     startActivity(new Intent(mContext, SubcontractReceiveAty.class));
                     finish();

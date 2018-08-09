@@ -37,9 +37,9 @@ public class BluetoothHelper {
 //        int mid = Pdata.length() / 2;
 //        String str1 = Pdata.substring(0, mid);
 //        String str2 = Pdata.substring(mid, Pdata.length());
-        zpSDK.zp_draw_text_ex(1, 3, Pdata, "宋体", 3, 0, false, false, false);
-        zpSDK.zp_draw_text_ex(25, 3, Pdata, "宋体", 3, 0, false, false, false);
-        zpSDK.zp_draw_text_ex(49, 3, Pdata, "宋体", 3, 0, false, false, false);
+        zpSDK.zp_draw_text_ex(5, 4, Pdata, "宋体", 3, 0, false, false, false);
+        zpSDK.zp_draw_text_ex(28, 4, Pdata, "宋体", 3, 0, false, false, false);
+        zpSDK.zp_draw_text_ex(52, 4, Pdata, "宋体", 3, 0, false, false, false);
 //        zpSDK.zp_draw_barcode(5, 15, Pdata, zpSDK.BARCODE_TYPE.BARCODE_CODE128, 8, 2, 0);
 
         zpSDK.zp_page_print(false);

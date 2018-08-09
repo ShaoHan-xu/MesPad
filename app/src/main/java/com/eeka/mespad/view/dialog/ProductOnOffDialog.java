@@ -3,6 +3,7 @@ package com.eeka.mespad.view.dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -56,6 +57,24 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
             tv_title.setText("成衣上架");
             view.findViewById(R.id.layout_productOnOff_sfc).setVisibility(View.GONE);
             mEt_washLabel = view.findViewById(R.id.et_productOnOff_washLabel);
+            mEt_washLabel.requestFocus();
+            SystemUtils.showSoftInputFromWindow(mContext);
+            mEt_washLabel.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                        String orderNum = mEt_washLabel.getText().toString();
+                        if (!TextUtils.isEmpty(mLastNum)) {
+                            mLastNum = orderNum.replaceFirst(mLastNum, "");
+                        } else {
+                            mLastNum = orderNum;
+                        }
+                        mEt_washLabel.setText(mLastNum);
+                        return true;
+                    }
+                    return false;
+                }
+            });
         }
 
         view.findViewById(R.id.btn_productOnOff_ok).setOnClickListener(new View.OnClickListener() {
@@ -77,6 +96,13 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
                 dismiss();
             }
         });
+    }
+
+    private String mLastNum;
+
+    public void setWashLabel(String rfid) {
+        if (mEt_washLabel != null)
+            mEt_washLabel.setText(rfid);
     }
 
     private void on() {

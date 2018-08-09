@@ -86,6 +86,10 @@ public class WashLabelDialog extends BaseDialog {
         });
     }
 
+    public void setWashLabel(String washLabel) {
+        mEt_washLabel.setText(washLabel);
+    }
+
     @Override
     public void show() {
         super.show();

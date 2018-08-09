@@ -81,7 +81,6 @@ public class SuspendFragment extends BaseFragment {
     private HorizontalScrollView mHSV_imgBar;
     private LinearLayout mLayout_imgBar;
     private String mWashLabel;
-    private boolean mWashLabelScanned;//是否已经扫了洗水唛
 
     private Button mBtn_binding;
 
@@ -89,6 +88,8 @@ public class SuspendFragment extends BaseFragment {
     private String mShopOrder = "";
     private String mItemCode = "";
     private String mSize = "";
+
+    private WashLabelDialog mWashLabelDialog;
 
     @Nullable
     @Override
@@ -221,6 +222,17 @@ public class SuspendFragment extends BaseFragment {
     }
 
     /**
+     * 绑定RFID号
+     */
+    public boolean inputRFID(String rfid) {
+        if (mWashLabelDialog != null && mWashLabelDialog.isShowing()) {
+            mWashLabelDialog.setWashLabel(rfid);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 绑定
      */
     public void binding() {
@@ -234,11 +246,11 @@ public class SuspendFragment extends BaseFragment {
             return;
         }
         //绑定洗水唛
-//        if ("true".equals(mCurComponent.getIsMaster()) && !mWashLabelScanned) {
-//            new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName()).show();
-//            mWashLabelScanned = true;
-//            return;
-//        }
+        if ("true".equals(mCurComponent.getIsMaster()) && isEmpty(mWashLabel)) {
+            mWashLabelDialog = new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName());
+            mWashLabelDialog.show();
+            return;
+        }
         mBtn_binding.setEnabled(false);
         showLoading();
         HttpHelper.hangerBinding(mCurComponent.getComponentId(), mWashLabel, mCurComponent.getIsNeedSubContract(), SuspendFragment.this);
@@ -341,7 +353,6 @@ public class SuspendFragment extends BaseFragment {
                 mCurComponent = component;
 //                showLoading();
                 mWashLabel = null;
-                mWashLabelScanned = false;
                 HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
                 List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
                 int childCount = mLayout_component.getChildCount();

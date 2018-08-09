@@ -83,6 +83,8 @@ public class CutFragment extends BaseFragment {
     private List<RecordNCBo> mList_recordNC;//记录不良
     private boolean isRecordLabu;//是否已记录拉布数据
 
+    private boolean isSearchShopOrder = false;//是否按工单号搜索
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -107,13 +109,15 @@ public class CutFragment extends BaseFragment {
         SystemUtils.playVideo(mContext, videoUrl);
     }
 
-    public void searchOrderByOrderNum(String orderNum, String resourceBo) {
+    public void searchOrderByOrderNum(String orderNum) {
+        isSearchShopOrder = true;
         showLoading();
         mRFID = orderNum;
-
+        HttpHelper.viewCutPadInfoByShopOrder(orderNum, this);
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
+        isSearchShopOrder = false;
         showLoading();
         mOrderType = orderType;
         mRFID = orderNum;
@@ -177,9 +181,11 @@ public class CutFragment extends BaseFragment {
         //粘朴数据
         mLayout_material2.removeAllViews();
         List<TailorInfoBo.StickyInfo> stickyInfo = mTailorInfo.getSTICKY_INFOR();
-        for (int i = 0; i < stickyInfo.size(); i++) {
-            TailorInfoBo.StickyInfo info = stickyInfo.get(i);
-            mLayout_material2.addView(getMaterialsView(info, i));
+        if (stickyInfo != null) {
+            for (int i = 0; i < stickyInfo.size(); i++) {
+                TailorInfoBo.StickyInfo info = stickyInfo.get(i);
+                mLayout_material2.addView(getMaterialsView(info, i));
+            }
         }
 
         //排料图数据
@@ -250,16 +256,17 @@ public class CutFragment extends BaseFragment {
         TextView tv_processLot = mView.findViewById(R.id.tv_sew_processLot);
         TextView tv_qty = mView.findViewById(R.id.tv_sew_qty);
         TextView tv_matDesc = mView.findViewById(R.id.tv_cut_matDesc);
+        tv_processLot.setText(mRI);
+
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
         tv_MTMOrderNum.setText(orderInfo.getSALES_ORDER());
         tv_matDesc.setText(orderInfo.getITEM_DESC());
         tv_style.setText(orderInfo.getITEM());
-        tv_processLot.setText(mRI);
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
         mTv_special.setText(orderInfo.getSO_REMARK());
 
-        if ("P".equals(mOrderType)) {
+        if (!isSearchShopOrder && "P".equals(mOrderType)) {
             mView.findViewById(R.id.layout_cut_layers).setVisibility(View.VISIBLE);
             TextView tv_layers = mView.findViewById(R.id.tv_sew_layers);
             tv_layers.setText(orderInfo.getLAYERS() + "");
@@ -742,7 +749,7 @@ public class CutFragment extends BaseFragment {
                 if (result != null) {
                     mList_padProcess = JSON.parseArray(result.getJSONArray("OPER_INFOR").toString(), TailorInfoBo.OPERINFORBean.class);
                 }
-            } else if (url.equals(HttpHelper.viewCutPadInfo_url)) {
+            } else if (url.equals(HttpHelper.viewCutPadInfo_url) || url.equals(HttpHelper.viewCutPadInforByShopOrder)) {
                 JSONObject result1 = resultJSON.getJSONObject("result");
                 if (result1 != null) {
                     mTailorInfo = JSON.parseObject(result1.toString(), TailorInfoBo.class);
@@ -754,11 +761,17 @@ public class CutFragment extends BaseFragment {
                         mBtn_done.setEnabled(true);
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
                     }
-                    mTailorInfo.setOrderType(mOrderType);
-                    mTailorInfo.setRFID(mRFID);
+                    if (!isSearchShopOrder) {
+                        mTailorInfo.setOrderType(mOrderType);
+                        mTailorInfo.setRFID(mRFID);
+                    } else {
+                        TailorInfoBo.SHOPORDERINFORBean shopOrderInfo = new TailorInfoBo.SHOPORDERINFORBean();
+                        shopOrderInfo.setSHOP_ORDER(mRFID);
+                        mTailorInfo.setSHOP_ORDER_INFOR(shopOrderInfo);
+                    }
                     refreshView();
 
-                    //更新订单后需要清空之前的记录
+                    //更新订单后需要清空之前的不良记录
                     mList_recordNC = new ArrayList<>();
                     isRecordLabu = false;
                 }

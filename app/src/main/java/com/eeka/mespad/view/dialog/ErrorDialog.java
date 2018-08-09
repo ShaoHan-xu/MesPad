@@ -110,14 +110,14 @@ public class ErrorDialog {
                 }
             });
         }
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                PushJson push = new PushJson();
-                push.setType(PushJson.TYPE_ErrDialogDismiss);
-                EventBus.getDefault().post(push);
-            }
-        });
+//        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                PushJson push = new PushJson();
+//                push.setType(PushJson.TYPE_ErrDialogDismiss);
+//                EventBus.getDefault().post(push);
+//            }
+//        });
         builder.setView(v);
         mDialog = builder.create();
         if (!((Activity) context).isFinishing()) {

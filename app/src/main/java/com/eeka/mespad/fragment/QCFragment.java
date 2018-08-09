@@ -158,17 +158,17 @@ public class QCFragment extends BaseFragment {
         if (currentOperations != null && currentOperations.size() != 0) {
             String currentOperation = currentOperations.get(0).getDescription();
             mTv_curProcess.setText(currentOperation);
-//            for (int i = 0; i < currentOperations.size(); i++) {
-//                SewAttr opera = currentOperations.get(i);
-//                if ("TQTXJ002".equals(opera.getName())) {
-//                    if (mOfflineDialog != null) {
-//                        mOfflineDialog.dismiss();
-//                        mOfflineDialog = null;
-//                    }
-//                    mOfflineDialog = new OfflineDialog(mContext, mSewQCData.getSfc(), mRFID, mSewQCData.getShopOrder(), opera.getName(), opera.getDescription());
-//                    mOfflineDialog.show();
-//                }
-//            }
+            for (int i = 0; i < currentOperations.size(); i++) {
+                SewAttr opera = currentOperations.get(i);
+                if ("TQTXJ002".equals(opera.getName())) {
+                    if (mOfflineDialog != null) {
+                        mOfflineDialog.dismiss();
+                        mOfflineDialog = null;
+                    }
+                    mOfflineDialog = new OfflineDialog(mContext, mSewQCData.getSfc(), mRFID, mSewQCData.getShopOrder(), opera.getName(), opera.getDescription());
+                    mOfflineDialog.show();
+                }
+            }
         }
         mTv_dayOutput.setText(mSewQCData.getDailyOutput() + "");
         mTv_monthOutput.setText(mSewQCData.getMonthlyOutput() + "");
