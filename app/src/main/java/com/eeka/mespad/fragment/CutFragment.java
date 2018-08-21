@@ -21,11 +21,13 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.activity.RecordCutNCActivity;
 import com.eeka.mespad.activity.RecordLabuActivity;
+import com.eeka.mespad.activity.WebActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
@@ -252,6 +254,7 @@ public class CutFragment extends BaseFragment {
 
         TextView tv_orderNum = mView.findViewById(R.id.tv_cut_orderNum);
         TextView tv_MTMOrderNum = mView.findViewById(R.id.tv_cut_MTMOrderNum);
+        tv_MTMOrderNum.setOnClickListener(this);
         TextView tv_style = mView.findViewById(R.id.tv_sew_style);
         TextView tv_processLot = mView.findViewById(R.id.tv_sew_processLot);
         TextView tv_qty = mView.findViewById(R.id.tv_sew_qty);
@@ -409,6 +412,9 @@ public class CutFragment extends BaseFragment {
             String content = mTv_special.getText().toString();
             if (!isEmpty(content))
                 MyAlertDialog.showAlert(mContext, content);
+        } else if (v.getId() == R.id.tv_cut_MTMOrderNum) {
+            String url = PadApplication.MTM_URL + mTailorInfo.getSHOP_ORDER_INFOR().getSALES_ORDER();
+            startActivity(WebActivity.getIntent(mContext, url));
         }
     }
 

@@ -235,7 +235,6 @@ public class QCFragment extends BaseFragment {
             toast("获取尺寸数据失败");
             return;
         }
-        mLayout_sizeInfo.removeAllViews();
         List<ClothSizeBo.DCPARRMSBean> parrms = mClothSizeData.getDC_PARRMS();
         if (parrms != null) {
             for (int i = 0; i < parrms.size(); i++) {
@@ -517,6 +516,8 @@ public class QCFragment extends BaseFragment {
                 mSewQCData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewQCDataBo.class);
                 setupView();
 
+                //此处删除成衣数据是防止主界面获取到数据而成衣数据获取失败的情况导致成衣数据还显示的上一件的数据问题
+                mLayout_sizeInfo.removeAllViews();
                 getClothSizeData();
             } else if (HttpHelper.getClothSize.equals(url)) {
                 mClothSizeData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ClothSizeBo.class);

@@ -18,21 +18,22 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/btn_ok"
+            android:id="@+id/btn_cancel"
             style="@style/btnStyle_primary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="1dp"
             android:layout_weight="1"
-            android:text="确定" />
+            android:text="取消" />
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_ok"
             style="@style/btnStyle_primary"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="取消" />
+            android:text="确定" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -109,9 +110,9 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center"
-                android:singleLine="true"
                 android:hint="扫码输入洗水唛编号"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:singleLine="true" />
         </LinearLayout>
 
     </LinearLayout>
