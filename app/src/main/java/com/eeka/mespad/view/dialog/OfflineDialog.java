@@ -19,13 +19,15 @@ import com.eeka.mespad.utils.SystemUtils;
 /**
  * 成衣下线提示弹框
  */
-public class OfflineDialog extends BaseDialog implements View.OnClickListener {
+public class OfflineDialog extends BaseDialog implements View.OnClickListener, HttpCallback {
 
     private String mSFC;
     private String mHangerId;
     private String mShopOrder;
     private String mOperation;
     private String mOperationDesc;
+
+    private boolean isChange;//换片下架
 
     public OfflineDialog(@NonNull Context context, String sfc, String hangerId, String shopOrder, String operation, String operationDesc) {
         super(context);
@@ -34,6 +36,17 @@ public class OfflineDialog extends BaseDialog implements View.OnClickListener {
         mShopOrder = shopOrder;
         mOperation = operation;
         mOperationDesc = operationDesc;
+        init();
+    }
+
+    public OfflineDialog(@NonNull Context context, String sfc, String hangerId, String shopOrder, String operation, String operationDesc, boolean isChange) {
+        super(context);
+        mSFC = sfc;
+        mHangerId = hangerId;
+        mShopOrder = shopOrder;
+        mOperation = operation;
+        mOperationDesc = operationDesc;
+        this.isChange = isChange;
         init();
     }
 
@@ -73,24 +86,30 @@ public class OfflineDialog extends BaseDialog implements View.OnClickListener {
      */
     private void offline() {
         LoadingDialog.show(mContext);
-        HttpHelper.productOff(mHangerId, mSFC, new HttpCallback() {
-            @Override
-            public void onSuccess(String url, JSONObject resultJSON) {
-                if (HttpHelper.isSuccess(resultJSON)) {
-                    ErrorDialog.showAlert(mContext,resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, true);
-                    dismiss();
-                } else {
-                    ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));
-                }
-                LoadingDialog.dismiss();
-            }
+        if (isChange) {
+            JSONObject json = new JSONObject();
+            json.put("HANGER_ID", mHangerId);
+            HttpHelper.hangerUnbind(json, this);
+        } else {
+            HttpHelper.productOff(mHangerId, mSFC, this);
+        }
+    }
 
-            @Override
-            public void onFailure(String url, int code, String message) {
-                LoadingDialog.dismiss();
-                ErrorDialog.showAlert(mContext, message);
-            }
-        });
+    @Override
+    public void onSuccess(String url, JSONObject resultJSON) {
+        if (HttpHelper.isSuccess(resultJSON)) {
+            ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, true);
+            dismiss();
+        } else {
+            ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));
+        }
+        LoadingDialog.dismiss();
+    }
+
+    @Override
+    public void onFailure(String url, int code, String message) {
+        LoadingDialog.dismiss();
+        ErrorDialog.showAlert(mContext, message);
     }
 
     @Override

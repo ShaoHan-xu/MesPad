@@ -32,6 +32,7 @@ import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.OfflineDialog;
+import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.ReworkInfoDialog;
 
 import java.util.ArrayList;
@@ -244,6 +245,43 @@ public class QCFragment extends BaseFragment {
         }
     }
 
+    private ProductOnOffDialog mProductOnOffDialog;
+
+    /**
+     * 成衣上架
+     */
+    public void productOn() {
+        mProductOnOffDialog = new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchOrder(mRFID);
+            }
+        });
+        mProductOnOffDialog.show();
+    }
+
+    /**
+     * 输入RFID号做成衣上架用
+     */
+    public boolean inputRFID(String rfid) {
+        if (mProductOnOffDialog != null && mProductOnOffDialog.isShowing()) {
+            mProductOnOffDialog.setWashLabel(rfid);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 成衣下架
+     */
+    public void productOff() {
+        if (mSewQCData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        new ProductOnOffDialog(mContext, mRFID, mSewQCData.getSfc(), true, null).show();
+    }
+
     /**
      * 记录不良
      */
@@ -264,6 +302,24 @@ public class QCFragment extends BaseFragment {
         } else {
             CreateCardDialog dialog = new CreateCardDialog(mContext, mSewQCData.getSfc());
             dialog.show();
+        }
+    }
+
+    /**
+     * 换片下架
+     */
+    public void change() {
+        if (mSewQCData == null) {
+            showErrorDialog("请先获取工单数据");
+        } else {
+            String operation = null;
+            String operationDesc = null;
+            List<SewAttr> currentOperation = mSewQCData.getCurrentOperation();
+            if (currentOperation != null && currentOperation.size() != 0) {
+                operation = currentOperation.get(0).getName();
+                operationDesc = currentOperation.get(0).getDescription();
+            }
+            new OfflineDialog(mContext, mSewQCData.getSfc(), mRFID, mSewQCData.getShopOrder(), operation, operationDesc, true).show();
         }
     }
 

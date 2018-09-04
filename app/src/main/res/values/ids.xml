@@ -38,4 +38,5 @@
     <item name="btn_productOff" type="id" />
     <item name="btn_manualStart" type="id" />
     <item name="btn_manualComplete" type="id" />
+    <item name="btn_change" type="id" />
 </resources>

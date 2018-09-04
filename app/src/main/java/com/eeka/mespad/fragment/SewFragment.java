@@ -82,6 +82,7 @@ public class SewFragment extends BaseFragment {
 
     private String mRFID;
     private SewDataBo mSewData;
+    private List<SewAttr> mList_lastOperation;
 
     private MainActivity mActivity;
 
@@ -484,6 +485,34 @@ public class SewFragment extends BaseFragment {
             mCurProcessAdapter.notifyDataSetChanged(curOperation);
         }
         if (curOperation != null) {
+            ErrorDialog.dismiss();
+            if (mList_lastOperation != null) {
+                boolean needAlert = false;
+                //比较当前款工序与上一款工序是否一致，不一致则提醒员工注意
+                if (curOperation.size() == mList_lastOperation.size()) {
+                    for (SewAttr item1 : curOperation) {
+                        boolean flag = true;
+                        for (SewAttr item2 : mList_lastOperation) {
+                            if (item1.getName().equals(item2.getName())) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            needAlert = true;
+                            break;
+                        }
+                    }
+                } else {
+                    needAlert = true;
+                }
+                if (needAlert) {
+                    ErrorDialog.showAlert(mContext, "当前款要做工序与上一款所做工序不一样，请注意", ErrorDialog.TYPE.ALERT, null, false);
+                    SystemUtils.startSystemAlerm(mContext);
+                }
+            }
+            mList_lastOperation = curOperation;
+            
             boolean hasNC = false;
             for (int i = 0; i < curOperation.size(); i++) {
                 SewAttr opera = curOperation.get(i);

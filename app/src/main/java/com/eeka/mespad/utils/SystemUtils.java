@@ -9,6 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Point;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -339,6 +341,16 @@ public class SystemUtils {
         } else {
             ErrorDialog.showAlert(context, "当前工序无视频");
         }
+    }
+
+    /**
+     * 调用系统铃声提醒
+     */
+    public static void startSystemAlerm(Context context) {
+        MediaPlayer mMediaPlayer = MediaPlayer.create(context,
+                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION));
+        mMediaPlayer.setLooping(false);
+        mMediaPlayer.start();
     }
 
     /**

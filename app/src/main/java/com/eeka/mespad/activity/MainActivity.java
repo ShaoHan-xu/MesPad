@@ -186,6 +186,10 @@ public class MainActivity extends NFCActivity {
                 //缝制段刷卡通过RFID卡号重新上架
                 return;
             }
+            if (TopicUtil.TOPIC_QC.equals(mTopic) && mQCFragment.inputRFID(content)) {
+                //质检段刷卡通过RFID卡号重新上架
+                return;
+            }
             toast("正在刷新页面");
             mEt_orderNum.setText(content);
             isSearchOrder = true;
@@ -269,6 +273,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "CHANG_BUTTON":
+                    button.setText("换片下线");
+                    button.setId(R.id.btn_change);
+                    break;
                 case "MANUAL_COMPLETE":
                     button.setText("手工完成");
                     button.setId(R.id.btn_manualComplete);
@@ -557,6 +565,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_change:
+                if (mQCFragment != null) {
+                    mQCFragment.change();
+                }
+                break;
             case R.id.btn_manualStart:
                 if (mSewFragment != null) {
                     String searchKey = mEt_orderNum.getText().toString();
@@ -570,13 +583,25 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_productOn:
-                if (mSewFragment != null) {
-                    mSewFragment.productOn();
+                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                    if (mSewFragment != null) {
+                        mSewFragment.productOn();
+                    }
+                } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                    if (mQCFragment != null) {
+                        mQCFragment.productOn();
+                    }
                 }
                 break;
             case R.id.btn_productOff:
-                if (mSewFragment != null) {
-                    mSewFragment.productOff();
+                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                    if (mSewFragment != null) {
+                        mSewFragment.productOff();
+                    }
+                } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                    if (mQCFragment != null) {
+                        mQCFragment.productOff();
+                    }
                 }
                 break;
             case R.id.btn_pattern:
