@@ -245,11 +245,13 @@ public class SuspendFragment extends BaseFragment {
             showErrorDialog("请员工刷卡登录");
             return;
         }
-        //绑定洗水唛
-        if ("true".equals(mCurComponent.getIsMaster()) && isEmpty(mWashLabel)) {
-            mWashLabelDialog = new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName());
-            mWashLabelDialog.show();
-            return;
+        //绑定洗水唛，目前只有于都产线需要
+        if ("YD".equals(getString(R.string.app_channel))) {
+            if ("true".equals(mCurComponent.getIsMaster()) && isEmpty(mWashLabel)) {
+                mWashLabelDialog = new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName());
+                mWashLabelDialog.show();
+                return;
+            }
         }
         mBtn_binding.setEnabled(false);
         showLoading();

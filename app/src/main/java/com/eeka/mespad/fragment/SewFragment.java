@@ -507,12 +507,12 @@ public class SewFragment extends BaseFragment {
                     needAlert = true;
                 }
                 if (needAlert) {
-                    ErrorDialog.showAlert(mContext, "当前款要做工序与上一款所做工序不一样，请注意", ErrorDialog.TYPE.ALERT, null, false);
+                    ErrorDialog.showAlert(mContext, "当前要做工序与上个要做工序不同，请注意", ErrorDialog.TYPE.ALERT, null, false);
                     SystemUtils.startSystemAlerm(mContext);
                 }
             }
             mList_lastOperation = curOperation;
-            
+
             boolean hasNC = false;
             for (int i = 0; i < curOperation.size(); i++) {
                 SewAttr opera = curOperation.get(i);
