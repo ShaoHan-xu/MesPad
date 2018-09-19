@@ -11,4 +11,5 @@ public class TopicUtil {
     public static final String TOPIC_QC = "UI040";//质检
     public static final String TOPIC_SUBCONTRACT = "UI050";//外协收货
     public static final String TOPIC_MANUAL = "UI060";//手工
+    public static final String TOPIC_PACKING = "UI070";//包装
 }

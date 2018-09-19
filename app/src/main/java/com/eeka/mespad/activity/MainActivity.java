@@ -273,6 +273,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "SORTING_BUTTON":
+                    button.setText("分拣扫码");
+                    button.setId(R.id.btn_sorting);
+                    break;
                 case "CHANG_BUTTON":
                     button.setText("换片下线");
                     button.setId(R.id.btn_change);
@@ -434,6 +438,11 @@ public class MainActivity extends NFCActivity {
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         Fragment fragment = null;
         switch (mTopic) {
+            case TopicUtil.TOPIC_PACKING:
+                if (mSewFragment == null)
+                    mSewFragment = new SewFragment();
+                fragment = mSewFragment;
+                break;
             case TopicUtil.TOPIC_MANUAL:
                 if (mSewFragment == null)
                     mSewFragment = new SewFragment();
@@ -461,6 +470,10 @@ public class MainActivity extends NFCActivity {
                 break;
         }
         if (fragment != null) {
+            //因为缝制主题公用于手工与包装主题，所以在此传值，用于在fragment内区分
+            Bundle bundle = new Bundle();
+            bundle.putString("topic", mTopic);
+            fragment.setArguments(bundle);
             if (fragment.isAdded()) {
                 ft.show(fragment);
             } else {
@@ -565,6 +578,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_sorting:
+                if (mSewFragment != null) {
+                    mSewFragment.sorting();
+                }
+                break;
             case R.id.btn_change:
                 if (mQCFragment != null) {
                     mQCFragment.change();
@@ -760,7 +778,10 @@ public class MainActivity extends NFCActivity {
         } else {
             mCardInfo.setCardNum(cardNum);
             switch (mTopic) {
+                //三个主题共用一个界面
+                case TopicUtil.TOPIC_PACKING:
                 case TopicUtil.TOPIC_MANUAL:
+                case TopicUtil.TOPIC_SEW:
                     mSewFragment.searchOrder(cardNum);
                     break;
                 case TopicUtil.TOPIC_CUT:
@@ -770,9 +791,6 @@ public class MainActivity extends NFCActivity {
                     } else {
                         getCardInfo(cardNum);
                     }
-                    break;
-                case TopicUtil.TOPIC_SEW:
-                    mSewFragment.searchOrder(cardNum);
                     break;
                 case TopicUtil.TOPIC_SUSPEND:
                     mSuspendFragment.searchOrder(cardNum);

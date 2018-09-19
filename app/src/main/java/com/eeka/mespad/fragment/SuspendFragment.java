@@ -247,7 +247,7 @@ public class SuspendFragment extends BaseFragment {
         }
         //绑定洗水唛，目前只有于都产线需要
         if ("YD".equals(getString(R.string.app_channel))) {
-            if ("true".equals(mCurComponent.getIsMaster()) && isEmpty(mWashLabel)) {
+            if ("true".equals(mCurComponent.getIsUnderCarry()) && "true".equals(mCurComponent.getIsMaster()) && isEmpty(mWashLabel)) {
                 mWashLabelDialog = new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName());
                 mWashLabelDialog.show();
                 return;

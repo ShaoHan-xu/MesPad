@@ -111,6 +111,15 @@ public class SuspendComponentBo {
         private String operationRef;
         private String isBound;
         private String isMaster;//是否主部件，用于判断是否需要绑定洗水唛
+        private String isUnderCarry;//是否有下架标识，用于判断是否需要绑定洗水唛
+
+        public String getIsUnderCarry() {
+            return isUnderCarry;
+        }
+
+        public void setIsUnderCarry(String isUnderCarry) {
+            this.isUnderCarry = isUnderCarry;
+        }
 
         public String getIsMaster() {
             return isMaster;

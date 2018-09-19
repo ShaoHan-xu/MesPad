@@ -16,8 +16,10 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
+import com.eeka.mespad.activity.WebActivity;
 import com.eeka.mespad.bo.ClothSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ReworkItemBo;
@@ -110,6 +112,7 @@ public class QCFragment extends BaseFragment {
         mTv_reworkInfo = mView.findViewById(R.id.tv_sewQC_reworkInfo);
         mTv_reworkInfo.setOnClickListener(this);
         mTv_special.setOnClickListener(this);
+        mTv_MTMOrderNum.setOnClickListener(this);
 
         mTv_componentDesc.setOnClickListener(this);
         mView.findViewById(R.id.btn_sewQc_save).setOnClickListener(this);
@@ -143,6 +146,10 @@ public class QCFragment extends BaseFragment {
             case R.id.tv_sewQC_reworkInfo:
                 showLoading();
                 HttpHelper.getReworkInfo(mSewQCData.getSfcRef(), this);
+                break;
+            case R.id.tv_sewQC_MTMOrderNum:
+                String url = PadApplication.MTM_URL + mSewQCData.getSalesOrder();
+                startActivity(WebActivity.getIntent(mContext, url));
                 break;
         }
     }

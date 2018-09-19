@@ -637,6 +637,7 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("SFC", sfc);
+        json.put("ncCode", "NC2QC");
         json.put("ResourceBO", resourceBo);
         params.put("params", json.toJSONString());
         HttpRequest.post(initNcForQA, params, getResponseHandler(initNcForQA, callback));

@@ -12,6 +12,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.ReflectUtil;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;
@@ -36,11 +37,13 @@ public class WebServiceUtils {
 
     private static String WEB_IN_OUT_URL = PadApplication.WEB_URL + "ExtStepPassServiceWSService";
     private static String WEB_DOING_URL = PadApplication.WEB_URL + "HangerDoServiceWSService";
+    private static String WEB_SENDPRODUCTMSG = PadApplication.WEB_URL + "ProductMessageServiceWSService";
     private static String NAMESPACE = "http://integration.ina.ws.eeka.com/";
     //方法名
     public static final String INA_IN = "inaCommonWipIn";
     public static final String INA_OUT = "inaCommonWipOut";
     public static final String INA_DOING = "sendTecFileListByRfid";
+    public static final String sendProductMessage = "sendProductMessage";
 
     private static final int WHAT_SUCCESS = 0;
     private static final int WHAT_FAIL = 1;
@@ -101,9 +104,11 @@ public class WebServiceUtils {
                             for (int i = 0; i < count; i++) {
                                 SoapObject soap = (SoapObject) resultSoapObject.getProperty(i);
                                 String code = soap.getProperty("code").toString();
-                                String message = soap.getProperty("message").toString();
                                 jsonObject.put("code", code);
-                                jsonObject.put("message", message);
+                                if (soap.hasProperty("message"))
+                                    jsonObject.put("message", soap.getProperty("message").toString());
+                                if (soap.hasProperty("msg"))
+                                    jsonObject.put("message", soap.getProperty("msg").toString());
                                 if (soap.hasProperty("nextLineId"))
                                     jsonObject.put("nextLineId", soap.getProperty("nextLineId").toString());
                                 if (soap.hasProperty("nextStationId"))
@@ -118,6 +123,8 @@ public class WebServiceUtils {
                                     url = INA_OUT;
                                 } else if (soapEnvelope.bodyOut.toString().startsWith(INA_DOING)) {
                                     url = INA_DOING;
+                                } else if (soapEnvelope.bodyOut.toString().startsWith(sendProductMessage)) {
+                                    url = sendProductMessage;
                                 }
                                 jsonObject.put("url", url);
                                 Message message = mHandler.obtainMessage(WHAT_SUCCESS, jsonObject);
@@ -132,6 +139,8 @@ public class WebServiceUtils {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Message message = mHandler.obtainMessage(WHAT_FAIL, "调用接口异常，" + e.toString());
+                    mHandler.sendMessage(message);
                 }
             }
         });
@@ -161,6 +170,22 @@ public class WebServiceUtils {
 
         void onFail(String errMsg);
 
+    }
+
+    /**
+     * 走分拣
+     *
+     * @param hangerIdWareHouse 成衣衣架号
+     */
+    public static void sendProductMessage(String lineId, String stationId, String hangerIdWareHouse, HttpCallBack callback) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        SoapObject object = new SoapObject();
+        object.addProperty("site", SpUtil.getSite());
+        object.addProperty("lineId", lineId);
+        object.addProperty("sewingStationID", stationId);
+        object.addProperty("hangerIdWareHouse", hangerIdWareHouse);
+        map.put("param", object);
+        callWebService(WEB_SENDPRODUCTMSG, sendProductMessage, map, callback);
     }
 
     public static void inaDoing(@NonNull INARequestBo data, HttpCallBack callBack) {

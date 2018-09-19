@@ -35,6 +35,7 @@ import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LineColorDialog;
@@ -44,7 +45,12 @@ import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.PocketSizeDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
+import com.eeka.mespad.view.dialog.SortingDialog;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -86,10 +92,15 @@ public class SewFragment extends BaseFragment {
 
     private MainActivity mActivity;
 
+    private String mTopic;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_sew, null);
+        Bundle bundle = getArguments();
+        assert bundle != null;
+        mTopic = bundle.getString("topic");
         return mView;
     }
 
@@ -99,12 +110,14 @@ public class SewFragment extends BaseFragment {
 
         mActivity = (MainActivity) getActivity();
 
+        EventBus.getDefault().register(this);
         initView();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -171,11 +184,32 @@ public class SewFragment extends BaseFragment {
         HttpHelper.getSewData(rfid, this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushMsgReceive(boolean complete) {
+        jumpSorting = true;
+        manualComplete(mRFID);
+    }
+
+    /**
+     * 分拣
+     */
+    public void sorting() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        new SortingDialog(mContext, mTopic).show();
+    }
+
     /**
      * 手工开始
      */
     public void manualStart(String rfid) {
         mRFID = rfid;
+        if (isEmpty(mRFID)) {
+            showErrorDialog("请输入条码获取数据");
+            return;
+        }
         INARequestBo bo = getINARequestParams();
         if (bo == null) {
             return;
@@ -193,11 +227,32 @@ public class SewFragment extends BaseFragment {
         WebServiceUtils.inaDoing(bo, new WebServiceCallback());
     }
 
+    private boolean jumpSorting;
+
     /**
      * 手工完成
      */
     public void manualComplete(String rfid) {
         mRFID = rfid;
+        if (isEmpty(mRFID)) {
+            showErrorDialog("请输入条码获取数据");
+            return;
+        }
+        if (!jumpSorting && mSewData != null) {
+            List<SewAttr> opeationInfos = mSewData.getCurrentOpeationInfos();
+            if (opeationInfos != null && opeationInfos.size() != 0) {
+                for (SewAttr item : opeationInfos) {
+                    if ("XQTBZ018".equals(item.getName())) {
+                        if (mSortingDialog != null && mSortingDialog.isShowing()) {
+                            mSortingDialog.dismiss();
+                        }
+                        mSortingDialog = new SortingDialog(mContext, mTopic);
+                        mSortingDialog.show();
+                        return;
+                    }
+                }
+            }
+        }
         INARequestBo bo = getINARequestParams();
         if (bo == null) {
             return;
@@ -214,11 +269,13 @@ public class SewFragment extends BaseFragment {
             if (WebServiceUtils.INA_IN.equals(method)) {
                 inaDoing();
             } else if (WebServiceUtils.INA_OUT.equals(method)) {
+                jumpSorting = false;
                 String nextLine = result.getString("nextLineId");
                 String nextPosition = result.getString("nextStationId");
                 StringBuilder message = new StringBuilder();
                 message.append("操作成功，下一个站位").append(nextLine).append("线").append(nextPosition).append("站位");
                 ErrorDialog.showAlert(mContext, message.toString(), ErrorDialog.TYPE.ALERT, null, true);
+                mActivity.setButtonState(R.id.btn_manualStart, false);
                 mActivity.setButtonState(R.id.btn_manualComplete, false);
             } else if (WebServiceUtils.INA_DOING.equals(method)) {
                 toast("开始手工作业");
@@ -561,8 +618,18 @@ public class SewFragment extends BaseFragment {
                 refreshProcessView(0);
             }
         }
+
+        //包装主题，去分拣
+        if (TopicUtil.TOPIC_PACKING.equals(mTopic)) {
+            if (mSortingDialog != null && mSortingDialog.isShowing()) {
+                mSortingDialog.dismiss();
+            }
+            mSortingDialog = new SortingDialog(mContext, mTopic);
+            mSortingDialog.show();
+        }
     }
 
+    private SortingDialog mSortingDialog;
     private OfflineDialog mOfflineDialog;
 
     /**
@@ -656,12 +723,10 @@ public class SewFragment extends BaseFragment {
                 toast("操作成功");
             } else if (HttpHelper.sewSubStart.equals(url)) {
                 toast("开始绣花工序");
-                MainActivity activity = (MainActivity) getActivity();
-                activity.setButtonState(R.id.btn_subStart, false);
+                mActivity.setButtonState(R.id.btn_subStart, false);
             } else if (HttpHelper.saveSubcontractInfo.equals(url)) {
                 toast("绣花工序完成");
-                MainActivity activity = (MainActivity) getActivity();
-                activity.setButtonState(R.id.btn_subComplete, false);
+                mActivity.setButtonState(R.id.btn_subComplete, false);
             }
         }
     }
