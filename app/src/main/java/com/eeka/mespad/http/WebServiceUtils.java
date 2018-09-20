@@ -129,8 +129,9 @@ public class WebServiceUtils {
                                 jsonObject.put("url", url);
                                 Message message = mHandler.obtainMessage(WHAT_SUCCESS, jsonObject);
                                 mHandler.sendMessage(message);
-//                            } else {
-//                                mCallback.onFail(jsonObject.getString("message"));
+                            } else {
+                                Message message = mHandler.obtainMessage(WHAT_FAIL, jsonObject.getString("message"));
+                                mHandler.sendMessage(message);
                             }
                         } else {
                             Message message = mHandler.obtainMessage(WHAT_FAIL, "调用接口数据返回为空");

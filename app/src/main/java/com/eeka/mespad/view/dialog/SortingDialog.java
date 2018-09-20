@@ -1,6 +1,7 @@
 package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -14,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.http.WebServiceUtils;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
@@ -47,7 +49,13 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    mLastNum = mEditText.getText().toString();
+                    String orderNum = mEditText.getText().toString();
+                    if (!TextUtils.isEmpty(mLastNum)) {
+                        mLastNum = orderNum.replaceFirst(mLastNum, "");
+                    } else {
+                        mLastNum = orderNum;
+                    }
+                    mEditText.setText(mLastNum);
                     sorting();
                     return true;
                 }
@@ -62,6 +70,14 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
             btn_jump.setOnClickListener(this);
         }
         view.findViewById(R.id.btn_cancel).setOnClickListener(this);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mEditText.requestFocus();
+                SystemUtils.showSoftInputFromWindow(mContext);
+            }
+        },500);
     }
 
     @Override

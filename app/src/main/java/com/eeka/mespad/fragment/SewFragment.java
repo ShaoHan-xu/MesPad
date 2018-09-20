@@ -198,7 +198,15 @@ public class SewFragment extends BaseFragment {
             showErrorDialog("请先获取衣架数据");
             return;
         }
-        new SortingDialog(mContext, mTopic).show();
+        showSortingDialog();
+    }
+
+    private void showSortingDialog() {
+        if (mSortingDialog != null && mSortingDialog.isShowing()) {
+            mSortingDialog.dismiss();
+        }
+        mSortingDialog = new SortingDialog(mContext, mTopic);
+        mSortingDialog.show();
     }
 
     /**
@@ -243,11 +251,7 @@ public class SewFragment extends BaseFragment {
             if (opeationInfos != null && opeationInfos.size() != 0) {
                 for (SewAttr item : opeationInfos) {
                     if ("XQTBZ018".equals(item.getName())) {
-                        if (mSortingDialog != null && mSortingDialog.isShowing()) {
-                            mSortingDialog.dismiss();
-                        }
-                        mSortingDialog = new SortingDialog(mContext, mTopic);
-                        mSortingDialog.show();
+                        showSortingDialog();
                         return;
                     }
                 }
@@ -621,11 +625,7 @@ public class SewFragment extends BaseFragment {
 
         //包装主题，去分拣
         if (TopicUtil.TOPIC_PACKING.equals(mTopic)) {
-            if (mSortingDialog != null && mSortingDialog.isShowing()) {
-                mSortingDialog.dismiss();
-            }
-            mSortingDialog = new SortingDialog(mContext, mTopic);
-            mSortingDialog.show();
+            showSortingDialog();
         }
     }
 
