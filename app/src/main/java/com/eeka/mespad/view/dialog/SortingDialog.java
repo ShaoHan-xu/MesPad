@@ -1,6 +1,7 @@
 package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -13,7 +14,9 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
@@ -21,6 +24,8 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * 分拣扫码弹框
@@ -77,7 +82,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 mEditText.requestFocus();
                 SystemUtils.showSoftInputFromWindow(mContext);
             }
-        },500);
+        }, 500);
     }
 
     @Override
@@ -121,7 +126,8 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 @Override
                 public void onFail(String errMsg) {
                     LoadingDialog.dismiss();
-                    ErrorDialog.showAlert(mContext, errMsg);
+                    //webservice的接口报错时都会有推送，所以此处不需要显示
+//                    ErrorDialog.showAlert(mContext, errMsg);
                 }
             });
         }

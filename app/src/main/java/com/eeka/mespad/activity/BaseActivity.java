@@ -76,6 +76,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         HttpHelper.positionLogin(cardNum, this);
     }
 
+    /**
+     * 刷卡上岗
+     */
+    public void clockOut(String cardNum) {
+        HttpHelper.positionLogout(cardNum, this);
+    }
+
     protected boolean isEmpty(String str) {
         return TextUtils.isEmpty(str);
     }

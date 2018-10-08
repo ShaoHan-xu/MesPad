@@ -22,7 +22,9 @@
     <item name="btn_binding" type="id" />
     <item name="btn_unbind" type="id" />
     <item name="btn_sticky" type="id" />
+    <item name="btn_qaToQc" type="id" />
     <item name="btn_gotoQC" type="id" />
+    <item name="btn_gotoQA" type="id" />
     <item name="btn_returnForSew" type="id" />
     <item name="btn_autoPicking" type="id" />
     <item name="btn_gyPic" type="id" />
@@ -40,4 +42,5 @@
     <item name="btn_manualComplete" type="id" />
     <item name="btn_change" type="id" />
     <item name="btn_sorting" type="id" />
+    <item name="btn_reworkList" type="id" />
 </resources>

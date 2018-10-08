@@ -216,6 +216,13 @@ public class RecordLabuActivity extends BaseActivity {
                         mLayout_items.addView(getItemView(list_items.get(i), i));
                     }
                     setResult(RESULT_OK);
+                } else {
+                    ErrorDialog.showAlert(mContext, "未配置拉布数据，无法操作", ErrorDialog.TYPE.ERROR, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    }, false);
                 }
             } else if (HttpHelper.saveOrUpdateLabuData.equals(url)) {
                 toast("保存成功");

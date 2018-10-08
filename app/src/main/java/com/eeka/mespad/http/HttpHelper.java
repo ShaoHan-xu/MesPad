@@ -88,6 +88,7 @@ public class HttpHelper {
     public static final String getClothSize = BASE_URL + "logNcPad/viewGarmentSize?";
     public static final String saveQCClothSizeData = BASE_URL + "logNcPad/saveDcCollect?";
     public static final String initNcForQA = BASE_URL + "logNcPad/initNcForQA?";
+    public static final String qaToQc = BASE_URL + "/logNcPad/qaToQc?";
     public static final String getBomInfo = BASE_URL + "sweing/getBomInfo?";
     public static final String getDictionaryData = BASE_URL + "common/getDictionaryData?";
     public static final String automaticPicking = BASE_URL + "cutpad/automaticPicking?";
@@ -106,6 +107,7 @@ public class HttpHelper {
     public static final String productOff = BASE_URL + "hanger/productOff?";
     public static final String productOn = BASE_URL + "hanger/productOn?";
     public static final String viewCutPadInforByShopOrder = BASE_URL + "cutpad/viewCutPadInforByInput?";
+    public static final String listOffLineReWorkInfo = BASE_URL + "logNcPad/listOffLineReWorkInfo?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -630,14 +632,25 @@ public class HttpHelper {
         HttpRequest.post(saveQCClothSizeData, params, getResponseHandler(saveQCClothSizeData, callback));
     }
 
-    /**
-     * 缝制站去质检站
-     */
-    public static void initNcForQA(String sfc, String resourceBo, HttpCallback callback) {
+    public static void qaToQc(String sfc, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("SFC", sfc);
-        json.put("ncCode", "NC2QC");
+        json.put("PAD_IP", PAD_IP);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(qaToQc, params, getResponseHandler(qaToQc, callback));
+    }
+
+    /**
+     * 缝制站去质检站
+     *
+     * @param type 去质检=NC2QC，去QA=NC2QA
+     */
+    public static void initNcForQA(String sfc, String resourceBo, String type, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC", sfc);
+        json.put("ncCode", type);
         json.put("ResourceBO", resourceBo);
         params.put("params", json.toJSONString());
         HttpRequest.post(initNcForQA, params, getResponseHandler(initNcForQA, callback));
@@ -813,6 +826,17 @@ public class HttpHelper {
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(viewCutPadInforByShopOrder, params, getResponseHandler(viewCutPadInforByShopOrder, callback));
+    }
+
+    /**
+     * 获取返修工序详情
+     */
+    public static void listOffLineReWorkInfo(String sfc, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("SFC", sfc);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(listOffLineReWorkInfo, params, getResponseHandler(listOffLineReWorkInfo, callback));
     }
 
     /**

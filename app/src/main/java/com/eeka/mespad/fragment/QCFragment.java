@@ -32,10 +32,12 @@ import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.ReworkInfoDialog;
+import com.eeka.mespad.view.dialog.ReworkListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +194,11 @@ public class QCFragment extends BaseFragment {
             for (String nc : mSewQCData.getNcCode()) {
                 if ("NC2QC".equals(nc)) {
                     hasNC = true;
+                    mTv_ncTag.setText("该件来自普通站位");
+                    break;
+                } else if ("NC2QA".equals(nc)) {
+                    hasNC = true;
+                    mTv_ncTag.setText("该件来自于QA站");
                     break;
                 }
             }
@@ -299,6 +306,21 @@ public class QCFragment extends BaseFragment {
             showErrorDialog("请先获取工单数据");
         }
     }
+
+    public void qaToQc() {
+        if (mSewQCData == null) {
+            toast("请先获取衣架数据");
+            return;
+        }
+        ErrorDialog.showConfirmAlert(mContext, "确定执行QA去QC的操作吗？", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoading();
+                HttpHelper.qaToQc(mSewQCData.getSfc(), QCFragment.this);
+            }
+        });
+    }
+
 
     /**
      * 解绑
@@ -585,6 +607,8 @@ public class QCFragment extends BaseFragment {
             } else if (HttpHelper.getClothSize.equals(url)) {
                 mClothSizeData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ClothSizeBo.class);
                 setupSizeInfo();
+            } else if (HttpHelper.qaToQc.equals(url)) {
+                toast("操作成功");
             } else if (HttpHelper.saveQCClothSizeData.equals(url)) {
                 toast("保存成功");
             } else if (HttpHelper.getPositionLoginUser_url.equals(url)) {

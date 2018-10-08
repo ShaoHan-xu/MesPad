@@ -44,6 +44,7 @@ import com.eeka.mespad.view.dialog.NCDetailDialog;
 import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.PocketSizeDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
+import com.eeka.mespad.view.dialog.ReworkListDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.eeka.mespad.view.dialog.SortingDialog;
 import com.squareup.picasso.Picasso;
@@ -177,9 +178,12 @@ public class SewFragment extends BaseFragment {
             MyAlertDialog.showAlert(mContext, content);
     }
 
-    public void searchOrder(String rfid) {
+    private boolean isDoing;
+
+    public void searchOrder(String rfid, boolean doing) {
         if (isAdded())
             showLoading();
+        isDoing = doing;
         mRFID = rfid;
         HttpHelper.getSewData(rfid, this);
     }
@@ -290,7 +294,8 @@ public class SewFragment extends BaseFragment {
         @Override
         public void onFail(String errMsg) {
             dismissLoading();
-            showErrorDialog(errMsg);
+            //webservice的接口报错时都会有推送，所以此处不需要显示
+//            showErrorDialog(errMsg);
         }
     }
 
@@ -320,7 +325,7 @@ public class SewFragment extends BaseFragment {
         mProductOnOffDialog = new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchOrder(mRFID);
+                searchOrder(mRFID, false);
             }
         });
         mProductOnOffDialog.show();
@@ -335,6 +340,17 @@ public class SewFragment extends BaseFragment {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 显示返修工序
+     */
+    public void showReworkList() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        new ReworkListDialog(mContext, mSewData.getSfc()).show();
     }
 
     /**
@@ -358,7 +374,22 @@ public class SewFragment extends BaseFragment {
             public void onClick(View v) {
                 showLoading();
                 PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
-                HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), SewFragment.this);
+                HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), "NC2QC", SewFragment.this);
+            }
+        });
+    }
+
+    public void gotoQA() {
+        if (mSewData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        ErrorDialog.showConfirmAlert(mContext, "发现当前实物有不良，需要去质检站？", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoading();
+                PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+                HttpHelper.initNcForQA(mSewData.getSfc(), resource.getRESOURCE_BO(), "NC2QA", SewFragment.this);
             }
         });
     }
@@ -709,8 +740,10 @@ public class SewFragment extends BaseFragment {
             if (HttpHelper.getSewData.equals(url)) {
                 SewDataBo sewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
                 if (mSewData != null) {
-                    mActivity.setButtonState(R.id.btn_manualStart, true);
-                    mActivity.setButtonState(R.id.btn_manualComplete, true);
+                    if (isDoing) {
+                        mActivity.setButtonState(R.id.btn_manualStart, true);
+                        mActivity.setButtonState(R.id.btn_manualComplete, true);
+                    }
                     String sfc = sewData.getSfc();
                     if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())) {
                         mActivity.setButtonState(R.id.btn_subStart, true);

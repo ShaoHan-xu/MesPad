@@ -182,8 +182,8 @@ public class MainActivity extends NFCActivity {
                 //上裁站刷卡绑定RFID
                 return;
             }
-            if (TopicUtil.TOPIC_SEW.equals(mTopic) && mSewFragment.inputRFID(content)) {
-                //缝制段刷卡通过RFID卡号重新上架
+            if ((TopicUtil.TOPIC_MANUAL.equals(mTopic) || TopicUtil.TOPIC_SEW.equals(mTopic)) && mSewFragment.inputRFID(content)) {
+                //手工段刷卡通过RFID卡号重新上架
                 return;
             }
             if (TopicUtil.TOPIC_QC.equals(mTopic) && mQCFragment.inputRFID(content)) {
@@ -273,6 +273,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "REWORK_LIST":
+                    button.setText("返修工序");
+                    button.setId(R.id.btn_reworkList);
+                    break;
                 case "SORTING_BUTTON":
                     button.setText("分拣扫码");
                     button.setId(R.id.btn_sorting);
@@ -361,9 +365,17 @@ public class MainActivity extends NFCActivity {
                     button.setText("粘朴方式");
                     button.setId(R.id.btn_sticky);
                     break;
+                case "QA_TO_QC":
+                    button.setText("QA去QC");
+                    button.setId(R.id.btn_qaToQc);
+                    break;
                 case "NOR_TO_QC":
                     button.setText("去质检");
                     button.setId(R.id.btn_gotoQC);
+                    break;
+                case "NOR_TO_QA":
+                    button.setText("去QA");
+                    button.setId(R.id.btn_gotoQA);
                     break;
                 case "SEWING_MAT_BT":
                     button.setText("缝制退补料申请");
@@ -578,6 +590,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_reworkList:
+                if (mSewFragment != null) {
+                    mSewFragment.showReworkList();
+                }
+                break;
             case R.id.btn_sorting:
                 if (mSewFragment != null) {
                     mSewFragment.sorting();
@@ -719,6 +736,16 @@ public class MainActivity extends NFCActivity {
                     mSewFragment.gotoQC();
                 }
                 break;
+            case R.id.btn_gotoQA:
+                if (mSewFragment != null) {
+                    mSewFragment.gotoQA();
+                }
+                break;
+            case R.id.btn_qaToQc:
+                if (mQCFragment != null) {
+                    mQCFragment.qaToQc();
+                }
+                break;
             case R.id.btn_returnForSew:
                 if (mSewFragment != null) {
                     mSewFragment.returnOrFeeding();
@@ -782,7 +809,7 @@ public class MainActivity extends NFCActivity {
                 case TopicUtil.TOPIC_PACKING:
                 case TopicUtil.TOPIC_MANUAL:
                 case TopicUtil.TOPIC_SEW:
-                    mSewFragment.searchOrder(cardNum);
+                    mSewFragment.searchOrder(cardNum, true);
                     break;
                 case TopicUtil.TOPIC_CUT:
                     String searchType = mTv_searchType.getText().toString();
@@ -890,7 +917,17 @@ public class MainActivity extends NFCActivity {
                             if (mCutFragment.inputRecordUser(mCardInfo.getCardNum())) {
                                 return;
                             } else {
-                                clockIn(mCardInfo.getCardNum());
+                                String cardNum = mCardInfo.getCardNum();
+                                List<UserInfoBo> users = SpUtil.getPositionUsers();
+                                if (users != null && users.size() != 0) {
+                                    for (UserInfoBo user : users) {
+                                        if (user.getCARD_NUMBER().equals(cardNum)) {
+                                            clockOut(cardNum);
+                                            break;
+                                        }
+                                    }
+                                }
+                                clockIn(cardNum);
                             }
                         } else {
                             mEt_orderNum.setText(mCardInfo.getCardNum());
