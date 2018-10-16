@@ -60,7 +60,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
         view.findViewById(R.id.btn_add).setOnClickListener(this);
         view.findViewById(R.id.btn_save).setOnClickListener(this);
 
-        mLayout_list = (LinearLayout) view.findViewById(R.id.layout_cutRecordQty);
+        mLayout_list = view.findViewById(R.id.layout_cutRecordQty);
 
         LoadingDialog.show(mContext);
         HttpHelper.getCutRecordData(mRFID, mShopOrder, this);
@@ -75,12 +75,12 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
         ((TextView) view.findViewById(R.id.tv_cutRecordQty_matNo)).setText(mData.getMATERIAL());
         ((TextView) view.findViewById(R.id.tv_cutRecordQty_matType)).setText(mData.getLAYOUT_TYPE());
 
-        TextView tv_recordUser = (TextView) view.findViewById(R.id.tv_cutRecordQty_recordUser);
+        TextView tv_recordUser = view.findViewById(R.id.tv_cutRecordQty_recordUser);
         tv_recordUser.setText(item.getUSER_NAME());
-        EditText et_recordQty = (EditText) view.findViewById(R.id.et_cutRecordQty_recordQty);
+        EditText et_recordQty = view.findViewById(R.id.et_cutRecordQty_recordQty);
         et_recordQty.setText(item.getRECORD());
 
-        TextView tv_process = (TextView) view.findViewById(R.id.tv_cutRecordQty_process);
+        TextView tv_process = view.findViewById(R.id.tv_cutRecordQty_process);
         tv_process.setTag(position);
         tv_process.setText(item.getOPERATION_DESC());
         tv_process.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +90,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
             }
         });
 
-        TextView tv_del = (TextView) view.findViewById(R.id.tv_cutRecordQty_del);
+        TextView tv_del = view.findViewById(R.id.tv_cutRecordQty_del);
         tv_del.setTag(position);
         tv_del.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,9 +115,9 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
         if (position < mList_data.size()) {
             for (int i = position; i < mLayout_list.getChildCount(); i++) {
                 View view = mLayout_list.getChildAt(i);
-                TextView tv_del = (TextView) view.findViewById(R.id.tv_cutRecordQty_del);
+                TextView tv_del = view.findViewById(R.id.tv_cutRecordQty_del);
                 tv_del.setTag(i);
-                TextView tv_process = (TextView) view.findViewById(R.id.tv_cutRecordQty_process);
+                TextView tv_process = view.findViewById(R.id.tv_cutRecordQty_process);
                 tv_process.setTag(i);
             }
         }
@@ -166,7 +166,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
                 ErrorDialog.showAlert(mContext, "请刷卡录入记录人");
                 return;
             }
-            EditText et_recordQty = (EditText) view.findViewById(R.id.et_cutRecordQty_recordQty);
+            EditText et_recordQty = view.findViewById(R.id.et_cutRecordQty_recordQty);
             String recordQty = et_recordQty.getText().toString();
             if (TextUtils.isEmpty(recordQty)) {
                 ErrorDialog.showAlert(mContext, "请填写记录数据");
@@ -223,7 +223,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
                         item.setUSER_ID(userId);
                         item.setUSER_NAME(userName);
                         View childAt = mLayout_list.getChildAt(i);
-                        TextView tv_user = (TextView) childAt.findViewById(R.id.tv_cutRecordQty_recordUser);
+                        TextView tv_user = childAt.findViewById(R.id.tv_cutRecordQty_recordUser);
                         tv_user.setText(userName);
                         break;
                     }

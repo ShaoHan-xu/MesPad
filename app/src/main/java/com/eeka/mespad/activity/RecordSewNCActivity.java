@@ -157,13 +157,15 @@ public class RecordSewNCActivity extends BaseActivity {
         if (resource != null) {
             data.setResourceRef(resource.getRESOURCE_BO());
         }
-        if (mRecordType == QCFragment.TYPE_QA) {
-            UpdateSewNcBo.NcCodeOperationListBean bean = new UpdateSewNcBo.NcCodeOperationListBean();
-            String ncCodeBo = "NCCodeBO:" + SpUtil.getSite() + ",NC2QC";
-            bean.setNcCodeRef(ncCodeBo);
-            bean.setOperation(mList_selected.get(0).getOperation());
-            mList_selected.add(bean);
-        } else {
+//        if (mRecordType != QCFragment.TYPE_QA) {
+//            List<UpdateSewNcBo.NcCodeOperationListBean> list_selected = new ArrayList<>(mList_selected);
+//            UpdateSewNcBo.NcCodeOperationListBean bean = list_selected.get(0);
+//            String ncCodeBo = "NCCodeBO:" + SpUtil.getSite() + ",NC2QC";
+//            bean.setNcCodeRef(ncCodeBo);
+//            bean.setOperation(bean.getOperation());
+//            list_selected.add(bean);
+//            data.setNcCodeOperationList(list_selected);
+//        } else {
             List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
             for (int i = 0; i < mList_selected.size(); i++) {
                 UpdateSewNcBo.NcCodeOperationListBean bean = mList_selected.get(i);
@@ -176,8 +178,8 @@ public class RecordSewNCActivity extends BaseActivity {
                 process.add(item);
             }
             data.setReworkOperationList(process);
-        }
-        data.setNcCodeOperationList(mList_selected);
+            data.setNcCodeOperationList(mList_selected);
+//        }
 
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         if (loginUsers != null && loginUsers.size() != 0) {

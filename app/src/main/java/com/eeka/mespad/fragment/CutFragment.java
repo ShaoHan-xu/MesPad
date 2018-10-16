@@ -111,11 +111,11 @@ public class CutFragment extends BaseFragment {
         SystemUtils.playVideo(mContext, videoUrl);
     }
 
-    public void searchOrderByOrderNum(String orderNum) {
+    public void searchOrderByOrderNum(String type, String orderNum) {
         isSearchShopOrder = true;
         showLoading();
         mRFID = orderNum;
-        HttpHelper.viewCutPadInfoByShopOrder(orderNum, this);
+        HttpHelper.viewCutPadInfoByShopOrder(type, orderNum, this);
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
@@ -298,6 +298,17 @@ public class CutFragment extends BaseFragment {
         }
 
         TabViewUtil.refreshTabView(mLayout_processTab, position);
+    }
+
+    /**
+     * 分包制卡
+     */
+    public void splitCard(String cardNum) {
+        if (mTailorInfo == null){
+            showErrorDialog("请获取主数据后再执行操作");
+            return;
+        }
+
     }
 
     public void startWork() {

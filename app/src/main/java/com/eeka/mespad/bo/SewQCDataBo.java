@@ -39,6 +39,33 @@ public class SewQCDataBo {
     //    private List<ClothingSizeBean> clothingSize;
     private List<DesignComponentBean> designComponent;
     private List<String> ncCode;
+    private String preLineId;
+    private String prePosition;
+    private String prePositionType;
+
+    public String getPreLineId() {
+        return preLineId;
+    }
+
+    public void setPreLineId(String preLineId) {
+        this.preLineId = preLineId;
+    }
+
+    public String getPrePosition() {
+        return prePosition;
+    }
+
+    public void setPrePosition(String prePosition) {
+        this.prePosition = prePosition;
+    }
+
+    public String getPrePositionType() {
+        return prePositionType;
+    }
+
+    public void setPrePositionType(String prePositionType) {
+        this.prePositionType = prePositionType;
+    }
 
     public String getSfcRef() {
         return sfcRef;

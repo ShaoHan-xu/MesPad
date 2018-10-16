@@ -180,10 +180,9 @@ public class SewFragment extends BaseFragment {
 
     private boolean isDoing;
 
-    public void searchOrder(String rfid, boolean doing) {
+    public void searchOrder(String rfid) {
         if (isAdded())
             showLoading();
-        isDoing = doing;
         mRFID = rfid;
         HttpHelper.getSewData(rfid, this);
     }
@@ -235,6 +234,7 @@ public class SewFragment extends BaseFragment {
         if (bo == null) {
             return;
         }
+        isDoing = false;
         showLoading();
         WebServiceUtils.inaDoing(bo, new WebServiceCallback());
     }
@@ -322,10 +322,15 @@ public class SewFragment extends BaseFragment {
      * 成衣上架
      */
     public void productOn() {
+        if (isEmpty(mRFID)) {
+            showErrorDialog("衣架号不能为空");
+            return;
+        }
         mProductOnOffDialog = new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchOrder(mRFID, false);
+                isDoing = false;
+                searchOrder(mRFID);
             }
         });
         mProductOnOffDialog.show();
@@ -498,7 +503,13 @@ public class SewFragment extends BaseFragment {
             toast("请先获取缝制数据");
             return;
         }
-        new PocketSizeDialog(mContext, mSewData.getShopOrder()).show();
+        List<SewAttr> infos = mSewData.getCurrentOpeationInfos();
+        if (infos != null && infos.size() != 0) {
+            SewAttr attr = infos.get(mVP_sop.getCurrentItem());
+            new PocketSizeDialog(mContext, mSewData.getShopOrder(), mSewData.getSfc(), attr.getName()).show();
+        } else {
+            showErrorDialog("当前衣架无工序，无法执行该操作");
+        }
     }
 
     @Override
@@ -516,7 +527,7 @@ public class SewFragment extends BaseFragment {
         mTv_matDesc.setText(mSewData.getItemDesc());
         mTv_style.setText(mSewData.getItem());
         mTv_size.setText(mSewData.getSize());
-        mTv_lastPosition.setText(String.format("%s,%s", mSewData.getLastLineCategory(), mSewData.getLastPosition()));
+        mTv_lastPosition.setText(String.format("%s-%s", mSewData.getLastLineCategory(), mSewData.getLastPosition()));
         String remark = mSewData.getSoRemark();
         if (isEmpty(remark)) {
             mTv_special.setText(null);
@@ -738,19 +749,17 @@ public class SewFragment extends BaseFragment {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getSewData.equals(url)) {
-                SewDataBo sewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
-                if (mSewData != null) {
-                    if (isDoing) {
-                        mActivity.setButtonState(R.id.btn_manualStart, true);
-                        mActivity.setButtonState(R.id.btn_manualComplete, true);
-                    }
-                    String sfc = sewData.getSfc();
-                    if (!isEmpty(sfc) && !sfc.equals(mSewData.getSfc())) {
-                        mActivity.setButtonState(R.id.btn_subStart, true);
-                        mActivity.setButtonState(R.id.btn_subComplete, true);
-                    }
+                mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
+                String sfc = mSewData.getSfc();
+                if (!isEmpty(sfc)) {
+                    mActivity.setButtonState(R.id.btn_subStart, true);
+                    mActivity.setButtonState(R.id.btn_subComplete, true);
                 }
-                mSewData = sewData;
+                if (isDoing) {
+                    mActivity.setButtonState(R.id.btn_manualStart, true);
+                    mActivity.setButtonState(R.id.btn_manualComplete, true);
+                }
+                isDoing = true;
                 initData();
             } else if (HttpHelper.initNcForQA.equals(url)) {
                 toast("操作成功");

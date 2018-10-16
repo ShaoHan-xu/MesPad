@@ -43,4 +43,5 @@
     <item name="btn_change" type="id" />
     <item name="btn_sorting" type="id" />
     <item name="btn_reworkList" type="id" />
+    <item name="btn_splitCard" type="id" />
 </resources>

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.R;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
@@ -46,7 +47,7 @@ public class MQTTService extends Service {
 
     private static final String MQTT_PORT = "1883"; // Broker Port
     private static final String MQTT_URL_FORMAT = "tcp://%s:%s"; // URL Format normally don't change
-    private String myTopic = NetUtil.getHostIP();
+    private String[] myTopic = new String[2];
     private String mClientId = null;
     private ScheduledExecutorService scheduler;
     private MqttAndroidClient mqttClient;
@@ -104,7 +105,8 @@ public class MQTTService extends Service {
      */
     public void init() {
         try {
-            myTopic = HttpHelper.getPadIp();
+            myTopic[0] = getString(R.string.app_channel);
+            myTopic[1] = HttpHelper.getPadIp();
             //clientId要唯一，不然会挤掉另外相同的clientId的连接
             mClientId = SystemUtils.getIMEI(this);
             //host为主机名，test为clientid即连接MQTT的客户端ID，一般以客户端唯一标识符表示，MemoryPersistence设置clientid的保存形式，默认为以内存保存
@@ -228,9 +230,10 @@ public class MQTTService extends Service {
             scheduler.shutdownNow();
             try {
                 // 订阅myTopic话题
-                mqttClient.subscribe(myTopic, 0);
+                int[] qos = {0, 0};
+                mqttClient.subscribe(myTopic, qos);
                 LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connected and subscribe success");
-                Logger.d("MQTT 订阅" + myTopic + "成功");
+                Logger.d("MQTT 订阅[" + myTopic[0] + "," + myTopic[1] + "]成功");
             } catch (Exception e) {
                 e.printStackTrace();
                 Logger.e("MQTT 订阅异常 " + e.getMessage());

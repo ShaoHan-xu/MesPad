@@ -107,11 +107,13 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
 
     private void on() {
         String washLabel = mEt_washLabel.getText().toString();
+        mHangerId = mEt_hangerId.getText().toString();
         if (TextUtils.isEmpty(washLabel)) {
             Toast.makeText(mContext, "请输入洗水唛", Toast.LENGTH_SHORT).show();
+        } else if (washLabel.equals(mHangerId)) {
+            ErrorDialog.showAlert(mContext, "当前衣架号与洗水唛号为同一号码，请检查衣架号是否正确，如不正确请关闭弹窗后拿衣架重新进站后再上架。");
         } else {
             LoadingDialog.show(mContext);
-            mHangerId = mEt_hangerId.getText().toString();
             HttpHelper.productOn(mHangerId, washLabel, this);
         }
     }
@@ -124,7 +126,11 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         if (HttpHelper.isSuccess(resultJSON)) {
-            ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, true);
+            if (HttpHelper.productOff.equals(url)) {
+                ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, true);
+            } else if (HttpHelper.productOn.equals(url)) {
+                Toast.makeText(mContext, "上架成功", Toast.LENGTH_LONG).show();
+            }
             if (mListener != null)
                 mListener.onClick(null);
             dismiss();
@@ -143,7 +149,7 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
     @Override
     public void show() {
         super.show();
-        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.4), (int) (SystemUtils.getScreenHeight(mContext) * 0.5));
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.4), (int) (SystemUtils.getScreenHeight(mContext) * 0.4));
     }
 
 }

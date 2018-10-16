@@ -235,6 +235,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_sewQC_lastPosition"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -245,24 +246,14 @@
                             style="@style/textStyle_default"
                             android:layout_width="80dp"
                             android:gravity="right"
-                            android:text="月产量"
+                            android:text="上一站位"
                             android:textColor="@color/text_gray_default" />
 
                         <TextView
-                            android:id="@+id/tv_sewQC_monthOutput"
+                            android:id="@+id/tv_sewQC_lastPosition"
                             style="@style/textStyle_default"
                             android:layout_marginLeft="10dp" />
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_sewQC_ncTag"
-                        style="@style/textStyle_default"
-                        android:layout_marginTop="10dp"
-                        android:padding="5dp"
-                        android:text="该件来自普通站位"
-                        android:textColor="@color/text_red_default"
-                        android:textSize="@dimen/textSize_itemTitle"
-                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_sewQC_reworkInfo"
@@ -272,6 +263,16 @@
                         android:padding="5dp"
                         android:text="返修衣架回质检"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/textSize_itemTitle"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_sewQC_ncTag"
+                        style="@style/textStyle_default"
+                        android:layout_marginTop="10dp"
+                        android:padding="5dp"
+                        android:text="该件来自普通站位"
+                        android:textColor="@color/text_red_default"
                         android:textSize="@dimen/textSize_itemTitle"
                         android:visibility="gone" />
 

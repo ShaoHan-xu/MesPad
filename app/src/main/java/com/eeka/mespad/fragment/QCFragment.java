@@ -62,7 +62,7 @@ public class QCFragment extends BaseFragment {
     private TextView mTv_SFC;
     private TextView mTv_curProcess;
     private TextView mTv_dayOutput;
-    private TextView mTv_monthOutput;
+    //    private TextView mTv_monthOutput;
     private TextView mTv_orderNum;
     private TextView mTv_MTMOrderNum;
     private TextView mTv_matNum;
@@ -71,6 +71,8 @@ public class QCFragment extends BaseFragment {
     private TextView mTv_special;
     private TextView mTv_ncTag;
     private TextView mTv_reworkInfo;
+    private TextView mTv_lastPosition;
+    private LinearLayout mLayout_lastPosition;
 
     private SewQCDataBo mSewQCData;
     private ClothSizeBo mClothSizeData;
@@ -98,18 +100,20 @@ public class QCFragment extends BaseFragment {
         mLayout_productComponent = mView.findViewById(R.id.layout_sewQC_productComponent);
         mLayout_designComponent = mView.findViewById(R.id.layout_sewQC_designComponent);
         mLayout_matInfo = mView.findViewById(R.id.layout_sewQC_matInfo);
+        mLayout_lastPosition = mView.findViewById(R.id.layout_sewQC_lastPosition);
 
         mTv_componentDesc = mView.findViewById(R.id.tv_sewQC_componentDesc);
         mTv_SFC = mView.findViewById(R.id.tv_sewQC_SFC);
         mTv_curProcess = mView.findViewById(R.id.tv_sewQC_curProcess);
         mTv_dayOutput = mView.findViewById(R.id.tv_sewQC_dayOutput);
-        mTv_monthOutput = mView.findViewById(R.id.tv_sewQC_monthOutput);
+//        mTv_monthOutput = mView.findViewById(R.id.tv_sewQC_monthOutput);
         mTv_orderNum = mView.findViewById(R.id.tv_sewQC_orderNum);
         mTv_MTMOrderNum = mView.findViewById(R.id.tv_sewQC_MTMOrderNum);
         mTv_matNum = mView.findViewById(R.id.tv_sewQC_matNum);
         mTv_matDesc = mView.findViewById(R.id.tv_sewQC_matDesc);
         mTv_size = mView.findViewById(R.id.tv_sewQC_size);
         mTv_ncTag = mView.findViewById(R.id.tv_sewQC_ncTag);
+        mTv_lastPosition = mView.findViewById(R.id.tv_sewQC_lastPosition);
         mTv_special = mView.findViewById(R.id.tv_sewQC_special);
         mTv_reworkInfo = mView.findViewById(R.id.tv_sewQC_reworkInfo);
         mTv_reworkInfo.setOnClickListener(this);
@@ -181,7 +185,7 @@ public class QCFragment extends BaseFragment {
             }
         }
         mTv_dayOutput.setText(mSewQCData.getDailyOutput() + "");
-        mTv_monthOutput.setText(mSewQCData.getMonthlyOutput() + "");
+//        mTv_monthOutput.setText(mSewQCData.getMonthlyOutput() + "");
         mTv_orderNum.setText(mSewQCData.getShopOrder());
         mTv_MTMOrderNum.setText(mSewQCData.getSalesOrder());
         mTv_matNum.setText(mSewQCData.getItem());
@@ -189,30 +193,44 @@ public class QCFragment extends BaseFragment {
         mTv_size.setText(mSewQCData.getSfcSize());
         mTv_special.setText(mSewQCData.getSoMark());
 
-        boolean hasNC = false;
-        if (mSewQCData.getNcCode() != null) {
-            for (String nc : mSewQCData.getNcCode()) {
-                if ("NC2QC".equals(nc)) {
-                    hasNC = true;
-                    mTv_ncTag.setText("该件来自普通站位");
-                    break;
-                } else if ("NC2QA".equals(nc)) {
-                    hasNC = true;
-                    mTv_ncTag.setText("该件来自于QA站");
-                    break;
-                }
-            }
-        }
-        if (hasNC) {
-            mTv_ncTag.setVisibility(View.VISIBLE);
-        } else {
-            mTv_ncTag.setVisibility(View.GONE);
-        }
+//        String lastPosition = mSewQCData.getPrePosition();
+//        if (isEmpty(lastPosition)) {
+//            mLayout_lastPosition.setVisibility(View.GONE);
+//        } else {
+//            mLayout_lastPosition.setVisibility(View.VISIBLE);
+//            mTv_lastPosition.setText(String.format("%s-%s", mSewQCData.getPreLineId(), mSewQCData.getPrePosition()));
+//        }
 
         if ("1".equals(mSewQCData.getReworkFlag())) {
             mTv_reworkInfo.setVisibility(View.VISIBLE);
         } else {
             mTv_reworkInfo.setVisibility(View.GONE);
+
+            boolean hasNC = false;
+            if (mSewQCData.getNcCode() != null) {
+                for (String nc : mSewQCData.getNcCode()) {
+                    if ("NC2QC".equals(nc) || ("NC2QA".equals(nc) && "NORMAL".equals(mSewQCData.getPrePositionType()))) {
+                        hasNC = true;
+                        mTv_ncTag.setText("该件来自普通站位");
+                        break;
+                    } else {
+                        if ("QUALITY_ASSESSMENT".equals(mSewQCData.getPrePositionType())) {
+                            hasNC = true;
+                            mTv_ncTag.setText("该件来自于QA站");
+                            break;
+                        } else if ("QUALITY_CONTROL".equals(mSewQCData.getPrePositionType())) {
+                            hasNC = true;
+                            mTv_ncTag.setText("该件来自于QC站");
+                            break;
+                        }
+                    }
+                }
+            }
+            if (hasNC) {
+                mTv_ncTag.setVisibility(View.VISIBLE);
+            } else {
+                mTv_ncTag.setVisibility(View.GONE);
+            }
         }
 
         mLayout_matInfo.removeAllViews();
@@ -320,7 +338,6 @@ public class QCFragment extends BaseFragment {
             }
         });
     }
-
 
     /**
      * 解绑

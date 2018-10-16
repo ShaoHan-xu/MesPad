@@ -818,11 +818,14 @@ public class HttpHelper {
 
     /**
      * 通过工单号获取工单信息
+     *
+     * @param type SHOP_ORDER,SFC
      */
-    public static void viewCutPadInfoByShopOrder(String shopOrder, HttpCallback callback) {
+    public static void viewCutPadInfoByShopOrder(String type, String value, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("PAD_IP", PAD_IP);
-        json.put("INPUT", shopOrder);
+        json.put("TYPE", type);
+        json.put("INPUT", value);
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));
         HttpRequest.post(viewCutPadInforByShopOrder, params, getResponseHandler(viewCutPadInforByShopOrder, callback));
@@ -872,12 +875,14 @@ public class HttpHelper {
     /**
      * 获取袋口尺寸信息
      */
-    public static void getPocketSize(String shopOrder, HttpCallback callback) {
+    public static void getPocketSize(String shopOrder, String sfc, String operation, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("SITE", SpUtil.getSite());
         json.put("LOGIC_NO", "query.cadSizeInfo");
         JSONObject json1 = new JSONObject();
         json1.put("SHOP_ORDER", shopOrder);
+        json1.put("OPERATIONS", operation);
+        json1.put("SFC", sfc);
         json.put("PARAMS", json1);
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));

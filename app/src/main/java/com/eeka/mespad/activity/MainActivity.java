@@ -176,20 +176,20 @@ public class MainActivity extends NFCActivity {
         } else if (PushJson.TYPE_EXIT.equals(type)) {
             finish();
             System.exit(0);
+        } else if (PushJson.TYPE_RFID.equals(type)) {
+            String content = push.getContent();
+            if (TopicUtil.TOPIC_SUSPEND.equals(mTopic)) {
+                //上裁站刷卡绑定RFID
+                mSuspendFragment.inputRFID(content);
+            } else if (TopicUtil.TOPIC_MANUAL.equals(mTopic) || TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                //手工段刷卡通过RFID卡号重新上架
+                mSewFragment.inputRFID(content);
+            } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                //质检段刷卡通过RFID卡号重新上架
+                mQCFragment.inputRFID(content);
+            }
         } else {
             String content = push.getContent();
-            if (TopicUtil.TOPIC_SUSPEND.equals(mTopic) && mSuspendFragment.inputRFID(content)) {
-                //上裁站刷卡绑定RFID
-                return;
-            }
-            if ((TopicUtil.TOPIC_MANUAL.equals(mTopic) || TopicUtil.TOPIC_SEW.equals(mTopic)) && mSewFragment.inputRFID(content)) {
-                //手工段刷卡通过RFID卡号重新上架
-                return;
-            }
-            if (TopicUtil.TOPIC_QC.equals(mTopic) && mQCFragment.inputRFID(content)) {
-                //质检段刷卡通过RFID卡号重新上架
-                return;
-            }
             toast("正在刷新页面");
             mEt_orderNum.setText(content);
             isSearchOrder = true;
@@ -273,6 +273,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "SPLIT_CARD":
+                    button.setText("分包制卡");
+                    button.setId(R.id.btn_splitCard);
+                    break;
                 case "REWORK_LIST":
                     button.setText("返修工序");
                     button.setId(R.id.btn_reworkList);
@@ -502,6 +506,7 @@ public class MainActivity extends NFCActivity {
         final List<String> list = new ArrayList<>();
         list.add("卡号");
         list.add("工单号");
+        list.add("SFC");
         final ListPopupWindow ppw = new ListPopupWindow(mContext);
         ppw.setAdapter(new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, list));
         ppw.setWidth(UnitUtil.dip2px(mContext, 120));
@@ -517,6 +522,8 @@ public class MainActivity extends NFCActivity {
                     mEt_orderNum.setHint("请输入卡号搜索");
                 } else if ("工单号".equals(s)) {
                     mEt_orderNum.setHint("请输入工单号搜索");
+                } else if ("SFC".equals(s)) {
+                    mEt_orderNum.setHint("请输入SFC搜索");
                 }
                 ppw.dismiss();
             }
@@ -590,6 +597,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_splitCard:
+                if (mCutFragment != null) {
+                    mCutFragment.splitCard(mCardInfo.getCardNum());
+                }
+                break;
             case R.id.btn_reworkList:
                 if (mSewFragment != null) {
                     mSewFragment.showReworkList();
@@ -809,12 +821,14 @@ public class MainActivity extends NFCActivity {
                 case TopicUtil.TOPIC_PACKING:
                 case TopicUtil.TOPIC_MANUAL:
                 case TopicUtil.TOPIC_SEW:
-                    mSewFragment.searchOrder(cardNum, true);
+                    mSewFragment.searchOrder(cardNum);
                     break;
                 case TopicUtil.TOPIC_CUT:
                     String searchType = mTv_searchType.getText().toString();
                     if ("工单号".equals(searchType)) {
-                        mCutFragment.searchOrderByOrderNum(cardNum);
+                        mCutFragment.searchOrderByOrderNum("SHOP_ORDER", cardNum);
+                    } else if ("SFC".equals(searchType)) {
+                        mCutFragment.searchOrderByOrderNum("SFC", cardNum);
                     } else {
                         getCardInfo(cardNum);
                     }
