@@ -54,13 +54,13 @@ public class RecordCutNCActivity extends BaseActivity {
     @Override
     protected void initView() {
         super.initView();
-        TextView tv_orderNum = (TextView) findViewById(R.id.tv_recordBad_orderNum);
+        TextView tv_orderNum = findViewById(R.id.tv_recordBad_orderNum);
         tv_orderNum.setText(mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
 
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
         mAdapter = new ItemAdapter(mContext, mList_badRecord, R.layout.gv_item_recordnc, layoutManager);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.gv_recordBad);
+        RecyclerView recyclerView = findViewById(R.id.gv_recordBad);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 
@@ -113,6 +113,7 @@ public class RecordCutNCActivity extends BaseActivity {
         showLoading();
         JSONObject json = new JSONObject();
         json.put("RFID", mTailorInfo.getRFID());
+        json.put("SFC_BO", mTailorInfo.getSFC_BO());
         json.put("ORDER_TYPE", mTailorInfo.getOrderType());
         json.put("SHOP_ORDER", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
         json.put("SHOP_ORDER_BO", mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER_BO());

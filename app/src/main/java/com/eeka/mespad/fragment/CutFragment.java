@@ -85,7 +85,7 @@ public class CutFragment extends BaseFragment {
     private List<RecordNCBo> mList_recordNC;//记录不良
     private boolean isRecordLabu;//是否已记录拉布数据
 
-    private boolean isSearchShopOrder = false;//是否按工单号搜索
+    private boolean isSearchCard = true;//是否按卡号搜索
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -112,14 +112,14 @@ public class CutFragment extends BaseFragment {
     }
 
     public void searchOrderByOrderNum(String type, String orderNum) {
-        isSearchShopOrder = true;
+        isSearchCard = false;
         showLoading();
         mRFID = orderNum;
         HttpHelper.viewCutPadInfoByShopOrder(type, orderNum, this);
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
-        isSearchShopOrder = false;
+        isSearchCard = true;
         showLoading();
         mOrderType = orderType;
         mRFID = orderNum;
@@ -269,7 +269,7 @@ public class CutFragment extends BaseFragment {
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
         mTv_special.setText(orderInfo.getSO_REMARK());
 
-        if (!isSearchShopOrder && "P".equals(mOrderType)) {
+        if (!isSearchCard && "P".equals(mOrderType)) {
             mView.findViewById(R.id.layout_cut_layers).setVisibility(View.VISIBLE);
             TextView tv_layers = mView.findViewById(R.id.tv_sew_layers);
             tv_layers.setText(orderInfo.getLAYERS() + "");
@@ -304,7 +304,7 @@ public class CutFragment extends BaseFragment {
      * 分包制卡
      */
     public void splitCard(String cardNum) {
-        if (mTailorInfo == null){
+        if (mTailorInfo == null) {
             showErrorDialog("请获取主数据后再执行操作");
             return;
         }
@@ -778,13 +778,9 @@ public class CutFragment extends BaseFragment {
                         mBtn_done.setEnabled(true);
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
                     }
-                    if (!isSearchShopOrder) {
+                    if (isSearchCard) {
                         mTailorInfo.setOrderType(mOrderType);
                         mTailorInfo.setRFID(mRFID);
-                    } else {
-                        TailorInfoBo.SHOPORDERINFORBean shopOrderInfo = new TailorInfoBo.SHOPORDERINFORBean();
-                        shopOrderInfo.setSHOP_ORDER(mRFID);
-                        mTailorInfo.setSHOP_ORDER_INFOR(shopOrderInfo);
                     }
                     refreshView();
 

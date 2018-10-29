@@ -94,6 +94,7 @@ public class SewFragment extends BaseFragment {
     private MainActivity mActivity;
 
     private String mTopic;
+    private WebServiceCallback mWebServiceCallback;
 
     @Nullable
     @Override
@@ -110,7 +111,7 @@ public class SewFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         mActivity = (MainActivity) getActivity();
-
+        mWebServiceCallback = new WebServiceCallback();
         EventBus.getDefault().register(this);
         initView();
     }
@@ -226,7 +227,7 @@ public class SewFragment extends BaseFragment {
             return;
         }
         showLoading();
-        WebServiceUtils.inaIn(bo, new WebServiceCallback());
+        WebServiceUtils.inaIn(bo, mWebServiceCallback);
     }
 
     private void inaDoing() {
@@ -236,7 +237,7 @@ public class SewFragment extends BaseFragment {
         }
         isDoing = false;
         showLoading();
-        WebServiceUtils.inaDoing(bo, new WebServiceCallback());
+        WebServiceUtils.inaDoing(bo, mWebServiceCallback);
     }
 
     private boolean jumpSorting;
@@ -266,7 +267,7 @@ public class SewFragment extends BaseFragment {
             return;
         }
         showLoading();
-        WebServiceUtils.inaOut(bo, new WebServiceCallback());
+        WebServiceUtils.inaOut(bo, mWebServiceCallback);
     }
 
     private class WebServiceCallback implements WebServiceUtils.HttpCallBack {
@@ -286,8 +287,11 @@ public class SewFragment extends BaseFragment {
                 mActivity.setButtonState(R.id.btn_manualStart, false);
                 mActivity.setButtonState(R.id.btn_manualComplete, false);
             } else if (WebServiceUtils.INA_DOING.equals(method)) {
-                toast("开始手工作业");
                 mActivity.setButtonState(R.id.btn_manualStart, false);
+                if (manualAlert) {
+                    toast("开始手工作业");
+                }
+                manualAlert = true;
             }
         }
 
@@ -317,6 +321,7 @@ public class SewFragment extends BaseFragment {
     }
 
     private ProductOnOffDialog mProductOnOffDialog;
+    private boolean manualAlert;
 
     /**
      * 成衣上架
@@ -329,8 +334,8 @@ public class SewFragment extends BaseFragment {
         mProductOnOffDialog = new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isDoing = false;
-                searchOrder(mRFID);
+                manualAlert = false;
+                manualStart(mRFID);
             }
         });
         mProductOnOffDialog.show();

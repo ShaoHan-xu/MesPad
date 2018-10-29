@@ -12,12 +12,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.bo.PocketSizeBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SystemUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,11 +40,16 @@ public class PocketSizeDialog extends BaseDialog {
                 LoadingDialog.dismiss();
                 if (HttpHelper.isSuccess(resultJSON)) {
                     JSONArray result = resultJSON.getJSONArray("result");
-                    if (result != null) {
+                    if (result != null && result.size() != 0) {
                         mItems = JSON.parseArray(result.toString(), PocketSizeBo.class);
                         initView();
                     } else {
-                        ErrorDialog.showAlert(mContext, "无数据返回");
+                        ErrorDialog.showAlert(mContext, "该工序无袋口尺寸数据", ErrorDialog.TYPE.ERROR, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dismiss();
+                            }
+                        }, false);
                     }
                 } else {
                     ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));
@@ -73,7 +80,7 @@ public class PocketSizeDialog extends BaseDialog {
     }
 
     private void initView() {
-        for (PocketSizeBo item : mItems) {
+        for (final PocketSizeBo item : mItems) {
             View child = LayoutInflater.from(mContext).inflate(R.layout.item_pocketsize, null);
             TextView tv_size = child.findViewById(R.id.tv_pocketSize_size);
             TextView tv_code = child.findViewById(R.id.tv_pocketSize_code);
@@ -82,6 +89,14 @@ public class PocketSizeDialog extends BaseDialog {
 
             ImageView imageView = child.findViewById(R.id.iv_pocketSize_img);
             Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<String> list = new ArrayList<>();
+                    list.add(item.getPICTURE_URL());
+                    mContext.startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
+                }
+            });
 
             mLayout_item.addView(child);
         }

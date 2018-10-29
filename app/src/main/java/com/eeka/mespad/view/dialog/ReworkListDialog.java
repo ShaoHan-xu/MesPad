@@ -42,7 +42,6 @@ public class ReworkListDialog extends BaseDialog {
             }
         });
 
-        getData();
     }
 
     private void getData() {
@@ -81,4 +80,9 @@ public class ReworkListDialog extends BaseDialog {
         });
     }
 
+    @Override
+    public void show() {
+        super.show();
+        getData();//防止方法内的加载弹框被此弹框覆盖
+    }
 }

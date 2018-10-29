@@ -19,6 +19,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.view.dialog.SplitCardDialog;
 
 import java.util.List;
 
@@ -108,6 +109,7 @@ public class HttpHelper {
     public static final String productOn = BASE_URL + "hanger/productOn?";
     public static final String viewCutPadInforByShopOrder = BASE_URL + "cutpad/viewCutPadInforByInput?";
     public static final String listOffLineReWorkInfo = BASE_URL + "logNcPad/listOffLineReWorkInfo?";
+    public static final String splitCard = BASE_URL + "cutpad/subPackage?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -117,9 +119,19 @@ public class HttpHelper {
     }
 
     /**
+     * 分包制卡
+     */
+    public static void splitCard(String processLot, List<SplitCardDialog.SplitCardBo> list, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("processLot", processLot);
+        json.put("lotInfos", list);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(splitCard, params, getResponseHandler(splitCard, callback));
+    }
+
+    /**
      * 根据PAD的IP地址查询站点的相关信息
-     *
-     * @param callback 回调
      */
     public static void initData(HttpCallback callback) {
         RequestParams params = getBaseParams();

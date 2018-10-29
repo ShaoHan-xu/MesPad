@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <TextView
+            style="@style/textStyle_default"
+            android:text="码数：" />
+
+        <TextView
+            android:id="@+id/tv_splitCard_size"
+            style="@style/textStyle_default"
+            android:layout_marginRight="20dp"
+            android:padding="5dp" />
+
+        <TextView
+            style="@style/textStyle_default"
+            android:text="卡号：" />
+
+        <TextView
+            android:id="@+id/tv_splitCard_cardNum"
+            style="@style/textStyle_default"
+            android:layout_marginRight="20dp"
+            android:padding="5dp" />
+
+        <TextView
+            style="@style/textStyle_default"
+            android:text="数量：" />
+
+        <TextView
+            android:id="@+id/tv_splitCard_qty"
+            style="@style/textStyle_default"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_splitCard_childItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_black"
+        android:divider="@color/divider_gray"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_splitCard_add"
+        style="@style/btnStyle_primary"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="新增分卡" />
+
+
+</LinearLayout>

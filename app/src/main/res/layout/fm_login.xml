@@ -19,7 +19,7 @@
             android:id="@+id/tv_login_alert"
             style="@style/textStyle_default"
             android:layout_marginBottom="20dp"
-            android:text="请输入卡号上岗"
+            android:text="请输入工号上岗"
             android:textStyle="bold" />
 
         <LinearLayout

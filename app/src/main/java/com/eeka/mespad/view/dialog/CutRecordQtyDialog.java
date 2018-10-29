@@ -62,8 +62,6 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
 
         mLayout_list = view.findViewById(R.id.layout_cutRecordQty);
 
-        LoadingDialog.show(mContext);
-        HttpHelper.getCutRecordData(mRFID, mShopOrder, this);
     }
 
     private View getItemView(CutRecordQtyBo.RecordQtyItemBo item, int position) {
@@ -189,6 +187,10 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
     public void show() {
         super.show();
         getWindow().setLayout(SystemUtils.getScreenWidth(mContext), SystemUtils.getScreenHeight(mContext));
+        
+        //防止loading弹框被覆盖
+        LoadingDialog.show(mContext);
+        HttpHelper.getCutRecordData(mRFID, mShopOrder, this);
     }
 
     @Override

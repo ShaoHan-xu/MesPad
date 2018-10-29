@@ -20,13 +20,13 @@ if (keystoreFilepath) {
 }
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.eeka.mespad"
         minSdkVersion 15
 
         targetSdkVersion 27
-        versionCode 69
+        versionCode 74
 
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

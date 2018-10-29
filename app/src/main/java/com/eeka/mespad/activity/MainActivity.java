@@ -178,15 +178,19 @@ public class MainActivity extends NFCActivity {
             System.exit(0);
         } else if (PushJson.TYPE_RFID.equals(type)) {
             String content = push.getContent();
-            if (TopicUtil.TOPIC_SUSPEND.equals(mTopic)) {
+            if (TopicUtil.TOPIC_SUSPEND.equals(mTopic) && mSuspendFragment.inputRFID(content)) {
                 //上裁站刷卡绑定RFID
-                mSuspendFragment.inputRFID(content);
-            } else if (TopicUtil.TOPIC_MANUAL.equals(mTopic) || TopicUtil.TOPIC_SEW.equals(mTopic)) {
+            } else if ((TopicUtil.TOPIC_MANUAL.equals(mTopic) || TopicUtil.TOPIC_SEW.equals(mTopic)) && mSewFragment.inputRFID(content)) {
                 //手工段刷卡通过RFID卡号重新上架
-                mSewFragment.inputRFID(content);
-            } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+            } else if (TopicUtil.TOPIC_QC.equals(mTopic) && mQCFragment.inputRFID(content)) {
                 //质检段刷卡通过RFID卡号重新上架
-                mQCFragment.inputRFID(content);
+            } else {
+                toast("正在刷新页面");
+                mEt_orderNum.setText(content);
+                isSearchOrder = true;
+                if (checkResource()) {
+                    searchOrder();
+                }
             }
         } else {
             String content = push.getContent();
@@ -749,8 +753,14 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_gotoQA:
-                if (mSewFragment != null) {
-                    mSewFragment.gotoQA();
+                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                    if (mSewFragment != null) {
+                        mSewFragment.gotoQA();
+                    }
+                } else if (TopicUtil.TOPIC_QC.equals(mTopic)) {
+                    if (mQCFragment != null) {
+                        mQCFragment.gotoQA();
+                    }
                 }
                 break;
             case R.id.btn_qaToQc:
@@ -865,7 +875,7 @@ public class MainActivity extends NFCActivity {
                     public void onClick(View v) {
                         showLoading();
                         mLogoutIndex = position;
-                        HttpHelper.positionLogout(item.getCARD_NUMBER(), MainActivity.this);
+                        HttpHelper.positionLogout(item.getEMPLOYEE_NUMBER(), MainActivity.this);
                     }
                 });
             }
@@ -994,6 +1004,8 @@ public class MainActivity extends NFCActivity {
                 mCutFragment.refreshLoginUsers();
                 break;
             case TopicUtil.TOPIC_SEW:
+            case TopicUtil.TOPIC_MANUAL:
+            case TopicUtil.TOPIC_PACKING:
                 mSewFragment.refreshLoginUsers();
                 break;
             case TopicUtil.TOPIC_SUSPEND:

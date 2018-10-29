@@ -52,7 +52,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
         if (rootView != null) {
             rootView.setOnClickListener(this);
         }
-        mLayout_loginUser = (LinearLayout) mView.findViewById(R.id.layout_loginUsers);
+        mLayout_loginUser = mView.findViewById(R.id.layout_loginUsers);
 
 //        HttpHelper.getPositionLoginUsers(this);
         refreshLoginUsers();
@@ -72,7 +72,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
         mLayout_loginUser.removeAllViews();
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         if (loginUsers != null) {
-            ScrollView scrollView = (ScrollView) mView.findViewById(R.id.scrollView_loginUsers);
+            ScrollView scrollView = mView.findViewById(R.id.scrollView_loginUsers);
             if (loginUsers.size() >= 3) {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 100));
                 scrollView.setLayoutParams(params);
@@ -82,8 +82,8 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
             }
             for (UserInfoBo userInfo : loginUsers) {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.layout_loginuser, null);
-                TextView tv_userName = (TextView) view.findViewById(R.id.tv_userName);
-                TextView tv_userId = (TextView) view.findViewById(R.id.tv_userId);
+                TextView tv_userName = view.findViewById(R.id.tv_userName);
+                TextView tv_userId = view.findViewById(R.id.tv_userId);
                 tv_userName.setText(userInfo.getNAME());
                 tv_userId.setText(userInfo.getEMPLOYEE_NUMBER() + "");
                 mLayout_loginUser.addView(view);
@@ -116,7 +116,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
 
     private void initProgressDialog() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_loading, null);
-        mTv_loadingMsg = (TextView) view.findViewById(R.id.tv_loading_msg);
+        mTv_loadingMsg = view.findViewById(R.id.tv_loading_msg);
 
         mProDialog = new Dialog(mContext);
         mProDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

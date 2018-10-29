@@ -21,6 +21,8 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.activity.RecordSewNCActivity;
 import com.eeka.mespad.activity.WebActivity;
 import com.eeka.mespad.bo.ClothSizeBo;
+import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.INARequestBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ReworkItemBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
@@ -28,6 +30,7 @@ import com.eeka.mespad.bo.SewAttr;
 import com.eeka.mespad.bo.SewQCDataBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.TabViewUtil;
@@ -37,7 +40,6 @@ import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.ReworkInfoDialog;
-import com.eeka.mespad.view.dialog.ReworkListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +185,8 @@ public class QCFragment extends BaseFragment {
                     mOfflineDialog.show();
                 }
             }
+        } else {
+            mTv_curProcess.setText(null);
         }
         mTv_dayOutput.setText(mSewQCData.getDailyOutput() + "");
 //        mTv_monthOutput.setText(mSewQCData.getMonthlyOutput() + "");
@@ -203,11 +207,24 @@ public class QCFragment extends BaseFragment {
 
         if ("1".equals(mSewQCData.getReworkFlag())) {
             mTv_reworkInfo.setVisibility(View.VISIBLE);
+            mTv_ncTag.setVisibility(View.GONE);
         } else {
             mTv_reworkInfo.setVisibility(View.GONE);
 
             boolean hasNC = false;
             if (mSewQCData.getNcCode() != null) {
+                if (mSewQCData.getNcCode().size() == 0) {
+                    if ("QUALITY_ASSESSMENT".equals(mSewQCData.getPrePositionType())) {
+                        hasNC = true;
+                        mTv_ncTag.setText("该件来自QA站");
+                    } else if ("QUALITY_CONTROL".equals(mSewQCData.getPrePositionType())) {
+                        hasNC = true;
+                        mTv_ncTag.setText("该件来自QC站");
+                    } else if ("REPAIR_OFFLINE".equals(mSewQCData.getPrePositionType())) {
+                        hasNC = true;
+                        mTv_ncTag.setText("该件来自线下返修站");
+                    }
+                }
                 for (String nc : mSewQCData.getNcCode()) {
                     if ("NC2QC".equals(nc) || ("NC2QA".equals(nc) && "NORMAL".equals(mSewQCData.getPrePositionType()))) {
                         hasNC = true;
@@ -216,11 +233,11 @@ public class QCFragment extends BaseFragment {
                     } else {
                         if ("QUALITY_ASSESSMENT".equals(mSewQCData.getPrePositionType())) {
                             hasNC = true;
-                            mTv_ncTag.setText("该件来自于QA站");
+                            mTv_ncTag.setText("该件来自QA站");
                             break;
                         } else if ("QUALITY_CONTROL".equals(mSewQCData.getPrePositionType())) {
                             hasNC = true;
-                            mTv_ncTag.setText("该件来自于QC站");
+                            mTv_ncTag.setText("该件来自QC站");
                             break;
                         }
                     }
@@ -286,10 +303,73 @@ public class QCFragment extends BaseFragment {
         mProductOnOffDialog = new ProductOnOffDialog(mContext, mRFID, null, false, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchOrder(mRFID);
+                inaIN(mRFID);
             }
         });
         mProductOnOffDialog.show();
+    }
+
+    /**
+     * 衣架进站
+     */
+    public void inaIN(String rfid) {
+        mRFID = rfid;
+        if (isEmpty(mRFID)) {
+            showErrorDialog("请输入条码获取数据");
+            return;
+        }
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        showLoading();
+        WebServiceUtils.inaIn(bo, new WebServiceCallback());
+    }
+
+    private void inaDoing() {
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        showLoading();
+        WebServiceUtils.inaDoing(bo, null);
+    }
+
+    private INARequestBo getINARequestParams() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo == null) {
+            ErrorDialog.showAlert(mContext, "站位数据为空，请重启应用获取");
+            return null;
+        }
+        INARequestBo bo = new INARequestBo();
+        bo.setSite(SpUtil.getSite());
+        bo.setLineId(contextInfo.getLINE_CATEGORY());
+        bo.setStationId(contextInfo.getPOSITION());
+        bo.setInTime(System.currentTimeMillis() + "");
+        bo.setOutTime(System.currentTimeMillis() + "");
+        bo.setDoTime(System.currentTimeMillis() + "");
+        bo.setHangerId(mRFID);
+        return bo;
+    }
+
+    private class WebServiceCallback implements WebServiceUtils.HttpCallBack {
+
+        @Override
+        public void onSuccess(String method, JSONObject result) {
+            dismissLoading();
+            if (WebServiceUtils.INA_IN.equals(method)) {
+                inaDoing();
+            } else if (WebServiceUtils.INA_DOING.equals(method)) {
+
+            }
+        }
+
+        @Override
+        public void onFail(String errMsg) {
+            dismissLoading();
+            //webservice的接口报错时都会有推送，所以此处不需要显示
+//            showErrorDialog(errMsg);
+        }
     }
 
     /**
@@ -323,6 +403,21 @@ public class QCFragment extends BaseFragment {
         } else {
             showErrorDialog("请先获取工单数据");
         }
+    }
+
+    public void gotoQA() {
+        if (mSewQCData == null) {
+            toast("请先获取缝制数据");
+            return;
+        }
+        ErrorDialog.showConfirmAlert(mContext, "发现当前实物有不良，需要去质检站？", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoading();
+                PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+                HttpHelper.initNcForQA(mSewQCData.getSfc(), resource.getRESOURCE_BO(), "NC2QA", QCFragment.this);
+            }
+        });
     }
 
     public void qaToQc() {
@@ -624,6 +719,8 @@ public class QCFragment extends BaseFragment {
             } else if (HttpHelper.getClothSize.equals(url)) {
                 mClothSizeData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ClothSizeBo.class);
                 setupSizeInfo();
+            } else if (HttpHelper.initNcForQA.equals(url)) {
+                toast("操作成功");
             } else if (HttpHelper.qaToQc.equals(url)) {
                 toast("操作成功");
             } else if (HttpHelper.saveQCClothSizeData.equals(url)) {

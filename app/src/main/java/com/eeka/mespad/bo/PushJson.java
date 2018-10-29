@@ -13,6 +13,7 @@ public class PushJson {
     public static final String TYPE_WARNING = "WARNING";//警告
     public static final String TYPE_TOAST = "TOAST";//toast
     public static final String TYPE_ErrDialogDismiss = "ErrDialogDismiss";//错误弹框消失
+    public static final String TYPE_HANGERID = "hangerId";//衣架号
 
     private String content;
     private String type;

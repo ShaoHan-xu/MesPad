@@ -25,6 +25,15 @@ public class TailorInfoBo implements Serializable {
     private List<StickyInfo> STICKY_INFOR;
     private String orderType;
     private String RFID;
+    private String SFC_BO;
+
+    public String getSFC_BO() {
+        return SFC_BO;
+    }
+
+    public void setSFC_BO(String SFC_BO) {
+        this.SFC_BO = SFC_BO;
+    }
 
     public String getRFID() {
         return RFID;
@@ -377,9 +386,35 @@ public class TailorInfoBo implements Serializable {
          * SIZE_CODE : 39
          * SIZE_AMOUNT : 4
          */
-
         private String SIZE_CODE;
         private int SIZE_AMOUNT;
+        private String PROCESS_LOT_BO;
+        private String QTY;
+        private String LAYERS;
+
+        public String getPROCESS_LOT_BO() {
+            return PROCESS_LOT_BO;
+        }
+
+        public void setPROCESS_LOT_BO(String PROCESS_LOT_BO) {
+            this.PROCESS_LOT_BO = PROCESS_LOT_BO;
+        }
+
+        public String getQTY() {
+            return QTY;
+        }
+
+        public void setQTY(String QTY) {
+            this.QTY = QTY;
+        }
+
+        public String getLAYERS() {
+            return LAYERS;
+        }
+
+        public void setLAYERS(String LAYERS) {
+            this.LAYERS = LAYERS;
+        }
 
         public String getSIZE_CODE() {
             return SIZE_CODE;
