@@ -3,42 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_title"
+    <RelativeLayout
+        android:id="@+id/layout_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="分包制卡"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textSize_title" />
+        android:background="@color/colorPrimary">
 
-    <LinearLayout
-        android:id="@+id/layout_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_centerInParent="true"
+            android:text="分包制卡"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_title" />
 
         <Button
-            android:id="@+id/btn_done"
+            android:id="@+id/btn_close"
             style="@style/btnStyle_primary"
-            android:text="确定" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:text="关闭" />
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_save"
             style="@style/btnStyle_primary"
-            android:layout_marginLeft="20dp"
-            android:text="取消" />
-    </LinearLayout>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/btn_close"
+            android:text="保存" />
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/layout_bottom"
-        android:layout_below="@id/tv_title"
+        android:layout_below="@id/layout_title"
         android:layout_gravity="center"
         android:padding="10dp">
 
@@ -50,6 +49,62 @@
             android:background="@drawable/border_black"
             android:divider="@drawable/divider_gray"
             android:orientation="vertical"
-            android:showDividers="middle" />
+            android:padding="10dp"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="码数：" />
+
+                <TextView
+                    android:id="@+id/tv_splitCard_size"
+                    style="@style/textStyle_default"
+                    android:layout_marginRight="20dp"
+                    android:padding="5dp" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="卡号：" />
+
+                <TextView
+                    android:id="@+id/tv_splitCard_cardNum"
+                    style="@style/textStyle_default"
+                    android:layout_marginRight="20dp"
+                    android:padding="5dp" />
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="数量：" />
+
+                <TextView
+                    android:id="@+id/tv_splitCard_qty"
+                    style="@style/textStyle_default"
+                    android:padding="5dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_splitCard_childItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_gray"
+                android:orientation="vertical"
+                android:showDividers="middle" />
+
+            <Button
+                android:id="@+id/btn_splitCard_add"
+                style="@style/btnStyle_primary"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="新增分卡" />
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>

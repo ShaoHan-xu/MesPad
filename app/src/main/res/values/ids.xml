@@ -44,4 +44,7 @@
     <item name="btn_sorting" type="id" />
     <item name="btn_reworkList" type="id" />
     <item name="btn_splitCard" type="id" />
+    <item name="btn_offlineSort" type="id" />
+    <item name="btn_qcSize" type="id" />
+    <item name="btn_yaotouSize" type="id" />
 </resources>

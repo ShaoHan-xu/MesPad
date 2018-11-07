@@ -44,9 +44,11 @@ import com.eeka.mespad.view.dialog.NCDetailDialog;
 import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.PocketSizeDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
+import com.eeka.mespad.view.dialog.QCSizeDialog;
 import com.eeka.mespad.view.dialog.ReworkListDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.eeka.mespad.view.dialog.SortingDialog;
+import com.eeka.mespad.view.dialog.YaotouSizeDialog;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -195,6 +197,34 @@ public class SewFragment extends BaseFragment {
     }
 
     /**
+     * 腰头尺寸
+     */
+    public void yaotouSize() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        List<SewAttr> infos = mSewData.getCurrentOpeationInfos();
+        if (infos != null && infos.size() != 0) {
+            SewAttr attr = infos.get(mVP_sop.getCurrentItem());
+            new YaotouSizeDialog(mContext, mSewData.getShopOrder(), mSewData.getSfc(), mSewData.getSize(), attr.getName()).show();
+        } else {
+            showErrorDialog("当前衣架无工序，无法执行该操作");
+        }
+    }
+
+    /**
+     * 质检尺寸
+     */
+    public void qcSize() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        new QCSizeDialog(mContext, mSewData.getShopOrder(), mSewData.getSize()).show();
+    }
+
+    /**
      * 分拣
      */
     public void sorting() {
@@ -203,6 +233,22 @@ public class SewFragment extends BaseFragment {
             return;
         }
         showSortingDialog();
+    }
+
+    /**
+     * 线下分拣
+     */
+    public void offlineSort() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        ErrorDialog.showConfirmAlert(mContext, "确定进行线下分拣操作吗？", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HttpHelper.offlineSort(SewFragment.this);
+            }
+        });
     }
 
     private void showSortingDialog() {
@@ -511,7 +557,7 @@ public class SewFragment extends BaseFragment {
         List<SewAttr> infos = mSewData.getCurrentOpeationInfos();
         if (infos != null && infos.size() != 0) {
             SewAttr attr = infos.get(mVP_sop.getCurrentItem());
-            new PocketSizeDialog(mContext, mSewData.getShopOrder(), mSewData.getSfc(), attr.getName()).show();
+            new PocketSizeDialog(mContext, mSewData.getShopOrder(), mSewData.getSfc(), mSewData.getSize(), attr.getName()).show();
         } else {
             showErrorDialog("当前衣架无工序，无法执行该操作");
         }
@@ -774,6 +820,8 @@ public class SewFragment extends BaseFragment {
             } else if (HttpHelper.saveSubcontractInfo.equals(url)) {
                 toast("绣花工序完成");
                 mActivity.setButtonState(R.id.btn_subComplete, false);
+            } else if (HttpHelper.offlineSort.equals(url)) {
+                ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, false);
             }
         }
     }

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="腰头尺寸"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_title" />
+
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_title"
+        android:layout_centerInParent="true"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="腰头宽：" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_width"
+                    style="@style/textStyle_default"
+                    android:text="12" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_widthUnit"
+                    style="@style/textStyle_default"
+                    android:text="CM" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="低腰码数：" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_size"
+                    style="@style/textStyle_default"
+                    android:text="38" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_sizeUnit"
+                    style="@style/textStyle_default"
+                    android:text="CM" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="腰实样号：" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_sampleCode"
+                    style="@style/textStyle_default"
+                    android:text="11" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_sampleUnit"
+                    style="@style/textStyle_default"
+                    android:text="CM" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="腰模板号：" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_template"
+                    style="@style/textStyle_default"
+                    android:text="38" />
+
+                <TextView
+                    android:id="@+id/tv_yaotouSize_templateUnit"
+                    style="@style/textStyle_default"
+                    android:text="11.5" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="编码：" />
+
+            <TextView
+                android:id="@+id/tv_yaotouSize_code"
+                style="@style/textStyle_default"
+                android:text="TT001" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_yaotouSize_img"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

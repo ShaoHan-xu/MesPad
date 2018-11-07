@@ -70,7 +70,9 @@ public class WashLabelDialog extends BaseDialog {
             public void onClick(View v) {
                 String washLabel = mEt_washLabel.getText().toString();
                 if (TextUtils.isEmpty(washLabel)) {
-                    Toast.makeText(mContext, "请输入洗水唛编号", Toast.LENGTH_SHORT).show();
+                    ErrorDialog.showAlert(mContext, "请输入洗水唛编号");
+                } else if (washLabel.length() < 9) {
+                    ErrorDialog.showAlert(mContext, "洗水唛编号少于9位，请查验卡号是否正确");
                 } else {
                     EventBus.getDefault().post(washLabel);
                     dismiss();

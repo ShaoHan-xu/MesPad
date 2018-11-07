@@ -23,9 +23,18 @@ public class TailorInfoBo implements Serializable {
     private List<LayoutInfoBean> LAYOUT_INFOR;
     private NextOrderInfo NEXT_OPER_INFOR;
     private List<StickyInfo> STICKY_INFOR;
+    private ProcessLotInfo PROCESS_LOT_INFO;
     private String orderType;
     private String RFID;
     private String SFC_BO;
+
+    public ProcessLotInfo getPROCESS_LOT_INFO() {
+        return PROCESS_LOT_INFO;
+    }
+
+    public void setPROCESS_LOT_INFO(ProcessLotInfo PROCESS_LOT_INFO) {
+        this.PROCESS_LOT_INFO = PROCESS_LOT_INFO;
+    }
 
     public String getSFC_BO() {
         return SFC_BO;
@@ -105,6 +114,36 @@ public class TailorInfoBo implements Serializable {
 
     public void setCUT_SIZES(List<CUTSIZESBean> CUT_SIZES) {
         this.CUT_SIZES = CUT_SIZES;
+    }
+
+    public static class ProcessLotInfo implements Serializable {
+        private String SIZE;
+        private String PROCESS_LOT;
+        private String PROCESS_LOT_QTY;
+
+        public String getSIZE() {
+            return SIZE;
+        }
+
+        public void setSIZE(String SIZE) {
+            this.SIZE = SIZE;
+        }
+
+        public String getPROCESS_LOT() {
+            return PROCESS_LOT;
+        }
+
+        public void setPROCESS_LOT(String PROCESS_LOT) {
+            this.PROCESS_LOT = PROCESS_LOT;
+        }
+
+        public String getPROCESS_LOT_QTY() {
+            return PROCESS_LOT_QTY;
+        }
+
+        public void setPROCESS_LOT_QTY(String PROCESS_LOT_QTY) {
+            this.PROCESS_LOT_QTY = PROCESS_LOT_QTY;
+        }
     }
 
     public static class MatInfoBean implements Serializable {

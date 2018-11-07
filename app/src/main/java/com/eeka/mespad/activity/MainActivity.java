@@ -277,6 +277,18 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "YAOTOU_SIZE":
+                    button.setText("腰头尺寸");
+                    button.setId(R.id.btn_yaotouSize);
+                    break;
+                case "CHECKING_MESSAGE":
+                    button.setText("质检尺寸");
+                    button.setId(R.id.btn_qcSize);
+                    break;
+                case "OFFLINE_SORT":
+                    button.setText("线下分拣");
+                    button.setId(R.id.btn_offlineSort);
+                    break;
                 case "SPLIT_CARD":
                     button.setText("分包制卡");
                     button.setId(R.id.btn_splitCard);
@@ -286,7 +298,7 @@ public class MainActivity extends NFCActivity {
                     button.setId(R.id.btn_reworkList);
                     break;
                 case "SORTING_BUTTON":
-                    button.setText("分拣扫码");
+                    button.setText("分拣衣架绑定");
                     button.setId(R.id.btn_sorting);
                     break;
                 case "CHANG_BUTTON":
@@ -601,6 +613,21 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_yaotouSize:
+                if (mSewFragment != null) {
+                    mSewFragment.yaotouSize();
+                }
+                break;
+            case R.id.btn_qcSize:
+                if (mSewFragment != null) {
+                    mSewFragment.qcSize();
+                }
+                break;
+            case R.id.btn_offlineSort:
+                if (mSewFragment != null) {
+                    mSewFragment.offlineSort();
+                }
+                break;
             case R.id.btn_splitCard:
                 if (mCutFragment != null) {
                     mCutFragment.splitCard(mCardInfo.getCardNum());
@@ -944,10 +971,12 @@ public class MainActivity extends NFCActivity {
                                 String cardNum = mCardInfo.getCardNum();
                                 List<UserInfoBo> users = SpUtil.getPositionUsers();
                                 if (users != null && users.size() != 0) {
-                                    for (UserInfoBo user : users) {
+                                    for (int i = 0; i < users.size(); i++) {
+                                        UserInfoBo user = users.get(i);
                                         if (user.getCARD_NUMBER().equals(cardNum)) {
+                                            mLogoutIndex = i;
                                             clockOut(cardNum);
-                                            break;
+                                            return;
                                         }
                                     }
                                 }

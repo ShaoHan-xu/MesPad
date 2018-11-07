@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -23,22 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 袋口尺寸信息弹框
+ * 腰头尺寸信息弹框
  */
-public class PocketSizeDialog extends BaseDialog {
+public class YaotouSizeDialog extends BaseDialog {
 
     private String mShopOrder;
     private String mSFC;
     private String mSize;
     private String mOperation;
     private List<PocketSizeBo> mItems;
-    private LinearLayout mLayout_item;
 
-    public PocketSizeDialog(@NonNull Context context, String shopOrder, String sfc, String sizeCode, String operation) {
+    public YaotouSizeDialog(@NonNull Context context, String shopOrder, String sfc, String size, String operation) {
         super(context);
         mShopOrder = shopOrder;
         mSFC = sfc;
-        mSize = sizeCode;
+        mSFC = size;
         mOperation = operation;
         init();
     }
@@ -46,11 +44,10 @@ public class PocketSizeDialog extends BaseDialog {
     @Override
     protected void init() {
         super.init();
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_pocketsize, null);
-        setContentView(view);
-        mLayout_item = view.findViewById(R.id.layout_pocketSize);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.dlg_yaotousize, null);
+        setContentView(mView);
 
-        view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+        mView.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -70,7 +67,7 @@ public class PocketSizeDialog extends BaseDialog {
                         mItems = JSON.parseArray(result.toString(), PocketSizeBo.class);
                         initView();
                     } else {
-                        ErrorDialog.showAlert(mContext, "该工序无袋口尺寸数据", ErrorDialog.TYPE.ERROR, new View.OnClickListener() {
+                        ErrorDialog.showAlert(mContext, "该工序无腰头尺寸数据", ErrorDialog.TYPE.ERROR, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 dismiss();
@@ -91,32 +88,35 @@ public class PocketSizeDialog extends BaseDialog {
     }
 
     private void initView() {
-        for (final PocketSizeBo item : mItems) {
-            View child = LayoutInflater.from(mContext).inflate(R.layout.item_pocketsize, null);
-            TextView tv_size = child.findViewById(R.id.tv_pocketSize_size);
-            TextView tv_code = child.findViewById(R.id.tv_pocketSize_code);
-            tv_size.setText(item.getVALUE());
-            tv_code.setText(item.getPART_NO());
+        final PocketSizeBo item = mItems.get(0);
+        TextView tv_size = mView.findViewById(R.id.tv_yaotouSize_size);
+        TextView tv_code = mView.findViewById(R.id.tv_yaotouSize_code);
+        TextView tv_width = mView.findViewById(R.id.tv_yaotouSize_width);
+        TextView tv_sampleCode = mView.findViewById(R.id.tv_yaotouSize_sampleCode);
+        TextView tv_template = mView.findViewById(R.id.tv_yaotouSize_template);
+        tv_width.setText(item.getYK_V());
+        tv_size.setText(item.getDYMS_V());
+        tv_sampleCode.setText(item.getYSYH_V());
+        tv_template.setText(item.getYMBH_V());
+        tv_code.setText(item.getPART_NO());
 
-            ImageView imageView = child.findViewById(R.id.iv_pocketSize_img);
-            Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<String> list = new ArrayList<>();
-                    list.add(item.getPICTURE_URL());
-                    mContext.startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
-                }
-            });
+        ImageView imageView = mView.findViewById(R.id.iv_yaotouSize_img);
+        Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> list = new ArrayList<>();
+                list.add(item.getPICTURE_URL());
+                mContext.startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
+            }
+        });
 
-            mLayout_item.addView(child);
-        }
     }
 
     @Override
     public void show() {
         super.show();
-        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.7), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.6), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
         initData();
     }
 }

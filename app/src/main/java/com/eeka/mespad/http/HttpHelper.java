@@ -8,12 +8,12 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.CutRecordQtyBo;
 import com.eeka.mespad.bo.GetLabuDataBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SaveLabuDataBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
-import com.eeka.mespad.bo.UpdateLabuBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
@@ -110,6 +110,8 @@ public class HttpHelper {
     public static final String viewCutPadInforByShopOrder = BASE_URL + "cutpad/viewCutPadInforByInput?";
     public static final String listOffLineReWorkInfo = BASE_URL + "logNcPad/listOffLineReWorkInfo?";
     public static final String splitCard = BASE_URL + "cutpad/subPackage?";
+    public static final String offlineSort = BASE_URL + "sort/bindingdefaultSortRfidBySFC?";
+    public static final String getQCSize = BASE_URL + "sweing/getShopOrderSize?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -119,14 +121,37 @@ public class HttpHelper {
     }
 
     /**
-     * 分包制卡
+     * 获取质检尺寸
      */
-    public static void splitCard(String processLot, List<SplitCardDialog.SplitCardBo> list, HttpCallback callback) {
+    public static void getQCSize(String shopOrder, String size, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("shopOrder", shopOrder);
+        params.put("sizeCode", size);
+        HttpRequest.post(getQCSize, params, getResponseHandler(getQCSize, callback));
+    }
+
+    /**
+     * 线下分拣
+     */
+    public static void offlineSort(HttpCallback callback) {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
-        json.put("processLot", processLot);
-        json.put("lotInfos", list);
-        params.put("params", json.toJSONString());
+        json.put("STATION_ID", contextInfo.getPOSITION());
+        json.put("LINE_ID", contextInfo.getLINE_CATEGORY());
+        params.put("params", json.toString());
+        HttpRequest.post(offlineSort, params, getResponseHandler(offlineSort, callback));
+    }
+
+    /**
+     * 分包制卡
+     */
+    public static void splitCard(SplitCardDialog.SplitCardDataBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+//        JSONObject json = new JSONObject();
+//        json.put("processLotBo", data.getProcessLotBo());
+//        json.put("lotInfos", data.getLotInfos());
+        params.put("params", JSON.toJSONString(data));
         HttpRequest.post(splitCard, params, getResponseHandler(splitCard, callback));
     }
 
@@ -887,7 +912,7 @@ public class HttpHelper {
     /**
      * 获取袋口尺寸信息
      */
-    public static void getPocketSize(String shopOrder, String sfc, String operation, HttpCallback callback) {
+    public static void getPocketSize(String shopOrder, String sfc, String sizeCode, String operation, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("SITE", SpUtil.getSite());
         json.put("LOGIC_NO", "query.cadSizeInfo");
@@ -895,6 +920,7 @@ public class HttpHelper {
         json1.put("SHOP_ORDER", shopOrder);
         json1.put("OPERATIONS", operation);
         json1.put("SFC", sfc);
+        json1.put("SIZE_CODE", sizeCode);
         json.put("PARAMS", json1);
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));

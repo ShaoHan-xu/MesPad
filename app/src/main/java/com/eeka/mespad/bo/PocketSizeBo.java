@@ -6,6 +6,42 @@ public class PocketSizeBo {
     private String VALUE;
     private String PART_NO;
     private String PICTURE_URL;
+    private String YK_V;
+    private String DYMS_V;
+    private String YSYH_V;
+    private String YMBH_V;
+
+    public String getYK_V() {
+        return YK_V;
+    }
+
+    public void setYK_V(String YK_V) {
+        this.YK_V = YK_V;
+    }
+
+    public String getDYMS_V() {
+        return DYMS_V;
+    }
+
+    public void setDYMS_V(String DYMS_V) {
+        this.DYMS_V = DYMS_V;
+    }
+
+    public String getYSYH_V() {
+        return YSYH_V;
+    }
+
+    public void setYSYH_V(String YSYH_V) {
+        this.YSYH_V = YSYH_V;
+    }
+
+    public String getYMBH_V() {
+        return YMBH_V;
+    }
+
+    public void setYMBH_V(String YMBH_V) {
+        this.YMBH_V = YMBH_V;
+    }
 
     public String getPART_NO() {
         return PART_NO;

@@ -54,7 +54,7 @@
         android:layout_margin="50dp"
         android:singleLine="true"
         android:background="@drawable/border_black"
-        android:hint="请扫码或者手动输入条码"
+        android:hint="请刷卡或者手动输入衣架号"
         android:padding="10dp" />
 
 

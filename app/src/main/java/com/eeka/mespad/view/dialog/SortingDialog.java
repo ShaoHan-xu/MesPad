@@ -93,10 +93,6 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 break;
             case R.id.btn_ok:
                 mLastNum = mEditText.getText().toString();
-                if (TextUtils.isEmpty(mLastNum)) {
-                    Toast.makeText(mContext, "请输入条码后继续操作", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 sorting();
                 break;
             case R.id.btn_jump:
@@ -111,6 +107,13 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
         if (contextInfo == null) {
             ErrorDialog.showAlert(mContext, "站位数据未获取，请重启应用获取");
         } else {
+            if (TextUtils.isEmpty(mLastNum)) {
+                Toast.makeText(mContext, "请输入衣架号继续操作", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (mLastNum.length() != 10) {
+                Toast.makeText(mContext, "衣架号不足10位，请查验", Toast.LENGTH_SHORT).show();
+                return;
+            }
             LoadingDialog.show(mContext);
             WebServiceUtils.sendProductMessage(contextInfo.getLINE_CATEGORY(), contextInfo.getPOSITION(), mLastNum, new WebServiceUtils.HttpCallBack() {
                 @Override

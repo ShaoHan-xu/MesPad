@@ -46,6 +46,7 @@ import com.eeka.mespad.view.dialog.CutRecordQtyDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.PatternDialog;
+import com.eeka.mespad.view.dialog.SplitCardDialog;
 import com.eeka.mespad.view.dialog.StickyDialog;
 import com.eeka.mespad.zxing.EncodingHandler;
 import com.squareup.picasso.Picasso;
@@ -101,6 +102,12 @@ public class CutFragment extends BaseFragment {
         return mView;
     }
 
+    @Override
+    protected void initData() {
+        super.initData();
+        mCardState = new CardState();
+    }
+
     public void playVideo() {
         if (mTailorInfo.getOPER_INFOR() == null || mTailorInfo.getOPER_INFOR().size() == 0) {
             toast("当前站位无工序");
@@ -111,7 +118,14 @@ public class CutFragment extends BaseFragment {
         SystemUtils.playVideo(mContext, videoUrl);
     }
 
+    private CardState mCardState;
+
     public void searchOrderByOrderNum(String type, String orderNum) {
+        if (!orderNum.equals(mCardState.getCardNum())) {
+            mCardState.setCardNum(orderNum);
+            mCardState.setStarted(false);
+            mCardState.setCompleted(false);
+        }
         isSearchCard = false;
         showLoading();
         mRFID = orderNum;
@@ -119,6 +133,11 @@ public class CutFragment extends BaseFragment {
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
+        if (!orderNum.equals(mCardState.getCardNum())) {
+            mCardState.setCardNum(orderNum);
+            mCardState.setStarted(false);
+            mCardState.setCompleted(false);
+        }
         isSearchCard = true;
         showLoading();
         mOrderType = orderType;
@@ -308,7 +327,13 @@ public class CutFragment extends BaseFragment {
             showErrorDialog("请获取主数据后再执行操作");
             return;
         }
-
+        new SplitCardDialog(mContext, cardNum, mRI, mTailorInfo, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+                searchOrder(mOrderType, mRFID, resource.getRESOURCE_BO(), mRI);
+            }
+        }).show();
     }
 
     public void startWork() {
@@ -775,12 +800,25 @@ public class CutFragment extends BaseFragment {
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
                         mTailorInfo.setOPER_INFOR(mList_padProcess);
                     } else {
-                        mBtn_done.setEnabled(true);
-                        ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
+                        if (mCardState.isStarted) {
+                            ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
+                        } else {
+                            ((MainActivity) getActivity()).setButtonState(R.id.btn_start, true);
+                        }
+
+                        if (mCardState.isCompleted) {
+                            mBtn_done.setEnabled(false);
+                        } else {
+                            mBtn_done.setEnabled(true);
+                        }
                     }
                     if (isSearchCard) {
                         mTailorInfo.setOrderType(mOrderType);
                         mTailorInfo.setRFID(mRFID);
+                    } else {
+                        //搜索工单号与SFC号时没有订单信息返回，所以new一个空对象set进去，避免后面用到时的空指针
+                        TailorInfoBo.SHOPORDERINFORBean shoporderinforBean = new TailorInfoBo.SHOPORDERINFORBean();
+                        mTailorInfo.setSHOP_ORDER_INFOR(shoporderinforBean);
                     }
                     refreshView();
 
@@ -792,15 +830,39 @@ public class CutFragment extends BaseFragment {
 //                    mBtn_done.setText("完成");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_primary);
                 toast("开始作业");
+                mCardState.setStarted(true);
                 ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
             } else if (url.equals(HttpHelper.completeBatchWork_url) || url.equals(HttpHelper.completeCustomWork_url)) {
 //                    mBtn_done.setText("开始");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
                 toast("工序已完成");
+                mCardState.setCompleted(true);
                 mBtn_done.setEnabled(false);
             } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {
                 toast("注销在制品成功，可重新开始");
             }
+        }
+    }
+
+    private class CardState {
+        private String cardNum;
+        private boolean isStarted;
+        private boolean isCompleted;
+
+        public String getCardNum() {
+            return cardNum;
+        }
+
+        public void setCardNum(String cardNum) {
+            this.cardNum = cardNum;
+        }
+
+        public void setStarted(boolean started) {
+            isStarted = started;
+        }
+
+        public void setCompleted(boolean completed) {
+            isCompleted = completed;
         }
     }
 }

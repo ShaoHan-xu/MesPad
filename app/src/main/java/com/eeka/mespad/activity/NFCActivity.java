@@ -260,7 +260,7 @@ public class NFCActivity extends BaseActivity {
         }
         // Parse the first message in the list
         // Build views for all of the sub records
-        Date now = new Date();
+//        Date now = new Date();
         List<ParsedNdefRecord> records = NdefMessageParser.parse(msg);
         final int size = records.size();
         if (size != 0) {

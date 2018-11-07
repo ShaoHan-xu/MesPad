@@ -112,6 +112,8 @@ public class ProductOnOffDialog extends BaseDialog implements HttpCallback {
             Toast.makeText(mContext, "请输入洗水唛", Toast.LENGTH_SHORT).show();
         } else if (washLabel.equals(mHangerId)) {
             ErrorDialog.showAlert(mContext, "当前衣架号与洗水唛号为同一号码，请检查衣架号是否正确，如不正确请关闭弹窗后拿衣架重新进站后再上架。");
+        } else if (washLabel.length() < 9) {
+            ErrorDialog.showAlert(mContext, "洗水唛编号少于9位，请查验卡号是否正确");
         } else {
             LoadingDialog.show(mContext);
             HttpHelper.productOn(mHangerId, washLabel, this);
