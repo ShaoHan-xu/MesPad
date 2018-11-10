@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -106,6 +107,11 @@ public class MainActivity extends NFCActivity {
             //否则扫码输入时第一位会获取不到
             mHandler.sendEmptyMessageDelayed(WHAT_KEYBOARD, 1000);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private static final int WHAT_KEYBOARD = 0;

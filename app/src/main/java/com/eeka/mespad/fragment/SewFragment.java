@@ -239,10 +239,6 @@ public class SewFragment extends BaseFragment {
      * 线下分拣
      */
     public void offlineSort() {
-        if (mSewData == null) {
-            showErrorDialog("请先获取衣架数据");
-            return;
-        }
         ErrorDialog.showConfirmAlert(mContext, "确定进行线下分拣操作吗？", new View.OnClickListener() {
             @Override
             public void onClick(View v) {

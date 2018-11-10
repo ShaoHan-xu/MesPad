@@ -911,11 +911,14 @@ public class HttpHelper {
 
     /**
      * 获取袋口尺寸信息
+     *
+     * @param LOGIC_NO 袋口尺寸=query.cadSizeInfo
+     *                 腰头尺寸=query.cadSizeYTInfo
      */
-    public static void getPocketSize(String shopOrder, String sfc, String sizeCode, String operation, HttpCallback callback) {
+    public static void getPocketSize(String LOGIC_NO, String shopOrder, String sfc, String sizeCode, String operation, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("SITE", SpUtil.getSite());
-        json.put("LOGIC_NO", "query.cadSizeInfo");
+        json.put("LOGIC_NO", LOGIC_NO);
         JSONObject json1 = new JSONObject();
         json1.put("SHOP_ORDER", shopOrder);
         json1.put("OPERATIONS", operation);

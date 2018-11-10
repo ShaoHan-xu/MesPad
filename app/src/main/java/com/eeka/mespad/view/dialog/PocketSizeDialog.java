@@ -60,7 +60,7 @@ public class PocketSizeDialog extends BaseDialog {
 
     private void initData() {
         LoadingDialog.show(mContext);
-        HttpHelper.getPocketSize(mShopOrder, mSFC, mSize, mOperation, new HttpCallback() {
+        HttpHelper.getPocketSize("query.cadSizeInfo", mShopOrder, mSFC, mSize, mOperation, new HttpCallback() {
             @Override
             public void onSuccess(String url, JSONObject resultJSON) {
                 LoadingDialog.dismiss();

@@ -36,7 +36,7 @@ public class YaotouSizeDialog extends BaseDialog {
         super(context);
         mShopOrder = shopOrder;
         mSFC = sfc;
-        mSFC = size;
+        mSize = size;
         mOperation = operation;
         init();
     }
@@ -57,7 +57,7 @@ public class YaotouSizeDialog extends BaseDialog {
 
     private void initData() {
         LoadingDialog.show(mContext);
-        HttpHelper.getPocketSize(mShopOrder, mSFC, mSize, mOperation, new HttpCallback() {
+        HttpHelper.getPocketSize("query.cadSizeYTInfo",mShopOrder, mSFC, mSize, mOperation, new HttpCallback() {
             @Override
             public void onSuccess(String url, JSONObject resultJSON) {
                 LoadingDialog.dismiss();
@@ -116,7 +116,7 @@ public class YaotouSizeDialog extends BaseDialog {
     @Override
     public void show() {
         super.show();
-        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.6), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.7), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
         initData();
     }
 }

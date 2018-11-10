@@ -14,6 +14,9 @@ public class SuspendComponentBo {
      */
 
     private String SFC;
+    private String PROCESS_LOT;
+    private String LOT_SFC_QTY;
+    private String REAL_CUT_NUM;
     private String SFC_SIZE;
     private String SHOP_ORDER;
     private String SALES_ORDER;
@@ -22,6 +25,30 @@ public class SuspendComponentBo {
     private int QTY_ORDERED;
     private String QTY_COMPLETE;
     private List<COMPONENTSBean> COMPONENTS;
+
+    public String getPROCESS_LOT() {
+        return PROCESS_LOT;
+    }
+
+    public void setPROCESS_LOT(String PROCESS_LOT) {
+        this.PROCESS_LOT = PROCESS_LOT;
+    }
+
+    public String getLOT_SFC_QTY() {
+        return LOT_SFC_QTY;
+    }
+
+    public void setLOT_SFC_QTY(String LOT_SFC_QTY) {
+        this.LOT_SFC_QTY = LOT_SFC_QTY;
+    }
+
+    public String getREAL_CUT_NUM() {
+        return REAL_CUT_NUM;
+    }
+
+    public void setREAL_CUT_NUM(String REAL_CUT_NUM) {
+        this.REAL_CUT_NUM = REAL_CUT_NUM;
+    }
 
     public String getSFC_SIZE() {
         return SFC_SIZE;
