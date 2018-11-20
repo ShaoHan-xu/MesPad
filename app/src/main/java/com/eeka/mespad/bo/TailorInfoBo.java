@@ -19,6 +19,7 @@ public class TailorInfoBo implements Serializable {
     private List<OPERINFORBean> OPER_INFOR;
     private SHOPORDERINFORBean SHOP_ORDER_INFOR;
     private List<CUTSIZESBean> CUT_SIZES;
+    private List<PlanSizeBean> PLAN_SIZES;
     private List<MatInfoBean> MAT_INFOR;
     private List<LayoutInfoBean> LAYOUT_INFOR;
     private NextOrderInfo NEXT_OPER_INFOR;
@@ -27,6 +28,14 @@ public class TailorInfoBo implements Serializable {
     private String orderType;
     private String RFID;
     private String SFC_BO;
+
+    public List<PlanSizeBean> getPLAN_SIZES() {
+        return PLAN_SIZES;
+    }
+
+    public void setPLAN_SIZES(List<PlanSizeBean> PLAN_SIZES) {
+        this.PLAN_SIZES = PLAN_SIZES;
+    }
 
     public ProcessLotInfo getPROCESS_LOT_INFO() {
         return PROCESS_LOT_INFO;
@@ -417,6 +426,27 @@ public class TailorInfoBo implements Serializable {
 
         public void setZ_LAYOUT_BO(String Z_LAYOUT_BO) {
             this.Z_LAYOUT_BO = Z_LAYOUT_BO;
+        }
+    }
+
+    public static class PlanSizeBean implements Serializable {
+        private String SIZE_CODE;
+        private String SIZE_AMOUNT;
+
+        public String getSIZE_CODE() {
+            return SIZE_CODE;
+        }
+
+        public void setSIZE_CODE(String SIZE_CODE) {
+            this.SIZE_CODE = SIZE_CODE;
+        }
+
+        public String getSIZE_AMOUNT() {
+            return SIZE_AMOUNT;
+        }
+
+        public void setSIZE_AMOUNT(String SIZE_AMOUNT) {
+            this.SIZE_AMOUNT = SIZE_AMOUNT;
         }
     }
 

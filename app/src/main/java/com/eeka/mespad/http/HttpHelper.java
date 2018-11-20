@@ -111,13 +111,40 @@ public class HttpHelper {
     public static final String listOffLineReWorkInfo = BASE_URL + "logNcPad/listOffLineReWorkInfo?";
     public static final String splitCard = BASE_URL + "cutpad/subPackage?";
     public static final String offlineSort = BASE_URL + "sort/bindingdefaultSortRfidBySFC?";
+    public static final String sortForClothTag = BASE_URL + "sort/sendSortMessageByClothCard?";
     public static final String getQCSize = BASE_URL + "sweing/getShopOrderSize?";
+    public static final String replaceBindingsRfid = PadApplication.XMII_URL + "Runner?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 根据吊牌走分拣系统
+     */
+    public static void sortForClothTag(String salesOrder, String hangerId, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SALES_ORDER", salesOrder);
+        json.put("SORT_RFID", hangerId);
+        params.put("params", json.toString());
+        HttpRequest.post(sortForClothTag, params, getResponseHandler(sortForClothTag, callback));
+    }
+
+    /**
+     * 更换衣架
+     */
+    public static void replaceBindingsRfid(String oldRFID, String newRFID, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/updateSortRfid");
+        params.put("OutputParameter", "resultJson");
+        params.put("Content-Type", "text/json");
+        params.put("oldRfid", oldRFID);
+        params.put("newRfid", newRFID);
+        HttpRequest.post(replaceBindingsRfid, params, getResponseHandler(replaceBindingsRfid, callback));
     }
 
     /**

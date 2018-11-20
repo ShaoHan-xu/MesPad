@@ -283,6 +283,14 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "SORT_CLOTHTAG":
+                    button.setText("通过吊牌走分拣");
+                    button.setId(R.id.btn_sortClothTag);
+                    break;
+                case "REPLACE_RFID":
+                    button.setText("更换分拣衣架");
+                    button.setId(R.id.btn_replaceRFID);
+                    break;
                 case "YAOTOU_SIZE":
                     button.setText("腰头尺寸");
                     button.setId(R.id.btn_yaotouSize);
@@ -619,6 +627,16 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_sortClothTag:
+                if (mSewFragment != null) {
+                    mSewFragment.sortForClothTag();
+                }
+                break;
+            case R.id.btn_replaceRFID:
+                if (mSewFragment != null) {
+                    mSewFragment.replaceRFID();
+                }
+                break;
             case R.id.btn_yaotouSize:
                 if (mSewFragment != null) {
                     mSewFragment.yaotouSize();
@@ -786,7 +804,7 @@ public class MainActivity extends NFCActivity {
                 }
                 break;
             case R.id.btn_gotoQA:
-                if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
+                if (TopicUtil.TOPIC_SEW.equals(mTopic) || TopicUtil.TOPIC_MANUAL.equals(mTopic)) {
                     if (mSewFragment != null) {
                         mSewFragment.gotoQA();
                     }
@@ -930,12 +948,14 @@ public class MainActivity extends NFCActivity {
             } else if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 ContextInfoBo contextInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ContextInfoBo.class);
                 SpUtil.saveContextInfo(contextInfoBo);
+                assert contextInfoBo != null;
                 List<UserInfoBo> positionUsers = contextInfoBo.getLOGIN_USER_LIST();
                 SpUtil.savePositionUsers(positionUsers);
 
                 HttpHelper.findProcessWithPadId(this);
             } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
                 mPositionInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), PositionInfoBo.class);
+                assert mPositionInfo != null;
                 SpUtil.save(SpUtil.KEY_RESOURCE, JSON.toJSONString(mPositionInfo.getRESR_INFOR()));
                 List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
                 if (operInfo != null && operInfo.size() != 0) {

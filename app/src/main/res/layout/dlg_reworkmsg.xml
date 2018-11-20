@@ -37,6 +37,24 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
+                android:text="SFC" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="衣架号" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="不良工序描述" />
 
             <TextView

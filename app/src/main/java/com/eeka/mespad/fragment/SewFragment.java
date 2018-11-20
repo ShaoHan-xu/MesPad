@@ -45,8 +45,10 @@ import com.eeka.mespad.view.dialog.OfflineDialog;
 import com.eeka.mespad.view.dialog.PocketSizeDialog;
 import com.eeka.mespad.view.dialog.ProductOnOffDialog;
 import com.eeka.mespad.view.dialog.QCSizeDialog;
+import com.eeka.mespad.view.dialog.ReplaceRFIDDialog;
 import com.eeka.mespad.view.dialog.ReworkListDialog;
 import com.eeka.mespad.view.dialog.SewReturnMatDialog;
+import com.eeka.mespad.view.dialog.SortForClothTagDialog;
 import com.eeka.mespad.view.dialog.SortingDialog;
 import com.eeka.mespad.view.dialog.YaotouSizeDialog;
 import com.squareup.picasso.Picasso;
@@ -392,6 +394,20 @@ public class SewFragment extends BaseFragment {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 通过吊牌走分拣系统
+     */
+    public void sortForClothTag() {
+        new SortForClothTagDialog(mContext).show();
+    }
+
+    /**
+     * 更换分拣衣架
+     */
+    public void replaceRFID() {
+        new ReplaceRFIDDialog(mContext).show();
     }
 
     /**

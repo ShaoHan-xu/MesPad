@@ -78,6 +78,9 @@ public class SuspendFragment extends BaseFragment {
     private TextView mTv_itemCode;
     private TextView mTv_matDesc;
     private TextView mTv_size;
+    private TextView mTv_processLot;
+    private TextView mTv_processLotQty;
+    private TextView mTv_realCutQty;
     private HorizontalScrollView mHSV_imgBar;
     private LinearLayout mLayout_imgBar;
     private String mWashLabel;
@@ -125,6 +128,9 @@ public class SuspendFragment extends BaseFragment {
         mTv_itemCode = mView.findViewById(R.id.tv_suspend_itemCode);
         mTv_matDesc = mView.findViewById(R.id.tv_suspend_matDesc);
         mTv_size = mView.findViewById(R.id.tv_suspend_size);
+        mTv_processLot = mView.findViewById(R.id.tv_suspend_processLot);
+        mTv_processLotQty = mView.findViewById(R.id.tv_suspend_processLotQTY);
+        mTv_realCutQty = mView.findViewById(R.id.tv_suspend_realCutQty);
         mHSV_imgBar = mView.findViewById(R.id.hsv_suspend_img);
         mLayout_imgBar = mView.findViewById(R.id.layout_suspend_img);
 
@@ -161,11 +167,14 @@ public class SuspendFragment extends BaseFragment {
         mBtn_binding.setEnabled(true);
         mTv_curSFC.setText(mCurSFC);
         mTv_orderNum.setText(mComponent.getSHOP_ORDER());
-        mTv_orderQty.setText(mComponent.getQTY_ORDERED() + "");
+        mTv_orderQty.setText(String.format("%s", mComponent.getQTY_ORDERED()));
         mTv_finishQty.setText(mComponent.getQTY_COMPLETE());
         mTv_itemCode.setText(mComponent.getITEM());
         mTv_matDesc.setText(mComponent.getITEM_DESC());
         mTv_size.setText(mComponent.getSFC_SIZE());
+        mTv_processLot.setText(mComponent.getPROCESS_LOT());
+        mTv_processLotQty.setText(mComponent.getLOT_SFC_QTY());
+        mTv_realCutQty.setText(mComponent.getREAL_CUT_NUM());
 
         String salesOrder = mComponent.getSALES_ORDER();
         if (isEmpty(salesOrder)) {

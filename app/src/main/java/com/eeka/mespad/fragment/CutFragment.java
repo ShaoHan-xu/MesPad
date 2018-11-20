@@ -67,6 +67,7 @@ public class CutFragment extends BaseFragment {
     private LinearLayout mLayout_material1;//排料图
     private LinearLayout mLayout_material2;//粘朴图
     private LinearLayout mLayout_sizeInfo;
+    private LinearLayout mLayout_planSize;
     private TailorInfoBo mTailorInfo;//主数据
 
     private ListView mLv_process;
@@ -154,6 +155,7 @@ public class CutFragment extends BaseFragment {
         mLayout_material1 = mView.findViewById(R.id.layout_material1);
         mLayout_material2 = mView.findViewById(R.id.layout_material2);
         mLayout_sizeInfo = mView.findViewById(R.id.layout_sizeInfo);
+        mLayout_planSize = mView.findViewById(R.id.layout_plantSize);
         mLayout_processTab = mView.findViewById(R.id.layout_processTab);
         mLayout_matTab = mView.findViewById(R.id.layout_matTab);
         mTv_nextProcess = mView.findViewById(R.id.tv_nextProcess);
@@ -221,6 +223,7 @@ public class CutFragment extends BaseFragment {
             }
         }
 
+        //排料图尺码信息
         int childCount = mLayout_sizeInfo.getChildCount();
         for (int i = childCount - 1; i > 0; i--) {
             mLayout_sizeInfo.removeViewAt(i);
@@ -232,6 +235,17 @@ public class CutFragment extends BaseFragment {
             mLayout_sizeInfo.setVisibility(View.VISIBLE);
             for (int i = 0; i < sizeArray.size(); i++) {
                 mLayout_sizeInfo.addView(getSizeInfoView(sizeArray.get(i)));
+            }
+        }
+
+        int childCount1 = mLayout_planSize.getChildCount();
+        for (int i = childCount1 - 1; i > 0; i--) {
+            mLayout_planSize.removeViewAt(i);
+        }
+        List<TailorInfoBo.PlanSizeBean> planSizes = mTailorInfo.getPLAN_SIZES();
+        if (planSizes != null) {
+            for (int i = 0; i < planSizes.size(); i++) {
+                mLayout_planSize.addView(getSizeInfoView(planSizes.get(i)));
             }
         }
 
@@ -557,13 +571,20 @@ public class CutFragment extends BaseFragment {
         return view;
     }
 
-    private View getSizeInfoView(TailorInfoBo.CUTSIZESBean sizeInfo) {
+    private <T> View getSizeInfoView(T t) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_sizeinfo, null);
         TextView tv_yardage = view.findViewById(R.id.tv_item_yardage);
         TextView tv_count = view.findViewById(R.id.tv_item_count);
-        tv_yardage.setText(sizeInfo.getSIZE_CODE());
-        int layers = mTailorInfo.getSHOP_ORDER_INFOR().getLAYERS();
-        tv_count.setText(String.format("%d", sizeInfo.getSIZE_AMOUNT() * layers));
+        if (t instanceof TailorInfoBo.CUTSIZESBean) {
+            TailorInfoBo.CUTSIZESBean data = (TailorInfoBo.CUTSIZESBean) t;
+            tv_yardage.setText(data.getSIZE_CODE());
+            int layers = mTailorInfo.getSHOP_ORDER_INFOR().getLAYERS();
+            tv_count.setText(String.format("%s", data.getSIZE_AMOUNT() * layers));
+        } else if (t instanceof TailorInfoBo.PlanSizeBean) {
+            TailorInfoBo.PlanSizeBean data = (TailorInfoBo.PlanSizeBean) t;
+            tv_yardage.setText(data.getSIZE_CODE());
+            tv_count.setText(data.getSIZE_AMOUNT());
+        }
         return view;
     }
 

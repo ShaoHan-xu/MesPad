@@ -5,6 +5,24 @@ public class ReworkWarnMsgBo {
     private String NC_DESC;
     private String USER_ID;
     private String USER_NAME;
+    private String HANGER_ID;
+    private String SFC;
+
+    public String getHANGER_ID() {
+        return HANGER_ID;
+    }
+
+    public void setHANGER_ID(String HANGER_ID) {
+        this.HANGER_ID = HANGER_ID;
+    }
+
+    public String getSFC() {
+        return SFC;
+    }
+
+    public void setSFC(String SFC) {
+        this.SFC = SFC;
+    }
 
     public String getOPER_DESC() {
         return OPER_DESC;

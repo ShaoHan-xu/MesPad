@@ -2,7 +2,6 @@ package com.eeka.mespad;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.util.TypeUtils;
@@ -25,6 +24,9 @@ public class PadApplication extends Application {
     public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
     public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
+    public static final String XMII_URL_D = "http://10.7.121.54:50000/XMII/";//D系统
+    public static final String XMII_URL_Q = "http://10.7.121.60:50000/XMII/";//Q系统
+    public static final String XMII_URL_P = "http://10.10.200.16:8000/XMII/";//P系统
     public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
     public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统
     public static final String WEB_URL_P = "http://10.10.200.16:8000/eeka-ws/";//P系统
@@ -35,6 +37,7 @@ public class PadApplication extends Application {
     public static String MQTT_Q = "10.7.121.40"; //MQ地址
     public static String MQTT_P = "10.10.200.40"; //MQ地址
     public static String BASE_URL;
+    public static String XMII_URL;
     public static String WEB_URL;
     public static String MTM_URL;
     public static String MQTT_BROKER; //MQ地址
@@ -62,16 +65,19 @@ public class PadApplication extends Application {
                 WEB_URL = WEB_URL_D;
                 MQTT_BROKER = MQTT_D;
                 MTM_URL = URL_MTM_D;
+                XMII_URL = XMII_URL_D;
             } else if ("Q".equals(systemCode)) {
                 BASE_URL = BASE_URL_Q;
                 WEB_URL = WEB_URL_Q;
                 MQTT_BROKER = MQTT_Q;
                 MTM_URL = URL_MTM_Q;
+                XMII_URL = XMII_URL_Q;
             } else if ("P".equals(systemCode)) {
                 BASE_URL = BASE_URL_P;
                 WEB_URL = WEB_URL_P;
                 MQTT_BROKER = MQTT_P;
                 MTM_URL = URL_MTM_P;
+                XMII_URL = XMII_URL_P;
             }
         }
 

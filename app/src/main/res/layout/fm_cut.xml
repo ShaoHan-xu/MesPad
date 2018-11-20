@@ -106,15 +106,69 @@
                 <!--android:id="@+id/tv_craftDescribe"-->
                 <!--style="@style/textStyle_default" />-->
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="品质要求"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_qualityDescribe"
-                    style="@style/textStyle_default" />
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="品质要求"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_qualityDescribe"
+                        style="@style/textStyle_default" />
+                </LinearLayout>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:id="@+id/layout_plantSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_black"
+                        android:divider="@drawable/divider_gray"
+                        android:orientation="vertical"
+                        android:showDividers="middle|end">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/text_green_default"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="码数"
+                                android:textColor="@color/white" />
+
+                            <TextView
+                                style="@style/textStyle_default"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="数量"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </ScrollView>
+
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -452,8 +506,8 @@
                 style="@style/btnStyle_green"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
                 android:text="完成"
                 android:visibility="gone" />
 
@@ -483,8 +537,8 @@
                             android:id="@+id/tv_nextProcess"
                             style="@style/textStyle_default"
                             android:layout_width="match_parent"
-                            android:paddingBottom="8dp"
-                            android:paddingTop="8dp" />
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp" />
                     </ScrollView>
                 </LinearLayout>
 

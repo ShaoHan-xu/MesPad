@@ -267,7 +267,7 @@ public class NFCActivity extends BaseActivity {
             ParsedNdefRecord record = records.get(0);
             PushJson pushJson = new PushJson();
             pushJson.setType(PushJson.TYPE_RFID);
-            pushJson.setContent(record.getViewText().replace("\n",""));
+            pushJson.setContent(record.getViewText().replace("\n", ""));
             EventBus.getDefault().post(pushJson);
         }
 
