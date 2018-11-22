@@ -80,6 +80,22 @@ public class SpUtil {
     }
 
     /**
+     * 保存销售订单号
+     */
+    public static void saveSalesOrder(String salesOrder) {
+        SharedPreferences.Editor edit = mSP.edit();
+        edit.putString("salesOrder", salesOrder);
+        edit.apply();
+    }
+
+    /**
+     * 获取销售订单号
+     */
+    public static String getSalesOrder() {
+        return mSP.getString("salesOrder", null);
+    }
+
+    /**
      * 保存site
      */
     public static void saveSite(String site) {

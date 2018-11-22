@@ -502,6 +502,7 @@ public class SuspendFragment extends BaseFragment {
         if (isEmpty(mSize)) {
             mSize = "";
         }
+        SpUtil.saveSalesOrder(mComponent.getSALES_ORDER());
         mCurSFC = mComponent.getSFC();
         mCurComponent = null;
         setupComponentView();

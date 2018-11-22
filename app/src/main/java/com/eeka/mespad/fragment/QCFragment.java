@@ -712,7 +712,7 @@ public class QCFragment extends BaseFragment {
             if (HttpHelper.findPadKeyDataForNcUI.equals(url)) {
                 mSewQCData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewQCDataBo.class);
                 setupView();
-
+                SpUtil.saveSalesOrder(mSewQCData.getSalesOrder());
                 //此处删除成衣数据是防止主界面获取到数据而成衣数据获取失败的情况导致成衣数据还显示的上一件的数据问题
                 mLayout_sizeInfo.removeAllViews();
                 getClothSizeData();

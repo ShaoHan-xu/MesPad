@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -68,6 +69,7 @@ public class CutFragment extends BaseFragment {
     private LinearLayout mLayout_material2;//粘朴图
     private LinearLayout mLayout_sizeInfo;
     private LinearLayout mLayout_planSize;
+    private ScrollView mScrollView_planSize;
     private TailorInfoBo mTailorInfo;//主数据
 
     private ListView mLv_process;
@@ -156,6 +158,7 @@ public class CutFragment extends BaseFragment {
         mLayout_material2 = mView.findViewById(R.id.layout_material2);
         mLayout_sizeInfo = mView.findViewById(R.id.layout_sizeInfo);
         mLayout_planSize = mView.findViewById(R.id.layout_plantSize);
+        mScrollView_planSize = mView.findViewById(R.id.scrollView_planSize);
         mLayout_processTab = mView.findViewById(R.id.layout_processTab);
         mLayout_matTab = mView.findViewById(R.id.layout_matTab);
         mTv_nextProcess = mView.findViewById(R.id.tv_nextProcess);
@@ -243,7 +246,10 @@ public class CutFragment extends BaseFragment {
             mLayout_planSize.removeViewAt(i);
         }
         List<TailorInfoBo.PlanSizeBean> planSizes = mTailorInfo.getPLAN_SIZES();
-        if (planSizes != null) {
+        if (planSizes == null || planSizes.size() == 0) {
+            mScrollView_planSize.setVisibility(View.GONE);
+        } else {
+            mScrollView_planSize.setVisibility(View.VISIBLE);
             for (int i = 0; i < planSizes.size(); i++) {
                 mLayout_planSize.addView(getSizeInfoView(planSizes.get(i)));
             }
@@ -841,6 +847,7 @@ public class CutFragment extends BaseFragment {
                         TailorInfoBo.SHOPORDERINFORBean shoporderinforBean = new TailorInfoBo.SHOPORDERINFORBean();
                         mTailorInfo.setSHOP_ORDER_INFOR(shoporderinforBean);
                     }
+                    SpUtil.saveSalesOrder(mTailorInfo.getSHOP_ORDER_INFOR().getSALES_ORDER());
                     refreshView();
 
                     //更新订单后需要清空之前的不良记录

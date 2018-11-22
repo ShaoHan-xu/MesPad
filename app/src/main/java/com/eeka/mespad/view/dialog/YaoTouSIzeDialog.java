@@ -57,7 +57,7 @@ public class YaotouSizeDialog extends BaseDialog {
 
     private void initData() {
         LoadingDialog.show(mContext);
-        HttpHelper.getPocketSize("query.cadSizeYTInfo",mShopOrder, mSFC, mSize, mOperation, new HttpCallback() {
+        HttpHelper.getCommonInfoByLogicNo("query.cadSizeYTInfo", mShopOrder, mSFC, mSize, mOperation, null, new HttpCallback() {
             @Override
             public void onSuccess(String url, JSONObject resultJSON) {
                 LoadingDialog.dismiss();

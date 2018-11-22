@@ -6,10 +6,19 @@ public class PocketSizeBo {
     private String VALUE;
     private String PART_NO;
     private String PICTURE_URL;
+    private String CONFIRM_URL;
     private String YK_V;
     private String DYMS_V;
     private String YSYH_V;
     private String YMBH_V;
+
+    public String getCONFIRM_URL() {
+        return CONFIRM_URL;
+    }
+
+    public void setCONFIRM_URL(String CONFIRM_URL) {
+        this.CONFIRM_URL = CONFIRM_URL;
+    }
 
     public String getYK_V() {
         return YK_V;

@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
@@ -39,6 +40,7 @@ import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.PocketSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.ReworkWarnMsgBo;
@@ -283,6 +285,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "CUT_MAT_INFO":
+                    button.setText("面料裁剪确认单");
+                    button.setId(R.id.btn_cutMatInfo);
+                    break;
                 case "SORT_CLOTHTAG":
                     button.setText("通过吊牌走分拣");
                     button.setId(R.id.btn_sortClothTag);
@@ -627,6 +633,14 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_cutMatInfo:
+                String salesOrder = SpUtil.getSalesOrder();
+                if (isEmpty(salesOrder)) {
+                    ErrorDialog.showAlert(mContext, "找不到该确认单");
+                    return;
+                }
+                HttpHelper.getCutMatInfoPic("query.cutConfirm", salesOrder, this);
+                break;
             case R.id.btn_sortClothTag:
                 if (mSewFragment != null) {
                     mSewFragment.sortForClothTag();
@@ -1026,6 +1040,21 @@ public class MainActivity extends NFCActivity {
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
                 refreshLoginUser();
+            } else if (HttpHelper.getCommonInfoByLogicNo.equals(url)) {
+                if (HttpHelper.isSuccess(resultJSON)) {
+                    JSONArray result = resultJSON.getJSONArray("result");
+                    if (result != null && result.size() != 0) {
+                        List<PocketSizeBo> items = JSON.parseArray(result.toString(), PocketSizeBo.class);
+                        String picUrl = items.get(0).getCONFIRM_URL();
+                        List<String> list = new ArrayList<>();
+                        list.add(picUrl);
+                        startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
+                    } else {
+                        showErrorDialog("找不到该工单的条格面料裁剪确认单");
+                    }
+                } else {
+                    ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));
+                }
             }
         } else {
             String message = resultJSON.getString("message");

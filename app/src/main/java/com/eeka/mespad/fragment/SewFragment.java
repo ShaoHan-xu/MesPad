@@ -822,6 +822,7 @@ public class SewFragment extends BaseFragment {
                     mActivity.setButtonState(R.id.btn_manualStart, true);
                     mActivity.setButtonState(R.id.btn_manualComplete, true);
                 }
+                SpUtil.saveSalesOrder(mSewData.getSalesOrder());
                 isDoing = true;
                 initData();
             } else if (HttpHelper.initNcForQA.equals(url)) {

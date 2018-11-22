@@ -103,7 +103,7 @@ public class HttpHelper {
     public static final String getStitchInventory = BASE_URL + "stitchPad/getStitchInventory?";
     public static final String getEmbroiderInfor = BASE_URL + "cutpad/viewEmbroiderPadInfor?";
     public static final String getReworkInfo = BASE_URL + "/sweing/findReworkInfoBySfcRef?";
-    public static final String getPocketSize = BASE_URL + "/ReportController/reportViewByLogic?";
+    public static final String getCommonInfoByLogicNo = BASE_URL + "/ReportController/reportViewByLogic?";
     public static final String getPattern = BASE_URL + "/cutpad/viewembroiderPicture?";
     public static final String productOff = BASE_URL + "hanger/productOff?";
     public static final String productOn = BASE_URL + "hanger/productOn?";
@@ -936,25 +936,31 @@ public class HttpHelper {
         HttpRequest.post(productOff, params, getResponseHandler(productOff, callback));
     }
 
+    public static void getCutMatInfoPic(String logicNo, String salesOrder, HttpCallback callback) {
+        getCommonInfoByLogicNo(logicNo, null, null, null, null, salesOrder, callback);
+    }
+
     /**
-     * 获取袋口尺寸信息
+     * 通过logicNo获取通用信息
      *
      * @param LOGIC_NO 袋口尺寸=query.cadSizeInfo
      *                 腰头尺寸=query.cadSizeYTInfo
+     *                 条格面料裁剪确认单=query.cutConfirm
      */
-    public static void getPocketSize(String LOGIC_NO, String shopOrder, String sfc, String sizeCode, String operation, HttpCallback callback) {
+    public static void getCommonInfoByLogicNo(String LOGIC_NO, String shopOrder, String sfc, String sizeCode, String operation, String salesOrder, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("SITE", SpUtil.getSite());
         json.put("LOGIC_NO", LOGIC_NO);
         JSONObject json1 = new JSONObject();
         json1.put("SHOP_ORDER", shopOrder);
+        json1.put("SALES_ORDER", salesOrder);
         json1.put("OPERATIONS", operation);
         json1.put("SFC", sfc);
         json1.put("SIZE_CODE", sizeCode);
         json.put("PARAMS", json1);
         RequestParams params = getBaseParams();
         params.put("params", JSON.toJSONString(json));
-        HttpRequest.post(getPocketSize, params, getResponseHandler(getPocketSize, callback));
+        HttpRequest.post(getCommonInfoByLogicNo, params, getResponseHandler(getCommonInfoByLogicNo, callback));
     }
 
     /**
