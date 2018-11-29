@@ -1,7 +1,6 @@
 package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -14,18 +13,13 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.ContextInfoBo;
-import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.http.WebServiceUtils;
-import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * 分拣扫码弹框
@@ -33,10 +27,12 @@ import org.greenrobot.eventbus.ThreadMode;
 public class SortingDialog extends BaseDialog implements View.OnClickListener {
 
     private String mTopic;
+    private OnClickListener mListener;
 
-    public SortingDialog(@NonNull Context context, String topic) {
+    public SortingDialog(@NonNull Context context, String topic, @NonNull OnClickListener listener) {
         super(context);
         mTopic = topic;
+        mListener = listener;
         init();
     }
 
@@ -97,7 +93,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 break;
             case R.id.btn_jump:
                 dismiss();
-                EventBus.getDefault().post(true);
+                mListener.onClick(null, 0);
                 break;
         }
     }
@@ -121,9 +117,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                     LoadingDialog.dismiss();
                     dismiss();
                     Toast.makeText(mContext, result.getString("message"), Toast.LENGTH_LONG).show();
-                    if (TopicUtil.TOPIC_MANUAL.equals(mTopic)) {
-                        EventBus.getDefault().post(true);
-                    }
+                    mListener.onClick(null, 1);
                 }
 
                 @Override

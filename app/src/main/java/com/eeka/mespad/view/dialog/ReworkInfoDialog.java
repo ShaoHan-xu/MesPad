@@ -2,7 +2,6 @@ package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.ReworkItemBo;
-import com.eeka.mespad.bo.SewDataBo;
 import com.eeka.mespad.utils.SystemUtils;
 
 import java.util.List;
@@ -38,7 +36,7 @@ public class ReworkInfoDialog extends BaseDialog {
 
         LinearLayout layout_items = view.findViewById(R.id.layout_reworkinfo);
         for (ReworkItemBo item : mItems) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_remorkinfo, null);
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_reworkinfo, null);
             TextView tv_item1 = itemView.findViewById(R.id.tv_item1);
             TextView tv_item2 = itemView.findViewById(R.id.tv_item2);
             TextView tv_item3 = itemView.findViewById(R.id.tv_item3);

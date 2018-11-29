@@ -1,6 +1,7 @@
 package com.eeka.mespad.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,10 +53,6 @@ import com.eeka.mespad.view.dialog.SortForClothTagDialog;
 import com.eeka.mespad.view.dialog.SortingDialog;
 import com.eeka.mespad.view.dialog.YaotouSizeDialog;
 import com.squareup.picasso.Picasso;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -116,14 +113,7 @@ public class SewFragment extends BaseFragment {
 
         mActivity = (MainActivity) getActivity();
         mWebServiceCallback = new WebServiceCallback();
-        EventBus.getDefault().register(this);
         initView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -183,19 +173,13 @@ public class SewFragment extends BaseFragment {
             MyAlertDialog.showAlert(mContext, content);
     }
 
-    private boolean isDoing;
+    private boolean isNewOrder;//是否新订单，用于判断按钮状态是否需要重置
 
     public void searchOrder(String rfid) {
         if (isAdded())
             showLoading();
         mRFID = rfid;
         HttpHelper.getSewData(rfid, this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPushMsgReceive(boolean complete) {
-        jumpSorting = true;
-        manualComplete(mRFID);
     }
 
     /**
@@ -253,7 +237,18 @@ public class SewFragment extends BaseFragment {
         if (mSortingDialog != null && mSortingDialog.isShowing()) {
             mSortingDialog.dismiss();
         }
-        mSortingDialog = new SortingDialog(mContext, mTopic);
+        mSortingDialog = new SortingDialog(mContext, mTopic, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    jumpSorting = true;
+                    manualComplete(mRFID);
+                } else if (which == 1) {
+                    mActivity.setButtonState(R.id.btn_offlineSort, false);
+                    mActivity.setButtonState(R.id.btn_sorting, false);
+                }
+            }
+        });
         mSortingDialog.show();
     }
 
@@ -279,7 +274,7 @@ public class SewFragment extends BaseFragment {
         if (bo == null) {
             return;
         }
-        isDoing = false;
+        isNewOrder = false;
         showLoading();
         WebServiceUtils.inaDoing(bo, mWebServiceCallback);
     }
@@ -325,11 +320,12 @@ public class SewFragment extends BaseFragment {
                 jumpSorting = false;
                 String nextLine = result.getString("nextLineId");
                 String nextPosition = result.getString("nextStationId");
-                StringBuilder message = new StringBuilder();
-                message.append("操作成功，下一个站位").append(nextLine).append("线").append(nextPosition).append("站位");
-                ErrorDialog.showAlert(mContext, message.toString(), ErrorDialog.TYPE.ALERT, null, true);
+                String msg = "操作成功，下一个站位" + nextLine + "线" + nextPosition + "站位";
+                ErrorDialog.showAlert(mContext, msg, ErrorDialog.TYPE.ALERT, null, true);
                 mActivity.setButtonState(R.id.btn_manualStart, false);
                 mActivity.setButtonState(R.id.btn_manualComplete, false);
+                mActivity.setButtonState(R.id.btn_offlineSort, false);
+                mActivity.setButtonState(R.id.btn_sorting, false);
             } else if (WebServiceUtils.INA_DOING.equals(method)) {
                 mActivity.setButtonState(R.id.btn_manualStart, false);
                 if (manualAlert) {
@@ -365,7 +361,7 @@ public class SewFragment extends BaseFragment {
     }
 
     private ProductOnOffDialog mProductOnOffDialog;
-    private boolean manualAlert;
+    private boolean manualAlert;//用于判断是否提示“手工作业开始”，因为成衣上架成功后需要调用手工开始的接口，此时不需要提示
 
     /**
      * 成衣上架
@@ -590,7 +586,11 @@ public class SewFragment extends BaseFragment {
         mTv_matDesc.setText(mSewData.getItemDesc());
         mTv_style.setText(mSewData.getItem());
         mTv_size.setText(mSewData.getSize());
-        mTv_lastPosition.setText(String.format("%s-%s", mSewData.getLastLineCategory(), mSewData.getLastPosition()));
+        if (isEmpty(mSewData.getLastLineCategory())) {
+            mTv_lastPosition.setText("无");
+        } else {
+            mTv_lastPosition.setText(String.format("%s-%s", mSewData.getLastLineCategory(), mSewData.getLastPosition()));
+        }
         String remark = mSewData.getSoRemark();
         if (isEmpty(remark)) {
             mTv_special.setText(null);
@@ -818,12 +818,14 @@ public class SewFragment extends BaseFragment {
                     mActivity.setButtonState(R.id.btn_subStart, true);
                     mActivity.setButtonState(R.id.btn_subComplete, true);
                 }
-                if (isDoing) {
+                if (isNewOrder) {
                     mActivity.setButtonState(R.id.btn_manualStart, true);
                     mActivity.setButtonState(R.id.btn_manualComplete, true);
+                    mActivity.setButtonState(R.id.btn_offlineSort, true);
+                    mActivity.setButtonState(R.id.btn_sorting, true);
                 }
                 SpUtil.saveSalesOrder(mSewData.getSalesOrder());
-                isDoing = true;
+                isNewOrder = true;
                 initData();
             } else if (HttpHelper.initNcForQA.equals(url)) {
                 toast("操作成功");
@@ -834,6 +836,8 @@ public class SewFragment extends BaseFragment {
                 toast("绣花工序完成");
                 mActivity.setButtonState(R.id.btn_subComplete, false);
             } else if (HttpHelper.offlineSort.equals(url)) {
+                mActivity.setButtonState(R.id.btn_offlineSort, false);
+                mActivity.setButtonState(R.id.btn_sorting, false);
                 ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, false);
             }
         }

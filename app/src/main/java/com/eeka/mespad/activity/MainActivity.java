@@ -58,6 +58,7 @@ import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -136,6 +137,7 @@ public class MainActivity extends NFCActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtil.isNetworkAvalible(mContext)) {
+                Beta.checkUpgrade();
                 checkResource();
             }
         }

@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.ReworkItemBo;
 import com.eeka.mespad.bo.ReworkWarnMsgBo;
 import com.eeka.mespad.utils.SystemUtils;
 
@@ -37,7 +36,7 @@ public class ReworkWarnMsgDialog extends BaseDialog {
 
         LinearLayout layout_items = view.findViewById(R.id.layout_reworkMsg);
         for (ReworkWarnMsgBo item : mItems) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_remorkinfo, null);
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_reworkwarn, null);
             TextView tv_item1 = itemView.findViewById(R.id.tv_item1);
             TextView tv_item2 = itemView.findViewById(R.id.tv_item2);
             TextView tv_item3 = itemView.findViewById(R.id.tv_item3);
