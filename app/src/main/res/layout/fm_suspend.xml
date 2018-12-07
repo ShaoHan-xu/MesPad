@@ -75,18 +75,86 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:padding="5dp">
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/textStyle_default"
-                    android:text="工艺说明"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/tv_suspend_craftDesc"
-                    style="@style/textStyle_default" />
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:text="工艺说明"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_suspend_craftDesc"
+                        style="@style/textStyle_default" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:padding="0.5dp"
+                    android:background="@drawable/border_black"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/text_green_default"
+                        android:divider="@drawable/divider_gray"
+                        android:orientation="horizontal"
+                        android:showDividers="middle">
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="物料号"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="物料名称"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.7"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="用量"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/layout_suspend_matInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@drawable/divider_gray"
+                            android:orientation="vertical"
+                            android:showDividers="beginning|middle|end" />
+                    </ScrollView>
+
+                </LinearLayout>
 
             </LinearLayout>
 

@@ -45,6 +45,7 @@ import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CutRecordQtyDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.PatternDialog;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
@@ -826,6 +827,7 @@ public class CutFragment extends BaseFragment {
                         mBtn_done.setEnabled(false);
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
                         mTailorInfo.setOPER_INFOR(mList_padProcess);
+                        ErrorDialog.showAlert(mContext, "该卡无工序数据，已经过站或者站位工序数据配置出错，请注意。");
                     } else {
                         if (mCardState.isStarted) {
                             ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);

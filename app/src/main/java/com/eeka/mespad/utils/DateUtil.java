@@ -1,5 +1,6 @@
 package com.eeka.mespad.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,4 +23,21 @@ public class DateUtil {
         return sdf.format(date);
     }
 
+    /**
+     * 日期转换为毫秒数
+     *
+     * @param date       要转换的日期
+     * @param dateFormat 日期的格式
+     * @return 转换后的毫秒数
+     */
+    public static long dateToMillis(String date, String dateFormat) {
+        long millis = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+        try {
+            millis = sdf.parse(date).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return millis;
+    }
 }

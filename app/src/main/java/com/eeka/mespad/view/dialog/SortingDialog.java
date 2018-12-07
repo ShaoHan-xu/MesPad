@@ -14,12 +14,12 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.http.HttpCallback;
+import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * 分拣扫码弹框
@@ -36,8 +36,10 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
         init();
     }
 
-    private EditText mEditText;
+    private EditText mEt_hangerId;
+    private EditText mEt_tag;
     private String mLastNum;
+    private String mLastTagNum;
 
     @Override
     protected void init() {
@@ -45,19 +47,36 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
         View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_sorting, null);
         setContentView(view);
 
-        mEditText = view.findViewById(R.id.et_sorting_code);
-        mEditText.setOnKeyListener(new View.OnKeyListener() {
+        mEt_hangerId = view.findViewById(R.id.et_sorting_code);
+        mEt_hangerId.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
-                    String orderNum = mEditText.getText().toString();
+                    String orderNum = mEt_hangerId.getText().toString();
                     if (!TextUtils.isEmpty(mLastNum)) {
                         mLastNum = orderNum.replaceFirst(mLastNum, "");
                     } else {
                         mLastNum = orderNum;
                     }
-                    mEditText.setText(mLastNum);
-                    sorting();
+                    mEt_hangerId.setText(mLastNum);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mEt_tag = mView.findViewById(R.id.et_sorting_tag);
+        mEt_tag.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                    String value = mEt_tag.getText().toString();
+                    if (!TextUtils.isEmpty(mLastTagNum)) {
+                        mLastTagNum = value.replaceFirst(mLastTagNum, "");
+                    } else {
+                        mLastTagNum = value;
+                    }
+                    mEt_tag.setText(mLastTagNum);
                     return true;
                 }
                 return false;
@@ -75,7 +94,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mEditText.requestFocus();
+                mEt_hangerId.requestFocus();
                 SystemUtils.showSoftInputFromWindow(mContext);
             }
         }, 500);
@@ -88,8 +107,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.btn_ok:
-                mLastNum = mEditText.getText().toString();
-                sorting();
+                checkItemSize();
                 break;
             case R.id.btn_jump:
                 dismiss();
@@ -98,36 +116,62 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
         }
     }
 
-    private void sorting() {
+    private void checkItemSize() {
         ContextInfoBo contextInfo = SpUtil.getContextInfo();
         if (contextInfo == null) {
             ErrorDialog.showAlert(mContext, "站位数据未获取，请重启应用获取");
         } else {
+            mLastNum = mEt_hangerId.getText().toString();
+            mLastTagNum = mEt_tag.getText().toString();
             if (TextUtils.isEmpty(mLastNum)) {
                 Toast.makeText(mContext, "请输入衣架号继续操作", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (TextUtils.isEmpty(mLastTagNum)) {
+                Toast.makeText(mContext, "请输入吊牌号继续操作", Toast.LENGTH_SHORT).show();
                 return;
             } else if (mLastNum.length() != 10) {
                 Toast.makeText(mContext, "衣架号不足10位，请查验", Toast.LENGTH_SHORT).show();
                 return;
             }
             LoadingDialog.show(mContext);
-            WebServiceUtils.sendProductMessage(contextInfo.getLINE_CATEGORY(), contextInfo.getPOSITION(), mLastNum, new WebServiceUtils.HttpCallBack() {
+            HttpHelper.checkItemAndSize(contextInfo.getLINE_CATEGORY(), contextInfo.getPOSITION(), mLastTagNum, new HttpCallback() {
                 @Override
-                public void onSuccess(String method, JSONObject result) {
-                    LoadingDialog.dismiss();
-                    dismiss();
-                    Toast.makeText(mContext, result.getString("message"), Toast.LENGTH_LONG).show();
-                    mListener.onClick(null, 1);
+                public void onSuccess(String url, JSONObject resultJSON) {
+                    if (HttpHelper.isSuccess(resultJSON)) {
+                        sorting();
+                    } else {
+                        LoadingDialog.dismiss();
+                        ErrorDialog.showAlert(mContext, resultJSON.getString("result"));
+                    }
                 }
 
                 @Override
-                public void onFail(String errMsg) {
+                public void onFailure(String url, int code, String message) {
                     LoadingDialog.dismiss();
-                    //webservice的接口报错时都会有推送，所以此处不需要显示
-//                    ErrorDialog.showAlert(mContext, errMsg);
+                    ErrorDialog.showAlert(mContext, message);
                 }
             });
         }
+    }
+
+    private void sorting() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        WebServiceUtils.sendProductMessage(contextInfo.getLINE_CATEGORY(), contextInfo.getPOSITION(), mLastNum, new WebServiceUtils.HttpCallBack() {
+            @Override
+            public void onSuccess(String method, JSONObject result) {
+                LoadingDialog.dismiss();
+                dismiss();
+                Toast.makeText(mContext, result.getString("message"), Toast.LENGTH_LONG).show();
+                mListener.onClick(null, 1);
+            }
+
+            @Override
+            public void onFail(String errMsg) {
+                LoadingDialog.dismiss();
+                //webservice的接口报错时都会有推送，所以此处不需要显示
+//                    ErrorDialog.showAlert(mContext, errMsg);
+            }
+        });
     }
 
     @Override

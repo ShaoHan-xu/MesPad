@@ -25,6 +25,7 @@ import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
+import com.eeka.mespad.bo.ComponentInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -59,6 +60,7 @@ public class SuspendFragment extends BaseFragment {
     private SFCAdapter mSFCAdapter;
 
     private LinearLayout mLayout_component;
+    private LinearLayout mLayout_matInfo;
 
     private ContextInfoBo mContextInfo;
     private SuspendComponentBo mComponent;
@@ -117,6 +119,7 @@ public class SuspendFragment extends BaseFragment {
         super.initView();
         mLv_orderList = mView.findViewById(R.id.lv_sfcList);
         mLayout_component = mView.findViewById(R.id.layout_component);
+        mLayout_matInfo = mView.findViewById(R.id.layout_suspend_matInfo);
         mVP_img = mView.findViewById(R.id.vp_suspend_componentImg);
 
         mLayout_mtmOrder = mView.findViewById(R.id.layout_suspend_mtmOrder);
@@ -212,9 +215,10 @@ public class SuspendFragment extends BaseFragment {
     }
 
     /**
-     * 设置部件布局
+     * 重置部件布局
      */
-    private void setupComponentView() {
+    private void resetComponentView() {
+        mLayout_matInfo.removeAllViews();
         mLayout_component.removeAllViews();
         List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
         for (SuspendComponentBo.COMPONENTSBean component : components) {
@@ -364,7 +368,7 @@ public class SuspendFragment extends BaseFragment {
                 mCurComponent = component;
 //                showLoading();
                 mWashLabel = null;
-                HttpHelper.getComponentPic(mCurSFC, component.getComponentId(), SuspendFragment.this);
+                HttpHelper.getComponentPic(mComponent.getSHOP_ORDER(), mCurSFC, component.getComponentId(), SuspendFragment.this);
                 List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
                 int childCount = mLayout_component.getChildCount();
                 for (int i = 0; i < childCount; i++) {
@@ -443,9 +447,9 @@ public class SuspendFragment extends BaseFragment {
                         mSuspendAlertDialog.show();
                     }
                 }
-            } else if (HttpHelper.getComponentPic.equals(url)) {
-                JSONObject result = resultJSON.getJSONObject("result");
-                mList_img = JSON.parseArray(result.getJSONArray("PICTURE_URL").toString(), String.class);
+            } else if (HttpHelper.getComponentInfo.equals(url)) {
+                ComponentInfoBo componentInfoBo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ComponentInfoBo.class);
+                mList_img = componentInfoBo.getPICTURE_URL();
                 mVP_img.setAdapter(new ImgAdapter(mContext, mList_img, R.layout.item_imageview));
                 if (mList_img.size() > 1) {
                     mHSV_imgBar.setVisibility(View.VISIBLE);
@@ -453,6 +457,7 @@ public class SuspendFragment extends BaseFragment {
                 } else {
                     mHSV_imgBar.setVisibility(View.GONE);
                 }
+                setupMatInfo(componentInfoBo.getMaterialInfo());
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
             } else if (HttpHelper.hangerUnbind.equals(url)) {
@@ -460,6 +465,21 @@ public class SuspendFragment extends BaseFragment {
             }
         } else {
             mBtn_binding.setEnabled(true);
+        }
+    }
+
+    private void setupMatInfo(List<ComponentInfoBo.MaterialInfoBean> matInfo) {
+        mLayout_matInfo.removeAllViews();
+        for (ComponentInfoBo.MaterialInfoBean item : matInfo) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_suspend_matinfo, null);
+            TextView tv_matCode = view.findViewById(R.id.tv_suspend_matCode);
+            TextView tv_matName = view.findViewById(R.id.tv_suspend_matName);
+            TextView tv_matUsedQTY = view.findViewById(R.id.tv_suspend_matUsedQTY);
+            tv_matCode.setText(item.getMATERIAL_CODE());
+            tv_matName.setText(item.getMATERIAL_NAME());
+            tv_matUsedQTY.setText(getString(R.string.float_2,item.getQTY()));
+
+            mLayout_matInfo.addView(view);
         }
     }
 
@@ -505,7 +525,7 @@ public class SuspendFragment extends BaseFragment {
         SpUtil.saveSalesOrder(mComponent.getSALES_ORDER());
         mCurSFC = mComponent.getSFC();
         mCurComponent = null;
-        setupComponentView();
+        resetComponentView();
         refreshOrderInfo();
         printSFC();
     }

@@ -21,6 +21,9 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
 
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
@@ -29,7 +32,9 @@ import cn.finalteam.okhttpfinal.LogUtil;
 import cn.finalteam.okhttpfinal.Part;
 import cn.finalteam.okhttpfinal.RequestParams;
 import okhttp3.Headers;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.Buffer;
 
 /**
  * 网络交互类
@@ -75,7 +80,7 @@ public class HttpHelper {
     public static final String getSuspendBaseData = BASE_URL + "bandpad/initial?";
     public static final String getSuspendUndoList = BASE_URL + "bandpad/getSfcs?";
     public static final String getSfcComponents = BASE_URL + "bandpad/getSfcComponents?";
-    public static final String getComponentPic = BASE_URL + "bandpad/getComponentPic?";
+    public static final String getComponentInfo = BASE_URL + "bandpad/getComponentInfo?";
     public static final String findPadKeyDataForNcUI = BASE_URL + "sweing/findPadKeyDataForNcUI?";
     public static final String getProductComponentList = BASE_URL + "logNcPad/listProdComponentsOnCompleteOpers?";
     public static final String getDesignComponentList = BASE_URL + "logNcPad/listDesgComponentByProdComp?";
@@ -114,6 +119,7 @@ public class HttpHelper {
     public static final String sortForClothTag = BASE_URL + "sort/sendSortMessageByClothCard?";
     public static final String getQCSize = BASE_URL + "sweing/getShopOrderSize?";
     public static final String replaceBindingsRfid = PadApplication.XMII_URL + "Runner?";
+    public static final String checkItemAndSize = PadApplication.XMII_URL + "Runner?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -132,6 +138,20 @@ public class HttpHelper {
         json.put("SORT_RFID", hangerId);
         params.put("params", json.toString());
         HttpRequest.post(sortForClothTag, params, getResponseHandler(sortForClothTag, callback));
+    }
+
+    /**
+     * 检查款式与尺码
+     */
+    public static void checkItemAndSize(String line, String position, String itemSize,HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/checkItemAndSize");
+        params.put("OutputParameter", "resultJson");
+        params.put("Content-Type", "text/json");
+        params.put("line", line);
+        params.put("position", position);
+        params.put("itemSize", itemSize);
+        HttpRequest.post(checkItemAndSize, params, getResponseHandler(checkItemAndSize, callback));
     }
 
     /**
@@ -556,13 +576,14 @@ public class HttpHelper {
      * @param sfc       工票号
      * @param component 部件
      */
-    public static void getComponentPic(String sfc, String component, HttpCallback callback) {
+    public static void getComponentPic(String shopOrder, String sfc, String component, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
+        json.put("SHOP_ORDER", shopOrder);
         json.put("SFC", sfc);
         json.put("COMPONENT", component);
         params.put("params", json.toJSONString());
-        HttpRequest.post(getComponentPic, params, getResponseHandler(getComponentPic, callback));
+        HttpRequest.post(getComponentInfo, params, getResponseHandler(getComponentInfo, callback));
     }
 
     /**
@@ -1084,9 +1105,18 @@ public class HttpHelper {
                     Toast.makeText(mContext, "连接错误", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (SpUtil.isDebugLog()) {
-                    LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + "\n       " + response);
+                RequestBody body = httpResponse.request().body();
+                Buffer buffer = new Buffer();
+                try {
+                    body.writeTo(buffer);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                buffer.flush();
+                buffer.close();
+                String s = buffer.readString(Charset.forName("UTF-8"));
+                String decode = URLDecoder.decode(s);
+                LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + decode + "\n       " + response);
                 Logger.d(response);
             }
         };

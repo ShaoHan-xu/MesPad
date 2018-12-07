@@ -55,6 +55,7 @@
             android:id="@+id/tv_suspendAlert_sureBtn"
             style="@style/textStyle_default"
             android:layout_width="100dp"
+            android:layout_height="match_parent"
             android:background="@drawable/btn_primary"
             android:gravity="center"
             android:padding="10dp"

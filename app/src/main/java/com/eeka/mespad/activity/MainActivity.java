@@ -67,6 +67,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.finalteam.okhttpfinal.LogUtil;
+
 /**
  * 首页
  * Created by Lenovo on 2017/6/12.
@@ -102,6 +104,7 @@ public class MainActivity extends NFCActivity {
         EventBus.getDefault().register(this);
         MQTTService.actionStart(mContext);
         SpUtil.cleanDictionaryData();
+        LogUtil.deletePastLogFile();
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 

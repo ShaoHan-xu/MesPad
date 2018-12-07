@@ -9,10 +9,10 @@ import android.content.Context;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 记录日志到本地文件
@@ -25,7 +25,7 @@ public class LogUtil {
     public static final int LOGTYPE_MQTT_STATUS = 4;//mqtt状态记录，掉线/重连
     public static final int LOGTYPE_EXCEPTION = 5;//各种异常记录
 
-    private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ");
+    private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ", Locale.CHINA);
     private static String mLogDir;
 
     public static void init(Context context) {
@@ -36,18 +36,12 @@ public class LogUtil {
         File logDir = new File(sdcard, "log");
         if (!logDir.exists()) {
             logDir.mkdirs();
-            // do not allow media scan
-            try {
-                new File(logDir, ".nomedia").createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         mLogDir = logDir.getAbsolutePath();
     }
 
     private static String getTodayString() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         return df.format(new Date());
     }
 
@@ -66,18 +60,46 @@ public class LogUtil {
         } else if (logType == LOGTYPE_EXCEPTION) {
             folder = new File(mLogDir, "exception");
         }
-        if (!folder.exists()) {
+        if (folder != null && !folder.exists()) {
             folder.mkdirs();
-        }
-        File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
-        String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
-        try {
-            OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f, true), "GBK");
-            BufferedWriter writer = new BufferedWriter(write);
-            writer.write(content);
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
+            String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
+            try {
+                OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f, true), "UTF-8");
+                BufferedWriter writer = new BufferedWriter(write);
+                writer.write(content);
+                writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    /**
+     * 删除过期log文件
+     */
+    public static void deletePastLogFile() {
+        File folder = new File(mLogDir);
+        File[] files = folder.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                File[] fs = file.listFiles();
+                for (int i = fs.length - 1; i >= 0; i--) {
+                    File f = fs[i];
+                    if (f.isFile()) {
+                        long l = f.lastModified();
+                        long curMillis = System.currentTimeMillis();
+                        if (curMillis - l > getWeekMillis()) {
+                            f.delete();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static long getWeekMillis() {
+        return 7 * 24 * 60 * 60 * 1000;
+    }
+
 }

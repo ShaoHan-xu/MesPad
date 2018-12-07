@@ -838,7 +838,7 @@ public class SewFragment extends BaseFragment {
             } else if (HttpHelper.offlineSort.equals(url)) {
                 mActivity.setButtonState(R.id.btn_offlineSort, false);
                 mActivity.setButtonState(R.id.btn_sorting, false);
-                ErrorDialog.showAlert(mContext, resultJSON.getString("result"), ErrorDialog.TYPE.ALERT, null, false);
+                toast(resultJSON.getString("result"));
             }
         }
     }
