@@ -39,13 +39,15 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
 
     private String mRFID;
     private String mShopOrder;
+    private int mProcessLotQTY;
     private List<TailorInfoBo.OPERINFORBean> mList_process;
 
-    public CutRecordQtyDialog(@NonNull Context context, String rfid, String shopOrder, List<TailorInfoBo.OPERINFORBean> processList) {
+    public CutRecordQtyDialog(@NonNull Context context, String rfid, String shopOrder, String processLotQTY, List<TailorInfoBo.OPERINFORBean> processList) {
         super(context);
         mContext = context;
         mRFID = rfid;
         mShopOrder = shopOrder;
+        mProcessLotQTY = Integer.valueOf(processLotQTY);
         mList_process = processList;
         init();
     }
@@ -72,6 +74,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
         ((TextView) view.findViewById(R.id.tv_cutRecordQty_cutNo)).setText(mData.getWORK_CENTER());
         ((TextView) view.findViewById(R.id.tv_cutRecordQty_matNo)).setText(mData.getMATERIAL());
         ((TextView) view.findViewById(R.id.tv_cutRecordQty_matType)).setText(mData.getLAYOUT_TYPE());
+        ((TextView) view.findViewById(R.id.tv_cutRecordQty_processQTY)).setText(mProcessLotQTY + "");
 
         TextView tv_recordUser = view.findViewById(R.id.tv_cutRecordQty_recordUser);
         tv_recordUser.setText(item.getUSER_NAME());
@@ -170,6 +173,11 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
                 ErrorDialog.showAlert(mContext, "请填写记录数据");
                 return;
             }
+            int inputQTY = Integer.valueOf(recordQty);
+            if (inputQTY > mProcessLotQTY) {
+                ErrorDialog.showAlert(mContext, "录入的数据不能大于批次数量，请检查");
+                return;
+            }
             itemBo.setRECORD(recordQty);
         }
         mData.setRFID(mRFID);
@@ -187,7 +195,7 @@ public class CutRecordQtyDialog extends Dialog implements View.OnClickListener, 
     public void show() {
         super.show();
         getWindow().setLayout(SystemUtils.getScreenWidth(mContext), SystemUtils.getScreenHeight(mContext));
-        
+
         //防止loading弹框被覆盖
         LoadingDialog.show(mContext);
         HttpHelper.getCutRecordData(mRFID, mShopOrder, this);

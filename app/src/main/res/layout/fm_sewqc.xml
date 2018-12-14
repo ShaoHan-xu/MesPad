@@ -234,38 +234,6 @@
                             android:layout_marginLeft="10dp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/layout_sewQC_lastPosition"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:visibility="gone"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:layout_width="80dp"
-                            android:gravity="right"
-                            android:text="上一站位"
-                            android:textColor="@color/text_gray_default" />
-
-                        <TextView
-                            android:id="@+id/tv_sewQC_lastPosition"
-                            style="@style/textStyle_default"
-                            android:layout_marginLeft="10dp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_sewQC_reworkInfo"
-                        style="@style/textStyle_default"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/text_red_default"
-                        android:padding="5dp"
-                        android:text="返修衣架回质检"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/textSize_itemTitle"
-                        android:visibility="gone" />
-
                     <TextView
                         android:id="@+id/tv_sewQC_ncTag"
                         style="@style/textStyle_default"
@@ -284,7 +252,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -460,12 +428,55 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_sewQC_lastPosition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="80dp"
+                    android:gravity="right"
+                    android:text="上一站位"
+                    android:textColor="@color/text_red_default" />
+
+                <TextView
+                    android:id="@+id/tv_sewQC_lastPosition"
+                    style="@style/textStyle_default"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/text_red_default" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_sewQC_reworkInfo"
+                style="@style/textStyle_default"
+                android:layout_marginTop="5dp"
+                android:background="@color/text_red_default"
+                android:padding="5dp"
+                android:text="返修衣架回质检"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_itemTitle"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/border_black">
+            android:layout_weight="0.7"
+            android:background="@drawable/border_black"
+            android:padding="0.5dp">
 
             <LinearLayout
                 android:id="@+id/layout_sewQC_matInfo"

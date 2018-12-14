@@ -32,7 +32,16 @@ public class ComponentInfoBo {
 
         private String MATERIAL_CODE;
         private String MATERIAL_NAME;
+        private String MAT_URL;
         private double QTY;
+
+        public String getMAT_URL() {
+            return MAT_URL;
+        }
+
+        public void setMAT_URL(String MAT_URL) {
+            this.MAT_URL = MAT_URL;
+        }
 
         public String getMATERIAL_CODE() {
             return MATERIAL_CODE;

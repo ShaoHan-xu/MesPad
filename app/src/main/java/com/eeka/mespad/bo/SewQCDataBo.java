@@ -42,6 +42,24 @@ public class SewQCDataBo {
     private String preLineId;
     private String prePosition;
     private String prePositionType;
+    private String prePositionTypeDesc;
+    private String sfccurrentOperation;
+
+    public String getSfccurrentOperation() {
+        return sfccurrentOperation;
+    }
+
+    public void setSfccurrentOperation(String sfccurrentOperation) {
+        this.sfccurrentOperation = sfccurrentOperation;
+    }
+
+    public String getPrePositionTypeDesc() {
+        return prePositionTypeDesc;
+    }
+
+    public void setPrePositionTypeDesc(String prePositionTypeDesc) {
+        this.prePositionTypeDesc = prePositionTypeDesc;
+    }
 
     public String getPreLineId() {
         return preLineId;

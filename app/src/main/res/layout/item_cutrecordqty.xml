@@ -7,11 +7,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/divider_gray"
-        android:orientation="horizontal"
         android:layout_marginLeft="-4dp"
         android:layout_marginRight="2dp"
+        android:divider="@drawable/divider_gray"
         android:gravity="center"
+        android:orientation="horizontal"
         android:showDividers="middle">
 
         <TextView
@@ -74,6 +74,14 @@
 
         <TextView
             android:id="@+id/tv_cutRecordQty_recordUser"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/tv_cutRecordQty_processQTY"
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"

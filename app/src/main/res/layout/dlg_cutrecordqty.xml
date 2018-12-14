@@ -134,6 +134,14 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
+                android:text="批次数量" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
                 android:text="数据录入" />
 
             <TextView

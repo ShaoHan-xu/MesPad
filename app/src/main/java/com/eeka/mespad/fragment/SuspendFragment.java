@@ -477,7 +477,17 @@ public class SuspendFragment extends BaseFragment {
             TextView tv_matUsedQTY = view.findViewById(R.id.tv_suspend_matUsedQTY);
             tv_matCode.setText(item.getMATERIAL_CODE());
             tv_matName.setText(item.getMATERIAL_NAME());
-            tv_matUsedQTY.setText(getString(R.string.float_2,item.getQTY()));
+            tv_matUsedQTY.setText(getString(R.string.float_2, item.getQTY()));
+
+            final String url = item.getMAT_URL();
+            tv_matCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<String> list = new ArrayList<>();
+                    list.add(url);
+                    startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
+                }
+            });
 
             mLayout_matInfo.addView(view);
         }

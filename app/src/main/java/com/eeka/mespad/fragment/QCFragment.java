@@ -71,7 +71,6 @@ public class QCFragment extends BaseFragment {
     private TextView mTv_matDesc;
     private TextView mTv_size;
     private TextView mTv_special;
-    private TextView mTv_ncTag;
     private TextView mTv_reworkInfo;
     private TextView mTv_lastPosition;
     private LinearLayout mLayout_lastPosition;
@@ -114,7 +113,6 @@ public class QCFragment extends BaseFragment {
         mTv_matNum = mView.findViewById(R.id.tv_sewQC_matNum);
         mTv_matDesc = mView.findViewById(R.id.tv_sewQC_matDesc);
         mTv_size = mView.findViewById(R.id.tv_sewQC_size);
-        mTv_ncTag = mView.findViewById(R.id.tv_sewQC_ncTag);
         mTv_lastPosition = mView.findViewById(R.id.tv_sewQC_lastPosition);
         mTv_special = mView.findViewById(R.id.tv_sewQC_special);
         mTv_reworkInfo = mView.findViewById(R.id.tv_sewQC_reworkInfo);
@@ -197,57 +195,18 @@ public class QCFragment extends BaseFragment {
         mTv_size.setText(mSewQCData.getSfcSize());
         mTv_special.setText(mSewQCData.getSoMark());
 
-//        String lastPosition = mSewQCData.getPrePosition();
-//        if (isEmpty(lastPosition)) {
-//            mLayout_lastPosition.setVisibility(View.GONE);
-//        } else {
-//            mLayout_lastPosition.setVisibility(View.VISIBLE);
-//            mTv_lastPosition.setText(String.format("%s-%s", mSewQCData.getPreLineId(), mSewQCData.getPrePosition()));
-//        }
+        String lastPosition = mSewQCData.getPrePosition();
+        if (isEmpty(lastPosition)) {
+            mLayout_lastPosition.setVisibility(View.GONE);
+        } else {
+            mLayout_lastPosition.setVisibility(View.VISIBLE);
+            mTv_lastPosition.setText(String.format("%s-%s(%s)", mSewQCData.getPreLineId(), mSewQCData.getPrePosition(), mSewQCData.getPrePositionTypeDesc()));
+        }
 
         if ("1".equals(mSewQCData.getReworkFlag())) {
             mTv_reworkInfo.setVisibility(View.VISIBLE);
-            mTv_ncTag.setVisibility(View.GONE);
         } else {
             mTv_reworkInfo.setVisibility(View.GONE);
-
-            boolean hasNC = false;
-            if (mSewQCData.getNcCode() != null) {
-                if (mSewQCData.getNcCode().size() == 0) {
-                    if ("QUALITY_ASSESSMENT".equals(mSewQCData.getPrePositionType())) {
-                        hasNC = true;
-                        mTv_ncTag.setText("该件来自QA站");
-                    } else if ("QUALITY_CONTROL".equals(mSewQCData.getPrePositionType())) {
-                        hasNC = true;
-                        mTv_ncTag.setText("该件来自QC站");
-                    } else if ("REPAIR_OFFLINE".equals(mSewQCData.getPrePositionType())) {
-                        hasNC = true;
-                        mTv_ncTag.setText("该件来自线下返修站");
-                    }
-                }
-                for (String nc : mSewQCData.getNcCode()) {
-                    if ("NC2QC".equals(nc) || ("NC2QA".equals(nc) && "NORMAL".equals(mSewQCData.getPrePositionType()))) {
-                        hasNC = true;
-                        mTv_ncTag.setText("该件来自普通站位");
-                        break;
-                    } else {
-                        if ("QUALITY_ASSESSMENT".equals(mSewQCData.getPrePositionType())) {
-                            hasNC = true;
-                            mTv_ncTag.setText("该件来自QA站");
-                            break;
-                        } else if ("QUALITY_CONTROL".equals(mSewQCData.getPrePositionType())) {
-                            hasNC = true;
-                            mTv_ncTag.setText("该件来自QC站");
-                            break;
-                        }
-                    }
-                }
-            }
-            if (hasNC) {
-                mTv_ncTag.setVisibility(View.VISIBLE);
-            } else {
-                mTv_ncTag.setVisibility(View.GONE);
-            }
         }
 
         mLayout_matInfo.removeAllViews();

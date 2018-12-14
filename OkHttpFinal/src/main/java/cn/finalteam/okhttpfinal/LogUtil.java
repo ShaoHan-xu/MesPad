@@ -62,16 +62,16 @@ public class LogUtil {
         }
         if (folder != null && !folder.exists()) {
             folder.mkdirs();
-            File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
-            String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
-            try {
-                OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f, true), "UTF-8");
-                BufferedWriter writer = new BufferedWriter(write);
-                writer.write(content);
-                writer.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        }
+        File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
+        String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
+        try {
+            OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f, true), "UTF-8");
+            BufferedWriter writer = new BufferedWriter(write);
+            writer.write(content);
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -87,9 +87,9 @@ public class LogUtil {
                 for (int i = fs.length - 1; i >= 0; i--) {
                     File f = fs[i];
                     if (f.isFile()) {
-                        long l = f.lastModified();
-                        long curMillis = System.currentTimeMillis();
-                        if (curMillis - l > getWeekMillis()) {
+                        long l = f.lastModified() / 1000;
+                        long curSeconds = System.currentTimeMillis() / 1000;
+                        if (curSeconds - l > getWeekSeconds()) {
                             f.delete();
                         }
                     }
@@ -98,8 +98,11 @@ public class LogUtil {
         }
     }
 
-    private static long getWeekMillis() {
-        return 7 * 24 * 60 * 60 * 1000;
+    /**
+     * 获取一个月的秒数
+     */
+    private static long getWeekSeconds() {
+        return 30 * 24 * 60 * 60;
     }
 
 }

@@ -71,8 +71,8 @@ public class WashLabelDialog extends BaseDialog {
                 String washLabel = mEt_washLabel.getText().toString();
                 if (TextUtils.isEmpty(washLabel)) {
                     ErrorDialog.showAlert(mContext, "请输入洗水唛编号");
-                } else if (washLabel.length() < 9) {
-                    ErrorDialog.showAlert(mContext, "洗水唛编号少于9位，请查验卡号是否正确");
+                } else if (washLabel.length() != 10) {
+                    ErrorDialog.showAlert(mContext, "卡号非10位，请查验卡号或重新刷卡输入");
                 } else {
                     EventBus.getDefault().post(washLabel);
                     dismiss();

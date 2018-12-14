@@ -681,7 +681,7 @@ public class CutFragment extends BaseFragment {
             return;
         }
         List<TailorInfoBo.OPERINFORBean> list = mTailorInfo.getOPER_INFOR();
-        mRecordQtyDialog = new CutRecordQtyDialog(mContext, mRFID, mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER(), list);
+        mRecordQtyDialog = new CutRecordQtyDialog(mContext, mRFID, mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER(), mTailorInfo.getPROCESS_LOT_INFO().getPROCESS_LOT_QTY(), list);
         mRecordQtyDialog.show();
     }
 

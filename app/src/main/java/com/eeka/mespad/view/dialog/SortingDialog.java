@@ -65,7 +65,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
             }
         });
 
-        mEt_tag = mView.findViewById(R.id.et_sorting_tag);
+        mEt_tag = view.findViewById(R.id.et_sorting_tag);
         mEt_tag.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -177,7 +177,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
     @Override
     public void show() {
         super.show();
-        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.5), (int) (SystemUtils.getScreenHeight(mContext) * 0.4));
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.5), (int) (SystemUtils.getScreenHeight(mContext) * 0.5));
     }
 
 }

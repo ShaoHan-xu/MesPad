@@ -107,7 +107,7 @@ public class PadApplication extends Application {
 
     private void initOkHttp() {
         OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
-        builder.setDebug(true);
+        builder.setDebug(SystemUtils.isApkInDebug(this));
         OkHttpFinal.getInstance().init(this, builder.build());
     }
 
