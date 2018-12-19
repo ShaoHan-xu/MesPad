@@ -25,9 +25,9 @@ public class CommListDialog extends BaseDialog {
     protected void init() {
         super.init();
         setCanceledOnTouchOutside(true);
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_commlist,null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_commlist, null);
         setContentView(view);
 
-        ListView listView = (ListView) view.findViewById(R.id.lv_commList);
+        ListView listView = view.findViewById(R.id.lv_commList);
     }
 }
