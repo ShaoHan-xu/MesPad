@@ -314,6 +314,10 @@ class OkHttpTask implements Callback, ProgressCallback {
             }
         }
         //接口请求失败
-        callback.onFailure(BaseHttpRequestCallback.ERROR_RESPONSE_DATA_PARSE_EXCEPTION, "Data parse exception");
+        if (result.contains("</html>") && result.contains("</body>") && result.contains("</script>")) {
+            callback.onFailure(BaseHttpRequestCallback.ERROR_RESPONSE_WEB, result);
+        } else {
+            callback.onFailure(BaseHttpRequestCallback.ERROR_RESPONSE_DATA_PARSE_EXCEPTION, "Data parse exception");
+        }
     }
 }

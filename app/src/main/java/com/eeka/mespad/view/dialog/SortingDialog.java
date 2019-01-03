@@ -130,7 +130,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 Toast.makeText(mContext, "请输入吊牌号继续操作", Toast.LENGTH_SHORT).show();
                 return;
             } else if (mLastNum.length() != 10) {
-                Toast.makeText(mContext, "衣架号不足10位，请查验", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "输入的衣架号非10位，请查验", Toast.LENGTH_SHORT).show();
                 return;
             }
             LoadingDialog.show(mContext);

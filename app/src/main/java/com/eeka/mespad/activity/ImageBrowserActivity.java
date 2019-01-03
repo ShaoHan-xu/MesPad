@@ -101,7 +101,9 @@ public class ImageBrowserActivity extends BaseActivity {
                 } else if (item instanceof String) {
                     bmpUrl = (String) item;
                 }
-                Picasso.with(mContext).load(bmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+                if (!isEmpty(bmpUrl)) {
+                    Picasso.with(mContext).load(bmpUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+                }
             }
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

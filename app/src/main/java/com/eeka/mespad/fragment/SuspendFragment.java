@@ -368,7 +368,7 @@ public class SuspendFragment extends BaseFragment {
                 mCurComponent = component;
 //                showLoading();
                 mWashLabel = null;
-                HttpHelper.getComponentPic(mComponent.getSHOP_ORDER(), mCurSFC, component.getComponentId(), SuspendFragment.this);
+                HttpHelper.getComponentInfo(mComponent.getSHOP_ORDER(), mCurSFC, component.getComponentId(), SuspendFragment.this);
                 List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
                 int childCount = mLayout_component.getChildCount();
                 for (int i = 0; i < childCount; i++) {
@@ -480,15 +480,18 @@ public class SuspendFragment extends BaseFragment {
             tv_matUsedQTY.setText(getString(R.string.float_2, item.getQTY()));
 
             final String url = item.getMAT_URL();
-            tv_matCode.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<String> list = new ArrayList<>();
-                    list.add(url);
-                    startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
-                }
-            });
-
+            if (isEmpty(url)) {
+                showAlert("该物料无图片地址返回");
+            } else {
+                tv_matCode.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<String> list = new ArrayList<>();
+                        list.add(url);
+                        startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
+                    }
+                });
+            }
             mLayout_matInfo.addView(view);
         }
     }

@@ -827,7 +827,6 @@ public class CutFragment extends BaseFragment {
                         mBtn_done.setEnabled(false);
                         ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);
                         mTailorInfo.setOPER_INFOR(mList_padProcess);
-                        ErrorDialog.showAlert(mContext, "该卡无工序数据，已经过站或者站位工序数据配置出错，请注意。");
                     } else {
                         if (mCardState.isStarted) {
                             ((MainActivity) getActivity()).setButtonState(R.id.btn_start, false);

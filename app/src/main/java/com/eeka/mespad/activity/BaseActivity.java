@@ -121,6 +121,10 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         ErrorDialog.showAlert(mContext, msg);
     }
 
+    protected void showAlert(String msg) {
+        ErrorDialog.showAlert(mContext, msg, ErrorDialog.TYPE.ALERT, null, false);
+    }
+
     protected void toast(String msg) {
         toast(msg, Toast.LENGTH_LONG);
     }

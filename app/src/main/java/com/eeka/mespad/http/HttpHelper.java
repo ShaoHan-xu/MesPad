@@ -143,7 +143,7 @@ public class HttpHelper {
     /**
      * 检查款式与尺码
      */
-    public static void checkItemAndSize(String line, String position, String itemSize,HttpCallback callback) {
+    public static void checkItemAndSize(String line, String position, String itemSize, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/checkItemAndSize");
         params.put("OutputParameter", "resultJson");
@@ -576,7 +576,7 @@ public class HttpHelper {
      * @param sfc       工票号
      * @param component 部件
      */
-    public static void getComponentPic(String shopOrder, String sfc, String component, HttpCallback callback) {
+    public static void getComponentInfo(String shopOrder, String sfc, String component, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("SHOP_ORDER", shopOrder);
@@ -1022,17 +1022,39 @@ public class HttpHelper {
     }
 
     /**
+     * 登录过期后重新登录
+     */
+    private static void cookieOutReLogin(HttpCallback callback) {
+        IS_COOKIE_OUT = true;
+
+        //记录cookie失效前的请求，重新登录后重新请求
+        HttpRequest.HttpRequestBo lastRequest = HttpRequest.mLastRequest;
+        mCookieOutRequest = new HttpRequest.HttpRequestBo();
+        mCookieOutRequest.setMethod(lastRequest.getMethod());
+        mCookieOutRequest.setUrl(lastRequest.getUrl());
+        mCookieOutRequest.setParams(lastRequest.getParams());
+        mCookieOutRequest.setCallback(lastRequest.getCallback());
+
+        UserInfoBo loginUser = SpUtil.getLoginUser();
+        login(loginUser.getUSER(), loginUser.getPassword(), callback);
+    }
+
+    /**
      * 获取请求响应Handler
      */
-    public static BaseHttpRequestCallback getResponseHandler(final String url, final HttpCallback callback) {
-        final BaseHttpRequestCallback response = new BaseHttpRequestCallback<JSONObject>() {
+    private static BaseHttpRequestCallback getResponseHandler(final String url, final HttpCallback callback) {
+        BaseHttpRequestCallback response = new BaseHttpRequestCallback<JSONObject>() {
 
             @Override
             public void onFailure(int errorCode, String msg) {
                 super.onFailure(errorCode, msg);
-                //无网络或者后台出错
-                if (callback != null)
+                if (!TextUtils.isEmpty(msg) && msg.contains("type=\"submit\" name=\"uidPasswordLogon\"")) {
+                    //后台返回登录页面，重新登录
+                    cookieOutReLogin(callback);
+                } else if (callback != null) {
+                    //无网络或者后台出错
                     callback.onFailure(url, errorCode, msg);
+                }
             }
 
             @Override
@@ -1075,18 +1097,7 @@ public class HttpHelper {
                     String message = jsonObject.getString("message");
                     if (!TextUtils.isEmpty(message)) {
                         if (message.contains(COOKIE_OUT)) {//cookie失效，重新登录获取新的cookie
-                            IS_COOKIE_OUT = true;
-
-                            //记录cookie失效前的请求，重新登录后重新请求
-                            HttpRequest.HttpRequestBo lastRequest = HttpRequest.mLastRequest;
-                            mCookieOutRequest = new HttpRequest.HttpRequestBo();
-                            mCookieOutRequest.setMethod(lastRequest.getMethod());
-                            mCookieOutRequest.setUrl(lastRequest.getUrl());
-                            mCookieOutRequest.setParams(lastRequest.getParams());
-                            mCookieOutRequest.setCallback(lastRequest.getCallback());
-
-                            UserInfoBo loginUser = SpUtil.getLoginUser();
-                            login(loginUser.getUSER(), loginUser.getPassword(), callback);
+                            cookieOutReLogin(callback);
                             return;
                         }
                     }
@@ -1115,8 +1126,8 @@ public class HttpHelper {
                 buffer.flush();
                 buffer.close();
                 String s = buffer.readString(Charset.forName("UTF-8"));
-                String decode = URLDecoder.decode(s);
-                LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + decode + "\n       " + response);
+                String reqParams = URLDecoder.decode(s);
+                LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPRESPONSE, url + reqParams + "\n       " + response);
                 Logger.d(response);
             }
         };
