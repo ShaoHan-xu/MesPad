@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:showDividers="middle">
+
+    <TextView
+        android:id="@+id/tv_storageOut_shopOrder"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_item"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_workCenter"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_size"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_rfid"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_area"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_location"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_inQTY"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_outQTY"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/tv_storageOut_lessQTY"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:padding="5dp" />
+
+    <Button
+        android:id="@+id/btn_storageOut_out"
+        style="@style/btnStyle_primary"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:minHeight="50dp"
+        android:padding="5dp"
+        android:text="出库" />
+</LinearLayout>

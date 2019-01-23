@@ -90,12 +90,14 @@ public class YaotouSizeDialog extends BaseDialog {
     private void initView() {
         final PocketSizeBo item = mItems.get(0);
         TextView tv_size = mView.findViewById(R.id.tv_yaotouSize_size);
+        TextView tv_sizeType = mView.findViewById(R.id.tv_yaotouSize_sizeType);
         TextView tv_code = mView.findViewById(R.id.tv_yaotouSize_code);
         TextView tv_width = mView.findViewById(R.id.tv_yaotouSize_width);
         TextView tv_sampleCode = mView.findViewById(R.id.tv_yaotouSize_sampleCode);
         TextView tv_template = mView.findViewById(R.id.tv_yaotouSize_template);
         tv_width.setText(item.getYK_V());
-        tv_size.setText(item.getDYMS_V());
+        tv_size.setText(item.getMS_V());
+        tv_sizeType.setText(String.format("%s：", item.getMS()));
         tv_sampleCode.setText(item.getYSYH_V());
         tv_template.setText(item.getYMBH_V());
         tv_code.setText(item.getPART_NO());

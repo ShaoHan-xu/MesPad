@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray"
+    android:orientation="horizontal"
+    android:showDividers="middle">
+
+    <TextView
+        android:id="@+id/tv_processSheets_patternName"
+        style="@style/textStyle_default"
+        android:layout_width="80dp"
+        android:gravity="center"
+        android:padding="3dp"/>
+
+    <TextView
+        android:id="@+id/tv_processSheets_technologyDesc"
+        style="@style/textStyle_default"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="3dp"
+        android:text="工艺描述" />
+</LinearLayout>

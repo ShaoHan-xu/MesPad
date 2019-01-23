@@ -50,4 +50,5 @@
     <item name="btn_replaceRFID" type="id" />
     <item name="btn_sortClothTag" type="id" />
     <item name="btn_cutMatInfo" type="id" />
+    <item name="btn_processSheets" type="id" />
 </resources>

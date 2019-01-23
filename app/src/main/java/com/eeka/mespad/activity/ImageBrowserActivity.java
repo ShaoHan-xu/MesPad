@@ -18,6 +18,7 @@ import com.eeka.mespad.bo.TailorInfoBo;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -56,7 +57,7 @@ public class ImageBrowserActivity extends BaseActivity {
                 viewPager.setCurrentItem(position);
             }
         } else {
-            LinearLayout layout_images = (LinearLayout) findViewById(R.id.layout_imageBrowser_images);
+            LinearLayout layout_images = findViewById(R.id.layout_imageBrowser_images);
             layout_images.setVisibility(View.VISIBLE);
             for (Object item : data) {
                 String url = (String) item;
@@ -189,6 +190,12 @@ public class ImageBrowserActivity extends BaseActivity {
         tv_layers.setText(layoutInfo.getLAYERS());
         tv_amount.setText(layoutInfo.getAMOUNT());
         tv_sizeRatio.setText(layoutInfo.getSIZE_RATIO());
+    }
+
+    public static Intent getIntent(Context context, String url) {
+        List<String> list = new ArrayList<>();
+        list.add(url);
+        return getIntent(context, list, 0);
     }
 
     /**

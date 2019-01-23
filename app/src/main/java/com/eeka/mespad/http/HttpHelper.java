@@ -14,6 +14,7 @@ import com.eeka.mespad.bo.GetLabuDataBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SaveLabuDataBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
+import com.eeka.mespad.bo.StorageOutBo;
 import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
@@ -118,14 +119,61 @@ public class HttpHelper {
     public static final String offlineSort = BASE_URL + "sort/bindingdefaultSortRfidBySFC?";
     public static final String sortForClothTag = BASE_URL + "sort/sendSortMessageByClothCard?";
     public static final String getQCSize = BASE_URL + "sweing/getShopOrderSize?";
+    public static final String getWareHouseInfo = BASE_URL + "wareHouse/getWareHouseInfo?";
+    public static final String storageOut = BASE_URL + "wareHouse/WareHouseOut?";
+    public static final String getClothType = BASE_URL + "wareHouse/webInitial?";
+    public static final String getStorAreaData = BASE_URL + "wareHouse/getStorAreaData?";
+
+    //MII接口
     public static final String replaceBindingsRfid = PadApplication.XMII_URL + "Runner?";
     public static final String checkItemAndSize = PadApplication.XMII_URL + "Runner?";
+    public static final String getProcessSheets = PadApplication.XMII_URL + "Runner?";
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 根据品类获取库区
+     */
+    public static void getStorAreaData(String clothType, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("code", clothType);
+        params.put("params", json.toString());
+        HttpRequest.post(getStorAreaData, params, getResponseHandler(getStorAreaData, callback));
+    }
+
+    /**
+     * 获取品类
+     */
+    public static void getClothType(HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        HttpRequest.post(getClothType, params, getResponseHandler(getClothType, callback));
+    }
+
+    /**
+     * 出库
+     */
+    public static void storageOut(StorageOutBo item, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(item));
+        HttpRequest.post(storageOut, params, getResponseHandler(storageOut, callback));
+    }
+
+    /**
+     * 获取库区内物料数据
+     */
+    public static void getWareHouseInfo(String type, String area, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("CLOTH_TYPE", type);
+        json.put("STOR_AREA", area);
+        params.put("params", json.toString());
+        HttpRequest.post(getWareHouseInfo, params, getResponseHandler(getWareHouseInfo, callback));
     }
 
     /**
@@ -138,6 +186,18 @@ public class HttpHelper {
         json.put("SORT_RFID", hangerId);
         params.put("params", json.toString());
         HttpRequest.post(sortForClothTag, params, getResponseHandler(sortForClothTag, callback));
+    }
+
+    /**
+     * 获取工艺单
+     */
+    public static void getProcessSheets(String shopOrder, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("Transaction", "EEKA_EXT/TRANS/ProcessSheet/TRANSACTION/styleTechnology");
+        params.put("OutputParameter", "resultJson");
+        params.put("Content-Type", "text/json");
+        params.put("shopOrder", shopOrder);
+        HttpRequest.post(getProcessSheets, params, getResponseHandler(getProcessSheets, callback));
     }
 
     /**

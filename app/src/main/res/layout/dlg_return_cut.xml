@@ -19,7 +19,7 @@
             android:background="@drawable/ic_close" />
 
         <TextView
-            android:id="@+id/tv_dlg_title"
+            android:id="@+id/tv_title"
             style="@style/textStyle_default"
             android:layout_alignBaseline="@id/btn_dlg_close"
             android:text="退料申请"

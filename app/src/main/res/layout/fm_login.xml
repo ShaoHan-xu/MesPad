@@ -10,10 +10,10 @@
         android:background="#EEEEEE"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="50dp"
         android:paddingLeft="100dp"
+        android:paddingTop="50dp"
         android:paddingRight="100dp"
-        android:paddingTop="50dp">
+        android:paddingBottom="50dp">
 
         <TextView
             android:id="@+id/tv_login_alert"
@@ -38,10 +38,10 @@
                 android:id="@+id/et_login_IP"
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
-                android:enabled="false"
-                android:digits="1234567890."
-                android:inputType="number"
                 android:layout_height="wrap_content"
+                android:digits="1234567890."
+                android:enabled="false"
+                android:inputType="number"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -119,9 +119,10 @@
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/iv_login_morePosition"
                 android:layout_toRightOf="@id/tag_position"
-                android:gravity="center"
                 android:enabled="false"
-                android:singleLine="true"/>
+                android:gravity="center"
+                android:inputType="number"
+                android:singleLine="true" />
         </RelativeLayout>
 
         <Button

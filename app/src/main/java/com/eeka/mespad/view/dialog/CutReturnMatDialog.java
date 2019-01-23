@@ -85,7 +85,7 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
     }
 
     private void initView() {
-        TextView tv_title = mView.findViewById(R.id.tv_dlg_title);
+        TextView tv_title = mView.findViewById(R.id.tv_title);
         if (mType == TYPE_RETURN) {
             tv_title.setText("退料申请");
         } else {

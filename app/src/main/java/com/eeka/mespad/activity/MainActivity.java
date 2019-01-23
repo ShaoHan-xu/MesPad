@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
@@ -42,12 +43,14 @@ import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PocketSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.ReworkWarnMsgBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.fragment.CutFragment;
 import com.eeka.mespad.fragment.QCFragment;
 import com.eeka.mespad.fragment.SewFragment;
+import com.eeka.mespad.fragment.StorageOutFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.service.MQTTService;
@@ -57,6 +60,7 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
 import com.tencent.bugly.beta.Beta;
 
@@ -81,6 +85,7 @@ public class MainActivity extends NFCActivity {
     private SuspendFragment mSuspendFragment;
     private SewFragment mSewFragment;
     private QCFragment mQCFragment;
+    private StorageOutFragment mStorageOutFragment;
 
     private LinearLayout mLayout_controlPanel;
 
@@ -105,6 +110,8 @@ public class MainActivity extends NFCActivity {
         MQTTService.actionStart(mContext);
         SpUtil.cleanDictionaryData();
         LogUtil.deletePastLogFile();
+        SpUtil.saveSalesOrder(null);
+        SpUtil.save(SpUtil.KEY_SHOPORDER, null);
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -290,6 +297,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "PROCESS_FORM":
+                    button.setText("工艺单显示");
+                    button.setId(R.id.btn_processSheets);
+                    break;
                 case "CUT_MAT_INFO":
                     button.setText("面料裁剪确认单");
                     button.setId(R.id.btn_cutMatInfo);
@@ -525,6 +536,11 @@ public class MainActivity extends NFCActivity {
                     mQCFragment = new QCFragment();
                 fragment = mQCFragment;
                 break;
+            case TopicUtil.TOPIC_STOCK_OUT:
+                if (mStorageOutFragment == null)
+                    mStorageOutFragment = new StorageOutFragment();
+                fragment = mStorageOutFragment;
+                break;
         }
         if (fragment != null) {
             //因为缝制主题公用于手工与包装主题，所以在此传值，用于在fragment内区分
@@ -638,6 +654,23 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_processSheets:
+                String mtmOrder = SpUtil.getSalesOrder();
+                String shopOrder = SpUtil.get(SpUtil.KEY_SHOPORDER, null);
+                if (isEmpty(mtmOrder) && isEmpty(shopOrder)) {
+                    ErrorDialog.showAlert(mContext, "请先获取订单数据");
+                } else if (!isEmpty(shopOrder)) {
+                    if (isEmpty(shopOrder)) {
+                        ErrorDialog.showAlert(mContext, "未找到当前订单号");
+                        return;
+                    }
+                    showLoading();
+                    HttpHelper.getProcessSheets(shopOrder, this);
+                } else {
+                    String url = PadApplication.MTM_URL + mtmOrder;
+                    startActivity(WebActivity.getIntent(mContext, url));
+                }
+                break;
             case R.id.btn_cutMatInfo:
                 String salesOrder = SpUtil.getSalesOrder();
                 if (isEmpty(salesOrder)) {
@@ -925,7 +958,7 @@ public class MainActivity extends NFCActivity {
 
     private Dialog mLogoutDialog;
     private CommonRecyclerAdapter mLogoutAdapter;
-    private int mLogoutIndex;
+    private String mLogoutUserId;//离岗员工ID
 
     private void showLogoutDialog() {
         mLogoutDialog = new Dialog(mContext);
@@ -937,15 +970,15 @@ public class MainActivity extends NFCActivity {
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
         mLogoutAdapter = new CommonRecyclerAdapter<UserInfoBo>(mContext, loginUsers, R.layout.item_logout, manager) {
             @Override
-            public void convert(RecyclerViewHolder holder, final UserInfoBo item, final int position) {
+            public void convert(RecyclerViewHolder holder, final UserInfoBo item, int position) {
                 holder.setText(R.id.tv_userName, item.getNAME());
                 holder.setText(R.id.tv_userNum, item.getEMPLOYEE_NUMBER());
                 holder.getView(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         showLoading();
-                        mLogoutIndex = position;
-                        HttpHelper.positionLogout(item.getEMPLOYEE_NUMBER(), MainActivity.this);
+                        mLogoutUserId = item.getEMPLOYEE_NUMBER();
+                        HttpHelper.positionLogout(mLogoutUserId, MainActivity.this);
                     }
                 });
             }
@@ -981,6 +1014,11 @@ public class MainActivity extends NFCActivity {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);
                     mTopic = bean.getTOPIC();
                 }
+                if (TopicUtil.TOPIC_STOCK_OUT.equals(mTopic)) {
+                    findViewById(R.id.layout_search).setVisibility(View.GONE);
+                } else {
+                    findViewById(R.id.layout_search).setVisibility(View.VISIBLE);
+                }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mTv_searchType.setVisibility(View.VISIBLE);
                 } else {
@@ -1015,11 +1053,11 @@ public class MainActivity extends NFCActivity {
                             } else {
                                 String cardNum = mCardInfo.getCardNum();
                                 List<UserInfoBo> users = SpUtil.getPositionUsers();
-                                if (users != null && users.size() != 0) {
+                                if (users != null) {
                                     for (int i = 0; i < users.size(); i++) {
                                         UserInfoBo user = users.get(i);
                                         if (user.getCARD_NUMBER().equals(cardNum)) {
-                                            mLogoutIndex = i;
+                                            mLogoutUserId = user.getEMPLOYEE_NUMBER();
                                             clockOut(cardNum);
                                             return;
                                         }
@@ -1045,6 +1083,9 @@ public class MainActivity extends NFCActivity {
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
                 refreshLoginUser();
+            } else if (HttpHelper.getProcessSheets.equals(url)) {
+                ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
+                new ProcessSheetsDialog(mContext, processSheets).show();
             } else if (HttpHelper.getCommonInfoByLogicNo.equals(url)) {
                 if (HttpHelper.isSuccess(resultJSON)) {
                     JSONArray result = resultJSON.getJSONArray("result");
@@ -1067,7 +1108,11 @@ public class MainActivity extends NFCActivity {
                 toast("用户下线成功");
                 logoutSuccess();
             } else {
-                showErrorDialog(message);
+                if (HttpHelper.getProcessSheets.equals(url)) {
+                    showErrorDialog(resultJSON.getString("result"));
+                } else {
+                    showErrorDialog(message);
+                }
             }
         }
     }
@@ -1102,18 +1147,24 @@ public class MainActivity extends NFCActivity {
                 break;
             case TopicUtil.TOPIC_QC:
                 mQCFragment.refreshLoginUsers();
+            case TopicUtil.TOPIC_STOCK_OUT:
+                mStorageOutFragment.refreshLoginUsers();
                 break;
         }
     }
 
     private void logoutSuccess() {
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
-        if (loginUsers != null && loginUsers.size() > mLogoutIndex) {
-            loginUsers.remove(mLogoutIndex);
-            SpUtil.savePositionUsers(loginUsers);
-            if (mLogoutAdapter != null) {
-                mLogoutAdapter.removeData(mLogoutIndex);
+        if (loginUsers != null) {
+            for (int i = 0; i < loginUsers.size(); i++) {
+                UserInfoBo user = loginUsers.get(i);
+                if (user.getEMPLOYEE_NUMBER().equals(mLogoutUserId)) {
+                    loginUsers.remove(user);
+                    mLogoutAdapter.removeData(i);
+                    break;
+                }
             }
+            SpUtil.savePositionUsers(loginUsers);
             if (loginUsers.size() == 0) {
                 if (mLogoutDialog != null) {
                     mLogoutDialog.dismiss();

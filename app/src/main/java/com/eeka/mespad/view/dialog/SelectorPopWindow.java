@@ -13,6 +13,7 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.BTReasonBo;
+import com.eeka.mespad.bo.DictionaryDataBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class SelectorPopWindow<T> extends PopupWindow {
     }
 
     private void initView() {
-        ListView listView = (ListView) mView.findViewById(R.id.lv_ppw_selector);
+        ListView listView = mView.findViewById(R.id.lv_ppw_selector);
         listView.setAdapter(new CommonAdapter<T>(mContext, mList_data, R.layout.item_textview) {
             @Override
             public void convert(ViewHolder holder, T item, int position) {
@@ -51,6 +52,8 @@ public class SelectorPopWindow<T> extends PopupWindow {
                     holder.setText(R.id.textView, ((BTReasonBo) item).getREASON_DESC());
                 } else if (item instanceof TailorInfoBo.OPERINFORBean) {
                     holder.setText(R.id.textView, ((TailorInfoBo.OPERINFORBean) item).getDESCRIPTION());
+                } else if (item instanceof DictionaryDataBo) {
+                    holder.setText(R.id.textView, ((DictionaryDataBo) item).getLABEL());
                 } else {
                     holder.setText(R.id.textView, item.toString());
                 }

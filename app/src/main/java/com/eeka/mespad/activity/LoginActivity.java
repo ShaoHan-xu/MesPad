@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by Lenovo on 2017/5/15.
  */
 
-public class LoginActivity extends BaseActivity implements LoginFragment.OnClockCallback {
+public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

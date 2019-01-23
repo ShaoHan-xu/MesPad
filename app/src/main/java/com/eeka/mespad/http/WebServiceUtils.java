@@ -12,7 +12,6 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.ReflectUtil;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.view.dialog.ErrorDialog;
 
 import org.ksoap2.HeaderProperty;
 import org.ksoap2.SoapEnvelope;

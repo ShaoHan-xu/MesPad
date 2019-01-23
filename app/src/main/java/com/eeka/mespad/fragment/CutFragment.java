@@ -45,7 +45,6 @@ import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CutRecordQtyDialog;
 import com.eeka.mespad.view.dialog.CutReturnMatDialog;
-import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.PatternDialog;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
@@ -849,6 +848,7 @@ public class CutFragment extends BaseFragment {
                         mTailorInfo.setSHOP_ORDER_INFOR(shoporderinforBean);
                     }
                     SpUtil.saveSalesOrder(mTailorInfo.getSHOP_ORDER_INFOR().getSALES_ORDER());
+                    SpUtil.save(SpUtil.KEY_SHOPORDER, mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());
                     refreshView();
 
                     //更新订单后需要清空之前的不良记录

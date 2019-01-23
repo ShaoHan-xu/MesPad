@@ -11,6 +11,24 @@ public class PocketSizeBo {
     private String DYMS_V;
     private String YSYH_V;
     private String YMBH_V;
+    private String MS;
+    private String MS_V;
+
+    public String getMS() {
+        return MS;
+    }
+
+    public void setMS(String MS) {
+        this.MS = MS;
+    }
+
+    public String getMS_V() {
+        return MS_V;
+    }
+
+    public void setMS_V(String MS_V) {
+        this.MS_V = MS_V;
+    }
 
     public String getCONFIRM_URL() {
         return CONFIRM_URL;
