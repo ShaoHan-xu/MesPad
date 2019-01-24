@@ -71,7 +71,7 @@ public class ProcessSheetsDialog extends BaseDialog {
         initTechnology();
 
         ImageView imageView = mView.findViewById(R.id.iv_processSheets_img);
-        Picasso.with(mContext).load(mData.getStyleImageURL()).resize(200, 200).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+        Picasso.with(mContext).load(mData.getStyleImageURL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +124,7 @@ public class ProcessSheetsDialog extends BaseDialog {
     private View getSizeView(String text) {
         View childView = LayoutInflater.from(mContext).inflate(R.layout.item_textview, null);
         TextView tv_size = childView.findViewById(R.id.textView);
-        tv_size.setWidth(UnitUtil.dip2px(mContext, 60));
+        tv_size.setWidth((int) mContext.getResources().getDimension(R.dimen.processSheets_sizeWidth));
         int padding = UnitUtil.dip2px(mContext, 5);
         tv_size.setPadding(padding, padding, padding, padding);
         tv_size.setGravity(Gravity.CENTER);

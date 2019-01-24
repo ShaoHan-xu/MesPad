@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/tv_processSheets_patternName"
         style="@style/textStyle_default"
-        android:layout_width="80dp"
+        android:layout_width="@dimen/processSheets_componentWidth"
         android:gravity="center"
         android:padding="3dp"/>
 

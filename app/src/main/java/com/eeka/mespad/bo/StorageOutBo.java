@@ -4,9 +4,9 @@ public class StorageOutBo {
 
     /**
      * SHOP_ORDER : 000060007228
-     * WORK_CENTRE : YDHL002
+     * WORK_CENTER : YDHL002
      * ITEM : KV01273
-     * RIFD : 1090595656
+     * RFID : 1090595656
      * SIZE : 40
      * STOR_AREA : A
      * STOR_LOCATION : A-3
@@ -16,9 +16,9 @@ public class StorageOutBo {
      */
 
     private String SHOP_ORDER;
-    private String WORK_CENTRE;
+    private String WORK_CENTER;
     private String ITEM;
-    private String RIFD;
+    private String RFID;
     private String SIZE;
     private String CLOTH_TYPE;
     private String STOR_AREA;
@@ -61,12 +61,12 @@ public class StorageOutBo {
         this.SHOP_ORDER = SHOP_ORDER;
     }
 
-    public String getWORK_CENTRE() {
-        return WORK_CENTRE;
+    public String getWORK_CENTER() {
+        return WORK_CENTER;
     }
 
-    public void setWORK_CENTRE(String WORK_CENTRE) {
-        this.WORK_CENTRE = WORK_CENTRE;
+    public void setWORK_CENTER(String WORK_CENTER) {
+        this.WORK_CENTER = WORK_CENTER;
     }
 
     public String getITEM() {
@@ -77,12 +77,12 @@ public class StorageOutBo {
         this.ITEM = ITEM;
     }
 
-    public String getRIFD() {
-        return RIFD;
+    public String getRFID() {
+        return RFID;
     }
 
-    public void setRIFD(String RIFD) {
-        this.RIFD = RIFD;
+    public void setRFID(String RFID) {
+        this.RFID = RFID;
     }
 
     public String getSIZE() {

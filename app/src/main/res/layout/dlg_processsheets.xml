@@ -273,28 +273,28 @@
 
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/processSheets_componentWidth"
                 android:gravity="center"
                 android:padding="3dp"
                 android:text="部件" />
 
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="180dp"
+                android:layout_width="@dimen/processSheets_dufaWidth"
                 android:gravity="center"
                 android:padding="3dp"
                 android:text="度法" />
 
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="60dp"
+                android:layout_width="@dimen/processSheets_sizeWidth"
                 android:gravity="center"
                 android:padding="3dp"
                 android:text="公差" />
 
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="60dp"
+                android:layout_width="@dimen/processSheets_sizeWidth"
                 android:gravity="center"
                 android:padding="3dp"
                 android:text="纸样松量" />
@@ -351,7 +351,7 @@
 
                     <TextView
                         style="@style/textStyle_default"
-                        android:layout_width="80dp"
+                        android:layout_width="@dimen/processSheets_componentWidth"
                         android:gravity="center"
                         android:padding="3dp"
                         android:text="部位" />

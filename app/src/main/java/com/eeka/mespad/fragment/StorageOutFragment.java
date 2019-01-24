@@ -151,9 +151,9 @@ public class StorageOutFragment extends BaseFragment {
         public void convert(ViewHolder holder, final StorageOutBo item, final int position) {
             holder.setText(R.id.tv_storageOut_shopOrder, item.getSHOP_ORDER());
             holder.setText(R.id.tv_storageOut_item, item.getITEM());
-            holder.setText(R.id.tv_storageOut_workCenter, item.getWORK_CENTRE());
+            holder.setText(R.id.tv_storageOut_workCenter, item.getWORK_CENTER());
             holder.setText(R.id.tv_storageOut_size, item.getSIZE());
-            holder.setText(R.id.tv_storageOut_rfid, item.getRIFD());
+            holder.setText(R.id.tv_storageOut_rfid, item.getRFID());
             holder.setText(R.id.tv_storageOut_area, item.getSTOR_AREA());
             holder.setText(R.id.tv_storageOut_location, item.getSTOR_LOCATION());
             holder.setText(R.id.tv_storageOut_inQTY, item.getSTOR_QUANTITY());

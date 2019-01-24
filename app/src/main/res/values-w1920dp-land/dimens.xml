@@ -12,6 +12,9 @@
     <!-- 描述类型、小字体大小-->
     <dimen name="textSize_describe">24sp</dimen>
 
+    <dimen name="processSheets_componentWidth">140dp</dimen>
+    <dimen name="processSheets_sizeWidth">100dp</dimen>
+    <dimen name="processSheets_dufaWidth">300dp</dimen>
     <dimen name="width_100">130dp</dimen>
     <dimen name="width_sewNCSelected">350dp</dimen>
     <dimen name="bottomBarHeight">80dp</dimen>
