@@ -12,6 +12,7 @@
     <!-- 描述类型、小字体大小-->
     <dimen name="textSize_describe">16sp</dimen>
 
+    <dimen name="processSheets_imgWidth">180dp</dimen>
     <dimen name="processSheets_componentWidth">80dp</dimen>
     <dimen name="processSheets_sizeWidth">60dp</dimen>
     <dimen name="processSheets_dufaWidth">180dp</dimen>

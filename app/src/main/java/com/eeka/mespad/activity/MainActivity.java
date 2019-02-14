@@ -659,16 +659,16 @@ public class MainActivity extends NFCActivity {
                 String shopOrder = SpUtil.get(SpUtil.KEY_SHOPORDER, null);
                 if (isEmpty(mtmOrder) && isEmpty(shopOrder)) {
                     ErrorDialog.showAlert(mContext, "请先获取订单数据");
-                } else if (!isEmpty(shopOrder)) {
+                } else if (!isEmpty(mtmOrder)) {
+                    String url = PadApplication.MTM_URL + mtmOrder;
+                    startActivity(WebActivity.getIntent(mContext, url));
+                } else {
                     if (isEmpty(shopOrder)) {
                         ErrorDialog.showAlert(mContext, "未找到当前订单号");
                         return;
                     }
                     showLoading();
                     HttpHelper.getProcessSheets(shopOrder, this);
-                } else {
-                    String url = PadApplication.MTM_URL + mtmOrder;
-                    startActivity(WebActivity.getIntent(mContext, url));
                 }
                 break;
             case R.id.btn_cutMatInfo:
