@@ -23,15 +23,18 @@ public class PadApplication extends Application {
     public static Context mContext;
     public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
     public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
+    public static final String BASE_URL_P_LH = "http://10.7.121.64:50000/eeka-mes/";//龙华P系统
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
     public static final String XMII_URL_D = "http://10.7.121.54:50000/XMII/";//D系统
     public static final String XMII_URL_Q = "http://10.7.121.60:50000/XMII/";//Q系统
+    public static final String XMII_URL_P_LH = "http://10.7.121.64:50000/XMII/";//龙华P系统
     public static final String XMII_URL_P = "http://10.10.200.16:8000/XMII/";//P系统
     public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
     public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统
+    public static final String WEB_URL_P_LH = "http://10.7.121.60:50000/eeka-ws/";//龙华P系统
     public static final String WEB_URL_P = "http://10.10.200.16:8000/eeka-ws/";//P系统
-    public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
-    public static final String URL_MTM_Q = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
+    public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
+    public static final String URL_MTM_Q = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
     public static final String URL_MTM_P = "https://mtm.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
     public static String MQTT_D = "10.7.121.40"; //MQ地址
     public static String MQTT_Q = "10.7.121.40"; //MQ地址
@@ -78,12 +81,18 @@ public class PadApplication extends Application {
                 MQTT_BROKER = MQTT_P;
                 MTM_URL = URL_MTM_P;
                 XMII_URL = XMII_URL_P;
+            } else if ("LH_P".equals(systemCode)) {
+                BASE_URL = BASE_URL_P_LH;
+                WEB_URL = WEB_URL_P_LH;
+                MQTT_BROKER = MQTT_Q;
+                MTM_URL = URL_MTM_P;
+                XMII_URL = XMII_URL_P_LH;
             }
         }
 
         //根据渠道设置工厂站点
         String channel = getString(R.string.app_channel);
-        if ("LH".equals(channel)) {
+        if ("LH".equals(channel) || "LH_P".equals(channel)) {
             SpUtil.saveSite("8082");
         } else if ("YD".equals(channel)) {
             SpUtil.saveSite("8081");

@@ -64,10 +64,6 @@ public class ErrorDialog {
         if (context == null) {
             return;
         }
-        if (!TextUtils.isEmpty(msg) && msg.contains("1920x1200")) {
-            LogUtil.writeToFile(LogUtil.LOGTYPE_EXCEPTION, "异常报错：" + msg + ",className：" + context.getClass().getName());
-            return;
-        }
         mHandler.removeCallbacksAndMessages(null);
         //衣架卡出站口时INA每7秒会推送一次错误报告，所以此处处理相同消息时重新计时10秒后弹框消失
         if (mLastMsg != null && mLastMsg.equals(msg) && mDialog != null && mDialog.isShowing()) {

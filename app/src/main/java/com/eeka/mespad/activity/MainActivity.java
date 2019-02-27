@@ -53,6 +53,7 @@ import com.eeka.mespad.fragment.SewFragment;
 import com.eeka.mespad.fragment.StorageOutFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
@@ -155,12 +156,17 @@ public class MainActivity extends NFCActivity {
 
     @Override
     protected void onDestroy() {
+        destroyService();
+        super.onDestroy();
+    }
+
+    private void destroyService() {
+        Logger.d("destroyService");
         dismissLoading();
         ErrorDialog.dismiss();
         EventBus.getDefault().unregister(this);
         MQTTService.actionStop(mContext);
         unregisterReceiver(mConnectivityReceiver);
-        super.onDestroy();
     }
 
     /**
@@ -195,6 +201,7 @@ public class MainActivity extends NFCActivity {
             }
         } else if (PushJson.TYPE_EXIT.equals(type)) {
             finish();
+            destroyService();
             System.exit(0);
         } else if (PushJson.TYPE_RFID.equals(type)) {
             String content = push.getContent();
@@ -281,6 +288,7 @@ public class MainActivity extends NFCActivity {
         long curMillis = System.currentTimeMillis();
         if (curMillis - mLastMillis <= 2000) {
             finish();
+            destroyService();
             System.exit(0);
         } else {
             mLastMillis = curMillis;
@@ -593,6 +601,11 @@ public class MainActivity extends NFCActivity {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
+            case R.id.btn_searchOrder:
+                isSearchOrder = true;
+                if (checkResource())
+                    searchOrder();
+                return;
             case R.id.tv_main_searchType:
                 showSearchTypeWindow();
                 break;
@@ -612,11 +625,6 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_login:
             case R.id.tv_startWorkAlert:
                 showLoginDialog();
-                return;
-            case R.id.btn_searchOrder:
-                isSearchOrder = true;
-                if (checkResource())
-                    searchOrder();
                 return;
             case R.id.btn_searchPosition:
                 String position1 = mEt_position.getText().toString();

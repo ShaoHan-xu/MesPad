@@ -13,6 +13,33 @@ public class PocketSizeBo {
     private String YMBH_V;
     private String MS;
     private String MS_V;
+    private String QKJD_VALUE;
+    private String QDC_VALUE;
+    private String DGK_VALUE;
+
+    public String getQKJD_VALUE() {
+        return QKJD_VALUE;
+    }
+
+    public void setQKJD_VALUE(String QKJD_VALUE) {
+        this.QKJD_VALUE = QKJD_VALUE;
+    }
+
+    public String getQDC_VALUE() {
+        return QDC_VALUE;
+    }
+
+    public void setQDC_VALUE(String QDC_VALUE) {
+        this.QDC_VALUE = QDC_VALUE;
+    }
+
+    public String getDGK_VALUE() {
+        return DGK_VALUE;
+    }
+
+    public void setDGK_VALUE(String DGK_VALUE) {
+        this.DGK_VALUE = DGK_VALUE;
+    }
 
     public String getMS() {
         return MS;

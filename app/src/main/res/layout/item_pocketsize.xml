@@ -49,6 +49,77 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="前袋口角度号：" />
+
+            <TextView
+                android:id="@+id/tv_pocketSize_QKJD"
+                style="@style/textStyle_default" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="袋盖号：" />
+
+            <TextView
+                android:id="@+id/tv_pocketSize_QDC"
+                style="@style/textStyle_default" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:text="前袋长：" />
+
+            <TextView
+                android:id="@+id/tv_pocketSize_DGK"
+                style="@style/textStyle_default" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider_gray" />
+
     <ImageView
         android:id="@+id/iv_pocketSize_img"
         android:layout_width="500dp"

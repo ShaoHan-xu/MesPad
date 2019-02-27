@@ -95,8 +95,14 @@ public class PocketSizeDialog extends BaseDialog {
             View child = LayoutInflater.from(mContext).inflate(R.layout.item_pocketsize, null);
             TextView tv_size = child.findViewById(R.id.tv_pocketSize_size);
             TextView tv_code = child.findViewById(R.id.tv_pocketSize_code);
+            TextView tv_QKJD = child.findViewById(R.id.tv_pocketSize_QKJD);
+            TextView tv_QDC = child.findViewById(R.id.tv_pocketSize_QDC);
+            TextView tv_DGK = child.findViewById(R.id.tv_pocketSize_DGK);
             tv_size.setText(item.getVALUE());
             tv_code.setText(item.getPART_NO());
+            tv_QKJD.setText(item.getQKJD_VALUE());
+            tv_QDC.setText(item.getQDC_VALUE());
+            tv_DGK.setText(item.getDGK_VALUE());
 
             ImageView imageView = child.findViewById(R.id.iv_pocketSize_img);
             Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);

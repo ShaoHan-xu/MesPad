@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.eeka.mespad.R;
+import com.eeka.mespad.manager.Logger;
 
 /**
  * 网页承载页面
  */
 public class WebActivity extends BaseActivity {
+
+    private WebView mWebView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,11 +25,13 @@ public class WebActivity extends BaseActivity {
         setContentView(R.layout.aty_webview);
 
         String url = getIntent().getStringExtra("url");
-        WebView webView = findViewById(R.id.webView);
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClient());
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(url);
+        Logger.d("webUrl:" + url);
+        mWebView = findViewById(R.id.webView);
+        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.setWebViewClient(new WebViewClient());
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        mWebView.loadUrl(url);
     }
 
     public static Intent getIntent(Context context, String url) {

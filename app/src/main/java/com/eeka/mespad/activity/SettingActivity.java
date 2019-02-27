@@ -76,6 +76,8 @@ public class SettingActivity extends BaseActivity {
                 mTv_systemCode.setText("Q系统");
             } else if ("P".equals(systemCode)) {
                 mTv_systemCode.setText("P系统");
+            } else if ("LH_P".equals(systemCode)) {
+                mTv_systemCode.setText("龙华P系统");
             }
         }
 
@@ -146,6 +148,8 @@ public class SettingActivity extends BaseActivity {
                 checked = 0;
             } else if (s.contains("Q")) {
                 checked = 1;
+            } else if (s.contains("龙华P")) {
+                checked = 3;
             } else if (s.contains("P")) {
                 checked = 2;
             }
@@ -167,6 +171,9 @@ public class SettingActivity extends BaseActivity {
                     } else if (which == 2) {
                         SpUtil.save(SpUtil.KEY_SYSTEMCODE, "P");
                         PadApplication.BASE_URL = PadApplication.BASE_URL_P;
+                    } else if (which == 3) {
+                        SpUtil.save(SpUtil.KEY_SYSTEMCODE, "LH_P");
+                        PadApplication.BASE_URL = PadApplication.BASE_URL_P_LH;
                     }
                     ErrorDialog.showConfirmAlert(mContext, "系统切换成功，重启应用后生效。", new View.OnClickListener() {
                         @Override
