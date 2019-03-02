@@ -3,20 +3,16 @@ package com.eeka.mespad.bluetoothPrint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.ToastUtil;
-import com.eeka.mespad.view.dialog.ErrorDialog;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
 import zpSDK.zpSDK.zpBluetoothPrinter;
-import zpSDK.zpSDK.zpSDK;
 
 public class BluetoothHelper {
     private static final int DEVICE_TYPE_KEYBOARD = 1344;//蓝牙外输设备
