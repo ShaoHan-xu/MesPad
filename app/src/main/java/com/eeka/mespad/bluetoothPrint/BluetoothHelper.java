@@ -3,6 +3,7 @@ package com.eeka.mespad.bluetoothPrint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.eeka.mespad.manager.Logger;
@@ -29,11 +30,15 @@ public class BluetoothHelper {
             return;
         }
 
-        zpSDK.pageSetup(576, 100);
+        zpSDK.pageSetup(576, 114);
         zpSDK.drawText(5, 4, content, 3, 0, 0, false, false);
         zpSDK.drawText(190, 4, content, 3, 0, 0, false, false);
         zpSDK.drawText(390, 4, content, 3, 0, 0, false, false);
-        zpSDK.print(0, 1);
+        if (!TextUtils.isEmpty(device.getName()) && device.getName().contains("K316")) {
+            zpSDK.print(0, 1);
+        } else {
+            zpSDK.print(0, 0);
+        }
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

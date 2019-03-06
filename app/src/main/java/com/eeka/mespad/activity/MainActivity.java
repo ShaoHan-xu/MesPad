@@ -1155,6 +1155,7 @@ public class MainActivity extends NFCActivity {
                 break;
             case TopicUtil.TOPIC_QC:
                 mQCFragment.refreshLoginUsers();
+                break;
             case TopicUtil.TOPIC_STOCK_OUT:
                 mStorageOutFragment.refreshLoginUsers();
                 break;
