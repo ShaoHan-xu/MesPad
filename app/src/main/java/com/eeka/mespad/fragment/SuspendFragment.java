@@ -33,6 +33,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.SuspendAlertDialog;
 import com.eeka.mespad.view.dialog.WashLabelDialog;
@@ -513,8 +514,12 @@ public class SuspendFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     int position = (int) v.getTag();
-                    ArrayList<String> urls = new ArrayList<>(mList_img);
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+                    if (mList_img == null) {
+                        ErrorDialog.showAlert(mContext, "是否长时间没有操作PAD了？数据已发生变更，请重启应用后再进行查看。");
+                    } else {
+                        ArrayList<String> urls = new ArrayList<>(mList_img);
+                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+                    }
                 }
             });
             mLayout_imgBar.addView(view);

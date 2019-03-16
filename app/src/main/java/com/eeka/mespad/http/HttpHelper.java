@@ -167,11 +167,15 @@ public class HttpHelper {
     /**
      * 获取库区内物料数据
      */
-    public static void getWareHouseInfo(String type, String area, HttpCallback callback) {
+    public static void getWareHouseInfo(String type, String area, String shopOrder, String item, HttpCallback callback) {
+        if (TextUtils.isEmpty(shopOrder)) shopOrder = "*";
+        if (TextUtils.isEmpty(item)) item = "*";
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("CLOTH_TYPE", type);
         json.put("STOR_AREA", area);
+        json.put("SHOP_ORDER", shopOrder);
+        json.put("ITEM", item);
         params.put("params", json.toString());
         HttpRequest.post(getWareHouseInfo, params, getResponseHandler(getWareHouseInfo, callback));
     }

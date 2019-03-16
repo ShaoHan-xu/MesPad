@@ -166,19 +166,19 @@ public class RecordSewNCActivity extends BaseActivity {
 //            list_selected.add(bean);
 //            data.setNcCodeOperationList(list_selected);
 //        } else {
-            List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
-            for (int i = 0; i < mList_selected.size(); i++) {
-                UpdateSewNcBo.NcCodeOperationListBean bean = mList_selected.get(i);
-                UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
-                item.setSequence(i + 1);
-                item.setReworkOperation(bean.getOperation());
-                item.setOperationDesc(bean.getProcessDesc());
-                item.setPartId(bean.getPROD_COMPONENT());
-                item.setResourceNo(bean.getResourceNo());
-                process.add(item);
-            }
-            data.setReworkOperationList(process);
-            data.setNcCodeOperationList(mList_selected);
+        List<UpdateSewNcBo.ReworkOperationListBean> process = new ArrayList<>();
+        for (int i = 0; i < mList_selected.size(); i++) {
+            UpdateSewNcBo.NcCodeOperationListBean bean = mList_selected.get(i);
+            UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
+            item.setSequence(i + 1);
+            item.setReworkOperation(bean.getOperation());
+            item.setOperationDesc(bean.getProcessDesc());
+            item.setPartId(bean.getPROD_COMPONENT());
+            item.setResourceNo(bean.getResourceNo());
+            process.add(item);
+        }
+        data.setReworkOperationList(process);
+        data.setNcCodeOperationList(mList_selected);
 //        }
 
         List<UserInfoBo> loginUsers = SpUtil.getPositionUsers();
@@ -295,28 +295,30 @@ public class RecordSewNCActivity extends BaseActivity {
             } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
                 mList_NcProcess = resultJSON.getJSONArray("result");
                 final RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
-                new RepairSelectorDialog(mContext, recordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        JSONObject item = mList_NcProcess.getJSONObject(position);
-                        for (UpdateSewNcBo.NcCodeOperationListBean selected : mList_selected) {
-                            if (selected.getOperation().equals(item.getString("OPERATION"))) {
-                                ErrorDialog.showAlert(mContext, "该工序已记录过不良，无法多次记录");
-                                return;
+                if (!this.isFinishing()) {//避免在网络请求成功前用户关闭了界面导致弹框闪退
+                    new RepairSelectorDialog(mContext, recordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            JSONObject item = mList_NcProcess.getJSONObject(position);
+                            for (UpdateSewNcBo.NcCodeOperationListBean selected : mList_selected) {
+                                if (selected.getOperation().equals(item.getString("OPERATION"))) {
+                                    ErrorDialog.showAlert(mContext, "该工序已记录过不良，无法多次记录");
+                                    return;
+                                }
                             }
-                        }
-                        mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
-                        mCurSelecting.setPROD_COMPONENT(item.getString("PART_ID"));
-                        mCurSelecting.setResourceNo(item.getString("RESOURCE"));
-                        mCurSelecting.setNC_CODE(recordNCBo.getNC_CODE());
-                        mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
-                        mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
-                        mCurSelecting.setOperation(item.getString("OPERATION"));
-                        mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
+                            mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
+                            mCurSelecting.setPROD_COMPONENT(item.getString("PART_ID"));
+                            mCurSelecting.setResourceNo(item.getString("RESOURCE"));
+                            mCurSelecting.setNC_CODE(recordNCBo.getNC_CODE());
+                            mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
+                            mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
+                            mCurSelecting.setOperation(item.getString("OPERATION"));
+                            mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
 
-                        mSelectedAdapter.addItem(mCurSelecting);
-                    }
-                }).show();
+                            mSelectedAdapter.addItem(mCurSelecting);
+                        }
+                    }).show();
+                }
             } else if (HttpHelper.recordSewNc.equals(url)) {
                 toast("保存成功");
                 finish();

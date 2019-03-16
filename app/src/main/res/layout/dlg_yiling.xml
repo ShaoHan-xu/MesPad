@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_title" />
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="装立领" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="衬衣领" />
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="风衣领" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/tv_yiLing_zll"
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/tv_yiLing_cyl"
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/tv_yiLing_fyl"
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="领档号" />
+
+            <TextView
+                android:id="@+id/tv_yiLing_ldh"
+                style="@style/textStyle_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_yiLing_img"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

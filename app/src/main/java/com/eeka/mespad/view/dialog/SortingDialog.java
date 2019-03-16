@@ -59,6 +59,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                         mLastNum = orderNum;
                     }
                     mEt_hangerId.setText(mLastNum);
+                    reqFocus(mEt_tag);
                     return true;
                 }
                 return false;
@@ -77,6 +78,7 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                         mLastTagNum = value;
                     }
                     mEt_tag.setText(mLastTagNum);
+                    reqFocus(mEt_hangerId);
                     return true;
                 }
                 return false;
@@ -98,6 +100,15 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                 SystemUtils.showSoftInputFromWindow(mContext);
             }
         }, 500);
+    }
+
+    private void reqFocus(final View v) {
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                v.requestFocus();
+            }
+        }, 50);
     }
 
     @Override

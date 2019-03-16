@@ -95,7 +95,6 @@ public class CutFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        initData();
     }
 
     @Nullable
@@ -103,12 +102,6 @@ public class CutFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fm_cut, null);
         return mView;
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-        mCardState = new CardState();
     }
 
     public void playVideo() {
@@ -123,7 +116,14 @@ public class CutFragment extends BaseFragment {
 
     private CardState mCardState;
 
+    private void checkCardState() {
+        if (mCardState == null) {
+            mCardState = new CardState();
+        }
+    }
+
     public void searchOrderByOrderNum(String type, String orderNum) {
+        checkCardState();
         if (!orderNum.equals(mCardState.getCardNum())) {
             mCardState.setCardNum(orderNum);
             mCardState.setStarted(false);
@@ -136,6 +136,7 @@ public class CutFragment extends BaseFragment {
     }
 
     public void searchOrder(String orderType, String orderNum, String resourceBo, String RI) {
+        checkCardState();
         if (!orderNum.equals(mCardState.getCardNum())) {
             mCardState.setCardNum(orderNum);
             mCardState.setStarted(false);

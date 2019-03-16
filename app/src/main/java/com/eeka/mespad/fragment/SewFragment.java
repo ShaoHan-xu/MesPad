@@ -52,6 +52,7 @@ import com.eeka.mespad.view.dialog.SewReturnMatDialog;
 import com.eeka.mespad.view.dialog.SortForClothTagDialog;
 import com.eeka.mespad.view.dialog.SortingDialog;
 import com.eeka.mespad.view.dialog.YaotouSizeDialog;
+import com.eeka.mespad.view.dialog.YiLingDialog;
 import com.squareup.picasso.Picasso;
 
 import java.math.BigDecimal;
@@ -180,6 +181,23 @@ public class SewFragment extends BaseFragment {
             showLoading();
         mRFID = rfid;
         HttpHelper.getSewData(rfid, this);
+    }
+
+    /**
+     * 衣领号
+     */
+    public void showYiLingDialog() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
+        List<SewAttr> infos = mSewData.getCurrentOpeationInfos();
+        if (infos != null && infos.size() != 0) {
+            SewAttr attr = infos.get(mVP_sop.getCurrentItem());
+            new YiLingDialog(mContext, mSewData.getShopOrder(), mSewData.getSfc(), mSewData.getSize(), attr.getName()).show();
+        } else {
+            showErrorDialog("当前衣架无工序，无法执行该操作");
+        }
     }
 
     /**

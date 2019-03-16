@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListPopupWindow;
@@ -63,6 +62,7 @@ import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
+import com.eeka.mespad.view.dialog.YiLingDialog;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -305,6 +305,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "YILING_MESSAGE":
+                    button.setText("衣领号显示");
+                    button.setId(R.id.btn_yiLing);
+                    break;
                 case "PROCESS_FORM":
                     button.setText("工艺单显示");
                     button.setId(R.id.btn_processSheets);
@@ -511,7 +515,6 @@ public class MainActivity extends NFCActivity {
             toast("请先获取站位数据");
             return;
         }
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
         Fragment fragment = null;
         switch (mTopic) {
             case TopicUtil.TOPIC_PACKING:
@@ -556,11 +559,11 @@ public class MainActivity extends NFCActivity {
             bundle.putString("topic", mTopic);
             fragment.setArguments(bundle);
             if (fragment.isAdded()) {
-                ft.show(fragment);
+                mFragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss();
             } else {
-                ft.add(R.id.layout_content, fragment);
+                mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
+                mFragmentManager.beginTransaction().add(R.id.layout_content, fragment).commitAllowingStateLoss();
             }
-            ft.commitAllowingStateLoss();
         }
     }
 
@@ -695,6 +698,11 @@ public class MainActivity extends NFCActivity {
             case R.id.btn_replaceRFID:
                 if (mSewFragment != null) {
                     mSewFragment.replaceRFID();
+                }
+                break;
+            case R.id.btn_yiLing:
+                if (mSewFragment != null) {
+                    mSewFragment.showYiLingDialog();
                 }
                 break;
             case R.id.btn_yaotouSize:

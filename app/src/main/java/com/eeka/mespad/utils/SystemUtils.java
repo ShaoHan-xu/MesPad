@@ -326,7 +326,7 @@ public class SystemUtils {
                 @Override
                 public void onResponse(Response httpResponse, String response, Headers headers) {
                     super.onResponse(httpResponse, response, headers);
-                    if (httpResponse.code() == 404) {
+                    if (httpResponse == null || httpResponse.code() == 404) {
                         ErrorDialog.showAlert(context, "视频文件不存在");
                     } else {
                         //自定义播放器，可缓存视频到本地

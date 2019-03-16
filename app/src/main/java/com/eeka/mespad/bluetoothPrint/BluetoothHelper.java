@@ -20,19 +20,29 @@ public class BluetoothHelper {
     private static final int DEVICE_TYPE_PRINTER = 1664;//蓝牙打印机
 
     public static void Print(Activity activity, String content) {
-        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(activity);
+        if (TextUtils.isEmpty(content)) {
+            ToastUtil.showToast(activity, "打印内容不能为空", Toast.LENGTH_SHORT);
+            return;
+        }
         BluetoothDevice device = getBluetoothDevice(activity);
         if (device == null) {
             return;
         }
+        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(activity);
         if (!zpSDK.connect(device.getAddress())) {
-            Toast.makeText(activity, "connect fail------", Toast.LENGTH_LONG).show();
-            return;
+            if (!zpSDK.connect(device.getAddress())) {
+                ToastUtil.showToast(activity, "connect fail------", Toast.LENGTH_LONG);
+                return;
+            }
         }
 
-        zpSDK.pageSetup(576, 114);
-        zpSDK.drawText(5, 4, content, 3, 0, 0, false, false);
-        zpSDK.drawText(190, 4, content, 3, 0, 0, false, false);
+        if (!TextUtils.isEmpty(device.getName()) && device.getName().contains("K316")) {
+            zpSDK.pageSetup(576, 100);
+        } else {
+            zpSDK.pageSetup(576, 114);
+        }
+        zpSDK.drawText(7, 4, content, 3, 0, 0, false, false);
+        zpSDK.drawText(195, 4, content, 3, 0, 0, false, false);
         zpSDK.drawText(390, 4, content, 3, 0, 0, false, false);
         if (!TextUtils.isEmpty(device.getName()) && device.getName().contains("K316")) {
             zpSDK.print(0, 1);

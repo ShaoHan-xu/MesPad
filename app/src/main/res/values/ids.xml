@@ -51,4 +51,5 @@
     <item name="btn_sortClothTag" type="id" />
     <item name="btn_cutMatInfo" type="id" />
     <item name="btn_processSheets" type="id" />
+    <item name="btn_yiLing" type="id" />
 </resources>

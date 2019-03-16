@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class StorageOutFragment extends BaseFragment {
 
     private TextView mTv_type;
     private TextView mTv_storageArea;
+    private EditText mEt_shopOrder, mEt_item;
 
     private ItemAdapter mItemAdapter;
     private List<StorageOutBo> mList_item;
@@ -68,6 +70,8 @@ public class StorageOutFragment extends BaseFragment {
         super.initView();
         mTv_type = mView.findViewById(R.id.tv_storageOut_setType);
         mTv_storageArea = mView.findViewById(R.id.tv_storageOut_setArea);
+        mEt_shopOrder = mView.findViewById(R.id.et_shopOrder);
+        mEt_item = mView.findViewById(R.id.et_item);
 
         ListView mLv_items = mView.findViewById(R.id.lv_storageOut_item);
         mItemAdapter = new ItemAdapter(mContext, mList_item, R.layout.item_storageout_item);
@@ -75,6 +79,7 @@ public class StorageOutFragment extends BaseFragment {
 
         mTv_type.setOnClickListener(this);
         mTv_storageArea.setOnClickListener(this);
+        mView.findViewById(R.id.btn_search).setOnClickListener(this);
     }
 
     @Override
@@ -108,6 +113,9 @@ public class StorageOutFragment extends BaseFragment {
             case R.id.tv_storageOut_setType:
                 showSelector(mList_type, mTv_type);
                 break;
+            case R.id.btn_search:
+                search();
+                break;
         }
     }
 
@@ -131,14 +139,20 @@ public class StorageOutFragment extends BaseFragment {
 
                 String area = mTv_storageArea.getText().toString();
                 if (!isEmpty(area)) {
-                    showLoading();
-                    HttpHelper.getWareHouseInfo(mClothType.getVALUE(), mArea.getVALUE(), StorageOutFragment.this);
+                    search();
                 }
             }
         });
         ppw.setWidth(mTv_storageArea.getWidth());
         ppw.setHeight(ListPopupWindow.WRAP_CONTENT);
         ppw.showAsDropDown(tv_anchorView);
+    }
+
+    private void search() {
+        String shopOrder = mEt_shopOrder.getText().toString();
+        String item = mEt_item.getText().toString();
+        showLoading();
+        HttpHelper.getWareHouseInfo(mClothType.getVALUE(), mArea.getVALUE(), shopOrder, item, StorageOutFragment.this);
     }
 
     private class ItemAdapter extends CommonAdapter<StorageOutBo> {

@@ -148,9 +148,7 @@ public class MQTTService extends Service {
                 Logger.d("mqtt connectionLost,cause:null");
                 LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost,cause:null");
             }
-            if (isNetworkAvailable()) {
-                startReconnect();
-            }
+            startReconnect();
         }
 
         @Override
@@ -246,6 +244,8 @@ public class MQTTService extends Service {
         }
     };
 
+    int connectCount;
+
     /**
      * 调用init() 方法之后，调用此方法。
      */
@@ -253,12 +253,17 @@ public class MQTTService extends Service {
         if (scheduler != null) {
             scheduler.shutdownNow();
         }
+        connectCount = 0;
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new Runnable() {
 
             @Override
             public void run() {
-                if (!mqttClient.isConnected() && isNetworkAvailable()) {
+                boolean networkStatus = isNetworkAvailable();
+                connectCount++;
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connect..." + connectCount);
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "network status = " + networkStatus);
+                if (!mqttClient.isConnected() && networkStatus) {
                     connect();
                 }
             }
@@ -282,11 +287,13 @@ public class MQTTService extends Service {
                 if (curMills - mLastNetworkUnAvailableMills > 2000) {
                     mLastNetworkUnAvailableMills = curMills;
                     Toast.makeText(context, "网络不可用", Toast.LENGTH_SHORT).show();
+                    LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "network lost");
                     if (scheduler != null) {
                         scheduler.shutdownNow();
                     }
                 }
             } else {
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "network connected");
                 Logger.d("网络已连接...");
                 if (mqttClient == null) {
                     init();
