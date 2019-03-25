@@ -1125,10 +1125,6 @@ public class HttpHelper {
             protected void onSuccess(Headers headers, JSONObject jsonObject) {
                 super.onSuccess(headers, jsonObject);
                 boolean success = isSuccess(jsonObject);
-                if (!success) {
-                    String message = jsonObject.getString("message");
-                    LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPFAIL, url + "\n" + message);
-                }
                 //登录的时候保存cookie
                 if (login_url.contains(url)) {
                     if (headers != null) {

@@ -24,6 +24,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.callback.IntegerCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.SelectorPopWindow;
 import com.eeka.mespad.view.dialog.StorageOutQTYDialog;
 
@@ -149,6 +150,10 @@ public class StorageOutFragment extends BaseFragment {
     }
 
     private void search() {
+        if (mClothType == null || mArea == null){
+            ErrorDialog.showAlert(mContext,"请先选择库位和类型");
+            return;
+        }
         String shopOrder = mEt_shopOrder.getText().toString();
         String item = mEt_item.getText().toString();
         showLoading();
