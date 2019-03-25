@@ -346,7 +346,16 @@ public class TailorInfoBo implements Serializable {
         private int LAYERS;
         private String Z_LAYOUT_BO;
         private String SALES_ORDER;
+        private String TP_ORDER;
         private String ITEM_DESC;
+
+        public String getTP_ORDER() {
+            return TP_ORDER;
+        }
+
+        public void setTP_ORDER(String TP_ORDER) {
+            this.TP_ORDER = TP_ORDER;
+        }
 
         public String getSALES_ORDER() {
             return SALES_ORDER;

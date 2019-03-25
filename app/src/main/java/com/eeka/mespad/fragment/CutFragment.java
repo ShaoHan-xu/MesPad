@@ -81,6 +81,10 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_special;
     private Button mBtn_done;
 
+    //套排
+    private LinearLayout mLayout_TP;
+    private TextView mTv_TP;
+
     private boolean showDone;
     private String mOrderType;
     private String mRFID;
@@ -165,6 +169,9 @@ public class CutFragment extends BaseFragment {
         mTv_nextProcess = mView.findViewById(R.id.tv_nextProcess);
         mTv_qualityDesc = mView.findViewById(R.id.tv_qualityDescribe);
         mTv_special = mView.findViewById(R.id.tv_special);
+
+        mLayout_TP = mView.findViewById(R.id.layout_cut_TP);
+        mTv_TP = mView.findViewById(R.id.tv_cut_TPNum);
 
         mLv_process = mView.findViewById(R.id.lv_processList);
         mLv_process.setOnItemClickListener(new ProcessClickListener());
@@ -303,7 +310,14 @@ public class CutFragment extends BaseFragment {
 
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
-        tv_MTMOrderNum.setText(orderInfo.getSALES_ORDER());
+        String salesOrder = orderInfo.getSALES_ORDER();
+        tv_MTMOrderNum.setText(salesOrder);
+        if (isEmpty(salesOrder)) {
+            mLayout_TP.setVisibility(View.GONE);
+        } else {
+            mLayout_TP.setVisibility(View.VISIBLE);
+            mTv_TP.setText(orderInfo.getTP_ORDER());
+        }
         tv_matDesc.setText(orderInfo.getITEM_DESC());
         tv_style.setText(orderInfo.getITEM());
         tv_qty.setText(orderInfo.getORDER_QTY() + "/件");
@@ -843,10 +857,6 @@ public class CutFragment extends BaseFragment {
                     if (isSearchCard) {
                         mTailorInfo.setOrderType(mOrderType);
                         mTailorInfo.setRFID(mRFID);
-                    } else {
-                        //搜索工单号与SFC号时没有订单信息返回，所以new一个空对象set进去，避免后面用到时的空指针
-                        TailorInfoBo.SHOPORDERINFORBean shoporderinforBean = new TailorInfoBo.SHOPORDERINFORBean();
-                        mTailorInfo.setSHOP_ORDER_INFOR(shoporderinforBean);
                     }
                     SpUtil.saveSalesOrder(mTailorInfo.getSHOP_ORDER_INFOR().getSALES_ORDER());
                     SpUtil.save(SpUtil.KEY_SHOPORDER, mTailorInfo.getSHOP_ORDER_INFOR().getSHOP_ORDER());

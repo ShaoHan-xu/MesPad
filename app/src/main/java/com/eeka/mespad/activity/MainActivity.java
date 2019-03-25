@@ -575,6 +575,7 @@ public class MainActivity extends NFCActivity {
         list.add("卡号");
         list.add("工单号");
         list.add("SFC");
+        list.add("衣架号");
         final ListPopupWindow ppw = new ListPopupWindow(mContext);
         ppw.setAdapter(new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, list));
         ppw.setWidth(UnitUtil.dip2px(mContext, 120));

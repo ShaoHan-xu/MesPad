@@ -128,8 +128,8 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:visibility="gone"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/layout_plantSize"
@@ -329,6 +329,38 @@
                         <TextView
                             android:id="@+id/tv_cut_MTMOrderNum"
                             style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_cut_TP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:text="此单为套排单据"
+                            android:textColor="@color/text_red_default" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/textStyle_gray"
+                                android:layout_marginRight="8dp"
+                                android:text="套排单号"
+                                android:textColor="@color/text_red_default" />
+
+                            <TextView
+                                android:id="@+id/tv_cut_TPNum"
+                                style="@style/textStyle_default"
+                                android:textColor="@color/text_red_default" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
