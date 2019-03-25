@@ -19,9 +19,7 @@ import java.util.Locale;
  */
 public class LogUtil {
     public static final int LOGTYPE_MQTT = 0;//mqtt推送相关的记录目录
-    public static final int LOGTYPE_HTTPREQUEST = 1;//http网络请求相关的记录目录
     public static final int LOGTYPE_HTTPRESPONSE = 2;//http网络请求返回数据记录目录，开启debug模式才会记录
-    public static final int LOGTYPE_HTTPFAIL = 3;//http请求失败时返回的数据
     public static final int LOGTYPE_MQTT_STATUS = 4;//mqtt状态记录，掉线/重连
     public static final int LOGTYPE_EXCEPTION = 5;//各种异常记录
 
@@ -49,12 +47,8 @@ public class LogUtil {
         File folder = null;
         if (logType == LOGTYPE_MQTT) {
             folder = new File(mLogDir, "MQTT");
-        } else if (logType == LOGTYPE_HTTPREQUEST) {
-            folder = new File(mLogDir, "HttpRequest");
         } else if (logType == LOGTYPE_HTTPRESPONSE) {
             folder = new File(mLogDir, "HttpResponse");
-        } else if (logType == LOGTYPE_HTTPFAIL) {
-            folder = new File(mLogDir, "HttpFail");
         } else if (logType == LOGTYPE_MQTT_STATUS) {
             folder = new File(mLogDir, "mqttStatus");
         } else if (logType == LOGTYPE_EXCEPTION) {

@@ -126,7 +126,6 @@ class OkHttpTask implements Callback, ProgressCallback {
         call.enqueue(this);
 
         ILogger.d("url=" + srcUrl + params.toString());
-        LogUtil.writeToFile(LogUtil.LOGTYPE_HTTPREQUEST, srcUrl + params.toString());
     }
 
     /**
