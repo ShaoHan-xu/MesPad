@@ -348,6 +348,15 @@ public class TailorInfoBo implements Serializable {
         private String SALES_ORDER;
         private String TP_ORDER;
         private String ITEM_DESC;
+        private String SIZE_CODE;
+
+        public String getSIZE_CODE() {
+            return SIZE_CODE;
+        }
+
+        public void setSIZE_CODE(String SIZE_CODE) {
+            this.SIZE_CODE = SIZE_CODE;
+        }
 
         public String getTP_ORDER() {
             return TP_ORDER;

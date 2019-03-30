@@ -12,9 +12,13 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+
+import java.util.List;
 
 /**
  * 成衣下线提示弹框
@@ -75,7 +79,12 @@ public class OfflineDialog extends BaseDialog implements View.OnClickListener, H
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_offline_offline) {
-            offline();
+            List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+            if (positionUsers == null || positionUsers.size() == 0) {
+                ErrorDialog.showAlert(mContext, "请员工先刷卡上岗再操作");
+            } else {
+                offline();
+            }
         } else if (v.getId() == R.id.btn_offline_cancel) {
             dismiss();
         }

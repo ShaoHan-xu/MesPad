@@ -554,13 +554,14 @@ public class MainActivity extends NFCActivity {
                 break;
         }
         if (fragment != null) {
-            //因为缝制主题公用于手工与包装主题，所以在此传值，用于在fragment内区分
-            Bundle bundle = new Bundle();
-            bundle.putString("topic", mTopic);
-            fragment.setArguments(bundle);
             if (fragment.isAdded()) {
                 mFragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss();
             } else {
+                //因为缝制主题公用于手工与包装主题，所以在此传值，用于在fragment内区分
+                Bundle bundle = new Bundle();
+                bundle.putString("topic", mTopic);
+                fragment.setArguments(bundle);
+
                 mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
                 mFragmentManager.beginTransaction().add(R.id.layout_content, fragment).commitAllowingStateLoss();
             }
@@ -593,6 +594,8 @@ public class MainActivity extends NFCActivity {
                     mEt_orderNum.setHint("请输入工单号搜索");
                 } else if ("SFC".equals(s)) {
                     mEt_orderNum.setHint("请输入SFC搜索");
+                }else if ("衣架号".equals(s)){
+                    mEt_orderNum.setHint("请输入衣架号搜索");
                 }
                 ppw.dismiss();
             }
@@ -959,6 +962,8 @@ public class MainActivity extends NFCActivity {
                         mCutFragment.searchOrderByOrderNum("SHOP_ORDER", cardNum);
                     } else if ("SFC".equals(searchType)) {
                         mCutFragment.searchOrderByOrderNum("SFC", cardNum);
+                    } else if ("衣架号".equals(searchType)) {
+                        mCutFragment.searchOrderByOrderNum("HANGER_ID", cardNum);
                     } else {
                         getCardInfo(cardNum);
                     }

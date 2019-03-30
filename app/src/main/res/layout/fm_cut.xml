@@ -336,8 +336,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:visibility="gone"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/textStyle_default"
@@ -393,6 +393,22 @@
 
                         <TextView
                             android:id="@+id/tv_sew_style"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
+                            android:text="尺码" />
+
+                        <TextView
+                            android:id="@+id/tv_sew_sizeCode"
                             style="@style/textStyle_default" />
                     </LinearLayout>
 

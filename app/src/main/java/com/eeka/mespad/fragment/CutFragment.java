@@ -80,6 +80,7 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_qualityDesc;
     private TextView mTv_special;
     private Button mBtn_done;
+    private TextView mTv_sizeCode;
 
     //套排
     private LinearLayout mLayout_TP;
@@ -169,6 +170,7 @@ public class CutFragment extends BaseFragment {
         mTv_nextProcess = mView.findViewById(R.id.tv_nextProcess);
         mTv_qualityDesc = mView.findViewById(R.id.tv_qualityDescribe);
         mTv_special = mView.findViewById(R.id.tv_special);
+        mTv_sizeCode = mView.findViewById(R.id.tv_sew_sizeCode);
 
         mLayout_TP = mView.findViewById(R.id.layout_cut_TP);
         mTv_TP = mView.findViewById(R.id.tv_cut_TPNum);
@@ -309,14 +311,17 @@ public class CutFragment extends BaseFragment {
         tv_processLot.setText(mRI);
 
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
+        mTv_sizeCode.setText(orderInfo.getSIZE_CODE());
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
         String salesOrder = orderInfo.getSALES_ORDER();
         tv_MTMOrderNum.setText(salesOrder);
-        if (isEmpty(salesOrder)) {
+
+        String tpOrder = orderInfo.getTP_ORDER();
+        if (isEmpty(tpOrder)) {
             mLayout_TP.setVisibility(View.GONE);
         } else {
             mLayout_TP.setVisibility(View.VISIBLE);
-            mTv_TP.setText(orderInfo.getTP_ORDER());
+            mTv_TP.setText(tpOrder);
         }
         tv_matDesc.setText(orderInfo.getITEM_DESC());
         tv_style.setText(orderInfo.getITEM());
