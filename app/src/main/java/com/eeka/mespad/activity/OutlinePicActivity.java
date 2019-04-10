@@ -69,12 +69,12 @@ public class OutlinePicActivity extends BaseActivity {
             view.setLayoutParams(params);
             String pictureUrl = item.getString("PICTURE_URL");
             if (!isEmpty(pictureUrl)) {
-                ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+                ImageView imageView =  view.findViewById(R.id.imageView);
                 Picasso.with(mContext).load(pictureUrl).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
             }
             String description = item.getString("DESCRIPTION");
             if (!isEmpty(description)) {
-                TextView textView = (TextView) view.findViewById(R.id.textView);
+                TextView textView =  view.findViewById(R.id.textView);
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(description);
             }

@@ -3,6 +3,7 @@ package com.eeka.mespad.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
@@ -26,6 +27,10 @@ public class BaseDialog extends Dialog {
     protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCanceledOnTouchOutside(false);
+    }
+
+    protected boolean isEmpty(String str) {
+        return TextUtils.isEmpty(str);
     }
 
     @Override

@@ -300,15 +300,16 @@ public class SuspendFragment extends BaseFragment {
         public void convertView(View view, String item, final int position) {
             ImageView imageView = view.findViewById(R.id.imageView);
             String url = mList_img.get(position);
-            Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> urls = new ArrayList<>(mList_img);
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, false));
-                }
-            });
-
+            if (!isEmpty(url)) {
+                Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> urls = new ArrayList<>(mList_img);
+                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, false));
+                    }
+                });
+            }
         }
     }
 
@@ -505,23 +506,25 @@ public class SuspendFragment extends BaseFragment {
     private void setImgBar() {
         mLayout_imgBar.removeAllViews();
         for (int i = 0; i < mList_img.size(); i++) {
-            String url = mList_img.get(i);
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_img_100, null);
             ImageView imageView = view.findViewById(R.id.imageView);
-            Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
-            imageView.setTag(i);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = (int) v.getTag();
-                    if (mList_img == null) {
-                        ErrorDialog.showAlert(mContext, "是否长时间没有操作PAD了？数据已发生变更，请重启应用后再进行查看。");
-                    } else {
-                        ArrayList<String> urls = new ArrayList<>(mList_img);
-                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+            String url = mList_img.get(i);
+            if (!isEmpty(url)) {
+                Picasso.with(mContext).load(url).error(R.drawable.ic_error_img).placeholder(R.drawable.loading).into(imageView);
+                imageView.setTag(i);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = (int) v.getTag();
+                        if (mList_img == null) {
+                            ErrorDialog.showAlert(mContext, "是否长时间没有操作PAD了？数据已发生变更，请重启应用后再进行查看。");
+                        } else {
+                            ArrayList<String> urls = new ArrayList<>(mList_img);
+                            startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
+                        }
                     }
-                }
-            });
+                });
+            }
             mLayout_imgBar.addView(view);
         }
     }

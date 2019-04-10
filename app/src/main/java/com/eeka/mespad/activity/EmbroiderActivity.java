@@ -108,8 +108,12 @@ public class EmbroiderActivity extends BaseActivity {
         mTv_request.setText(item.getQUALITY_REQUIREMENT());
         mTv_artist.setText(item.getPATT_DESC());
 
-        Picasso.with(mContext).load(item.getIMAGE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_embroider);
-        Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_pattern);
+        String image_url = item.getIMAGE_URL();
+        if (!isEmpty(image_url))
+            Picasso.with(mContext).load(image_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_embroider);
+        String picture_url = item.getPICTURE_URL();
+        if (!isEmpty(picture_url))
+            Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_pattern);
     }
 
     public static Intent getIntent(Context context, String sfc, String processLotBo, String theme) {

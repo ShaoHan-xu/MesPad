@@ -594,7 +594,7 @@ public class MainActivity extends NFCActivity {
                     mEt_orderNum.setHint("请输入工单号搜索");
                 } else if ("SFC".equals(s)) {
                     mEt_orderNum.setHint("请输入SFC搜索");
-                }else if ("衣架号".equals(s)){
+                } else if ("衣架号".equals(s)) {
                     mEt_orderNum.setHint("请输入衣架号搜索");
                 }
                 ppw.dismiss();
@@ -1107,7 +1107,11 @@ public class MainActivity extends NFCActivity {
                 refreshLoginUser();
             } else if (HttpHelper.getProcessSheets.equals(url)) {
                 ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
-                new ProcessSheetsDialog(mContext, processSheets).show();
+                if (processSheets == null) {
+                    ErrorDialog.showAlert(mContext, "该订单无工艺单信息");
+                } else {
+                    new ProcessSheetsDialog(mContext, processSheets).show();
+                }
             } else if (HttpHelper.getCommonInfoByLogicNo.equals(url)) {
                 if (HttpHelper.isSuccess(resultJSON)) {
                     JSONArray result = resultJSON.getJSONArray("result");

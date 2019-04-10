@@ -2,6 +2,7 @@ package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -84,12 +85,17 @@ public class PatternDialog extends BaseDialog {
                 @Override
                 public void onClick(View v) {
                     TabViewUtil.refreshTabView(mLayout_process, finalI);
-                    Picasso.with(mContext).load(mList_data.get(finalI).getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_img);
+                    String picture_url = mList_data.get(finalI).getPICTURE_URL();
+                    if (!TextUtils.isEmpty(picture_url)) {
+                        Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_img);
+                    }
                 }
             }));
         }
         TabViewUtil.refreshTabView(mLayout_process, 0);
-        Picasso.with(mContext).load(mList_data.get(0).getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_img);
+        String picture_url = mList_data.get(0).getPICTURE_URL();
+        if (!isEmpty(picture_url))
+            Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_img);
     }
 
 }

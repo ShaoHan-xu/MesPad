@@ -75,7 +75,9 @@ public class RecordLabuActivity extends BaseActivity {
             TextView tv_planQty = findViewById(R.id.tv_recordLabu_planLabuCount);
             tv_planQty.setText(layoutInfo.getLAYERS());
             ImageView imageView = findViewById(R.id.iv_recordLabu_matImg);
-            Picasso.with(mContext).load(layoutInfo.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+            String picture_url = layoutInfo.getPICTURE_URL();
+            if (!isEmpty(picture_url))
+                Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         }
 
         PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();

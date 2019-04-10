@@ -26,7 +26,7 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 94
+        versionCode 95
 
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -124,7 +124,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.danikula:videocache:2.7.0'
-    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.google.zxing:core:3.3.0'

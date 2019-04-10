@@ -2,17 +2,20 @@ package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.utils.SystemUtils;
+import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.squareup.picasso.Picasso;
 
@@ -71,13 +74,18 @@ public class ProcessSheetsDialog extends BaseDialog {
         initTechnology();
 
         ImageView imageView = mView.findViewById(R.id.iv_processSheets_img);
-        Picasso.with(mContext).load(mData.getStyleImageURL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(ImageBrowserActivity.getIntent(mContext, mData.getStyleImageURL()));
-            }
-        });
+        final String styleImageURL = mData.getStyleImageURL();
+        if (!TextUtils.isEmpty(styleImageURL)) {
+            Picasso.with(mContext).load(styleImageURL).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.startActivity(ImageBrowserActivity.getIntent(mContext, styleImageURL));
+                }
+            });
+        } else {
+            Toast.makeText(mContext, "该工艺单无图片信息", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initTechnology() {

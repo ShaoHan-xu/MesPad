@@ -727,17 +727,20 @@ public class SewFragment extends BaseFragment {
                 @Override
                 public void convertView(View view, SewAttr item, final int position) {
                     ImageView imageView = view.findViewById(R.id.imageView);
-                    Picasso.with(mContext).load(item.getAttributes().getSOP_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ArrayList<String> urls = new ArrayList<>();
-                            for (SewAttr data : curOperation) {
-                                urls.add(data.getAttributes().getSOP_URL());
+                    String sop_url = item.getAttributes().getSOP_URL();
+                    if (!isEmpty(sop_url)) {
+                        Picasso.with(mContext).load(sop_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+                        imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ArrayList<String> urls = new ArrayList<>();
+                                for (SewAttr data : curOperation) {
+                                    urls.add(data.getAttributes().getSOP_URL());
+                                }
+                                startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
                             }
-                            startActivity(ImageBrowserActivity.getIntent(mContext, urls, position));
-                        }
-                    });
+                        });
+                    }
                 }
             });
 
@@ -776,7 +779,9 @@ public class SewFragment extends BaseFragment {
     private View getMatView(SewAttr item, final int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_material, null);
         ImageView imageView = view.findViewById(R.id.iv_materials);
-        Picasso.with(mContext).load(item.getAttributes().getMAT_URL()).resize(200, 200).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+        String mat_url = item.getAttributes().getMAT_URL();
+        if (!isEmpty(mat_url))
+            Picasso.with(mContext).load(mat_url).resize(200, 200).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
         TextView textView = view.findViewById(R.id.tv_matNum);
         textView.setText(item.getDescription());
         imageView.setOnClickListener(new View.OnClickListener() {

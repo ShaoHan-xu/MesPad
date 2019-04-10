@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -100,15 +101,18 @@ public class LineColorDialog extends BaseDialog {
             }
 
             ImageView imageView = holder.getView(R.id.iv_lineColor_img);
-            Picasso.with(mContext).load(item.getMATERAIL_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> urls = new ArrayList<>();
-                    urls.add(item.getMATERAIL_URL());
-                    mContext.startActivity(ImageBrowserActivity.getIntent(mContext, urls, 0));
-                }
-            });
+            final String materail_url = item.getMATERAIL_URL();
+            if (!TextUtils.isEmpty(materail_url)) {
+                Picasso.with(mContext).load(materail_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> urls = new ArrayList<>();
+                        urls.add(materail_url);
+                        mContext.startActivity(ImageBrowserActivity.getIntent(mContext, urls, 0));
+                    }
+                });
+            }
         }
     }
 

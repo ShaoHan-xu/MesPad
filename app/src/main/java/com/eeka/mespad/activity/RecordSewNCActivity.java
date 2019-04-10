@@ -293,9 +293,9 @@ public class RecordSewNCActivity extends BaseActivity {
                 mNcAdapter.setData(mList_NcCode);
                 mNcAdapter.notifyDataSetChanged();
             } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
-                mList_NcProcess = resultJSON.getJSONArray("result");
-                final RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
                 if (!this.isFinishing()) {//避免在网络请求成功前用户关闭了界面导致弹框闪退
+                    mList_NcProcess = resultJSON.getJSONArray("result");
+                    final RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
                     new RepairSelectorDialog(mContext, recordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

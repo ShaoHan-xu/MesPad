@@ -234,7 +234,9 @@ public class CutReturnMatDialog extends Dialog implements View.OnClickListener, 
         }
         tv_num.setText(materialInfo.getITEM());
         EditText et_value = view.findViewById(R.id.et_returnMaterial_value);
-        Picasso.with(mContext).load(materialInfo.getPicUrl()).into(iv_materialImg);
+        String picUrl = materialInfo.getPicUrl();
+        if (!TextUtils.isEmpty(picUrl))
+            Picasso.with(mContext).load(picUrl).into(iv_materialImg);
         TextView tv_reason = view.findViewById(R.id.tv_returnMaterial_reason);
 
         tv_reason.setText(materialInfo.getReason());

@@ -61,7 +61,8 @@ public class ImageBrowserActivity extends BaseActivity {
             layout_images.setVisibility(View.VISIBLE);
             for (Object item : data) {
                 String url = (String) item;
-                layout_images.addView(getImageView(url));
+                if (!isEmpty(url))
+                    layout_images.addView(getImageView(url));
             }
         }
     }

@@ -105,16 +105,18 @@ public class PocketSizeDialog extends BaseDialog {
             tv_DGK.setText(item.getDGK_VALUE());
 
             ImageView imageView = child.findViewById(R.id.iv_pocketSize_img);
-            Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    List<String> list = new ArrayList<>();
-                    list.add(item.getPICTURE_URL());
-                    mContext.startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
-                }
-            });
-
+            final String picture_url = item.getPICTURE_URL();
+            if (!isEmpty(picture_url)) {
+                Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<String> list = new ArrayList<>();
+                        list.add(picture_url);
+                        mContext.startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
+                    }
+                });
+            }
             mLayout_item.addView(child);
         }
     }

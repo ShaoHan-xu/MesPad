@@ -515,36 +515,42 @@ public class CutFragment extends BaseFragment {
         TextView tv_material = view.findViewById(R.id.tv_matNum);
         if (data instanceof TailorInfoBo.LayoutInfoBean) {
             TailorInfoBo.LayoutInfoBean item = (TailorInfoBo.LayoutInfoBean) data;
-            Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
-            iv_material.setTag(position);
-            tv_material.setText(item.getLAYOUT());
-            iv_material.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> urls = new ArrayList<>();
-                    List<TailorInfoBo.LayoutInfoBean> list = mTailorInfo.getLAYOUT_INFOR();
-                    for (TailorInfoBo.LayoutInfoBean item : list) {
-                        urls.add(item.getPICTURE_URL());
+            String picture_url = item.getPICTURE_URL();
+            if (!isEmpty(picture_url)) {
+                Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+                iv_material.setTag(position);
+                tv_material.setText(item.getLAYOUT());
+                iv_material.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> urls = new ArrayList<>();
+                        List<TailorInfoBo.LayoutInfoBean> list = mTailorInfo.getLAYOUT_INFOR();
+                        for (TailorInfoBo.LayoutInfoBean item : list) {
+                            urls.add(item.getPICTURE_URL());
+                        }
+                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
                     }
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
-                }
-            });
+                });
+            }
         } else if (data instanceof TailorInfoBo.StickyInfo) {
             TailorInfoBo.StickyInfo item = (TailorInfoBo.StickyInfo) data;
-            Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
-            iv_material.setTag(position);
-            tv_material.setText(item.getIDENTITY_INFO());
-            iv_material.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> urls = new ArrayList<>();
-                    List<TailorInfoBo.StickyInfo> list = mTailorInfo.getSTICKY_INFOR();
-                    for (TailorInfoBo.StickyInfo item : list) {
-                        urls.add(item.getPICTURE_URL());
+            String picture_url = item.getPICTURE_URL();
+            if (!isEmpty(picture_url)) {
+                Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+                iv_material.setTag(position);
+                tv_material.setText(item.getIDENTITY_INFO());
+                iv_material.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> urls = new ArrayList<>();
+                        List<TailorInfoBo.StickyInfo> list = mTailorInfo.getSTICKY_INFOR();
+                        for (TailorInfoBo.StickyInfo item : list) {
+                            urls.add(item.getPICTURE_URL());
+                        }
+                        startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
                     }
-                    startActivity(ImageBrowserActivity.getIntent(mContext, urls, (Integer) v.getTag()));
-                }
-            });
+                });
+            }
         }
         return view;
     }
@@ -557,7 +563,9 @@ public class CutFragment extends BaseFragment {
         view.setTag(position);
         ImageView iv_material = view.findViewById(R.id.iv_materials);
         TextView tv_material = view.findViewById(R.id.tv_matNum);
-        Picasso.with(mContext).load(item.getPICTURE_URL()).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
+        String picture_url = item.getPICTURE_URL();
+        if (!isEmpty(picture_url))
+            Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(iv_material);
         iv_material.setTag(position);
         tv_material.setText(item.getLAYOUT());
 

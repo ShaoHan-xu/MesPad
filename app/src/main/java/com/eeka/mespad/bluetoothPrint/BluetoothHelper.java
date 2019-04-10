@@ -37,7 +37,7 @@ public class BluetoothHelper {
         }
 
         if (!TextUtils.isEmpty(device.getName()) && device.getName().contains("K316")) {
-            zpSDK.pageSetup(576, 100);
+            zpSDK.pageSetup(576, 90);
         } else {
             zpSDK.pageSetup(576, 114);
         }
