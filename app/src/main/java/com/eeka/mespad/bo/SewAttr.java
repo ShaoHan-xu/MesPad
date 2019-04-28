@@ -45,6 +45,15 @@ public class SewAttr {
         private String QUALITY_REQUIREMENT;//质量要求
         private String OPERATION_INSTRUCTION;//工艺说明
         private String NC_DESCRIPTION;//不合格点
+        private String OPERATION_TIME;
+
+        public String getOPERATION_TIME() {
+            return OPERATION_TIME;
+        }
+
+        public void setOPERATION_TIME(String OPERATION_TIME) {
+            this.OPERATION_TIME = OPERATION_TIME;
+        }
 
         public String getNC_DESCRIPTION() {
             return NC_DESCRIPTION;

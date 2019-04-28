@@ -23,7 +23,7 @@ import cn.finalteam.okhttpfinal.HttpRequest;
 
 public class UpdateManager {
 
-//    private static final String apkUrl = "http://10.7.121.10/app/MesPad.apk";
+    //    private static final String apkUrl = "http://10.7.121.10/app/MesPad.apk";
     private static File apkFile;
 
     private static AlertDialog mDownloadDialog;
@@ -39,7 +39,7 @@ public class UpdateManager {
         }
     }
 
-    public static void downloadApk(final Context context,String apkUrl) {
+    public static void downloadApk(final Context context, String apkUrl) {
         initPath();
         HttpRequest.download(apkUrl, apkFile, new FileDownloadCallback() {
 
@@ -79,7 +79,7 @@ public class UpdateManager {
         // 给下载对话框增加进度条
         final LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.layout_progress, null);
-        mProgress = (ProgressBar) v.findViewById(R.id.progressBar);
+        mProgress = v.findViewById(R.id.progressBar);
         builder.setView(v);
         mDownloadDialog = builder.create();
         mDownloadDialog.setCancelable(false);

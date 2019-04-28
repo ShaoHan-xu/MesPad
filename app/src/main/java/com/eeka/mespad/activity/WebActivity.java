@@ -18,8 +18,6 @@ import com.eeka.mespad.manager.Logger;
  */
 public class WebActivity extends BaseActivity {
 
-    private WebView mWebView;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +25,7 @@ public class WebActivity extends BaseActivity {
 
         String url = getIntent().getStringExtra("url");
         Logger.d("webUrl:" + url);
-        mWebView = findViewById(R.id.webView);
+        WebView mWebView = findViewById(R.id.webView);
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = mWebView.getSettings();

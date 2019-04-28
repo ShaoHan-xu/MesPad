@@ -769,7 +769,18 @@ public class SewFragment extends BaseFragment {
 
         @Override
         public void convert(ViewHolder holder, SewAttr item, int position) {
-            holder.setText(R.id.textView, item.getDescription());
+            String operationTime = item.getAttributes().getOPERATION_TIME();
+
+            try {
+                float aFloat = Float.parseFloat(operationTime);
+                aFloat = aFloat / 60;
+                operationTime = getString(R.string.float_2, aFloat) + "分";
+            } catch (Exception e) {
+                e.printStackTrace();
+                operationTime += "秒";
+            }
+
+            holder.setText(R.id.textView, item.getDescription() + "\n工时：" + operationTime);
         }
     }
 

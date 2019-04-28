@@ -31,10 +31,10 @@ public class PadApplication extends Application {
     public static final String XMII_URL_P = "http://10.10.200.16:8000/XMII/";//P系统
     public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
     public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统
-    public static final String WEB_URL_P_LH = "http://10.7.121.60:50000/eeka-ws/";//龙华P系统
+    public static final String WEB_URL_P_LH = "http://10.7.121.64:50000/eeka-ws/";//龙华P系统
     public static final String WEB_URL_P = "http://10.10.200.16:8000/eeka-ws/";//P系统
     public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
-    public static final String URL_MTM_Q = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
+    public static final String URL_MTM_Q = "http://mtm.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
     public static final String URL_MTM_P = "https://mtm.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
     public static String MQTT_D = "10.7.121.40"; //MQ地址
     public static String MQTT_Q = "10.7.121.40"; //MQ地址
