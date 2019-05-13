@@ -692,7 +692,7 @@ public class SewFragment extends BaseFragment {
                 }
                 if (needAlert) {
                     ErrorDialog.showAlert(mContext, "当前要做工序与上个要做工序不同，请注意", ErrorDialog.TYPE.ALERT, null, false);
-                    SystemUtils.startSystemAlerm(mContext);
+                    SystemUtils.startSystemRingtoneAlert(mContext);
                 }
             }
             mList_lastOperation = curOperation;

@@ -346,11 +346,13 @@ public class SystemUtils {
     /**
      * 调用系统铃声提醒
      */
-    public static void startSystemAlerm(Context context) {
-        MediaPlayer mMediaPlayer = MediaPlayer.create(context,
-                RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION));
-        mMediaPlayer.setLooping(false);
-        mMediaPlayer.start();
+    public static void startSystemRingtoneAlert(Context context) {
+        Uri uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+        if (uri != null) {
+            MediaPlayer mMediaPlayer = MediaPlayer.create(context.getApplicationContext(), uri);
+            mMediaPlayer.setLooping(false);
+            mMediaPlayer.start();
+        }
     }
 
     /**

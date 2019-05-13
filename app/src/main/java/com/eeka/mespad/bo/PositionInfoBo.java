@@ -18,6 +18,15 @@ public class PositionInfoBo {
     private RESRINFORBean RESR_INFOR;
     private List<OPERINFORBean> OPER_INFOR;
     private List<BUTTONINFORBean> BUTTON_INFOR;
+    private String PICTURE_URL;//记录不良时上传的图片路径
+
+    public String getPICTURE_URL() {
+        return PICTURE_URL;
+    }
+
+    public void setPICTURE_URL(String PICTURE_URL) {
+        this.PICTURE_URL = PICTURE_URL;
+    }
 
     public RESRINFORBean getRESR_INFOR() {
         return RESR_INFOR;
