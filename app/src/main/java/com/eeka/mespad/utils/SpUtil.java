@@ -28,6 +28,7 @@ public class SpUtil {
     public static final String KEY_DEBUG = "key_debug";
     public static final String KEY_SYSTEMCODE = "key_systemCode";
     public static final String KEY_SHOPORDER = "key_shopOrder";
+    public static final String KEY_NCIMG_INFO = "key_ncImgServer";
 
     static {
         new SpUtil();

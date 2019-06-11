@@ -15,7 +15,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
@@ -353,6 +356,19 @@ public class SystemUtils {
             mMediaPlayer.setLooping(false);
             mMediaPlayer.start();
         }
+    }
+
+    /**
+     * 打开本地照相机
+     *
+     * @param uri         图片输出的 URI
+     * @param requestCode startActivityForResult时使用的请求 code
+     */
+    public static void takePhoto(Activity activity, Uri uri, int requestCode) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        intent.putExtra("android.intent.extras.CAMERA_FACING", android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT); // 调用前置摄像头 startActivityForResult(intent, 1);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     /**

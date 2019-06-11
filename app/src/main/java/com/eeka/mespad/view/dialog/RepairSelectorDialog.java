@@ -53,9 +53,9 @@ public class RepairSelectorDialog extends Dialog {
     }
 
     private void initView() {
-        TextView tv_title = (TextView) mView.findViewById(R.id.tv_repairProcess_ncTYpe);
+        TextView tv_title = mView.findViewById(R.id.tv_repairProcess_ncTYpe);
         tv_title.setText(mTitle);
-        RecyclerView recyclerView = (RecyclerView) mView.findViewById(R.id.recyclerView_ncProcess);
+        RecyclerView recyclerView = mView.findViewById(R.id.recyclerView_ncProcess);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(mContext, 4);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new ItemAdapter(mContext, mList_data, R.layout.gv_item_recordnc, layoutManager));

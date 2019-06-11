@@ -132,13 +132,22 @@ public class UpdateSewNcBo {
          */
 
         private String ncCodeRef;
-        private String operation;//返修工序描述
+        private String operation;
         private String NC_CODE;
         private String NC_CODE_BO;
         private String DESCRIPTION;
-        private String processDesc;//返修工序
+        private String operationDesc;
         private String PROD_COMPONENT;
         private String resourceNo;
+        private String ncImageLocation;
+
+        public String getNcImageLocation() {
+            return ncImageLocation;
+        }
+
+        public void setNcImageLocation(String ncImageLocation) {
+            this.ncImageLocation = ncImageLocation;
+        }
 
         public String getNC_CODE() {
             return NC_CODE;
@@ -164,12 +173,12 @@ public class UpdateSewNcBo {
             this.PROD_COMPONENT = PROD_COMPONENT;
         }
 
-        public String getProcessDesc() {
-            return processDesc;
+        public String getOperationDesc() {
+            return operationDesc;
         }
 
-        public void setProcessDesc(String processDesc) {
-            this.processDesc = processDesc;
+        public void setOperationDesc(String operationDesc) {
+            this.operationDesc = operationDesc;
         }
 
         public String getNC_CODE_BO() {

@@ -28,6 +28,15 @@ public class StorageOutBo {
     private String OUT_QUANTITY;
     private String SURPLUS_QUANTITY;
     private String QUANTITY;
+    private String IS_OUT;
+
+    public String getIS_OUT() {
+        return IS_OUT;
+    }
+
+    public void setIS_OUT(String IS_OUT) {
+        this.IS_OUT = IS_OUT;
+    }
 
     public String getCLOTH_TYPE() {
         return CLOTH_TYPE;

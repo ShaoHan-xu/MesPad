@@ -22,6 +22,7 @@ import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
@@ -134,6 +135,19 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    public static void uploadNcImg(File file, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("ncImageLocation", file);
+        String url = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
+        if (TextUtils.isEmpty(url)) {
+            Logger.d("nc图片服务器地址为空");
+            return;
+        }
+        url = url + file.getName();
+        Logger.d("fileServer: " + url);
+        HttpRequest.post(url, params, getResponseHandler(url, callback));
     }
 
     /**

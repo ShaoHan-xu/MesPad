@@ -1,19 +1,19 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 28
     }
 
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'com.squareup.okhttp3:okhttp:3.7.0'
+    api 'com.squareup.okhttp3:okhttp:3.12.1'
     api 'com.alibaba:fastjson:1.2.32'
 
 }

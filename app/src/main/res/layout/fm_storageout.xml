@@ -200,9 +200,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#EEE"
             android:divider="@drawable/divider_gray"
             android:gravity="center"
-            android:background="#EEE"
             android:orientation="horizontal"
             android:showDividers="middle">
 
@@ -220,7 +220,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="款号" />
+                android:text="工作中心" />
 
             <TextView
                 style="@style/textStyle_default"
@@ -228,7 +228,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="工作中心" />
+                android:text="款号" />
 
             <TextView
                 style="@style/textStyle_default"

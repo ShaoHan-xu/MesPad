@@ -16,7 +16,7 @@
         android:padding="5dp" />
 
     <TextView
-        android:id="@+id/tv_storageOut_item"
+        android:id="@+id/tv_storageOut_workCenter"
         style="@style/textStyle_default"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -24,7 +24,7 @@
         android:padding="5dp" />
 
     <TextView
-        android:id="@+id/tv_storageOut_workCenter"
+        android:id="@+id/tv_storageOut_item"
         style="@style/textStyle_default"
         android:layout_width="0dp"
         android:layout_weight="1"

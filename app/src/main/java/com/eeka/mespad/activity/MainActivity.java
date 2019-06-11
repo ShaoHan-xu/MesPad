@@ -40,6 +40,7 @@ import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.OmitQCBo;
 import com.eeka.mespad.bo.PocketSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
@@ -60,9 +61,9 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
-import com.eeka.mespad.view.dialog.YiLingDialog;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -169,6 +170,8 @@ public class MainActivity extends NFCActivity {
         unregisterReceiver(mConnectivityReceiver);
     }
 
+    private OmitQCDetailDialog mOmitQCDialog;
+
     /**
      * 收到推送消息
      */
@@ -184,6 +187,17 @@ public class MainActivity extends NFCActivity {
             if (checkResource()) {
                 showLoading();
                 HttpHelper.getPositionLoginUsers(this);
+            }
+        } else if (PushJson.TYPE_WARNING_UNDETECT.equals(type)) {
+            String message = push.getMessage();
+            if (!isEmpty(message)) {
+                List<OmitQCBo> data = JSON.parseArray(message, OmitQCBo.class);
+                if (mOmitQCDialog == null) {
+                    mOmitQCDialog = new OmitQCDetailDialog(mContext, data);
+                } else {
+                    mOmitQCDialog.addItem(data);
+                }
+                mOmitQCDialog.show();
             }
         } else if (PushJson.TYPE_WARNING.equals(type)) {
             String message = push.getMessage();
@@ -228,6 +242,7 @@ public class MainActivity extends NFCActivity {
                 searchOrder();
             }
         }
+
     }
 
     @Override
@@ -1031,6 +1046,7 @@ public class MainActivity extends NFCActivity {
                 mPositionInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), PositionInfoBo.class);
                 assert mPositionInfo != null;
                 SpUtil.save(SpUtil.KEY_RESOURCE, JSON.toJSONString(mPositionInfo.getRESR_INFOR()));
+                SpUtil.save(SpUtil.KEY_NCIMG_INFO, JSON.toJSONString(mPositionInfo.getNcImgInfo()));
                 List<PositionInfoBo.OPERINFORBean> operInfo = mPositionInfo.getOPER_INFOR();
                 if (operInfo != null && operInfo.size() != 0) {
                     PositionInfoBo.OPERINFORBean bean = operInfo.get(0);

@@ -150,8 +150,8 @@ public class StorageOutFragment extends BaseFragment {
     }
 
     private void search() {
-        if (mClothType == null || mArea == null){
-            ErrorDialog.showAlert(mContext,"请先选择库位和类型");
+        if (mClothType == null || mArea == null) {
+            ErrorDialog.showAlert(mContext, "请先选择库位和类型");
             return;
         }
         String shopOrder = mEt_shopOrder.getText().toString();
@@ -224,6 +224,12 @@ public class StorageOutFragment extends BaseFragment {
             if (HttpHelper.getWareHouseInfo.equals(url)) {
                 mList_item = JSON.parseArray(resultJSON.getJSONArray("result").toString(), StorageOutBo.class);
                 if (mList_item != null) {
+                    for (int i = mList_item.size() - 1; i >= 0; i--) {
+                        StorageOutBo item = mList_item.get(i);
+                        if ("Y".equals(item.getIS_OUT())) {
+                            mList_item.remove(i);
+                        }
+                    }
                     mItemAdapter.notifyDataSetChanged(mList_item);
                     if (mList_item.size() == 0) {
                         showAlert("该品类在库区内无库存");

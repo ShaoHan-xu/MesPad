@@ -244,6 +244,8 @@ public class QCFragment extends BaseFragment {
             toast("获取尺寸数据失败");
             return;
         }
+        //此处删除成衣数据是防止主界面获取到数据而成衣数据获取失败的情况导致成衣数据还显示的上一件的数据问题
+        mLayout_sizeInfo.removeAllViews();
         List<ClothSizeBo.DCPARRMSBean> parrms = mClothSizeData.getDC_PARRMS();
         if (parrms != null) {
             for (int i = 0; i < parrms.size(); i++) {
@@ -446,8 +448,6 @@ public class QCFragment extends BaseFragment {
                 if (isAdded())
                     showLoading();
 
-                //此处删除成衣数据是防止主界面获取到数据而成衣数据获取失败的情况导致成衣数据还显示的上一件的数据问题
-                mLayout_sizeInfo.removeAllViews();
                 HttpHelper.getClothSize(mSewQCData.getSfc(), operationBo, this);
             }
         }
@@ -664,7 +664,6 @@ public class QCFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
     }
 
     @Override
@@ -676,6 +675,9 @@ public class QCFragment extends BaseFragment {
                 setupView();
                 SpUtil.saveSalesOrder(mSewQCData.getSalesOrder());
                 SpUtil.save(SpUtil.KEY_SHOPORDER, mSewQCData.getShopOrder());
+
+                //此处删除成衣数据是防止主界面获取到数据而成衣数据获取失败的情况导致成衣数据还显示的上一件的数据问题
+                mLayout_sizeInfo.removeAllViews();
                 getClothSizeData();
             } else if (HttpHelper.getClothSize.equals(url)) {
                 mClothSizeData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ClothSizeBo.class);

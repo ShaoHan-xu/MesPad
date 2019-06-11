@@ -92,14 +92,6 @@ public final class HttpRequest {
     }
 
     public static void post(String url, RequestParams params, long timeout, BaseHttpRequestCallback callback) {
-        if (mLastRequest == null) {
-            mLastRequest = new HttpRequestBo();
-        }
-        mLastRequest.setMethod(Method.POST);
-        mLastRequest.setUrl(url);
-        mLastRequest.setParams(params);
-        mLastRequest.setCallback(callback);
-
         OkHttpClient.Builder builder = OkHttpFinal.getInstance().getOkHttpClientBuilder();
         builder.readTimeout(timeout, TimeUnit.MILLISECONDS);
         builder.connectTimeout(timeout, TimeUnit.MILLISECONDS);
@@ -287,6 +279,14 @@ public final class HttpRequest {
 
     private static void executeRequest(Method method, String url, RequestParams params, OkHttpClient.Builder builder, BaseHttpRequestCallback callback) {
         if (!TextUtils.isEmpty(url)) {
+            if (mLastRequest == null) {
+                mLastRequest = new HttpRequestBo();
+            }
+            mLastRequest.setMethod(method);
+            mLastRequest.setUrl(url);
+            mLastRequest.setParams(params);
+            mLastRequest.setCallback(callback);
+
             if (builder == null) {
                 builder = OkHttpFinal.getInstance().getOkHttpClientBuilder();
             }

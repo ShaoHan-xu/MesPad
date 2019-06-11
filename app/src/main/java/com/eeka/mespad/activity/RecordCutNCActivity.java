@@ -1,11 +1,15 @@
 package com.eeka.mespad.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,11 +24,19 @@ import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.FileUtil;
+import com.eeka.mespad.utils.SmbUtil;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
+import com.eeka.mespad.utils.UriUtil;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 记录裁剪不良界面
@@ -32,6 +44,8 @@ import java.util.List;
  */
 
 public class RecordCutNCActivity extends BaseActivity {
+
+    private static final int REQUEST_TAKEPHOTO = 0;
 
     private TailorInfoBo mTailorInfo;
     private List<RecordNCBo> mList_badRecord;
@@ -153,25 +167,121 @@ public class RecordCutNCActivity extends BaseActivity {
 
             TextView tv_type = holder.getView(R.id.tv_recordNc_type);
             tv_type.setText(item.getDESCRIPTION());
-            holder.getView(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    badCount[0]++;
-                    item.setQTY(badCount[0]);
+
+            setWidgetClickListener(holder, position, R.id.layout_recordNc_type);
+            setWidgetClickListener(holder, position, R.id.btn_recordNc_sub);
+        }
+
+        @Override
+        public void onClick(View v, int position) {
+            super.onClick(v, position);
+            RecordNCBo recordNCBo = mList_badRecord.get(position);
+            if (v.getId() == R.id.layout_recordNc_type) {
+                mCurPosition = position;
+                if (recordNCBo.getQTY() == 0) {
+                    //第一次则需要拍照
+                    takePhoto();
+                } else {
+                    itemCountAdd();
+                }
+            } else if (v.getId() == R.id.btn_recordNc_sub) {
+                if (recordNCBo.getQTY() > 0) {
+                    recordNCBo.setQTY(recordNCBo.getQTY() - 1);
                     notifyItemChanged(position);
                 }
-            });
-            holder.getView(R.id.btn_recordNc_sub).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (badCount[0] > 0) {
-                        badCount[0]--;
-                        item.setQTY(badCount[0]);
-                        notifyItemChanged(position);
-                    }
-                }
-            });
+            }
         }
+    }
+
+    private Uri mUri;
+    private String mImgName;
+
+    //拍照
+    private void takePhoto() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermission(Manifest.permission.CAMERA)) {
+            requestPermission(new String[]{Manifest.permission.CAMERA});
+            return;
+        }
+        String dirPath = FileUtil.getImagesFolderPath(mContext) + File.separator;
+        mImgName = UUID.randomUUID() + ".jpg";
+        File file = new File(dirPath, mImgName);
+        if (!file.getParentFile().exists()) {
+            file.mkdirs();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mUri = FileProvider.getUriForFile(mContext, "com.eeka.mespad.fileProvider", file);
+        } else {
+            mUri = Uri.fromFile(file);
+        }
+
+        SystemUtils.takePhoto(this, mUri, REQUEST_TAKEPHOTO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_TAKEPHOTO) {
+            final String path = UriUtil.getRealPathFromUri(mContext, mUri);
+            Logger.d(path);
+            submitImg(path);
+        }
+    }
+
+    //上传图片
+    private void submitImg(final String path) {
+        showLoading();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean flag;
+                    if (isEmpty(path)) {
+                        String uriStr = mUri.toString();
+                        String fileName = uriStr.substring(uriStr.lastIndexOf("/"));
+                        flag = SmbUtil.smbPut(mContext.getContentResolver().openInputStream(mUri), fileName);
+                    } else {
+                        flag = SmbUtil.smbPut(path);
+                    }
+                    if (flag) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dismissLoading();
+                                itemCountAdd();
+                            }
+                        });
+                    } else {
+                        showErrorDialog("图片上传失败");
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showErrorDialog("图片上传失败");
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private int mCurPosition;
+
+    /**
+     * 拍照上传成功后记录+1
+     */
+    private void itemCountAdd() {
+        RecordNCBo recordNCBo = mList_badRecord.get(mCurPosition);
+        recordNCBo.setQTY(recordNCBo.getQTY() + 1);
+        String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
+        if (!isEmpty(s)) {
+            PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
+            String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + mImgName;
+            recordNCBo.setNC_IMAGE_LOCATION(imgLocation);
+        }
+        mAdapter.notifyItemChanged(mCurPosition);
     }
 
     @Override

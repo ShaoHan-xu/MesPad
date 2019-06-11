@@ -25,10 +25,12 @@ public class LoadingDialog {
     public static void show(Context context, String msg) {
         View view = LayoutInflater.from(context).inflate(R.layout.dlg_loading, null);
         if (!TextUtils.isEmpty(msg)) {
-            TextView tv_loadingMsg = (TextView) view.findViewById(R.id.tv_loading_msg);
+            TextView tv_loadingMsg = view.findViewById(R.id.tv_loading_msg);
             tv_loadingMsg.setText(msg);
         }
         mDialog = new Dialog(context);
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCancelable(false);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(view);
         mDialog.show();

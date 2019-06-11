@@ -51,15 +51,15 @@ public class VideoPlayerActivity extends BaseActivity {
         super.initView();
 
         mHandler = new MyHandler(this);
-        mLayout_control = (RelativeLayout) findViewById(R.id.layout_videoPlayer_control);
-        mSeekBar = (SeekBar) findViewById(R.id.seekBar_videoPlayer_progress);
+        mLayout_control = findViewById(R.id.layout_videoPlayer_control);
+        mSeekBar = findViewById(R.id.seekBar_videoPlayer_progress);
         mSeekBar.setOnSeekBarChangeListener(new SeekChangedListener());
-        mTv_playTime = (TextView) findViewById(R.id.tv_videoPlayer_playTime);
-        mTv_duration = (TextView) findViewById(R.id.tv_videoPlayer_duration);
+        mTv_playTime = findViewById(R.id.tv_videoPlayer_playTime);
+        mTv_duration = findViewById(R.id.tv_videoPlayer_duration);
 
-        mVideoView = (VideoView) findViewById(R.id.videoView);
+        mVideoView = findViewById(R.id.videoView);
         mVideoView.setOnTouchListener(new PlayerTouchListener());
-        mIv_play = (ImageView) findViewById(R.id.iv_videoPlayer_play);
+        mIv_play = findViewById(R.id.iv_videoPlayer_play);
         mIv_play.setOnClickListener(this);
 
         showLoading();

@@ -17,6 +17,7 @@ import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.http.WebServiceUtils;
+import com.eeka.mespad.utils.PattermUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
@@ -77,8 +78,14 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
                     } else {
                         mLastTagNum = value;
                     }
-                    mEt_tag.setText(mLastTagNum);
-                    reqFocus(mEt_hangerId);
+
+                    //如果扫描的结果是纯数字，则是扫错了条码
+                    if (PattermUtil.isNumeric(mLastTagNum)) {
+                        Toast.makeText(mContext, "条码扫描错误，请重新扫码！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        mEt_tag.setText(mLastTagNum);
+                        reqFocus(mEt_hangerId);
+                    }
                     return true;
                 }
                 return false;

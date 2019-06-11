@@ -11,6 +11,7 @@ public class RecordNCBo implements Serializable {
     private String NC_CODE;
     private String NC_CODE_BO;
     private String DESCRIPTION;
+    private String NC_IMAGE_LOCATION;
     private int QTY;
 
     public RecordNCBo() {
@@ -19,6 +20,14 @@ public class RecordNCBo implements Serializable {
     public RecordNCBo(String DESCRIPTION, int count) {
         this.DESCRIPTION = DESCRIPTION;
         this.QTY = count;
+    }
+
+    public String getNC_IMAGE_LOCATION() {
+        return NC_IMAGE_LOCATION;
+    }
+
+    public void setNC_IMAGE_LOCATION(String NC_IMAGE_LOCATION) {
+        this.NC_IMAGE_LOCATION = NC_IMAGE_LOCATION;
     }
 
     public String getNC_CODE() {

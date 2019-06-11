@@ -4,30 +4,28 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.eeka.mespad.view.dialog.LoadingDialog;
 
 /**
  * Activity基类
@@ -38,9 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener, HttpCallback, LoginFragment.OnLoginCallback, LoginFragment.OnClockCallback {
 
     protected Context mContext;
-
-    private Dialog mProDialog;
-    private TextView mTv_loadingMsg;
 
     protected FragmentManager mFragmentManager;
     protected Dialog mLoginDialog;
@@ -55,7 +50,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void initView() {
-
     }
 
     protected void initData() {
@@ -92,29 +86,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void showLoading(String msg, boolean cancelAble) {
-        if (mProDialog == null) {
-            initProgressDialog();
-        }
-        mTv_loadingMsg.setText(msg);
-        mProDialog.setCancelable(cancelAble);
-        if (!isFinishing()) {
-            mProDialog.show();
-        }
+        LoadingDialog.show(mContext, msg);
     }
 
     protected void dismissLoading() {
-        if (mProDialog != null) {
-            mProDialog.dismiss();
-        }
-    }
-
-    private void initProgressDialog() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.dlg_loading, null);
-        mTv_loadingMsg = view.findViewById(R.id.tv_loading_msg);
-
-        mProDialog = new Dialog(mContext);
-        mProDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProDialog.setContentView(view);
+        LoadingDialog.dismiss();
     }
 
     protected void showErrorDialog(String msg) {
@@ -137,6 +113,15 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
     }
 
+    protected boolean checkPermission(String permission) {
+        return ContextCompat.checkSelfPermission(mContext, permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    protected void requestPermission(String[] permissions) {
+        requestPermissions(permissions, 1);
+    }
+
     /**
      * 显示登录弹框
      */
@@ -146,6 +131,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         mLoginDialog.setContentView(R.layout.dlg_login);
 
         final LoginFragment loginFragment = (LoginFragment) mFragmentManager.findFragmentById(R.id.loginFragment);
+        assert loginFragment != null;
         loginFragment.setOnClockCallback(this);
 
         mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

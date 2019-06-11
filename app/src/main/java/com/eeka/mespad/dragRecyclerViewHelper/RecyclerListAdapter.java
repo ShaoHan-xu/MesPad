@@ -48,7 +48,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         holder.tv_code.setText(mItems.get(position).getDESCRIPTION());
-        holder.tv_process.setText(mItems.get(position).getProcessDesc());
+        holder.tv_process.setText(mItems.get(position).getOperationDesc());
 
         holder.tv_del.setOnClickListener(new View.OnClickListener() {
             @Override

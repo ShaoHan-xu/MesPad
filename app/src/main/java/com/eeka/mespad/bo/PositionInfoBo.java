@@ -18,14 +18,51 @@ public class PositionInfoBo {
     private RESRINFORBean RESR_INFOR;
     private List<OPERINFORBean> OPER_INFOR;
     private List<BUTTONINFORBean> BUTTON_INFOR;
-    private String PICTURE_URL;//记录不良时上传的图片路径
 
-    public String getPICTURE_URL() {
-        return PICTURE_URL;
+    private String PICTURE_IP;//记录不良时上传的图片路径
+    private String PICTURE_USER;//记录不良时上传的图片路径
+    private String PICTURE_PASSWD;//记录不良时上传的图片路径
+    private String PICTURE_REMOTE;//记录不良时上传的图片路径
+
+    public NCImgInfo getNcImgInfo() {
+        NCImgInfo ncImgInfo = new NCImgInfo();
+        ncImgInfo.PICTURE_IP = PICTURE_IP;
+        ncImgInfo.PICTURE_USER = PICTURE_USER;
+        ncImgInfo.PICTURE_PASSWD = PICTURE_PASSWD;
+        ncImgInfo.PICTURE_REMOTE = PICTURE_REMOTE;
+        return ncImgInfo;
     }
 
-    public void setPICTURE_URL(String PICTURE_URL) {
-        this.PICTURE_URL = PICTURE_URL;
+    public String getPICTURE_IP() {
+        return PICTURE_IP;
+    }
+
+    public void setPICTURE_IP(String PICTURE_IP) {
+        this.PICTURE_IP = PICTURE_IP;
+    }
+
+    public String getPICTURE_USER() {
+        return PICTURE_USER;
+    }
+
+    public void setPICTURE_USER(String PICTURE_USER) {
+        this.PICTURE_USER = PICTURE_USER;
+    }
+
+    public String getPICTURE_PASSWD() {
+        return PICTURE_PASSWD;
+    }
+
+    public void setPICTURE_PASSWD(String PICTURE_PASSWD) {
+        this.PICTURE_PASSWD = PICTURE_PASSWD;
+    }
+
+    public String getPICTURE_REMOTE() {
+        return PICTURE_REMOTE;
+    }
+
+    public void setPICTURE_REMOTE(String PICTURE_REMOTE) {
+        this.PICTURE_REMOTE = PICTURE_REMOTE;
     }
 
     public RESRINFORBean getRESR_INFOR() {
@@ -196,6 +233,46 @@ public class PositionInfoBo {
 
         public void setBUTTON_SEQUENCE(int BUTTON_SEQUENCE) {
             this.BUTTON_SEQUENCE = BUTTON_SEQUENCE;
+        }
+    }
+
+    public static class NCImgInfo {
+
+        private String PICTURE_IP;//记录不良时上传的图片路径
+        private String PICTURE_USER;//记录不良时上传的图片路径
+        private String PICTURE_PASSWD;//记录不良时上传的图片路径
+        private String PICTURE_REMOTE;//记录不良时上传的图片路径
+
+        public String getPICTURE_IP() {
+            return PICTURE_IP;
+        }
+
+        public void setPICTURE_IP(String PICTURE_IP) {
+            this.PICTURE_IP = PICTURE_IP;
+        }
+
+        public String getPICTURE_USER() {
+            return PICTURE_USER;
+        }
+
+        public void setPICTURE_USER(String PICTURE_USER) {
+            this.PICTURE_USER = PICTURE_USER;
+        }
+
+        public String getPICTURE_PASSWD() {
+            return PICTURE_PASSWD;
+        }
+
+        public void setPICTURE_PASSWD(String PICTURE_PASSWD) {
+            this.PICTURE_PASSWD = PICTURE_PASSWD;
+        }
+
+        public String getPICTURE_REMOTE() {
+            return PICTURE_REMOTE;
+        }
+
+        public void setPICTURE_REMOTE(String PICTURE_REMOTE) {
+            this.PICTURE_REMOTE = PICTURE_REMOTE;
         }
     }
 }

@@ -1,9 +1,15 @@
 package com.eeka.mespad.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -27,16 +34,23 @@ import com.eeka.mespad.bo.UpdateSewNcBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.dragRecyclerViewHelper.RecyclerListAdapter;
 import com.eeka.mespad.dragRecyclerViewHelper.SimpleItemTouchHelperCallback;
-import com.eeka.mespad.fragment.QCFragment;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.FileUtil;
+import com.eeka.mespad.utils.SmbUtil;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
+import com.eeka.mespad.utils.UriUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.RepairSelectorDialog;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 记录缝制质检不良界面
@@ -45,6 +59,7 @@ import java.util.List;
 public class RecordSewNCActivity extends BaseActivity {
 
     private static final int REQUEST_REPAIR = 0;
+    private static final int REQUEST_TAKEPHOTO = 1;
 
     private static final String KEY_DATA = "key_data";
     private static final String KEY_SFC = "key_sfc";
@@ -111,8 +126,7 @@ public class RecordSewNCActivity extends BaseActivity {
           ★★★★★★★★★★★★★★★★★★★★★★★
           要使用ItemTouchHelper，你需要创建一个ItemTouchHelper.Callback。
           这个接口可以让你监听“move(上下移动)”与 “swipe（左右滑动）”事件。这里还是
-          ★控制view被选中
-          的状态以及★重写默认动画的地方。
+          ★控制view被选中的状态以及★重写默认动画的地方。
 
           如果你只是想要一个基本的实现，有一个
           帮助类可以使用：SimpleCallback,但是为了了解其工作机制，我们还是自己实现。
@@ -172,7 +186,7 @@ public class RecordSewNCActivity extends BaseActivity {
             UpdateSewNcBo.ReworkOperationListBean item = new UpdateSewNcBo.ReworkOperationListBean();
             item.setSequence(i + 1);
             item.setReworkOperation(bean.getOperation());
-            item.setOperationDesc(bean.getProcessDesc());
+            item.setOperationDesc(bean.getOperationDesc());
             item.setPartId(bean.getPROD_COMPONENT());
             item.setResourceNo(bean.getResourceNo());
             process.add(item);
@@ -271,16 +285,20 @@ public class RecordSewNCActivity extends BaseActivity {
             tv_code.setVisibility(View.VISIBLE);
             tv_code.setText(item.getNC_CODE());
 
-            holder.getView(R.id.layout_recordNc_type).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mNcCodePosition = position;
-                    SewQCDataBo.DesignComponentBean productComponent = mList_component.get(mProductPosition);
-                    SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = productComponent.getDesgComponents().get(mDesignPosition);
-                    showLoading();
-                    HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
-                }
-            });
+            setWidgetClickListener(holder, position, R.id.layout_recordNc_type);
+        }
+
+        @Override
+        public void onClick(View v, int position) {
+            super.onClick(v, position);
+            if (v.getId() == R.id.layout_recordNc_type) {
+                RecordNCBo item = mList_NcCode.get(position);
+                mNcCodePosition = position;
+                SewQCDataBo.DesignComponentBean productComponent = mList_component.get(mProductPosition);
+                SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = productComponent.getDesgComponents().get(mDesignPosition);
+                showLoading();
+                HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
+            }
         }
     }
 
@@ -295,27 +313,19 @@ public class RecordSewNCActivity extends BaseActivity {
             } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
                 if (!this.isFinishing()) {//避免在网络请求成功前用户关闭了界面导致弹框闪退
                     mList_NcProcess = resultJSON.getJSONArray("result");
-                    final RecordNCBo recordNCBo = mList_NcCode.get(mNcCodePosition);
-                    new RepairSelectorDialog(mContext, recordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
+                    mCurRecordNCBo = mList_NcCode.get(mNcCodePosition);
+                    new RepairSelectorDialog(mContext, mCurRecordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            JSONObject item = mList_NcProcess.getJSONObject(position);
+                            mCurNcProcess = mList_NcProcess.getJSONObject(position);
                             for (UpdateSewNcBo.NcCodeOperationListBean selected : mList_selected) {
-                                if (selected.getOperation().equals(item.getString("OPERATION"))) {
+                                if (selected.getOperation().equals(mCurNcProcess.getString("OPERATION"))) {
                                     ErrorDialog.showAlert(mContext, "该工序已记录过不良，无法多次记录");
                                     return;
                                 }
                             }
-                            mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
-                            mCurSelecting.setPROD_COMPONENT(item.getString("PART_ID"));
-                            mCurSelecting.setResourceNo(item.getString("RESOURCE"));
-                            mCurSelecting.setNC_CODE(recordNCBo.getNC_CODE());
-                            mCurSelecting.setNcCodeRef(recordNCBo.getNC_CODE_BO());
-                            mCurSelecting.setDESCRIPTION(recordNCBo.getDESCRIPTION());
-                            mCurSelecting.setOperation(item.getString("OPERATION"));
-                            mCurSelecting.setProcessDesc(item.getString("DESCRIPTION"));
 
-                            mSelectedAdapter.addItem(mCurSelecting);
+                            takePhoto();
                         }
                     }).show();
                 }
@@ -324,6 +334,123 @@ public class RecordSewNCActivity extends BaseActivity {
                 finish();
             }
         }
+    }
+
+    private Uri mUri;
+    private String mImgName;
+
+    //拍照
+    private void takePhoto() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermission(Manifest.permission.CAMERA)) {
+            requestPermission(new String[]{Manifest.permission.CAMERA});
+            return;
+        }
+        String dirPath = FileUtil.getImagesFolderPath(mContext) + File.separator;
+        mImgName = UUID.randomUUID() + ".jpg";
+        File file = new File(dirPath, mImgName);
+        if (!file.getParentFile().exists()) {
+            file.mkdirs();
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mUri = FileProvider.getUriForFile(mContext, "com.eeka.mespad.fileProvider", file);
+        } else {
+            mUri = Uri.fromFile(file);
+        }
+
+        SystemUtils.takePhoto(this, mUri, REQUEST_TAKEPHOTO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_TAKEPHOTO) {
+            final String path = UriUtil.getRealPathFromUri(mContext, mUri);
+            Logger.d(path);
+            submitImg(path);
+        }
+    }
+
+    //上传图片
+    private void submitImg(final String path) {
+        showLoading();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    boolean flag;
+                    if (isEmpty(path)) {
+                        String uriStr = mUri.toString();
+                        String fileName = uriStr.substring(uriStr.lastIndexOf("/"));
+                        flag = SmbUtil.smbPut(mContext.getContentResolver().openInputStream(mUri), fileName);
+                    } else {
+                        flag = SmbUtil.smbPut(path);
+                    }
+                    if (flag) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dismissLoading();
+                                addNcProcess();
+                            }
+                        });
+                    } else {
+                        showErrorDialog("图片上传失败");
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showErrorDialog("图片上传失败");
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            boolean allowAllPermission = false;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allowAllPermission = false;
+                    break;
+                }
+                allowAllPermission = true;
+            }
+            if (allowAllPermission) {
+                takePhoto();
+            } else {
+                Toast.makeText(mContext, "该功能需要授权方可使用", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private RecordNCBo mCurRecordNCBo;
+    private JSONObject mCurNcProcess;
+
+    private void addNcProcess() {
+        mCurSelecting = new UpdateSewNcBo.NcCodeOperationListBean();
+        mCurSelecting.setPROD_COMPONENT(mCurNcProcess.getString("PART_ID"));
+        mCurSelecting.setResourceNo(mCurNcProcess.getString("RESOURCE"));
+        mCurSelecting.setNC_CODE(mCurRecordNCBo.getNC_CODE());
+        mCurSelecting.setNcCodeRef(mCurRecordNCBo.getNC_CODE_BO());
+        mCurSelecting.setDESCRIPTION(mCurRecordNCBo.getDESCRIPTION());
+        mCurSelecting.setOperation(mCurNcProcess.getString("OPERATION"));
+        mCurSelecting.setOperationDesc(mCurNcProcess.getString("DESCRIPTION"));
+
+        String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
+        if (!isEmpty(s)) {
+            PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
+            String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + mImgName;
+            mCurSelecting.setNcImageLocation(imgLocation);
+        }
+
+        mSelectedAdapter.addItem(mCurSelecting);
     }
 
     /**
