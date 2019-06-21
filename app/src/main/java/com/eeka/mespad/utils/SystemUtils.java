@@ -26,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.eeka.mespad.BuildConfig;
+import com.eeka.mespad.activity.VideoPlayerActivity;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 
@@ -305,17 +306,21 @@ public class SystemUtils {
         context.startActivity(i);
     }
 
+    public static void playVideo(final Context context, String videoUrl) {
+        playVideo(context, videoUrl, false);
+    }
+
     /**
      * 开启视频播放界面
      */
-    public static void playVideo(final Context context, String videoUrl) {
+    public static void playVideo(final Context context, String videoUrl, final boolean cache) {
         String videoPath = null;
         try {
             if (!TextUtils.isEmpty(videoUrl)) {
                 int indexOf = videoUrl.lastIndexOf("/");
                 if (indexOf != -1) {
                     String host = videoUrl.substring(0, indexOf + 1);
-                    String name = videoUrl.substring(indexOf + 1, videoUrl.length());
+                    String name = videoUrl.substring(indexOf + 1);
                     videoPath = host + URLEncoder.encode(name, "utf-8");
                 }
             }
@@ -333,11 +338,14 @@ public class SystemUtils {
                         ErrorDialog.showAlert(context, "视频文件不存在");
                     } else {
                         //自定义播放器，可缓存视频到本地
-                        // context.startActivity(VideoPlayerActivity.getIntent(context, videoPath));
-                        //系统自带视频播放，无缓存
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.parse(finalVideoPath), "video/mp4");
-                        context.startActivity(intent);
+                        if (cache) {
+                            context.startActivity(VideoPlayerActivity.getIntent(context, finalVideoPath));
+                        } else {
+                            //系统自带视频播放，无缓存
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.parse(finalVideoPath), "video/mp4");
+                            context.startActivity(intent);
+                        }
                     }
                 }
             });

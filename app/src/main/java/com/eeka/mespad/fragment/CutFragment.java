@@ -81,6 +81,8 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_special;
     private Button mBtn_done;
     private TextView mTv_sizeCode;
+    private LinearLayout mLayout_ncData;
+    private TextView mTv_ncDesc;
 
     //套排
     private LinearLayout mLayout_TP;
@@ -186,6 +188,9 @@ public class CutFragment extends BaseFragment {
 
         mView.findViewById(R.id.layout_processDescription).setOnClickListener(this);
         mView.findViewById(R.id.layout_special).setOnClickListener(this);
+
+        mLayout_ncData = mView.findViewById(R.id.layout_cut_ncData);
+        mTv_ncDesc = mView.findViewById(R.id.tv_cut_ncDesc);
     }
 
     public void refreshView() {
@@ -336,6 +341,14 @@ public class CutFragment extends BaseFragment {
             mView.findViewById(R.id.layout_cut_layers).setVisibility(View.GONE);
         }
 
+        //配片不良
+        TailorInfoBo.NcData nc_data = mTailorInfo.getNC_DATA();
+        if (nc_data == null) {
+            mLayout_ncData.setVisibility(View.GONE);
+        } else {
+            mLayout_ncData.setVisibility(View.VISIBLE);
+            mTv_ncDesc.setText(nc_data.getNC_DESC());
+        }
     }
 
     /**

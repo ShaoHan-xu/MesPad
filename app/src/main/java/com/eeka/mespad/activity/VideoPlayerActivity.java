@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -139,7 +138,7 @@ public class VideoPlayerActivity extends BaseActivity {
                 } else if (msg.what == WHAT_UPDATE) {
                     int duration = activity.mVideoView.getDuration();
                     int curPosition = activity.mVideoView.getCurrentPosition();
-                    activity.mTv_playTime.setText(DateUtil.msecToTime(curPosition, "mm:ss"));
+                    activity.mTv_playTime.setText(DateUtil.millisToDate(curPosition, "mm:ss"));
                     int curTime = (int) ((float) curPosition / duration * 100);
                     activity.mSeekBar.setProgress(curTime);
                     sendEmptyMessageDelayed(WHAT_UPDATE, 1000);
@@ -187,7 +186,7 @@ public class VideoPlayerActivity extends BaseActivity {
             mIv_play.setImageResource(R.drawable.pause);
             mHandler.sendEmptyMessageDelayed(MyHandler.WHAT_HIDE, 3000);
             int duration = mVideoView.getDuration();
-            mTv_duration.setText(DateUtil.msecToTime(duration, "mm:ss"));
+            mTv_duration.setText(DateUtil.millisToDate(duration, "mm:ss"));
             mHandler.sendEmptyMessage(MyHandler.WHAT_UPDATE);
         }
     }

@@ -103,6 +103,12 @@ public class SortForClothTagDialog extends BaseDialog {
     }
 
     private void reqFocus(final View v) {
+        String tag = mEt_tag.getText().toString();
+        String hangerId = mEt_hangerId.getText().toString();
+        if (!isEmpty(tag) && !isEmpty(hangerId)) {
+            done();
+            return;
+        }
         v.postDelayed(new Runnable() {
             @Override
             public void run() {

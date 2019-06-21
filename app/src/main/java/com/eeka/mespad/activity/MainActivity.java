@@ -1,17 +1,21 @@
 package com.eeka.mespad.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +37,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.AlarmReceiver;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
@@ -55,12 +60,14 @@ import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.service.MQTTService;
+import com.eeka.mespad.utils.DateUtil;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.MaintenanceDialog;
 import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
@@ -100,6 +107,7 @@ public class MainActivity extends NFCActivity {
     private CardInfoBo mCardInfo;
     private boolean isSearchOrder;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +129,52 @@ public class MainActivity extends NFCActivity {
             //如果平板连接着蓝牙输入设备，则在应用启动1秒后拉起使输入框获取焦点，拉起键盘
             //否则扫码输入时第一位会获取不到
             mHandler.sendEmptyMessageDelayed(WHAT_KEYBOARD, 1000);
+        }
+
+        setAlarm();
+    }
+
+    /**
+     * 设置保养视频的闹钟
+     */
+    private void setAlarm() {
+        String channel = getString(R.string.app_channel);
+        String mAlertTime;
+        if ("YD".equals(channel)) {
+            mAlertTime = "07:35:00";
+        } else {
+            mAlertTime = "07:55:00";
+        }
+
+        String curDate = DateUtil.getCurDate();
+        String[] split = curDate.split(" ");
+        String date = split[0];
+        String alertTime = date + " " + mAlertTime;
+        long alertMillis = DateUtil.dateToMillis(alertTime, "yyyy-MM-dd HH:mm:ss");
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(AlarmReceiver.BROADCAST_Maintenance);
+        intent.putExtra("isWeek", false);
+        PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        long curMillis = System.currentTimeMillis();
+        if (curMillis < alertMillis) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alertMillis, pi);
+        } else if (curMillis > alertMillis && curMillis < alertMillis + 30 * 60 * 1000) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, curMillis + 5 * 1000, pi);
+        }
+
+        if ("星期六".equals(DateUtil.getWeek())) {
+            if ("YD".equals(channel)) {
+                mAlertTime = "18:25:00";
+            } else {
+                mAlertTime = "17:25:00";
+            }
+
+            alertTime = date + " " + mAlertTime;
+            alertMillis = DateUtil.dateToMillis(alertTime, "yyyy-MM-dd HH:mm:ss");
+            intent.putExtra("isWeek", true);
+            pi = PendingIntent.getBroadcast(mContext, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alertMillis, pi);
         }
     }
 
@@ -178,7 +232,16 @@ public class MainActivity extends NFCActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
-        if (PushJson.TYPE_LOGIN.equals(type) || PushJson.TYPE_LOGOUT.equals(type)) {
+        if (PushJson.TYPE_ALERT.equals(type)) {
+            showAlert(push.getMessage());
+        } else if (PushJson.TYPE_Maintenance.equals(type)) {
+            Logger.d(push.getMessage());
+            if ("true".equals(push.getMessage())) {
+                new MaintenanceDialog(mContext, true).show();
+            } else {
+                new MaintenanceDialog(mContext, false).show();
+            }
+        } else if (PushJson.TYPE_LOGIN.equals(type) || PushJson.TYPE_LOGOUT.equals(type)) {
             if (PushJson.TYPE_LOGIN.equals(type)) {
                 toast("用户刷卡上岗");
             } else {
@@ -238,6 +301,7 @@ public class MainActivity extends NFCActivity {
             toast("正在刷新页面");
             mEt_orderNum.setText(content);
             isSearchOrder = true;
+            mTv_searchType.setText("衣架号");
             if (checkResource()) {
                 searchOrder();
             }

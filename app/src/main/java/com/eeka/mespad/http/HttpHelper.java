@@ -691,10 +691,11 @@ public class HttpHelper {
     /**
      * 根据设计部件获取不良代码列表
      */
-    public static void getSewNcCodeList(String designComponent, HttpCallback callback) {
+    public static void getSewNcCodeList(String productComponent,String designComponent, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("PAD_ID", PAD_IP);
+        json.put("PROD_COMPONENT", productComponent);
         json.put("DESG_COMPONENT", designComponent);
         params.put("params", json.toJSONString());
         HttpRequest.post(getSewNcCodeList, params, getResponseHandler(getSewNcCodeList, callback));

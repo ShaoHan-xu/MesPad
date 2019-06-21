@@ -240,7 +240,7 @@ public class RecordSewNCActivity extends BaseActivity {
     /**
      * 刷新设计部件布局
      */
-    private void refreshDesignComponentView(SewQCDataBo.DesignComponentBean component) {
+    private void refreshDesignComponentView(final SewQCDataBo.DesignComponentBean component) {
         mLayout_designComponent.removeAllViews();
         List<SewQCDataBo.DesignComponentBean.DesgComponentsBean> desgComponents = component.getDesgComponents();
         if (desgComponents != null && desgComponents.size() != 0) {
@@ -254,7 +254,7 @@ public class RecordSewNCActivity extends BaseActivity {
                         mDesignPosition = finalI;
                         mLayout_NcProcess.removeAllViews();
                         showLoading();
-                        HttpHelper.getSewNcCodeList(bean.getName(), RecordSewNCActivity.this);
+                        HttpHelper.getSewNcCodeList(component.getName(), bean.getName(), RecordSewNCActivity.this);
                         TabViewUtil.refreshTabView(mLayout_designComponent, finalI);
                     }
                 }));
@@ -262,7 +262,7 @@ public class RecordSewNCActivity extends BaseActivity {
                     mDesignPosition = 0;
                     mLayout_NcProcess.removeAllViews();
                     showLoading();
-                    HttpHelper.getSewNcCodeList(bean.getName(), RecordSewNCActivity.this);
+                    HttpHelper.getSewNcCodeList(component.getName(), bean.getName(), RecordSewNCActivity.this);
                 }
             }
             TabViewUtil.refreshTabView(mLayout_designComponent, 0);
@@ -413,20 +413,8 @@ public class RecordSewNCActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            boolean allowAllPermission = false;
-            for (int grantResult : grantResults) {
-                if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                    allowAllPermission = false;
-                    break;
-                }
-                allowAllPermission = true;
-            }
-            if (allowAllPermission) {
-                takePhoto();
-            } else {
-                Toast.makeText(mContext, "该功能需要授权方可使用", Toast.LENGTH_SHORT).show();
-            }
+        if (allowAllPermission) {
+            takePhoto();
         }
     }
 

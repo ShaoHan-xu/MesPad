@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.eeka.mespad">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -48,6 +50,12 @@
 
         <service android:name=".service.MQTTService" />
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+
+        <receiver android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.alarm.maintenance.action"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".activity.MainActivity"

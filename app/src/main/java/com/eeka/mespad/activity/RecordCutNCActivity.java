@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
@@ -216,6 +217,14 @@ public class RecordCutNCActivity extends BaseActivity {
         }
 
         SystemUtils.takePhoto(this, mUri, REQUEST_TAKEPHOTO);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (allowAllPermission) {
+            takePhoto();
+        }
     }
 
     @Override

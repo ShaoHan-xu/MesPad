@@ -28,6 +28,15 @@ public class TailorInfoBo implements Serializable {
     private String orderType;
     private String RFID;
     private String SFC_BO;
+    private NcData NC_DATA;
+
+    public NcData getNC_DATA() {
+        return NC_DATA;
+    }
+
+    public void setNC_DATA(NcData NC_DATA) {
+        this.NC_DATA = NC_DATA;
+    }
 
     public List<PlanSizeBean> getPLAN_SIZES() {
         return PLAN_SIZES;
@@ -706,6 +715,27 @@ public class TailorInfoBo implements Serializable {
 
         public void setPICTURE_URL(String PICTURE_URL) {
             this.PICTURE_URL = PICTURE_URL;
+        }
+    }
+
+    public static class NcData implements Serializable {
+        private String NC_CODE;
+        private String NC_DESC;
+
+        public String getNC_CODE() {
+            return NC_CODE;
+        }
+
+        public void setNC_CODE(String NC_CODE) {
+            this.NC_CODE = NC_CODE;
+        }
+
+        public String getNC_DESC() {
+            return NC_DESC;
+        }
+
+        public void setNC_DESC(String NC_DESC) {
+            this.NC_DESC = NC_DESC;
         }
     }
 }

@@ -110,6 +110,12 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
     }
 
     private void reqFocus(final View v) {
+        String tag = mEt_tag.getText().toString();
+        String hangerId = mEt_hangerId.getText().toString();
+        if (!isEmpty(tag) && !isEmpty(hangerId)) {
+            checkItemSize();
+            return;
+        }
         v.postDelayed(new Runnable() {
             @Override
             public void run() {

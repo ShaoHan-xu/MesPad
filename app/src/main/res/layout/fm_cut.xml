@@ -444,6 +444,26 @@
                             style="@style/textStyle_default" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/layout_cut_ncData"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
+                            android:text="不良描述"
+                            android:textColor="@color/text_red_default" />
+
+                        <TextView
+                            android:id="@+id/tv_cut_ncDesc"
+                            style="@style/textStyle_default"
+                            android:textColor="@color/text_red_default" />
+                    </LinearLayout>
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

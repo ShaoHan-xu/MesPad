@@ -1,7 +1,10 @@
 package com.eeka.mespad.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.ListPopupWindow;
@@ -37,9 +40,12 @@ import java.util.Map;
  */
 public class StorageOutFragment extends BaseFragment {
 
+    private static final int WHAT_INITDATA = 0;
+
     private TextView mTv_type;
     private TextView mTv_storageArea;
     private EditText mEt_shopOrder, mEt_item;
+    private TextView mTv_autoRefresh;
 
     private ItemAdapter mItemAdapter;
     private List<StorageOutBo> mList_item;
@@ -73,12 +79,14 @@ public class StorageOutFragment extends BaseFragment {
         mTv_storageArea = mView.findViewById(R.id.tv_storageOut_setArea);
         mEt_shopOrder = mView.findViewById(R.id.et_shopOrder);
         mEt_item = mView.findViewById(R.id.et_item);
+        mTv_autoRefresh = mView.findViewById(R.id.tv_autoRefresh);
 
         ListView mLv_items = mView.findViewById(R.id.lv_storageOut_item);
         mItemAdapter = new ItemAdapter(mContext, mList_item, R.layout.item_storageout_item);
         mLv_items.setAdapter(mItemAdapter);
 
         mTv_type.setOnClickListener(this);
+        mTv_autoRefresh.setOnClickListener(this);
         mTv_storageArea.setOnClickListener(this);
         mView.findViewById(R.id.btn_search).setOnClickListener(this);
     }
@@ -116,6 +124,15 @@ public class StorageOutFragment extends BaseFragment {
                 break;
             case R.id.btn_search:
                 search();
+                break;
+            case R.id.tv_autoRefresh:
+                if ("暂停刷新".equals(mTv_autoRefresh.getText().toString())) {
+                    mTv_autoRefresh.setText("自动刷新");
+                    mHandler.removeMessages(WHAT_INITDATA);
+                } else {
+                    mTv_autoRefresh.setText("暂停刷新");
+                    mHandler.sendEmptyMessage(WHAT_INITDATA);
+                }
                 break;
         }
     }
@@ -217,6 +234,17 @@ public class StorageOutFragment extends BaseFragment {
         mStorageOutQTYDialog.show();
     }
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == WHAT_INITDATA) {
+                search();
+            }
+        }
+    };
+
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
@@ -234,6 +262,7 @@ public class StorageOutFragment extends BaseFragment {
                     if (mList_item.size() == 0) {
                         showAlert("该品类在库区内无库存");
                     }
+                    mHandler.sendEmptyMessageDelayed(WHAT_INITDATA, 60 * 1000);
                 }
             } else if (HttpHelper.storageOut.equals(url)) {
                 mStorageOutQTYDialog.dismiss();

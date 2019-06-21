@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
@@ -34,6 +35,8 @@ import com.eeka.mespad.view.dialog.LoadingDialog;
 
 @SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener, HttpCallback, LoginFragment.OnLoginCallback, LoginFragment.OnClockCallback {
+
+    public static int REQUEST_PERMISSION = 998;
 
     protected Context mContext;
 
@@ -119,8 +122,43 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     protected void requestPermission(String[] permissions) {
-        requestPermissions(permissions, 1);
+        requestPermissions(permissions, REQUEST_PERMISSION);
     }
+
+    protected boolean allowAllPermission;
+
+    protected boolean checkPermissionResult(int[] grantResults) {
+        allowAllPermission = false;
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                allowAllPermission = false;
+                break;
+            }
+            allowAllPermission = true;
+        }
+        return allowAllPermission;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION) {
+            allowAllPermission = false;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allowAllPermission = false;
+                    break;
+                }
+                allowAllPermission = true;
+            }
+            if (allowAllPermission) {
+
+            } else {
+                Toast.makeText(mContext, "该功能需要授权方可使用", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     /**
      * 显示登录弹框
