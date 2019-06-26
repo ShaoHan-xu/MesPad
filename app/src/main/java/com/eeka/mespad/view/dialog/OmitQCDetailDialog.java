@@ -83,7 +83,7 @@ public class OmitQCDetailDialog extends BaseDialog {
     public void addItem(List<OmitQCBo> list) {
         mList.addAll(0, list);
         for (OmitQCBo item : list) {
-            mLayout_item.addView(getItemView(item));
+            mLayout_item.addView(getItemView(item), 0);
         }
     }
 
