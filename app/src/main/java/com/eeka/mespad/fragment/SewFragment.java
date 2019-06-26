@@ -98,6 +98,9 @@ public class SewFragment extends BaseFragment {
     private String mTopic;
     private WebServiceCallback mWebServiceCallback;
 
+    private SortingDialog mSortingDialog;
+    private OfflineDialog mOfflineDialog;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -252,10 +255,14 @@ public class SewFragment extends BaseFragment {
     }
 
     private void showSortingDialog() {
+        if (mSewData == null) {
+            showErrorDialog("请先获取衣架数据");
+            return;
+        }
         if (mSortingDialog != null && mSortingDialog.isShowing()) {
             mSortingDialog.dismiss();
         }
-        mSortingDialog = new SortingDialog(mContext, mTopic, new DialogInterface.OnClickListener() {
+        mSortingDialog = new SortingDialog(mContext, mTopic, mSewData.getSfc(), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
@@ -754,9 +761,6 @@ public class SewFragment extends BaseFragment {
             showSortingDialog();
         }
     }
-
-    private SortingDialog mSortingDialog;
-    private OfflineDialog mOfflineDialog;
 
     /**
      * 工序列表适配器

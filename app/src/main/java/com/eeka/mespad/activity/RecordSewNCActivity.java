@@ -378,7 +378,7 @@ public class RecordSewNCActivity extends BaseActivity {
             @Override
             public void run() {
                 try {
-                    boolean flag;
+                    final boolean flag;
                     if (isEmpty(path)) {
                         String uriStr = mUri.toString();
                         String fileName = uriStr.substring(uriStr.lastIndexOf("/"));
@@ -386,17 +386,18 @@ public class RecordSewNCActivity extends BaseActivity {
                     } else {
                         flag = SmbUtil.smbPut(path);
                     }
-                    if (flag) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dismissLoading();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dismissLoading();
+                            if (flag) {
                                 addNcProcess();
+                            } else {
+                                showErrorDialog("图片上传失败");
                             }
-                        });
-                    } else {
-                        showErrorDialog("图片上传失败");
-                    }
+                        }
+                    });
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {

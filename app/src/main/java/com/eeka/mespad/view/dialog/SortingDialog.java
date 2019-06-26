@@ -29,10 +29,12 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
 
     private String mTopic;
     private OnClickListener mListener;
+    private String mSFC;
 
-    public SortingDialog(@NonNull Context context, String topic, @NonNull OnClickListener listener) {
+    public SortingDialog(@NonNull Context context, String topic, String sfc, @NonNull OnClickListener listener) {
         super(context);
         mTopic = topic;
+        mSFC = sfc;
         mListener = listener;
         init();
     }
@@ -141,41 +143,36 @@ public class SortingDialog extends BaseDialog implements View.OnClickListener {
     }
 
     private void checkItemSize() {
-        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-        if (contextInfo == null) {
-            ErrorDialog.showAlert(mContext, "站位数据未获取，请重启应用获取");
-        } else {
-            mLastNum = mEt_hangerId.getText().toString();
-            mLastTagNum = mEt_tag.getText().toString();
-            if (TextUtils.isEmpty(mLastNum)) {
-                Toast.makeText(mContext, "请输入衣架号继续操作", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (TextUtils.isEmpty(mLastTagNum)) {
-                Toast.makeText(mContext, "请输入吊牌号继续操作", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (mLastNum.length() != 10) {
-                Toast.makeText(mContext, "输入的衣架号非10位，请查验", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            LoadingDialog.show(mContext);
-            HttpHelper.checkItemAndSize(contextInfo.getLINE_CATEGORY(), contextInfo.getPOSITION(), mLastTagNum, new HttpCallback() {
-                @Override
-                public void onSuccess(String url, JSONObject resultJSON) {
-                    if (HttpHelper.isSuccess(resultJSON)) {
-                        sorting();
-                    } else {
-                        LoadingDialog.dismiss();
-                        ErrorDialog.showAlert(mContext, resultJSON.getString("result"));
-                    }
-                }
-
-                @Override
-                public void onFailure(String url, int code, String message) {
-                    LoadingDialog.dismiss();
-                    ErrorDialog.showAlert(mContext, message);
-                }
-            });
+        mLastNum = mEt_hangerId.getText().toString();
+        mLastTagNum = mEt_tag.getText().toString();
+        if (TextUtils.isEmpty(mLastNum)) {
+            Toast.makeText(mContext, "请输入衣架号继续操作", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (TextUtils.isEmpty(mLastTagNum)) {
+            Toast.makeText(mContext, "请输入吊牌号继续操作", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (mLastNum.length() != 10) {
+            Toast.makeText(mContext, "输入的衣架号非10位，请查验", Toast.LENGTH_SHORT).show();
+            return;
         }
+        LoadingDialog.show(mContext);
+        HttpHelper.checkItemAndSize(mSFC, mLastTagNum, new HttpCallback() {
+            @Override
+            public void onSuccess(String url, JSONObject resultJSON) {
+                if (HttpHelper.isSuccess(resultJSON)) {
+                    sorting();
+                } else {
+                    LoadingDialog.dismiss();
+                    ErrorDialog.showAlert(mContext, resultJSON.getString("result"));
+                }
+            }
+
+            @Override
+            public void onFailure(String url, int code, String message) {
+                LoadingDialog.dismiss();
+                ErrorDialog.showAlert(mContext, message);
+            }
+        });
     }
 
     private void sorting() {

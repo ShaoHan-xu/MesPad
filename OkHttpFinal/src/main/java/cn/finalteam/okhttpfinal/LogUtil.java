@@ -28,7 +28,7 @@ public class LogUtil {
 
     public static void init(Context context) {
         File sdcard = context.getExternalFilesDir(null);
-        if (sdcard == null || !sdcard.exists()) {
+        if (sdcard != null && !sdcard.exists()) {
             sdcard.mkdirs();
         }
         File logDir = new File(sdcard, "log");

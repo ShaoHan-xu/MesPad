@@ -2,6 +2,7 @@ package com.eeka.mespad.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.manager.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -24,6 +25,7 @@ public class SmbUtil {
     private static String username = "eeka";
     private static String password = "Gst#2017";
     private static String remoteUrl = "smb://10.7.121.10/eeka/nc_code";
+    private static String date;
 
     static {
         String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
@@ -32,12 +34,14 @@ public class SmbUtil {
         username = imgInfo.getPICTURE_USER();
         password = imgInfo.getPICTURE_PASSWD();
         remoteUrl = imgInfo.getPICTURE_REMOTE();
+
+        date = DateUtil.getCurDate().split(" ")[0];
     }
 
     public static void createDir(String dir) throws Exception {
         NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(domainIp, username, password);  //先登录验证
-        SmbFile fp = new SmbFile(remoteUrl + "//" + dir, auth);
-        System.out.println("fieldir+++++++++++++++++++++=" + remoteUrl + "//" + dir);
+        SmbFile fp = new SmbFile(dir, auth);
+        Logger.d("fieldir+++++++++++++++++++++=" + dir);
         // 目录已存在创建文件夹
         if (!fp.exists() || !fp.isDirectory()) {
             // 目录不存在的情况下，则创建
@@ -101,21 +105,24 @@ public class SmbUtil {
         //从本地读取文件上传到服务主机中
         OutputStream outs = null;
         try {
+            String url = remoteUrl + File.separator + date;
+            createDir(url);
+
             NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(domainIp, username, password);  //先登录验证
-            SmbFile smbfile = new SmbFile(remoteUrl + File.separator + fileName, auth);
-            if (smbfile.exists()) {
-                System.out.println("file is exists");
-            } else {
-                smbfile.connect();
-                outs = new SmbFileOutputStream(smbfile);
-                byte[] buffer = new byte[4096];
-                int len; //读取长度
-                while ((len = ins.read(buffer, 0, buffer.length)) != -1) {
-                    outs.write(buffer, 0, len);
-                }
-                outs.flush(); //刷新缓冲的输出流
-                System.out.println("图片上传成功");
+            SmbFile smbfile = new SmbFile(url + File.separator + fileName, auth);
+//            if (smbfile.exists()) {
+//                System.out.println("file is exists");
+//            } else {
+            smbfile.connect();
+            outs = new SmbFileOutputStream(smbfile);
+            byte[] buffer = new byte[4096];
+            int len; //读取长度
+            while ((len = ins.read(buffer, 0, buffer.length)) != -1) {
+                outs.write(buffer, 0, len);
             }
+            outs.flush(); //刷新缓冲的输出流
+            Logger.d("图片上传成功");
+//        }
         } catch (Exception e) {
             e.printStackTrace();
             success = false;

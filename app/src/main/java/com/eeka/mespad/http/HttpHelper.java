@@ -221,13 +221,12 @@ public class HttpHelper {
     /**
      * 检查款式与尺码
      */
-    public static void checkItemAndSize(String line, String position, String itemSize, HttpCallback callback) {
+    public static void checkItemAndSize(String sfc,  String itemSize, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/checkItemAndSize");
         params.put("OutputParameter", "resultJson");
         params.put("Content-Type", "text/json");
-        params.put("line", line);
-        params.put("position", position);
+        params.put("sfc", sfc);
         params.put("itemSize", itemSize);
         HttpRequest.post(checkItemAndSize, params, getResponseHandler(checkItemAndSize, callback));
     }
