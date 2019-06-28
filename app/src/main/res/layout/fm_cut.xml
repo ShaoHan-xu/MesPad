@@ -308,6 +308,22 @@
                         <TextView
                             style="@style/textStyle_gray"
                             android:layout_marginRight="8dp"
+                            android:text="SFC:" />
+
+                        <TextView
+                            android:id="@+id/tv_cut_sfc"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/textStyle_gray"
+                            android:layout_marginRight="8dp"
                             android:text="生产订单号" />
 
                         <TextView
@@ -316,6 +332,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layout_cut_mtmOrderNum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"

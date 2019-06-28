@@ -125,7 +125,7 @@ public class MQTTService extends Service {
             // 设置会话心跳时间 单位为秒 服务器会每隔1.5*value秒的时间向客户端发送个消息判断客户端是否在线，但这个方法并没有重连的机制
             options.setKeepAliveInterval(60);
             //设置自动重连
-            options.setAutomaticReconnect(true);
+//            options.setAutomaticReconnect(true);
 //            mqttAsyncClient.connect(connOpts).waitForCompletion();
             //设置回调
             mqttClient.setCallback(mqttCallback);
@@ -148,6 +148,7 @@ public class MQTTService extends Service {
                 Logger.d("mqtt connectionLost,cause:null");
                 LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "mqtt connectionLost,cause:null");
             }
+
             startReconnect();
         }
 
@@ -178,7 +179,6 @@ public class MQTTService extends Service {
             long messageId = token.getMessageId();
             Logger.d("messageId=:" + messageId);
         }
-
     };
 
     /**
@@ -200,7 +200,7 @@ public class MQTTService extends Service {
      * 重新连接如果他是必须的
      */
     public synchronized void reconnectIfNecessary() {
-        if (mqttClient == null || !mqttClient.isConnected()) {
+        if (mqttClient != null && !mqttClient.isConnected()) {
             connect();
         }
     }
@@ -211,10 +211,11 @@ public class MQTTService extends Service {
             @Override
             public void run() {
                 try {
+                    LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connect..." + connectCount);
                     mqttClient.connect(options, null, iMqttActionListener);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    // 连接出错，可以设置重新连接
+                    LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connect exception：" + e.getMessage());
                 }
             }
         }).start();
@@ -235,12 +236,14 @@ public class MQTTService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
                 Logger.e("MQTT 订阅异常 " + e.getMessage());
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connected and subscribe exception：" + e.getMessage());
             }
         }
 
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
             Logger.e("连接失败,exception:" + exception.getMessage());
+            startReconnect();
         }
     };
 
@@ -259,10 +262,11 @@ public class MQTTService extends Service {
 
             @Override
             public void run() {
-                boolean networkStatus = isNetworkAvailable();
                 connectCount++;
-                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "connect..." + connectCount);
+                boolean networkStatus = isNetworkAvailable();
                 LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "network status = " + networkStatus);
+                boolean pingStatus = SystemUtils.pingIpAddress(PadApplication.MQTT_BROKER);
+                LogUtil.writeToFile(LogUtil.LOGTYPE_MQTT_STATUS, "ping " + PadApplication.MQTT_BROKER + " status = " + pingStatus);
                 if (!mqttClient.isConnected() && networkStatus) {
                     connect();
                 }

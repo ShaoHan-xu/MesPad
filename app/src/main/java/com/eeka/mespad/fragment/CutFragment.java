@@ -83,6 +83,8 @@ public class CutFragment extends BaseFragment {
     private TextView mTv_sizeCode;
     private LinearLayout mLayout_ncData;
     private TextView mTv_ncDesc;
+    private LinearLayout mLayout_mtmOrderNum;
+    private TextView mTv_sfc;
 
     //套排
     private LinearLayout mLayout_TP;
@@ -191,6 +193,9 @@ public class CutFragment extends BaseFragment {
 
         mLayout_ncData = mView.findViewById(R.id.layout_cut_ncData);
         mTv_ncDesc = mView.findViewById(R.id.tv_cut_ncDesc);
+
+        mLayout_mtmOrderNum = mView.findViewById(R.id.layout_cut_mtmOrderNum);
+        mTv_sfc = mView.findViewById(R.id.tv_cut_sfc);
     }
 
     public void refreshView() {
@@ -314,12 +319,18 @@ public class CutFragment extends BaseFragment {
         TextView tv_qty = mView.findViewById(R.id.tv_sew_qty);
         TextView tv_matDesc = mView.findViewById(R.id.tv_cut_matDesc);
         tv_processLot.setText(mRI);
+        mTv_sfc.setText(mTailorInfo.getSFC_BO().split(",")[1]);
 
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         mTv_sizeCode.setText(orderInfo.getSIZE_CODE());
         tv_orderNum.setText(orderInfo.getSHOP_ORDER());
         String salesOrder = orderInfo.getSALES_ORDER();
-        tv_MTMOrderNum.setText(salesOrder);
+        if (isEmpty(salesOrder)) {
+            mLayout_mtmOrderNum.setVisibility(View.GONE);
+        } else {
+            mLayout_mtmOrderNum.setVisibility(View.VISIBLE);
+            tv_MTMOrderNum.setText(salesOrder);
+        }
 
         String tpOrder = orderInfo.getTP_ORDER();
         if (isEmpty(tpOrder)) {

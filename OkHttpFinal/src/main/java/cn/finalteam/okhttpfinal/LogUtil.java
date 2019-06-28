@@ -24,6 +24,7 @@ public class LogUtil {
     public static final int LOGTYPE_EXCEPTION = 5;//各种异常记录
 
     private static final SimpleDateFormat TIMESTAMP_FMT = new SimpleDateFormat("[HH:mm:ss] ", Locale.CHINA);
+    private static final SimpleDateFormat HOUR_FMT = new SimpleDateFormat("HH", Locale.CHINA);
     private static String mLogDir;
 
     public static void init(Context context) {
@@ -57,7 +58,17 @@ public class LogUtil {
         if (folder != null && !folder.exists()) {
             folder.mkdirs();
         }
-        File f = new File(folder.getAbsolutePath() + File.separator + getTodayString() + ".txt");
+        String filePath;
+        if (logType == LOGTYPE_HTTPRESPONSE) {
+            filePath = folder.getAbsolutePath() + File.separator + getTodayString() + File.separator + HOUR_FMT.format(new Date()) + ".txt";
+        } else {
+            filePath = folder.getAbsolutePath() + File.separator + getTodayString() + ".txt";
+        }
+        File f = new File(filePath);
+        File parentFile = f.getParentFile();
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
         String content = TIMESTAMP_FMT.format(new Date()) + message + "\n\n";
         try {
             OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(f, true), "UTF-8");
@@ -75,16 +86,20 @@ public class LogUtil {
     public static void deletePastLogFile() {
         File folder = new File(mLogDir);
         File[] files = folder.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                File[] fs = file.listFiles();
-                for (int i = fs.length - 1; i >= 0; i--) {
-                    File f = fs[i];
-                    if (f.isFile()) {
-                        long l = f.lastModified() / 1000;
-                        long curSeconds = System.currentTimeMillis() / 1000;
-                        if (curSeconds - l > getWeekSeconds()) {
-                            f.delete();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    File[] fs = file.listFiles();
+                    if (fs != null) {
+                        for (int i = fs.length - 1; i >= 0; i--) {
+                            File f = fs[i];
+                            if (f.isFile()) {
+                                long l = f.lastModified() / 1000;
+                                long curSeconds = System.currentTimeMillis() / 1000;
+                                if (curSeconds - l > getWeekSeconds()) {
+                                    f.delete();
+                                }
+                            }
                         }
                     }
                 }
