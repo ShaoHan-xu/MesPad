@@ -319,7 +319,10 @@ public class CutFragment extends BaseFragment {
         TextView tv_qty = mView.findViewById(R.id.tv_sew_qty);
         TextView tv_matDesc = mView.findViewById(R.id.tv_cut_matDesc);
         tv_processLot.setText(mRI);
-        mTv_sfc.setText(mTailorInfo.getSFC_BO().split(",")[1]);
+
+        String sfcBo = mTailorInfo.getSFC_BO();
+        if (!isEmpty(sfcBo))
+            mTv_sfc.setText(sfcBo.split(",")[1]);
 
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         mTv_sizeCode.setText(orderInfo.getSIZE_CODE());

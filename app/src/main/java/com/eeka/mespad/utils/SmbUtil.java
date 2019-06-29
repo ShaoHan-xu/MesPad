@@ -27,6 +27,8 @@ public class SmbUtil {
     private static String remoteUrl = "smb://10.7.121.10/eeka/nc_code";
     private static String date;
 
+    public static String mImgUrl;
+
     static {
         String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
         PositionInfoBo.NCImgInfo imgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
@@ -108,8 +110,9 @@ public class SmbUtil {
             String url = remoteUrl + File.separator + date;
             createDir(url);
 
+            mImgUrl = url + File.separator + fileName;
             NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(domainIp, username, password);  //先登录验证
-            SmbFile smbfile = new SmbFile(url + File.separator + fileName, auth);
+            SmbFile smbfile = new SmbFile(mImgUrl, auth);
 //            if (smbfile.exists()) {
 //                System.out.println("file is exists");
 //            } else {

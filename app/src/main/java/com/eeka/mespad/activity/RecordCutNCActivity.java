@@ -26,6 +26,7 @@ import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.DateUtil;
 import com.eeka.mespad.utils.FileUtil;
 import com.eeka.mespad.utils.SmbUtil;
 import com.eeka.mespad.utils.SpUtil;
@@ -288,7 +289,7 @@ public class RecordCutNCActivity extends BaseActivity {
         String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
         if (!isEmpty(s)) {
             PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
-            String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + mImgName;
+            String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + DateUtil.getCurDate().split(" ")[0] + File.separator + mImgName;
             recordNCBo.setNC_IMAGE_LOCATION(imgLocation);
         }
         mAdapter.notifyItemChanged(mCurPosition);
