@@ -97,7 +97,7 @@ public class PadApplication extends Application {
         String channel = getString(R.string.app_channel);
         if ("LH".equals(channel) || "LH_P".equals(channel)) {
             SpUtil.saveSite("8082");
-        } else if ("YD".equals(channel)) {
+        } else {
             SpUtil.saveSite("8081");
         }
 

@@ -7,6 +7,15 @@ public class ReworkWarnMsgBo {
     private String USER_NAME;
     private String HANGER_ID;
     private String SFC;
+    private String LINE_CATEGORY;
+
+    public String getLINE_CATEGORY() {
+        return LINE_CATEGORY;
+    }
+
+    public void setLINE_CATEGORY(String LINE_CATEGORY) {
+        this.LINE_CATEGORY = LINE_CATEGORY;
+    }
 
     public String getHANGER_ID() {
         return HANGER_ID;

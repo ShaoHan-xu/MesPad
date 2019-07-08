@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,7 +11,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:showDividers="middle">
-
+        
         <TextView
             android:id="@+id/tv_omitqc_location"
             style="@style/textStyle_default"
@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="5dp" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_recordUser"
             style="@style/textStyle_default"
@@ -29,7 +29,7 @@
             android:layout_weight="0.8"
             android:gravity="center"
             android:padding="5dp" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_item"
             style="@style/textStyle_default"
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="漏检款号" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_hangerId"
             style="@style/textStyle_default"
@@ -49,7 +49,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="漏检衣架号" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_sfc"
             style="@style/textStyle_default"
@@ -59,7 +59,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="漏检SFC" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_omitUser"
             style="@style/textStyle_default"
@@ -69,7 +69,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="漏检人" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_omitOperate"
             style="@style/textStyle_default"
@@ -79,7 +79,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="漏检工序" />
-
+        
         <TextView
             android:id="@+id/tv_omitqc_ncCodeDesc"
             style="@style/textStyle_default"
@@ -88,7 +88,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:padding="5dp"
+            android:text="不良描述"
             android:textColor="@color/text_blue_default" />
-
+    
     </LinearLayout>
 </LinearLayout>

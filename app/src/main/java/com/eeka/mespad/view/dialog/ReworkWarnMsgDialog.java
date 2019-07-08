@@ -37,11 +37,15 @@ public class ReworkWarnMsgDialog extends BaseDialog {
         LinearLayout layout_items = view.findViewById(R.id.layout_reworkMsg);
         for (ReworkWarnMsgBo item : mItems) {
             View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_reworkwarn, null);
+
+            TextView tv_item0 = itemView.findViewById(R.id.tv_item0);
             TextView tv_item1 = itemView.findViewById(R.id.tv_item1);
             TextView tv_item2 = itemView.findViewById(R.id.tv_item2);
             TextView tv_item3 = itemView.findViewById(R.id.tv_item3);
             TextView tv_item4 = itemView.findViewById(R.id.tv_item4);
             TextView tv_item5 = itemView.findViewById(R.id.tv_item5);
+
+            tv_item0.setText(item.getLINE_CATEGORY());
             tv_item1.setText(item.getSFC());
             tv_item2.setText(item.getHANGER_ID());
             tv_item3.setText(item.getOPER_DESC());

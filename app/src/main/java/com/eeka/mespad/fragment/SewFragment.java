@@ -28,6 +28,7 @@ import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.INARequestBo;
+import com.eeka.mespad.bo.NcDataBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.SewAttr;
 import com.eeka.mespad.bo.SewDataBo;
@@ -89,6 +90,9 @@ public class SewFragment extends BaseFragment {
     private TextView mTv_lastPosition;
     private TextView mTv_ncDetail;
 
+    private LinearLayout mLayout_ncData;
+    private TextView mTv_ncData;
+
     private String mRFID;
     private SewDataBo mSewData;
     private List<SewAttr> mList_lastOperation;
@@ -149,6 +153,9 @@ public class SewFragment extends BaseFragment {
         mView.findViewById(R.id.layout_sew_craftDesc).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_special).setOnClickListener(this);
+
+        mLayout_ncData = mView.findViewById(R.id.layout_sew_ncData);
+        mTv_ncData = mView.findViewById(R.id.tv_sew_ncData);
     }
 
     @Override
@@ -759,6 +766,19 @@ public class SewFragment extends BaseFragment {
         //包装主题，去分拣
         if (TopicUtil.TOPIC_PACKING.equals(mTopic)) {
             showSortingDialog();
+        }
+
+        //不良描述
+        if (mSewData.getExtInfoMap() != null) {
+            NcDataBo ncData = mSewData.getExtInfoMap().getNC_DATA();
+            if (ncData != null) {
+                mLayout_ncData.setVisibility(View.VISIBLE);
+                mTv_ncData.setText(ncData.getNC_DESC());
+            } else {
+                mLayout_ncData.setVisibility(View.GONE);
+            }
+        } else {
+            mLayout_ncData.setVisibility(View.GONE);
         }
     }
 

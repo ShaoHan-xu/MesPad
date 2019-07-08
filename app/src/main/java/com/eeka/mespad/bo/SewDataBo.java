@@ -37,6 +37,15 @@ public class SewDataBo implements Serializable {
     private List<SewAttr> lastOperations;
     private List<SewAttr> nextOperation;
     private List<SewAttr> colorItems;// 用料图
+    private ExtInfoMap extInfoMap;
+
+    public ExtInfoMap getExtInfoMap() {
+        return extInfoMap;
+    }
+
+    public void setExtInfoMap(ExtInfoMap extInfoMap) {
+        this.extInfoMap = extInfoMap;
+    }
 
     public List<SewAttr> getNextOperation() {
         return nextOperation;
@@ -150,4 +159,16 @@ public class SewDataBo implements Serializable {
         this.colorItems = colorItems;
     }
 
+    public static class ExtInfoMap implements Serializable {
+
+        private NcDataBo NC_DATA;
+
+        public NcDataBo getNC_DATA() {
+            return NC_DATA;
+        }
+
+        public void setNC_DATA(NcDataBo NC_DATA) {
+            this.NC_DATA = NC_DATA;
+        }
+    }
 }

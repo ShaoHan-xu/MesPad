@@ -81,9 +81,17 @@ public class OmitQCDetailDialog extends BaseDialog {
     }
 
     public void addItem(List<OmitQCBo> list) {
+        int childCount = mLayout_item.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View childAt = mLayout_item.getChildAt(i);
+            childAt.setBackgroundResource(R.color.white);
+        }
+
         mList.addAll(0, list);
         for (OmitQCBo item : list) {
-            mLayout_item.addView(getItemView(item), 0);
+            View itemView = getItemView(item);
+            itemView.setBackgroundResource(R.color.text_green_default);
+            mLayout_item.addView(itemView, 0);
         }
     }
 
