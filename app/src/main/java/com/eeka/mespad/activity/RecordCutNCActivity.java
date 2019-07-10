@@ -182,7 +182,21 @@ public class RecordCutNCActivity extends BaseActivity {
                 mCurPosition = position;
                 if (recordNCBo.getQTY() == 0) {
                     //第一次则需要拍照
-                    takePhoto();
+                    new AlertDialog.Builder(mContext)
+                            .setMessage("是否拍照？")
+                            .setNegativeButton("不拍照", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mImgName = null;
+                                    itemCountAdd();
+                                }
+                            })
+                            .setPositiveButton("拍照", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    takePhoto();
+                                }
+                            }).create().show();
                 } else {
                     itemCountAdd();
                 }
@@ -286,11 +300,15 @@ public class RecordCutNCActivity extends BaseActivity {
     private void itemCountAdd() {
         RecordNCBo recordNCBo = mList_badRecord.get(mCurPosition);
         recordNCBo.setQTY(recordNCBo.getQTY() + 1);
-        String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
-        if (!isEmpty(s)) {
-            PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
-            String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + DateUtil.getCurDate().split(" ")[0] + File.separator + mImgName;
-            recordNCBo.setNC_IMAGE_LOCATION(imgLocation);
+        if (isEmpty(mImgName)) {
+            recordNCBo.setNC_IMAGE_LOCATION(null);
+        } else {
+            String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
+            if (!isEmpty(s)) {
+                PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
+                String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + DateUtil.getCurDate().split(" ")[0] + File.separator + mImgName;
+                recordNCBo.setNC_IMAGE_LOCATION(imgLocation);
+            }
         }
         mAdapter.notifyItemChanged(mCurPosition);
     }

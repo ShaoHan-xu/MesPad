@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,9 +55,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class SuspendFragment extends BaseFragment {
 
-    private ListView mLv_orderList;
-    private List<String> mList_sfcList;
-    private SFCAdapter mSFCAdapter;
+//    private ListView mLv_orderList;
 
     private LinearLayout mLayout_component;
     private LinearLayout mLayout_matInfo;
@@ -118,7 +115,7 @@ public class SuspendFragment extends BaseFragment {
     @Override
     protected void initView() {
         super.initView();
-        mLv_orderList = mView.findViewById(R.id.lv_sfcList);
+//        mLv_orderList = mView.findViewById(R.id.lv_sfcList);
         mLayout_component = mView.findViewById(R.id.layout_component);
         mLayout_matInfo = mView.findViewById(R.id.layout_suspend_matInfo);
         mVP_img = mView.findViewById(R.id.vp_suspend_componentImg);
@@ -406,15 +403,15 @@ public class SuspendFragment extends BaseFragment {
                 JSONObject result = resultJSON.getJSONObject("result");
                 setupBaseView(result);
             } else if (HttpHelper.getSuspendUndoList.equals(url)) {
-                mList_sfcList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), String.class);
-                mSFCAdapter.notifyDataSetChanged(mList_sfcList);
-                for (int i = 0; i < mList_sfcList.size(); i++) {
-                    String str = mList_sfcList.get(i);
-                    if (mCurSFC != null && mCurSFC.equals(str)) {
-                        mLv_orderList.setSelection(i);
-                        break;
-                    }
-                }
+//                mList_sfcList = JSON.parseArray(resultJSON.getJSONArray("result").toString(), String.class);
+////                mSFCAdapter.notifyDataSetChanged(mList_sfcList);
+////                for (int i = 0; i < mList_sfcList.size(); i++) {
+////                    String str = mList_sfcList.get(i);
+////                    if (mCurSFC != null && mCurSFC.equals(str)) {
+////                        mLv_orderList.setSelection(i);
+////                        break;
+////                    }
+////                }
             } else if (HttpHelper.getSfcComponents.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mComponent = JSON.parseObject(result.toString(), SuspendComponentBo.class);

@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.eeka.mespad.R;
+import com.eeka.mespad.utils.SystemUtils;
 
 public class SuspendAlertDialog extends BaseDialog {
 
@@ -78,4 +79,9 @@ public class SuspendAlertDialog extends BaseDialog {
         }
     }
 
+    @Override
+    public void show() {
+        super.show();
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.8), (int) (SystemUtils.getScreenHeight(mContext) * 0.7));
+    }
 }

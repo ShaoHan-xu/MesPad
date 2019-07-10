@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
@@ -68,15 +69,24 @@ public class OmitQCDetailDialog extends BaseDialog {
         tv_omitUser.setText(item.getUserName());
         tv_omitOperate.setText(item.getOperationDesc());
 
+        final String ncImageLocation = item.getNcImageLocation();
+        if (isEmpty(ncImageLocation)) {
+            tv_ncCodeDesc.setTextColor(mContext.getResources().getColor(R.color.text_gray_default));
+        } else {
+            tv_ncCodeDesc.setTextColor(mContext.getResources().getColor(R.color.text_blue_default));
+            tv_ncCodeDesc.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        }
+
         tv_ncCodeDesc.setText(item.getNcDesc());
-        tv_ncCodeDesc.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         tv_ncCodeDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.startActivity(ImageBrowserActivity.getIntent(mContext, item.getNcImageLocation()));
+                if (isEmpty(ncImageLocation))
+                    Toast.makeText(mContext, "该不良记录未拍照片", Toast.LENGTH_SHORT).show();
+                else
+                    mContext.startActivity(ImageBrowserActivity.getIntent(mContext, ncImageLocation));
             }
         });
-
         return view;
     }
 
@@ -84,13 +94,13 @@ public class OmitQCDetailDialog extends BaseDialog {
         int childCount = mLayout_item.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = mLayout_item.getChildAt(i);
-            childAt.setBackgroundResource(R.color.white);
+            childAt.findViewById(R.id.itemView).setBackgroundResource(R.color.white);
         }
 
         mList.addAll(0, list);
         for (OmitQCBo item : list) {
             View itemView = getItemView(item);
-            itemView.setBackgroundResource(R.color.text_green_default);
+            itemView.findViewById(R.id.itemView).setBackgroundResource(R.color.text_green_default);
             mLayout_item.addView(itemView, 0);
         }
     }

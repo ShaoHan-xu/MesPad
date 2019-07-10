@@ -1,9 +1,10 @@
 package com.eeka.mespad.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -326,7 +326,21 @@ public class RecordSewNCActivity extends BaseActivity {
                                 }
                             }
 
-                            takePhoto();
+                            new AlertDialog.Builder(mContext)
+                                    .setMessage("是否拍照？")
+                                    .setNegativeButton("不拍照", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mImgName = null;
+                                            addNcProcess();
+                                        }
+                                    })
+                                    .setPositiveButton("拍照", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            takePhoto();
+                                        }
+                                    }).create().show();
                         }
                     }).show();
                 }
@@ -433,11 +447,13 @@ public class RecordSewNCActivity extends BaseActivity {
         mCurSelecting.setOperation(mCurNcProcess.getString("OPERATION"));
         mCurSelecting.setOperationDesc(mCurNcProcess.getString("DESCRIPTION"));
 
-        String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
-        if (!isEmpty(s)) {
-            PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
-            String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + DateUtil.getCurDate().split(" ")[0] + File.separator + mImgName;
-            mCurSelecting.setNcImageLocation(imgLocation);
+        if (!isEmpty(mImgName)) {
+            String s = SpUtil.get(SpUtil.KEY_NCIMG_INFO, null);
+            if (!isEmpty(s)) {
+                PositionInfoBo.NCImgInfo ncImgInfo = JSON.parseObject(s, PositionInfoBo.NCImgInfo.class);
+                String imgLocation = ncImgInfo.getPICTURE_REMOTE().replace("smb", "http").replace("/eeka", "") + File.separator + DateUtil.getCurDate().split(" ")[0] + File.separator + mImgName;
+                mCurSelecting.setNcImageLocation(imgLocation);
+            }
         }
 
         mSelectedAdapter.addItem(mCurSelecting);

@@ -32,6 +32,7 @@ import com.eeka.mespad.activity.WebActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.NcDataBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.RecordNCBo;
 import com.eeka.mespad.bo.ReturnMaterialInfoBo;
@@ -84,6 +85,7 @@ public class CutFragment extends BaseFragment {
     private LinearLayout mLayout_ncData;
     private TextView mTv_ncDesc;
     private LinearLayout mLayout_mtmOrderNum;
+    private LinearLayout mLayout_sfc;
     private TextView mTv_sfc;
 
     //套排
@@ -195,6 +197,7 @@ public class CutFragment extends BaseFragment {
         mTv_ncDesc = mView.findViewById(R.id.tv_cut_ncDesc);
 
         mLayout_mtmOrderNum = mView.findViewById(R.id.layout_cut_mtmOrderNum);
+        mLayout_sfc = mView.findViewById(R.id.layout_cut_sfc);
         mTv_sfc = mView.findViewById(R.id.tv_cut_sfc);
     }
 
@@ -321,8 +324,12 @@ public class CutFragment extends BaseFragment {
         tv_processLot.setText(mRI);
 
         String sfcBo = mTailorInfo.getSFC_BO();
-        if (!isEmpty(sfcBo))
+        if (!isEmpty(sfcBo)) {
+            mLayout_sfc.setVisibility(View.VISIBLE);
             mTv_sfc.setText(sfcBo.split(",")[1]);
+        } else {
+            mLayout_sfc.setVisibility(View.GONE);
+        }
 
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         mTv_sizeCode.setText(orderInfo.getSIZE_CODE());
@@ -356,7 +363,7 @@ public class CutFragment extends BaseFragment {
         }
 
         //配片不良
-        TailorInfoBo.NcData nc_data = mTailorInfo.getNC_DATA();
+        NcDataBo nc_data = mTailorInfo.getNC_DATA();
         if (nc_data == null) {
             mLayout_ncData.setVisibility(View.GONE);
         } else {

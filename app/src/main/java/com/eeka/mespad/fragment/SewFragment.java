@@ -768,9 +768,11 @@ public class SewFragment extends BaseFragment {
             showSortingDialog();
         }
 
-        //不良描述
-        if (mSewData.getExtInfoMap() != null) {
-            NcDataBo ncData = mSewData.getExtInfoMap().getNC_DATA();
+        //拓展数据
+        SewDataBo.ExtInfoMap extInfoMap = mSewData.getExtInfoMap();
+        if (extInfoMap != null) {
+            //不良描述
+            NcDataBo ncData = extInfoMap.getNC_DATA();
             if (ncData != null) {
                 mLayout_ncData.setVisibility(View.VISIBLE);
                 mTv_ncData.setText(ncData.getNC_DESC());
