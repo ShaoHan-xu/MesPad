@@ -17,7 +17,7 @@
     <View
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:background="@color/text_gray_default" />
+        android:background="@color/divider_gray" />
 
     <TextView
         android:id="@+id/tv_userId"

@@ -338,11 +338,12 @@ public class SuspendFragment extends BaseFragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(MATCH_PARENT, 0);
         layoutParams.weight = 1;
         view.setLayoutParams(layoutParams);
-        Button btn_component = view.findViewById(R.id.btn_componentName);
-        btn_component.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-        ImageView iv_finished = view.findViewById(R.id.iv_part_finished);
+
+        RelativeLayout rootView = view.findViewById(R.id.rootView);
+        TextView tv_componentName = view.findViewById(R.id.tv_componentName);
         TextView tv_helpDesc = view.findViewById(R.id.tv_helpDesc);
-        btn_component.setText(component.getComponentName());
+        ImageView iv_finished = view.findViewById(R.id.iv_part_finished);
+        tv_componentName.setText(component.getComponentName());
         String isNeedSubContract = component.getIsNeedSubContract();//是否需要外协
         String isSubContractCompleted = component.getIsSubContractCompleted();//外协是否已完成
         if ("true".equals(isNeedSubContract)) {
@@ -355,31 +356,31 @@ public class SuspendFragment extends BaseFragment {
             tv_helpDesc.setText("不需要外协");
         }
         if ("true".equals(component.getIsBound())) {
-            btn_component.setEnabled(false);
+            rootView.setEnabled(false);
             iv_finished.setVisibility(View.VISIBLE);
         } else {
-            btn_component.setEnabled(true);
+            rootView.setEnabled(true);
             iv_finished.setVisibility(View.GONE);
         }
-        btn_component.setOnClickListener(new View.OnClickListener() {
+        rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCurComponent = component;
-//                showLoading();
                 mWashLabel = null;
                 HttpHelper.getComponentInfo(mComponent.getSHOP_ORDER(), mCurSFC, component.getComponentId(), SuspendFragment.this);
                 List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
                 int childCount = mLayout_component.getChildCount();
                 for (int i = 0; i < childCount; i++) {
                     View childAt = mLayout_component.getChildAt(i);
-                    Button button = childAt.findViewById(R.id.btn_componentName);
+                    RelativeLayout rootView = childAt.findViewById(R.id.rootView);
+                    rootView.setBackgroundResource(R.drawable.btn_primary);
+                    rootView.setEnabled(true);
                     SuspendComponentBo.COMPONENTSBean componentsBean = components.get(i);
                     if ("true".equals(componentsBean.getIsBound())) {
-                        button.setEnabled(false);
-                    } else {
-                        button.setEnabled(true);
+                        rootView.setEnabled(false);
                     }
                 }
+                v.setBackgroundResource(R.color.colorPrimaryDark);
                 v.setEnabled(false);
             }
         });
