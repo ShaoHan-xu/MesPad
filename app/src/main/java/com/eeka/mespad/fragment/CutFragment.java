@@ -227,16 +227,6 @@ public class CutFragment extends BaseFragment {
         mVP_matInfo.setAdapter(mVPAdapter_matInfo);
         mVP_matInfo.addOnPageChangeListener(new ViewPagerChangedListener(ViewPagerChangedListener.TYPE_MAT));
 
-        //粘朴数据
-        mLayout_material2.removeAllViews();
-        List<TailorInfoBo.StickyInfo> stickyInfo = mTailorInfo.getSTICKY_INFOR();
-        if (stickyInfo != null) {
-            for (int i = 0; i < stickyInfo.size(); i++) {
-                TailorInfoBo.StickyInfo info = stickyInfo.get(i);
-                mLayout_material2.addView(getMaterialsView(info, i));
-            }
-        }
-
         //排料图数据
         mLayout_material1.removeAllViews();
         List<TailorInfoBo.LayoutInfoBean> layoutArray = mTailorInfo.getLAYOUT_INFOR();
@@ -278,6 +268,13 @@ public class CutFragment extends BaseFragment {
             }
         }
 
+        //粘朴数据
+        List<TailorInfoBo.StickyInfo> stickyInfo = mTailorInfo.getSTICKY_INFOR();
+        if (stickyInfo == null) {
+            stickyInfo = new ArrayList<>();
+        }
+
+        //工序数据
         List<TailorInfoBo.OPERINFORBean> list = mTailorInfo.getOPER_INFOR();
         VPAdapter mVPAdapter_process = new VPAdapter<>(list);
         mVP_process.setAdapter(mVPAdapter_process);
@@ -292,13 +289,20 @@ public class CutFragment extends BaseFragment {
         });
         mLv_process.setItemChecked(0, true);
 
-        //工序数据
         mLayout_processTab.removeAllViews();
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
-                final int finalI = i;
+                TailorInfoBo.OPERINFORBean operaInfoBean = list.get(i);
+                String sopUrl = operaInfoBean.getSOP_URL();
+                String[] split = sopUrl.split(",");
+                for (String url : split) {
+                    TailorInfoBo.StickyInfo stickyInfo1 = new TailorInfoBo.StickyInfo();
+                    stickyInfo1.setPICTURE_URL(url);
+                    stickyInfo1.setIDENTITY_INFO(operaInfoBean.getOPERATION());
+                }
 
-                mLayout_processTab.addView(TabViewUtil.getTabView(mContext, mTailorInfo.getOPER_INFOR().get(i), new View.OnClickListener() {
+                final int finalI = i;
+                mLayout_processTab.addView(TabViewUtil.getTabView(mContext, operaInfoBean, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mVP_process.setCurrentItem(finalI);
@@ -312,6 +316,11 @@ public class CutFragment extends BaseFragment {
         TailorInfoBo.NextOrderInfo nextOperInfo = mTailorInfo.getNEXT_OPER_INFOR();
         if (nextOperInfo != null) {
             mTv_nextProcess.setText(nextOperInfo.getOPER_DESC());
+        }
+
+        mLayout_material2.removeAllViews();
+        for (int i = 0; i < stickyInfo.size(); i++) {
+            mLayout_material2.addView(getMaterialsView(stickyInfo.get(i), i));
         }
 
         TextView tv_orderNum = mView.findViewById(R.id.tv_cut_orderNum);
@@ -799,7 +808,7 @@ public class CutFragment extends BaseFragment {
             Object object = data.get(position);
             if (object instanceof TailorInfoBo.MatInfoBean) {
                 TailorInfoBo.MatInfoBean matInfo = (TailorInfoBo.MatInfoBean) object;
-                textView.setText(String.format("1、%s\n2、%s", matInfo.getGRAND_CATEGORY_DESC(), matInfo.getMID_CATEGORY_DESC()));
+                textView.setText(String.format("大类、%s\n小类、%s", matInfo.getGRAND_CATEGORY_DESC(), matInfo.getMID_CATEGORY_DESC()));
             } else if (object instanceof TailorInfoBo.OPERINFORBean) {
                 TailorInfoBo.OPERINFORBean operInfo = (TailorInfoBo.OPERINFORBean) object;
                 String quality = operInfo.getOPERATION_INSTRUCTION();
