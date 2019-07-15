@@ -294,11 +294,14 @@ public class CutFragment extends BaseFragment {
             for (int i = 0; i < list.size(); i++) {
                 TailorInfoBo.OPERINFORBean operaInfoBean = list.get(i);
                 String sopUrl = operaInfoBean.getSOP_URL();
-                String[] split = sopUrl.split(",");
-                for (String url : split) {
-                    TailorInfoBo.StickyInfo stickyInfo1 = new TailorInfoBo.StickyInfo();
-                    stickyInfo1.setPICTURE_URL(url);
-                    stickyInfo1.setIDENTITY_INFO(operaInfoBean.getOPERATION());
+                if (!isEmpty(sopUrl)) {
+                    String[] split = sopUrl.split(",");
+                    for (String url : split) {
+                        TailorInfoBo.StickyInfo stickyInfo1 = new TailorInfoBo.StickyInfo();
+                        stickyInfo1.setPICTURE_URL(url);
+                        stickyInfo1.setIDENTITY_INFO(operaInfoBean.getOPERATION());
+                        stickyInfo.add(stickyInfo1);
+                    }
                 }
 
                 final int finalI = i;
