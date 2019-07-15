@@ -297,10 +297,12 @@ public class CutFragment extends BaseFragment {
                 if (!isEmpty(sopUrl)) {
                     String[] split = sopUrl.split(",");
                     for (String url : split) {
-                        TailorInfoBo.StickyInfo stickyInfo1 = new TailorInfoBo.StickyInfo();
-                        stickyInfo1.setPICTURE_URL(url);
-                        stickyInfo1.setIDENTITY_INFO(operaInfoBean.getOPERATION());
-                        stickyInfo.add(stickyInfo1);
+                        if (url.startsWith("http")) {
+                            TailorInfoBo.StickyInfo stickyInfo1 = new TailorInfoBo.StickyInfo();
+                            stickyInfo1.setPICTURE_URL(url);
+                            stickyInfo1.setIDENTITY_INFO(operaInfoBean.getOPERATION());
+                            stickyInfo.add(stickyInfo1);
+                        }
                     }
                 }
 
