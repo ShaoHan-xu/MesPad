@@ -29,6 +29,15 @@ public class TailorInfoBo implements Serializable {
     private String RFID;
     private String SFC_BO;
     private NcDataBo NC_DATA;
+    private int SUB_PACKAGE_NUM;
+
+    public int getSUB_PACKAGE_NUM() {
+        return SUB_PACKAGE_NUM;
+    }
+
+    public void setSUB_PACKAGE_NUM(int SUB_PACKAGE_NUM) {
+        this.SUB_PACKAGE_NUM = SUB_PACKAGE_NUM;
+    }
 
     public NcDataBo getNC_DATA() {
         return NC_DATA;

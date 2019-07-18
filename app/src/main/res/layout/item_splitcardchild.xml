@@ -3,17 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="4dp">
-
+        
         <TextView
             style="@style/textStyle_default"
+            android:text="分包号：" />
+        
+        <TextView
+            android:id="@+id/tv_splitCard_No"
+            style="@style/textStyle_default"
+            android:text="0" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_marginLeft="20dp"
             android:text="卡号：" />
-
+        
         <EditText
             android:id="@+id/et_splitCard_cardNum"
             android:layout_width="150dp"
@@ -21,12 +31,12 @@
             android:background="@drawable/border_black"
             android:inputType="number"
             android:padding="5dp" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_marginLeft="20dp"
             android:text="数量：" />
-
+        
         <EditText
             android:id="@+id/et_splitCard_qty"
             android:layout_width="60dp"
@@ -34,7 +44,7 @@
             android:background="@drawable/border_black"
             android:inputType="number"
             android:padding="5dp" />
-
+        
         <Button
             android:id="@+id/btn_splitCard_delete"
             android:layout_width="wrap_content"
@@ -44,6 +54,6 @@
             android:background="@drawable/circle_red"
             android:text="删除"
             android:textColor="@color/white" />
-
+    
     </LinearLayout>
 </LinearLayout>

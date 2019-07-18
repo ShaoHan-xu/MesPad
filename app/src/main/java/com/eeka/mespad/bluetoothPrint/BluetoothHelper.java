@@ -9,8 +9,11 @@ import android.widget.Toast;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.ToastUtil;
+import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.SplitCardDialog;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 
 import zpSDK.zpSDK.zpBluetoothPrinter;
@@ -18,6 +21,46 @@ import zpSDK.zpSDK.zpBluetoothPrinter;
 public class BluetoothHelper {
     private static final int DEVICE_TYPE_KEYBOARD = 1344;//蓝牙外输设备
     private static final int DEVICE_TYPE_PRINTER = 1664;//蓝牙打印机
+
+    public static void printSubCardInfo(Activity activity, SplitCardDialog.SplitCardDataBo data) {
+        if (data == null || data.getLotInfos() == null) {
+            ErrorDialog.showAlert(activity, "打印内容不能为空");
+            return;
+        }
+        BluetoothDevice device = getBluetoothDevice(activity);
+        if (device == null) {
+            return;
+        }
+        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(activity);
+
+        List<SplitCardDialog.SplitCardItemBo> lotInfos = data.getLotInfos();
+        int size = lotInfos.size();
+        for (int i = 0; i < size; i++) {
+            if (!zpSDK.connect(device.getAddress())) {
+                if (!zpSDK.connect(device.getAddress())) {
+                    ToastUtil.showToast(activity, "connect fail------", Toast.LENGTH_LONG);
+                    return;
+                }
+            }
+
+            zpSDK.pageSetup(576, 400);
+            SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);
+            zpSDK.drawText(80, 350, "工单号：" + data.getShopOrder(), 3, 1, 0, false, false);
+            zpSDK.drawText(160, 350, "款号：" + data.getItem(), 3, 1, 0, false, false);
+            zpSDK.drawText(240, 350, "码数：" + data.getSize(), 3, 1, 0, false, false);
+            zpSDK.drawText(320, 350, "分包号：" + cardItemBo.getNumber(), 3, 1, 0, false, false);
+            zpSDK.drawText(400, 350, "子卡号：" + cardItemBo.getCardId(), 3, 1, 0, false, false);
+            zpSDK.drawText(480, 350, "子卡件数：" + cardItemBo.getSubqty(), 3, 1, 0, false, false);
+
+            zpSDK.print(0, 1);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            zpSDK.disconnect();
+        }
+    }
 
     public static void Print(Activity activity, String content) {
         if (TextUtils.isEmpty(content)) {
