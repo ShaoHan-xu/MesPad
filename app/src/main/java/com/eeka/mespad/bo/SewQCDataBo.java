@@ -44,6 +44,15 @@ public class SewQCDataBo {
     private String prePositionType;
     private String prePositionTypeDesc;
     private String sfccurrentOperation;
+    private String secondClass;
+
+    public String getSecondClass() {
+        return secondClass;
+    }
+
+    public void setSecondClass(String secondClass) {
+        this.secondClass = secondClass;
+    }
 
     public String getSfccurrentOperation() {
         return sfccurrentOperation;

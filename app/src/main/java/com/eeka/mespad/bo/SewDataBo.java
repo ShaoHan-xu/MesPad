@@ -162,6 +162,15 @@ public class SewDataBo implements Serializable {
     public static class ExtInfoMap implements Serializable {
 
         private NcDataBo NC_DATA;
+        private String secondClass;
+
+        public String getSecondClass() {
+            return secondClass;
+        }
+
+        public void setSecondClass(String secondClass) {
+            this.secondClass = secondClass;
+        }
 
         public NcDataBo getNC_DATA() {
             return NC_DATA;

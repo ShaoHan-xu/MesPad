@@ -52,4 +52,5 @@
     <item name="btn_cutMatInfo" type="id" />
     <item name="btn_processSheets" type="id" />
     <item name="btn_yiLing" type="id" />
+    <item name="btn_secondClass" type="id" />
 </resources>

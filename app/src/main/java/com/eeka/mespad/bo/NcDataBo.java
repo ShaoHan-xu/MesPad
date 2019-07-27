@@ -1,6 +1,8 @@
 package com.eeka.mespad.bo;
 
-public class NcDataBo {
+import java.io.Serializable;
+
+public class NcDataBo implements Serializable {
 
     private String NC_CODE;
     private String NC_DESC;

@@ -89,6 +89,7 @@ public class SewFragment extends BaseFragment {
     private ListView mLv_nextProcess;
     private TextView mTv_lastPosition;
     private TextView mTv_ncDetail;
+    private TextView mTv_secondClass;
 
     private LinearLayout mLayout_ncData;
     private TextView mTv_ncData;
@@ -141,6 +142,7 @@ public class SewFragment extends BaseFragment {
         mTv_lastPosition = mView.findViewById(R.id.tv_sew_lastPosition);
         mTv_ncDetail = mView.findViewById(R.id.tv_sew_ncDetail);
         mTv_ncDetail.setOnClickListener(this);
+        mTv_secondClass = mView.findViewById(R.id.tv_sew_secondClass);
 
         mLayout_processTab = mView.findViewById(R.id.layout_sew_processList);
         mLayout_matInfo = mView.findViewById(R.id.layout_sew_matInfo);
@@ -610,6 +612,7 @@ public class SewFragment extends BaseFragment {
             toast("数据错误");
             return;
         }
+
         mTv_ncDetail.setVisibility(View.GONE);
         mTv_qualityReq.setText(null);
         mTv_craftDesc.setText(null);
@@ -779,8 +782,16 @@ public class SewFragment extends BaseFragment {
             } else {
                 mLayout_ncData.setVisibility(View.GONE);
             }
+
+            String secondClass = extInfoMap.getSecondClass();
+            if (isEmpty(secondClass)) {
+                mTv_secondClass.setVisibility(View.GONE);
+            } else {
+                mTv_secondClass.setVisibility(View.VISIBLE);
+            }
         } else {
             mLayout_ncData.setVisibility(View.GONE);
+            mTv_secondClass.setVisibility(View.GONE);
         }
     }
 

@@ -381,6 +381,10 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
+                case "SECOND_CLASS":
+                    button.setText("二等品");
+                    button.setId(R.id.btn_secondClass);
+                    break;
                 case "YILING_MESSAGE":
                     button.setText("衣领号显示");
                     button.setId(R.id.btn_yiLing);
@@ -745,6 +749,11 @@ public class MainActivity extends NFCActivity {
             return;
         }
         switch (v.getId()) {
+            case R.id.btn_secondClass:
+                if (mCutFragment != null) {
+                    mCutFragment.markSecondClass();
+                }
+                break;
             case R.id.btn_processSheets:
                 String mtmOrder = SpUtil.getSalesOrder();
                 String shopOrder = SpUtil.get(SpUtil.KEY_SHOPORDER, null);

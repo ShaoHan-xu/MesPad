@@ -367,6 +367,24 @@ public class TailorInfoBo implements Serializable {
         private String TP_ORDER;
         private String ITEM_DESC;
         private String SIZE_CODE;
+        private String WORK_CENTER;
+        private String WORK_CENTER_DESC;
+
+        public String getWORK_CENTER() {
+            return WORK_CENTER;
+        }
+
+        public void setWORK_CENTER(String WORK_CENTER) {
+            this.WORK_CENTER = WORK_CENTER;
+        }
+
+        public String getWORK_CENTER_DESC() {
+            return WORK_CENTER_DESC;
+        }
+
+        public void setWORK_CENTER_DESC(String WORK_CENTER_DESC) {
+            this.WORK_CENTER_DESC = WORK_CENTER_DESC;
+        }
 
         public String getSIZE_CODE() {
             return SIZE_CODE;

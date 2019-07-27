@@ -43,6 +43,7 @@ public class StorageOutFragment extends BaseFragment {
     private static final int WHAT_INITDATA = 0;
 
     private TextView mTv_type;
+    private TextView mTv_workCenter;
     private TextView mTv_storageArea;
     private EditText mEt_shopOrder, mEt_item;
     private TextView mTv_autoRefresh;
@@ -51,7 +52,9 @@ public class StorageOutFragment extends BaseFragment {
     private List<StorageOutBo> mList_item;
 
     private List<DictionaryDataBo> mList_type;
+    private List<DictionaryDataBo> mList_workCenter;
     private Map<String, List<DictionaryDataBo>> mMap_area;
+    private DictionaryDataBo mWorkCenter;
     private DictionaryDataBo mClothType;
     private DictionaryDataBo mArea;
 
@@ -76,6 +79,7 @@ public class StorageOutFragment extends BaseFragment {
     protected void initView() {
         super.initView();
         mTv_type = mView.findViewById(R.id.tv_storageOut_setType);
+        mTv_workCenter = mView.findViewById(R.id.tv_storageOut_workCenter);
         mTv_storageArea = mView.findViewById(R.id.tv_storageOut_setArea);
         mEt_shopOrder = mView.findViewById(R.id.et_shopOrder);
         mEt_item = mView.findViewById(R.id.et_item);
@@ -86,6 +90,7 @@ public class StorageOutFragment extends BaseFragment {
         mLv_items.setAdapter(mItemAdapter);
 
         mTv_type.setOnClickListener(this);
+        mTv_workCenter.setOnClickListener(this);
         mTv_autoRefresh.setOnClickListener(this);
         mTv_storageArea.setOnClickListener(this);
         mView.findViewById(R.id.btn_search).setOnClickListener(this);
@@ -94,6 +99,18 @@ public class StorageOutFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
+
+        mWorkCenter = new DictionaryDataBo();
+        mWorkCenter.setLABEL("请选择");
+        mWorkCenter.setVALUE("*");
+
+        mClothType = new DictionaryDataBo();
+        mClothType.setLABEL("请选择");
+        mClothType.setVALUE("*");
+
+        mArea = new DictionaryDataBo();
+        mArea.setLABEL("请选择");
+        mArea.setVALUE("*");
 
         mMap_area = new HashMap<>();
 
@@ -122,7 +139,11 @@ public class StorageOutFragment extends BaseFragment {
             case R.id.tv_storageOut_setType:
                 showSelector(mList_type, mTv_type);
                 break;
+            case R.id.tv_storageOut_workCenter:
+                showSelector(mList_workCenter, mTv_workCenter);
+                break;
             case R.id.btn_search:
+                showLoading();
                 search();
                 break;
             case R.id.tv_autoRefresh:
@@ -142,8 +163,8 @@ public class StorageOutFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //如果切换品类，库区需要重新选择
-                mArea = null;
-                mTv_storageArea.setText(null);
+                mArea = new DictionaryDataBo("请选择", "*");
+                mTv_storageArea.setText(mArea.getLABEL());
 
                 T t = list.get(position);
                 DictionaryDataBo item = (DictionaryDataBo) t;
@@ -153,10 +174,13 @@ public class StorageOutFragment extends BaseFragment {
                     mClothType = item;
                 } else if (tv_anchorView == mTv_storageArea) {
                     mArea = item;
+                } else if (tv_anchorView == mTv_workCenter) {
+                    mWorkCenter = item;
                 }
 
                 String area = mTv_storageArea.getText().toString();
                 if (!isEmpty(area)) {
+                    showLoading();
                     search();
                 }
             }
@@ -167,14 +191,9 @@ public class StorageOutFragment extends BaseFragment {
     }
 
     private void search() {
-        if (mClothType == null || mArea == null) {
-            ErrorDialog.showAlert(mContext, "请先选择库位和类型");
-            return;
-        }
         String shopOrder = mEt_shopOrder.getText().toString();
         String item = mEt_item.getText().toString();
-        showLoading();
-        HttpHelper.getWareHouseInfo(mClothType.getVALUE(), mArea.getVALUE(), shopOrder, item, StorageOutFragment.this);
+        HttpHelper.getWareHouseInfo(mWorkCenter.getVALUE(), mClothType.getVALUE(), mArea.getVALUE(), shopOrder, item, StorageOutFragment.this);
     }
 
     private class ItemAdapter extends CommonAdapter<StorageOutBo> {
@@ -262,6 +281,7 @@ public class StorageOutFragment extends BaseFragment {
                     if (mList_item.size() == 0) {
                         showAlert("该品类在库区内无库存");
                     }
+                    mHandler.removeMessages(WHAT_INITDATA);
                     mHandler.sendEmptyMessageDelayed(WHAT_INITDATA, 60 * 1000);
                 }
             } else if (HttpHelper.storageOut.equals(url)) {
@@ -281,6 +301,7 @@ public class StorageOutFragment extends BaseFragment {
             } else if (HttpHelper.getClothType.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mList_type = JSON.parseArray(result.getJSONArray("clothTypeoptions").toString(), DictionaryDataBo.class);
+                mList_workCenter = JSON.parseArray(result.getJSONArray("workCenteroptions").toString(), DictionaryDataBo.class);
             } else if (HttpHelper.getStorAreaData.equals(url)) {
                 List<DictionaryDataBo> list = JSON.parseArray(resultJSON.getJSONArray("result").toString(), DictionaryDataBo.class);
                 mMap_area.put(mClothType.getVALUE(), list);

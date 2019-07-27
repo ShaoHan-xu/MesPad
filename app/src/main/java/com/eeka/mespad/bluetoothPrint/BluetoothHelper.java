@@ -52,6 +52,13 @@ public class BluetoothHelper {
             zpSDK.drawText(400, 350, "子卡号：" + cardItemBo.getCardId(), 3, 1, 0, false, false);
             zpSDK.drawText(480, 350, "子卡件数：" + cardItemBo.getSubqty(), 3, 1, 0, false, false);
 
+//            zpSDK.pageSetup(576, 200);
+//            zpSDK.drawText(10, 10, "工单号：3456784324653", 3, 0, 0, false, false);
+//            zpSDK.drawText(10, 60, "款号：KF2353", 3, 0, 0, false, false);
+//            zpSDK.drawText(300, 60, "分包号：2", 3, 0, 0, false, false);
+//            zpSDK.drawText(10, 110, "码数：36", 3, 0, 0, false, false);
+//            zpSDK.drawText(300, 110, "子卡件数：20", 3, 0, 0, false, false);
+
             zpSDK.print(0, 1);
             try {
                 Thread.sleep(500);

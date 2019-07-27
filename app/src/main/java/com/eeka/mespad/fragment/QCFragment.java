@@ -74,6 +74,7 @@ public class QCFragment extends BaseFragment {
     private TextView mTv_reworkInfo;
     private TextView mTv_lastPosition;
     private LinearLayout mLayout_lastPosition;
+    private TextView mTv_secondClass;
 
     private SewQCDataBo mSewQCData;
     private ClothSizeBo mClothSizeData;
@@ -120,9 +121,12 @@ public class QCFragment extends BaseFragment {
         mTv_special.setOnClickListener(this);
         mTv_MTMOrderNum.setOnClickListener(this);
 
+        mTv_secondClass = mView.findViewById(R.id.tv_qc_secondClass);
+
         mTv_componentDesc.setOnClickListener(this);
         mView.findViewById(R.id.btn_sewQc_save).setOnClickListener(this);
         mView.findViewById(R.id.btn_sewQc_refresh).setOnClickListener(this);
+
     }
 
     @Override
@@ -194,6 +198,13 @@ public class QCFragment extends BaseFragment {
         mTv_matDesc.setText(mSewQCData.getItemDesc());
         mTv_size.setText(mSewQCData.getSfcSize());
         mTv_special.setText(mSewQCData.getSoMark());
+
+        String secondClass = mSewQCData.getSecondClass();
+        if (!isEmpty(secondClass) && "SECOND_CLASS".equals(secondClass)) {
+            mTv_secondClass.setVisibility(View.VISIBLE);
+        } else {
+            mTv_secondClass.setVisibility(View.GONE);
+        }
 
         String lastPosition = mSewQCData.getPrePosition();
         if (isEmpty(lastPosition)) {

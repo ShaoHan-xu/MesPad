@@ -13,6 +13,14 @@ public class DictionaryDataBo {
     private String VALUE;
     private String LABEL;
 
+    public DictionaryDataBo() {
+    }
+
+    public DictionaryDataBo(String LABEL, String VALUE) {
+        this.VALUE = VALUE;
+        this.LABEL = LABEL;
+    }
+
     public String getVALUE() {
         return VALUE;
     }

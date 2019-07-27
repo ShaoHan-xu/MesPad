@@ -3,14 +3,14 @@
     android:id="@+id/layout_rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <LinearLayout
         android:id="@+id/tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="horizontal">
-
+        
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -20,16 +20,7 @@
             android:orientation="vertical"
             android:padding="0.5dp"
             android:showDividers="middle">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="设置品类与库区"
-                android:textColor="@color/white"
-                android:textSize="@dimen/textSize_title" />
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +28,36 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:showDividers="middle">
-
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="工作中心" />
+                
+                <TextView
+                    android:id="@+id/tv_storageOut_workCenter"
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/ic_arrow_down"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="请选择" />
+            
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_gray"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+                
                 <TextView
                     style="@style/textStyle_default"
                     android:layout_width="0dp"
@@ -45,7 +65,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="品类" />
-
+                
                 <TextView
                     android:id="@+id/tv_storageOut_setType"
                     style="@style/textStyle_default"
@@ -53,10 +73,11 @@
                     android:layout_weight="1"
                     android:drawableRight="@drawable/ic_arrow_down"
                     android:gravity="center"
-                    android:padding="10dp" />
-
+                    android:padding="10dp"
+                    android:text="请选择" />
+            
             </LinearLayout>
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,7 +85,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:showDividers="middle">
-
+                
                 <TextView
                     style="@style/textStyle_default"
                     android:layout_width="0dp"
@@ -72,7 +93,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="库区" />
-
+                
                 <TextView
                     android:id="@+id/tv_storageOut_setArea"
                     style="@style/textStyle_default"
@@ -80,12 +101,13 @@
                     android:layout_weight="1"
                     android:drawableRight="@drawable/ic_arrow_down"
                     android:gravity="center"
-                    android:padding="10dp" />
-
+                    android:padding="10dp"
+                    android:text="请选择" />
+            
             </LinearLayout>
-
+        
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -93,48 +115,49 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:background="@drawable/border_black"
-            android:orientation="vertical"
-            android:padding="10dp">
-
+            android:orientation="vertical">
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
-
+                android:orientation="horizontal"
+                android:padding="10dp">
+                
                 <TextView
                     style="@style/textStyle_default"
                     android:text="工单号：" />
-
+                
                 <EditText
                     android:id="@+id/et_shopOrder"
                     style="@style/textStyle_default"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/border_black" />
-
+            
             </LinearLayout>
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingTop="5dp">
-
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+                
                 <TextView
                     style="@style/textStyle_default"
                     android:text="款     号：" />
-
+                
                 <EditText
                     android:id="@+id/et_item"
                     style="@style/textStyle_default"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/border_black" />
-
+            
             </LinearLayout>
-
+            
             <Button
                 android:id="@+id/btn_search"
                 style="@style/btnStyle_primary"
@@ -142,7 +165,7 @@
                 android:layout_marginTop="10dp"
                 android:text="查询" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -150,7 +173,7 @@
             android:background="@drawable/border_black"
             android:orientation="vertical"
             android:padding="0.5dp">
-
+            
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -159,12 +182,12 @@
                 android:text="在岗员工"
                 android:textColor="@color/white"
                 android:textSize="@dimen/textSize_title" />
-
+            
             <ScrollView
                 android:id="@+id/scrollView_loginUsers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
+                
                 <LinearLayout
                     android:id="@+id/layout_loginUsers"
                     android:layout_width="match_parent"
@@ -174,9 +197,9 @@
                     android:showDividers="middle" />
             </ScrollView>
         </LinearLayout>
-
+    
     </LinearLayout>
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -187,12 +210,12 @@
         android:orientation="vertical"
         android:padding="0.5dp"
         android:showDividers="middle">
-
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary">
-
+            
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -200,7 +223,7 @@
                 android:text="库区信息"
                 android:textColor="@color/white"
                 android:textSize="@dimen/textSize_title" />
-
+            
             <TextView
                 android:id="@+id/tv_autoRefresh"
                 android:layout_width="wrap_content"
@@ -211,9 +234,9 @@
                 android:paddingRight="10dp"
                 android:text="暂停刷新"
                 android:textColor="@color/white" />
-
+        
         </RelativeLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -222,7 +245,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:showDividers="middle">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -230,7 +253,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="工单号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -238,7 +261,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="工作中心" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -246,7 +269,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="款号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -254,7 +277,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="码数" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -262,7 +285,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="RFID卡号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -270,7 +293,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="库区" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -278,7 +301,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="库位" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -286,7 +309,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="入库数量" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -294,7 +317,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="出库数量" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -302,7 +325,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="剩余数量" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
@@ -311,13 +334,13 @@
                 android:padding="5dp"
                 android:text="操作" />
         </LinearLayout>
-
+        
         <ListView
             android:id="@+id/lv_storageOut_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@drawable/divider_gray" />
-
+    
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,6 +1,9 @@
 package com.eeka.mespad.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -87,6 +90,7 @@ public class CutFragment extends BaseFragment {
     private LinearLayout mLayout_mtmOrderNum;
     private LinearLayout mLayout_sfc;
     private TextView mTv_sfc;
+    private TextView mTv_workCenter;
 
     //套排
     private LinearLayout mLayout_TP;
@@ -177,6 +181,7 @@ public class CutFragment extends BaseFragment {
         mTv_qualityDesc = mView.findViewById(R.id.tv_qualityDescribe);
         mTv_special = mView.findViewById(R.id.tv_special);
         mTv_sizeCode = mView.findViewById(R.id.tv_sew_sizeCode);
+        mTv_workCenter = mView.findViewById(R.id.tv_cut_workCenter);
 
         mLayout_TP = mView.findViewById(R.id.layout_cut_TP);
         mTv_TP = mView.findViewById(R.id.tv_cut_TPNum);
@@ -201,6 +206,7 @@ public class CutFragment extends BaseFragment {
         mTv_sfc = mView.findViewById(R.id.tv_cut_sfc);
     }
 
+    @SuppressLint("SetTextI18n")
     public void refreshView() {
         //物料数据
         mLayout_material1.removeAllViews();
@@ -335,7 +341,9 @@ public class CutFragment extends BaseFragment {
         TextView tv_processLot = mView.findViewById(R.id.tv_sew_processLot);
         TextView tv_qty = mView.findViewById(R.id.tv_sew_qty);
         TextView tv_matDesc = mView.findViewById(R.id.tv_cut_matDesc);
-        tv_processLot.setText(mRI);
+        if (!isEmpty(mRI)) {
+            tv_processLot.setText(mRI.replace("ProcessLotBO:", ""));
+        }
 
         String sfcBo = mTailorInfo.getSFC_BO();
         if (!isEmpty(sfcBo)) {
@@ -384,6 +392,8 @@ public class CutFragment extends BaseFragment {
             mLayout_ncData.setVisibility(View.VISIBLE);
             mTv_ncDesc.setText(nc_data.getNC_DESC());
         }
+
+        mTv_workCenter.setText(orderInfo.getWORK_CENTER());
     }
 
     /**
@@ -405,6 +415,25 @@ public class CutFragment extends BaseFragment {
         }
 
         TabViewUtil.refreshTabView(mLayout_processTab, position);
+    }
+
+    public void markSecondClass() {
+        if (mTailorInfo == null) {
+            showAlert("请先获取数据");
+            return;
+        }
+        new AlertDialog.Builder(mContext).setMessage("确定标记为二等品吗？")
+                .setNegativeButton("取消", null)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showLoading();
+                        String sfc_bo = mTailorInfo.getSFC_BO();
+                        HttpHelper.markSecondClass(sfc_bo, CutFragment.this);
+                    }
+                })
+                .create()
+                .show();
     }
 
     /**
@@ -941,6 +970,8 @@ public class CutFragment extends BaseFragment {
                 mBtn_done.setEnabled(false);
             } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {
                 toast("注销在制品成功，可重新开始");
+            } else if (HttpHelper.markSecondClass.equals(url)) {
+                toast("标记二等品成功");
             }
         }
     }

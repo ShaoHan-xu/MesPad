@@ -124,6 +124,7 @@ public class HttpHelper {
     public static final String storageOut = BASE_URL + "wareHouse/WareHouseOut?";
     public static final String getClothType = BASE_URL + "wareHouse/webInitial?";
     public static final String getStorAreaData = BASE_URL + "wareHouse/getStorAreaData?";
+    public static final String markSecondClass = BASE_URL + "logNcPad/saveSecondClassBySfcRef?";
 
     //MII接口
     public static final String replaceBindingsRfid = PadApplication.XMII_URL + "Runner?";
@@ -135,6 +136,17 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 根据品类获取库区
+     */
+    public static void markSecondClass(String sfcBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("SFC_BO", sfcBo);
+        params.put("params", json.toString());
+        HttpRequest.post(markSecondClass, params, getResponseHandler(markSecondClass, callback));
     }
 
     public static void uploadNcImg(File file, HttpCallback callback) {
@@ -181,12 +193,13 @@ public class HttpHelper {
     /**
      * 获取库区内物料数据
      */
-    public static void getWareHouseInfo(String type, String area, String shopOrder, String item, HttpCallback callback) {
+    public static void getWareHouseInfo(String workCenter,String type, String area, String shopOrder, String item, HttpCallback callback) {
         if (TextUtils.isEmpty(shopOrder)) shopOrder = "*";
         if (TextUtils.isEmpty(item)) item = "*";
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("CLOTH_TYPE", type);
+        json.put("WORK_CENTER", workCenter);
         json.put("STOR_AREA", area);
         json.put("SHOP_ORDER", shopOrder);
         json.put("ITEM", item);
