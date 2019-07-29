@@ -393,7 +393,7 @@ public class CutFragment extends BaseFragment {
             mTv_ncDesc.setText(nc_data.getNC_DESC());
         }
 
-        mTv_workCenter.setText(orderInfo.getWORK_CENTER());
+        mTv_workCenter.setText(orderInfo.getWORK_CENTER_DESC());
     }
 
     /**

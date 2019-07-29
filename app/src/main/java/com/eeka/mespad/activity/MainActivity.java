@@ -379,7 +379,6 @@ public class MainActivity extends NFCActivity {
                 continue;
             }
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
-            button.setOnClickListener(this);
             switch (item.getBUTTON_ID()) {
                 case "SECOND_CLASS":
                     button.setText("二等品");
@@ -570,6 +569,10 @@ public class MainActivity extends NFCActivity {
                         mCutFragment.showCompleteButton();
                     continue;
             }
+            if (isEmpty(button.getText().toString())) {
+                return;
+            }
+            button.setOnClickListener(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             button.setLayoutParams(params);
             mLayout_controlPanel.addView(button);
