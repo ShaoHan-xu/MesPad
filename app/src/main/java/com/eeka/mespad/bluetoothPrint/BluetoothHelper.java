@@ -43,21 +43,22 @@ public class BluetoothHelper {
                 }
             }
 
-            zpSDK.pageSetup(576, 400);
-            SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);
-            zpSDK.drawText(80, 350, "工单号：" + data.getShopOrder(), 3, 1, 0, false, false);
-            zpSDK.drawText(160, 350, "款号：" + data.getItem(), 3, 1, 0, false, false);
-            zpSDK.drawText(240, 350, "码数：" + data.getSize(), 3, 1, 0, false, false);
-            zpSDK.drawText(320, 350, "分包号：" + cardItemBo.getNumber(), 3, 1, 0, false, false);
-            zpSDK.drawText(400, 350, "子卡号：" + cardItemBo.getCardId(), 3, 1, 0, false, false);
-            zpSDK.drawText(480, 350, "子卡件数：" + cardItemBo.getSubqty(), 3, 1, 0, false, false);
+//            zpSDK.pageSetup(576, 400);
+//            SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);
+//            zpSDK.drawText(80, 350, "工单号：" + data.getShopOrder(), 3, 1, 0, false, false);
+//            zpSDK.drawText(160, 350, "款号：" + data.getItem(), 3, 1, 0, false, false);
+//            zpSDK.drawText(240, 350, "码数：" + data.getSize(), 3, 1, 0, false, false);
+//            zpSDK.drawText(320, 350, "分包号：" + cardItemBo.getNumber(), 3, 1, 0, false, false);
+//            zpSDK.drawText(400, 350, "子卡号：" + cardItemBo.getCardId(), 3, 1, 0, false, false);
+//            zpSDK.drawText(480, 350, "子卡件数：" + cardItemBo.getSubqty(), 3, 1, 0, false, false);
 
-//            zpSDK.pageSetup(576, 200);
-//            zpSDK.drawText(10, 10, "工单号：3456784324653", 3, 0, 0, false, false);
-//            zpSDK.drawText(10, 60, "款号：KF2353", 3, 0, 0, false, false);
-//            zpSDK.drawText(300, 60, "分包号：2", 3, 0, 0, false, false);
-//            zpSDK.drawText(10, 110, "码数：36", 3, 0, 0, false, false);
-//            zpSDK.drawText(300, 110, "子卡件数：20", 3, 0, 0, false, false);
+            zpSDK.pageSetup(576, 200);
+            SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);
+            zpSDK.drawText(30, 10, "工单号：" + data.getShopOrder(), 3, 0, 0, false, false);
+            zpSDK.drawText(30, 60, "款号：" + data.getItem(), 3, 0, 0, false, false);
+            zpSDK.drawText(320, 60, "分包号：" + cardItemBo.getNumber(), 3, 0, 0, false, false);
+            zpSDK.drawText(30, 110, "码数：" + data.getSize(), 3, 0, 0, false, false);
+            zpSDK.drawText(320, 110, "子卡件数：" + cardItemBo.getSubqty(), 3, 0, 0, false, false);
 
             zpSDK.print(0, 1);
             try {

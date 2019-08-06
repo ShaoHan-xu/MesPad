@@ -119,6 +119,9 @@ public class SplitCardDialog extends BaseDialog {
                 refreshQTY();
             }
         });
+
+        EditText et_cardNum = childView.findViewById(R.id.et_splitCard_cardNum);
+        et_cardNum.requestFocus();
     }
 
     /**

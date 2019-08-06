@@ -26,10 +26,10 @@ public class PadApplication extends Application {
     public static final String BASE_URL_P_LH = "http://10.7.121.64:50000/eeka-mes/";//龙华P系统
     public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
 
-    public static final String XMII_URL_D = "http://10.7.121.54:50000/XMII/";//D系统
-    public static final String XMII_URL_Q = "http://10.7.121.60:50000/XMII/";//Q系统
-    public static final String XMII_URL_P_LH = "http://10.7.121.64:50000/XMII/";//龙华P系统
-    public static final String XMII_URL_P = "http://10.10.200.16:8000/XMII/";//P系统
+    public static final String XMII_URL_D = "http://10.7.121.54:50000/XMII/Runner?";//D系统
+    public static final String XMII_URL_Q = "http://10.7.121.60:50000/XMII/Runner?";//Q系统
+    public static final String XMII_URL_P_LH = "http://10.7.121.64:50000/XMII/Runner?";//龙华P系统
+    public static final String XMII_URL_P = "http://10.10.200.16:8000/XMII/Runner?";//P系统
 
     public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
     public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统

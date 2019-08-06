@@ -54,6 +54,7 @@
         <receiver android:name=".AlarmReceiver">
             <intent-filter>
                 <action android:name="android.alarm.maintenance.action"/>
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
             </intent-filter>
         </receiver>
 

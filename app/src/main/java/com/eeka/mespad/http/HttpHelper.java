@@ -127,9 +127,8 @@ public class HttpHelper {
     public static final String markSecondClass = BASE_URL + "logNcPad/saveSecondClassBySfcRef?";
 
     //MII接口
-    public static final String replaceBindingsRfid = PadApplication.XMII_URL + "Runner?";
-    public static final String checkItemAndSize = PadApplication.XMII_URL + "Runner?";
-    public static final String getProcessSheets = PadApplication.XMII_URL + "Runner?";
+    public static final String XMII_URL = PadApplication.XMII_URL;
+
     private static Context mContext;
 
     private static HttpRequest.HttpRequestBo mCookieOutRequest;//记录cookie过期的请求，用于重新登录后再次请求
@@ -223,12 +222,10 @@ public class HttpHelper {
      * 获取工艺单
      */
     public static void getProcessSheets(String shopOrder, HttpCallback callback) {
-        RequestParams params = getBaseParams();
+        RequestParams params = getXMIIParams();
         params.put("Transaction", "EEKA_EXT/TRANS/ProcessSheet/TRANSACTION/styleTechnology");
-        params.put("OutputParameter", "resultJson");
-        params.put("Content-Type", "text/json");
         params.put("shopOrder", shopOrder);
-        HttpRequest.post(getProcessSheets, params, getResponseHandler(getProcessSheets, callback));
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
     /**
@@ -237,11 +234,9 @@ public class HttpHelper {
     public static void checkItemAndSize(String sfc,  String itemSize, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/checkItemAndSize");
-        params.put("OutputParameter", "resultJson");
-        params.put("Content-Type", "text/json");
         params.put("sfc", sfc);
         params.put("itemSize", itemSize);
-        HttpRequest.post(checkItemAndSize, params, getResponseHandler(checkItemAndSize, callback));
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
     /**
@@ -250,11 +245,9 @@ public class HttpHelper {
     public static void replaceBindingsRfid(String oldRFID, String newRFID, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/updateSortRfid");
-        params.put("OutputParameter", "resultJson");
-        params.put("Content-Type", "text/json");
         params.put("oldRfid", oldRFID);
         params.put("newRfid", newRFID);
-        HttpRequest.post(replaceBindingsRfid, params, getResponseHandler(replaceBindingsRfid, callback));
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
     /**
@@ -1089,6 +1082,13 @@ public class HttpHelper {
         if (!TextUtils.isEmpty(cookie)) {
             params.addHeader("Cookie", cookie);
         }
+        return params;
+    }
+
+    private static RequestParams getXMIIParams(){
+        RequestParams params = getBaseParams();
+        params.put("OutputParameter", "resultJson");
+        params.put("Content-Type", "text/json");
         return params;
     }
 

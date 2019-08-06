@@ -1194,7 +1194,7 @@ public class MainActivity extends NFCActivity {
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
                 refreshLoginUser();
-            } else if (HttpHelper.getProcessSheets.equals(url)) {
+            } else if (HttpHelper.XMII_URL.equals(url)) {
                 ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
                 if (processSheets == null) {
                     ErrorDialog.showAlert(mContext, "该订单无工艺单信息");
@@ -1223,7 +1223,7 @@ public class MainActivity extends NFCActivity {
                 toast("用户下线成功");
                 logoutSuccess();
             } else {
-                if (HttpHelper.getProcessSheets.equals(url)) {
+                if (HttpHelper.XMII_URL.equals(url)) {
                     showErrorDialog(resultJSON.getString("result"));
                 } else {
                     showErrorDialog(message);
