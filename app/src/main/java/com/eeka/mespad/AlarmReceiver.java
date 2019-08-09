@@ -19,9 +19,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (BROADCAST_BOOT_COMPLETED.equals(action)) {
             Logger.d("收到开机广播了。。。。");
-            Intent i = new Intent(context, MainActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+//            Intent i = new Intent(context, MainActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(i);
         } else if (BROADCAST_Maintenance.equals(action)) {
             PushJson pushJson = new PushJson();
             boolean isWeek = intent.getBooleanExtra("isWeek", false);

@@ -2,6 +2,7 @@ package com.eeka.mespad.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,7 +28,6 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.callback.IntegerCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
-import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.SelectorPopWindow;
 import com.eeka.mespad.view.dialog.StorageOutQTYDialog;
 
@@ -204,6 +204,15 @@ public class StorageOutFragment extends BaseFragment {
 
         @Override
         public void convert(ViewHolder holder, final StorageOutBo item, final int position) {
+            if (item.getFEED_LEVEL() == 1) {
+                holder.getView(R.id.itemView).setBackgroundColor(Color.parseColor("#FDE9D9"));
+            } else if (item.getFEED_LEVEL() == 2) {
+                holder.getView(R.id.itemView).setBackgroundColor(Color.parseColor("#DAEEF3"));
+            } else if (item.getFEED_LEVEL() == 3) {
+                holder.getView(R.id.itemView).setBackgroundColor(Color.parseColor("#D8E4BC"));
+            } else {
+                holder.getView(R.id.itemView).setBackgroundResource(R.color.white);
+            }
             holder.setText(R.id.tv_storageOut_shopOrder, item.getSHOP_ORDER());
             holder.setText(R.id.tv_storageOut_item, item.getITEM());
             holder.setText(R.id.tv_storageOut_workCenter, item.getWORK_CENTER());
@@ -220,7 +229,7 @@ public class StorageOutFragment extends BaseFragment {
                 public void onClick(View v) {
                     List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
                     if (positionUsers == null || positionUsers.size() == 0) {
-                        showErrorDialog("请员工上岗在操作");
+                        showErrorDialog("请员工上岗再操作");
                         return;
                     }
                     mOutPosition = position;
@@ -234,12 +243,12 @@ public class StorageOutFragment extends BaseFragment {
 
     private void showInputDialog() {
         final StorageOutBo outBo = mList_item.get(mOutPosition);
-        mStorageOutQTYDialog = new StorageOutQTYDialog(mContext, outBo.getSURPLUS_QUANTITY(), new IntegerCallback() {
+        mStorageOutQTYDialog = new StorageOutQTYDialog(mContext, outBo.getSHOP_ORDER(), outBo.getITEM(), outBo.getSIZE(), outBo.getSURPLUS_QUANTITY(), new IntegerCallback() {
             @Override
             public void callback(int value) {
                 List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
                 if (positionUsers == null || positionUsers.size() == 0) {
-                    showErrorDialog("请员工上岗在操作");
+                    showErrorDialog("请员工上岗再操作");
                     return;
                 }
                 outBo.setUSER_ID(positionUsers.get(0).getEMPLOYEE_NUMBER());

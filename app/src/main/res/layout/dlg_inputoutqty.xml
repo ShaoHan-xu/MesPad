@@ -1,44 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@color/windowBackground">
+    
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center"
+        android:padding="8dp"
         android:text="输入出库数量"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_title" />
-
-    <EditText
-        android:id="@+id/et_qty"
-        style="@style/textStyle_default"
-        android:layout_width="200dp"
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/border_black"
-        android:gravity="center"
-        android:inputType="number"
-        android:padding="10dp" />
-
+        android:orientation="vertical">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:gravity="right"
+                android:text="工单号：" />
+            
+            <TextView
+                android:id="@+id/tv_shopOrder"
+                style="@style/textStyle_default"
+                android:text="" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:gravity="right"
+                android:text="款号：" />
+            
+            <TextView
+                android:id="@+id/tv_item"
+                style="@style/textStyle_default"
+                android:text="" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:gravity="right"
+                android:text="码数：" />
+            
+            <TextView
+                android:id="@+id/tv_size"
+                style="@style/textStyle_default"
+                android:text="" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:gravity="right"
+                android:text="剩余数量：" />
+            
+            <TextView
+                android:id="@+id/tv_lessQTY"
+                style="@style/textStyle_default"
+                android:text="" />
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:gravity="right"
+                android:text="出库数量：" />
+            
+            <EditText
+                android:id="@+id/et_qty"
+                style="@style/textStyle_default"
+                android:layout_width="150dp"
+                android:background="@drawable/border_black"
+                android:gravity="center"
+                android:inputType="number"
+                android:padding="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_cancel"
             style="@style/btnStyle_primary"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="取消" />
-
+        
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent" />
-
+        
         <Button
             android:id="@+id/btn_done"
             style="@style/btnStyle_primary"

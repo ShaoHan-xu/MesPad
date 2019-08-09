@@ -1,6 +1,8 @@
 package com.eeka.mespad.bo;
 
-public class StorageOutBo {
+import java.io.Serializable;
+
+public class StorageOutBo implements Serializable {
 
     /**
      * SHOP_ORDER : 000060007228
@@ -29,6 +31,15 @@ public class StorageOutBo {
     private String SURPLUS_QUANTITY;
     private String QUANTITY;
     private String IS_OUT;
+    private int FEED_LEVEL;
+
+    public int getFEED_LEVEL() {
+        return FEED_LEVEL;
+    }
+
+    public void setFEED_LEVEL(int FEED_LEVEL) {
+        this.FEED_LEVEL = FEED_LEVEL;
+    }
 
     public String getIS_OUT() {
         return IS_OUT;
