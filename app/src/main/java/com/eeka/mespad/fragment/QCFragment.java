@@ -550,7 +550,7 @@ public class QCFragment extends BaseFragment {
         String content = tv_sizeAttr.getText().toString();
         if (content.length() > 6) {
             String st = content.substring(0, content.length() / 2);
-            String en = content.substring(content.length() / 2, content.length());
+            String en = content.substring(content.length() / 2);
             tv_sizeAttr.setText(String.format("%s\n%s", st, en));
         }
 

@@ -232,7 +232,7 @@ public class HttpHelper {
      * 检查款式与尺码
      */
     public static void checkItemAndSize(String sfc,  String itemSize, HttpCallback callback) {
-        RequestParams params = getBaseParams();
+        RequestParams params = getXMIIParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/checkItemAndSize");
         params.put("sfc", sfc);
         params.put("itemSize", itemSize);
@@ -243,7 +243,7 @@ public class HttpHelper {
      * 更换衣架
      */
     public static void replaceBindingsRfid(String oldRFID, String newRFID, HttpCallback callback) {
-        RequestParams params = getBaseParams();
+        RequestParams params = getXMIIParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/updateSortRfid");
         params.put("oldRfid", oldRFID);
         params.put("newRfid", newRFID);
