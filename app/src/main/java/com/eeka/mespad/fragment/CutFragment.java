@@ -466,6 +466,34 @@ public class CutFragment extends BaseFragment {
         }
     }
 
+    public void completeWork() {
+        if (mTailorInfo == null) {
+            toast("请先开始作业");
+            return;
+        }
+        if ("P".equals(mOrderType)) {
+            List<TailorInfoBo.OPERINFORBean> operInfo = mTailorInfo.getOPER_INFOR();
+            if (operInfo != null) {
+                //遍历当前工序，如果有拉布，并且没有记录拉布数据，则必须记录拉布数据才可以完工
+                for (TailorInfoBo.OPERINFORBean item : operInfo) {
+                    if (!isEmpty(item.getDESCRIPTION()) && item.getDESCRIPTION().contains("拉布")) {
+                        if (!isRecordLabu) {
+                            showErrorDialog("请记录拉布数据");
+                            return;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        showLoading();
+        if ("S".equals(mOrderType)) {
+            HttpHelper.completeCustomWork(getStartAndCompleteParams(), this);
+        } else {
+            HttpHelper.completeBatchWork(getStartAndCompleteParams(), this);
+        }
+    }
+
     /**
      * 选择粘朴方式
      */
@@ -497,14 +525,19 @@ public class CutFragment extends BaseFragment {
         new AutoPickDialog(mContext, shopOrder, itemCode, "20").show();
     }
 
+    private String USER_ID;//避免员工点开始与完成时的用户不一致
+
     private StartWorkParamsBo getStartAndCompleteParams() {
         TailorInfoBo.SHOPORDERINFORBean orderInfo = mTailorInfo.getSHOP_ORDER_INFOR();
         StartWorkParamsBo params = new StartWorkParamsBo();
         params.setRFID(mRFID);
-        List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
-        if (positionUsers != null && positionUsers.size() != 0) {
-            params.setUSER_ID(positionUsers.get(0).getUSER());
+        if (isEmpty(USER_ID)) {
+            List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+            if (positionUsers != null && positionUsers.size() != 0) {
+                USER_ID = positionUsers.get(0).getUSER();
+            }
         }
+        params.setUSER_ID(USER_ID);
         ContextInfoBo contextInfo = SpUtil.getContextInfo();
         if (contextInfo != null) {
             params.setPOSITION(contextInfo.getPOSITION());
@@ -532,31 +565,7 @@ public class CutFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_done) {
-            if (mTailorInfo == null) {
-                toast("请先开始作业");
-                return;
-            }
-            if ("P".equals(mOrderType)) {
-                List<TailorInfoBo.OPERINFORBean> operInfo = mTailorInfo.getOPER_INFOR();
-                if (operInfo != null) {
-                    //遍历当前工序，如果有拉布，并且没有记录拉布数据，则必须记录拉布数据才可以完工
-                    for (TailorInfoBo.OPERINFORBean item : operInfo) {
-                        if (!isEmpty(item.getDESCRIPTION()) && item.getDESCRIPTION().contains("拉布")) {
-                            if (!isRecordLabu) {
-                                showErrorDialog("请记录拉布数据");
-                                return;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-            showLoading();
-            if ("S".equals(mOrderType)) {
-                HttpHelper.completeCustomWork(getStartAndCompleteParams(), this);
-            } else {
-                HttpHelper.completeBatchWork(getStartAndCompleteParams(), this);
-            }
+            completeWork();
         } else if (v.getId() == R.id.layout_processDescription) {
             String content = mTv_qualityDesc.getText().toString();
             if (!isEmpty(content))
@@ -966,6 +975,7 @@ public class CutFragment extends BaseFragment {
 //                    mBtn_done.setText("开始");
 //                    mBtn_done.setBackgroundResource(R.drawable.btn_green);
                 toast("工序已完成");
+                USER_ID = null;
                 mCardState.setCompleted(true);
                 mBtn_done.setEnabled(false);
             } else if (url.equals(HttpHelper.signoffByShopOrder) || url.equals(HttpHelper.signoffByProcessLot)) {

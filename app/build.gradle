@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 117
+        versionCode 118
 
-        versionName "3.117"
+        versionName "3.118"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -130,9 +130,9 @@ dependencies {
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
-    implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.tencent.bugly:crashreport_upgrade:1.4.1'
+    implementation 'com.google.zxing:core:3.3.0'
     implementation files('libs/guavalib.jar')
     implementation files('libs/ksoap2-android-assembly-3.3.0-jar-with-dependencies.jar')
     implementation files('libs/zp_cpcl_new.jar')

@@ -23,6 +23,15 @@ public class PositionInfoBo {
     private String PICTURE_USER;//记录不良时上传的图片路径
     private String PICTURE_PASSWD;//记录不良时上传的图片路径
     private String PICTURE_REMOTE;//记录不良时上传的图片路径
+    private String WORK_TYPE;//工作类型，大货=P，定制=S
+
+    public String getWORK_TYPE() {
+        return WORK_TYPE;
+    }
+
+    public void setWORK_TYPE(String WORK_TYPE) {
+        this.WORK_TYPE = WORK_TYPE;
+    }
 
     public NCImgInfo getNcImgInfo() {
         NCImgInfo ncImgInfo = new NCImgInfo();

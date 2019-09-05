@@ -1,5 +1,6 @@
 package com.eeka.mespad.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -10,9 +11,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -69,6 +72,7 @@ import com.eeka.mespad.view.dialog.MaintenanceDialog;
 import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
+import com.eeka.mespad.zxing.android.CaptureActivity;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -86,6 +90,9 @@ import cn.finalteam.okhttpfinal.LogUtil;
  */
 
 public class MainActivity extends NFCActivity {
+
+    private static final String DECODED_CONTENT_KEY = "codedContent";
+    private static final int REQUEST_CODE_SCAN = 0x0000;
 
     private DrawerLayout mDrawerLayout;
     private CutFragment mCutFragment;
@@ -229,7 +236,9 @@ public class MainActivity extends NFCActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
-        if (PushJson.TYPE_ALERT.equals(type)) {
+        if (PushJson.TYPE_SCAN.equals(type)) {
+            Logger.d("扫码");
+        } else if (PushJson.TYPE_ALERT.equals(type)) {
             showAlert(push.getMessage());
         } else if (PushJson.TYPE_Maintenance.equals(type)) {
             Logger.d(push.getMessage());
@@ -601,11 +610,8 @@ public class MainActivity extends NFCActivity {
         Fragment fragment = null;
         switch (mTopic) {
             case TopicUtil.TOPIC_PACKING:
-                if (mSewFragment == null)
-                    mSewFragment = new SewFragment();
-                fragment = mSewFragment;
-                break;
             case TopicUtil.TOPIC_MANUAL:
+            case TopicUtil.TOPIC_SEW:
                 if (mSewFragment == null)
                     mSewFragment = new SewFragment();
                 fragment = mSewFragment;
@@ -614,11 +620,6 @@ public class MainActivity extends NFCActivity {
                 if (mCutFragment == null)
                     mCutFragment = new CutFragment();
                 fragment = mCutFragment;
-                break;
-            case TopicUtil.TOPIC_SEW:
-                if (mSewFragment == null)
-                    mSewFragment = new SewFragment();
-                fragment = mSewFragment;
                 break;
             case TopicUtil.TOPIC_SUSPEND:
                 if (mSuspendFragment == null)
@@ -687,6 +688,45 @@ public class MainActivity extends NFCActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (allowAllPermission) {
+            startScan();
+        }
+    }
+
+    public void startScan() {
+        if (!checkPermission(Manifest.permission.CAMERA)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermission(Manifest.permission.CAMERA)) {
+                requestPermission(new String[]{Manifest.permission.CAMERA});
+                return;
+            }
+        }
+        Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SCAN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 扫描二维码/条码回传
+        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
+            if (data != null) {
+                //返回的文本内容
+                String content = data.getStringExtra(DECODED_CONTENT_KEY);
+                //返回的BitMap图像
+//                Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
+
+                PushJson pushJson = new PushJson();
+                pushJson.setType(PushJson.TYPE_SCAN);
+                pushJson.setContent(content);
+                EventBus eventBus = EventBus.getDefault();
+                eventBus.post(pushJson);
+            }
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
@@ -695,6 +735,7 @@ public class MainActivity extends NFCActivity {
                 isSearchOrder = true;
                 if (checkResource())
                     searchOrder();
+//                startScan();
                 return;
             case R.id.tv_main_searchType:
                 showSearchTypeWindow();

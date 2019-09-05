@@ -192,7 +192,7 @@ public class HttpHelper {
     /**
      * 获取库区内物料数据
      */
-    public static void getWareHouseInfo(String workCenter,String type, String area, String shopOrder, String item, HttpCallback callback) {
+    public static void getWareHouseInfo(String workCenter, String type, String area, String shopOrder, String item, HttpCallback callback) {
         if (TextUtils.isEmpty(shopOrder)) shopOrder = "*";
         if (TextUtils.isEmpty(item)) item = "*";
         RequestParams params = getBaseParams();
@@ -231,7 +231,7 @@ public class HttpHelper {
     /**
      * 检查款式与尺码
      */
-    public static void checkItemAndSize(String sfc,  String itemSize, HttpCallback callback) {
+    public static void checkItemAndSize(String sfc, String itemSize, HttpCallback callback) {
         RequestParams params = getXMIIParams();
         params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_HANGER_DATA_TO_WMS/TRANSACTION/checkItemAndSize");
         params.put("sfc", sfc);
@@ -696,7 +696,7 @@ public class HttpHelper {
     /**
      * 根据设计部件获取不良代码列表
      */
-    public static void getSewNcCodeList(String productComponent,String designComponent, HttpCallback callback) {
+    public static void getSewNcCodeList(String productComponent, String designComponent, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("PAD_ID", PAD_IP);
@@ -1074,6 +1074,7 @@ public class HttpHelper {
     private static RequestParams getBaseParams() {
         PAD_IP = getPadIp();
         RequestParams params = new RequestParams();
+        params.put("PAD_IP", PAD_IP);
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {
             params.put("site", site);
@@ -1085,7 +1086,7 @@ public class HttpHelper {
         return params;
     }
 
-    private static RequestParams getXMIIParams(){
+    private static RequestParams getXMIIParams() {
         RequestParams params = getBaseParams();
         params.put("OutputParameter", "resultJson");
         params.put("Content-Type", "text/json");

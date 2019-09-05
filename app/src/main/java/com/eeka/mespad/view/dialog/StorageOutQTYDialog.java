@@ -45,8 +45,6 @@ public class StorageOutQTYDialog extends BaseDialog {
         tv_size.setText(mSize);
         tv_lessQTY.setText(mLesQTY + "");
 
-        final EditText et_value = mView.findViewById(R.id.et_qty);
-
         mView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,18 +54,8 @@ public class StorageOutQTYDialog extends BaseDialog {
         mView.findViewById(R.id.btn_done).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String s = et_value.getText().toString();
-                if (TextUtils.isEmpty(s)) {
-                    ErrorDialog.showAlert(mContext, "出库数量不能为空");
-                    return;
-                }
-                int qty = Integer.valueOf(s);
-                if (qty > mLesQTY) {
-                    ErrorDialog.showAlert(mContext, "出库数量不能大于库存剩余数量");
-                    return;
-                }
                 if (mCallback != null) {
-                    mCallback.callback(qty);
+                    mCallback.callback(mLesQTY);
                 }
             }
         });

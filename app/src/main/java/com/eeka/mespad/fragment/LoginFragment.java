@@ -1,5 +1,6 @@
 package com.eeka.mespad.fragment;
 
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +8,6 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethod;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,14 +18,20 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.activity.MainActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +67,18 @@ public class LoginFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         initView();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -104,6 +122,7 @@ public class LoginFragment extends BaseFragment {
         }
 
         mView.findViewById(R.id.iv_login_morePosition).setOnClickListener(this);
+        mView.findViewById(R.id.iv_login_scan).setOnClickListener(this);
     }
 
     @Override
@@ -113,6 +132,10 @@ public class LoginFragment extends BaseFragment {
             login();
         } else if (v.getId() == R.id.iv_login_morePosition) {
             showSiteList(mEt_site);
+        } else if (v.getId() == R.id.iv_login_scan) {
+            MainActivity activity = (MainActivity) getActivity();
+            if (activity != null)
+                activity.startScan();
         }
     }
 
@@ -210,6 +233,15 @@ public class LoginFragment extends BaseFragment {
                     mClockCallback.onClockIn(false);
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushMsgReceive(PushJson push) {
+        String type = push.getType();
+        if (PushJson.TYPE_SCAN.equals(type)) {
+            mEt_user.setText(push.getContent());
+            login();
         }
     }
 

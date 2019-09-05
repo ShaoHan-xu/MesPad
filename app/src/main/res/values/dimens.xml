@@ -20,5 +20,8 @@
     <dimen name="width_sewNCSelected">250dp</dimen>
     <dimen name="bottomBarHeight">50dp</dimen>
     <dimen name="searchBoxWidth">180dp</dimen>
+    
+    <dimen name="standard_padding">8dip</dimen>
+    <dimen name="half_padding">4dip</dimen>
 
 </resources>

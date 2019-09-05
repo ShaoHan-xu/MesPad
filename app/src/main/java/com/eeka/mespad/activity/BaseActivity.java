@@ -127,18 +127,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected boolean allowAllPermission;
 
-    protected boolean checkPermissionResult(int[] grantResults) {
-        allowAllPermission = false;
-        for (int grantResult : grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                allowAllPermission = false;
-                break;
-            }
-            allowAllPermission = true;
-        }
-        return allowAllPermission;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -151,14 +139,11 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 allowAllPermission = true;
             }
-            if (allowAllPermission) {
-
-            } else {
+            if (!allowAllPermission) {
                 Toast.makeText(mContext, "该功能需要授权方可使用", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
 
     /**
      * 显示登录弹框

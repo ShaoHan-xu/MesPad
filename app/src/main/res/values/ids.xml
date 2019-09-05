@@ -5,6 +5,15 @@
     <item name="radioButton3" type="id" />
     <item name="radioButton4" type="id" />
     <item name="radioButton5" type="id" />
+    
+    <!-- zxing相关 -->
+    <item type="id" name="decode"/>
+    <item type="id" name="decode_failed"/>
+    <item type="id" name="decode_succeeded"/>
+    <item type="id" name="launch_product_query"/>
+    <item type="id" name="quit"/>
+    <item type="id" name="restart_preview"/>
+    <item type="id" name="return_scan_result"/>
 
     <!-- 主页底部按钮ID -->
     <item name="btn_materialReturn" type="id" />
