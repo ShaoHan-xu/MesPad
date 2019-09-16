@@ -309,7 +309,7 @@ public class RecordSewNCActivity extends BaseActivity {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getSewNcCodeList.equals(url)) {
                 mList_NcCode = JSON.parseArray(resultJSON.getJSONArray("result").toString(), RecordNCBo.class);
-                mNcAdapter.setData(mList_NcCode);
+                mNcAdapter.notifyDataSetChanged(mList_NcCode);
                 mNcAdapter.notifyDataSetChanged();
             } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
                 if (!this.isFinishing()) {//避免在网络请求成功前用户关闭了界面导致弹框闪退

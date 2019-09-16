@@ -367,7 +367,7 @@
         android:id="@+id/layout_imageBrowser_images"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/divider_white"
+        android:divider="@drawable/divider_white_5dp"
         android:orientation="horizontal"
         android:showDividers="middle"
         android:visibility="gone" />

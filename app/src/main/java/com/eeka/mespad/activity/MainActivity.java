@@ -1,6 +1,5 @@
 package com.eeka.mespad.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -11,11 +10,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -36,10 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.AlarmReceiver;
-import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
@@ -47,9 +42,7 @@ import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.OmitQCBo;
-import com.eeka.mespad.bo.PocketSizeBo;
 import com.eeka.mespad.bo.PositionInfoBo;
-import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.ReworkWarnMsgBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -70,9 +63,7 @@ import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MaintenanceDialog;
 import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
-import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
-import com.eeka.mespad.zxing.android.CaptureActivity;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -90,9 +81,6 @@ import cn.finalteam.okhttpfinal.LogUtil;
  */
 
 public class MainActivity extends NFCActivity {
-
-    private static final String DECODED_CONTENT_KEY = "codedContent";
-    private static final int REQUEST_CODE_SCAN = 0x0000;
 
     private DrawerLayout mDrawerLayout;
     private CutFragment mCutFragment;
@@ -487,7 +475,7 @@ public class MainActivity extends NFCActivity {
                     break;
                 case "VIDEO":
                     button.setText("视频查看");
-                    button.setId(R.id.btn_video);
+                    button.setId(R.id.btn_playVideo);
                     break;
                 case "LOGIN":
                     button.setText("上岗登录");
@@ -688,45 +676,6 @@ public class MainActivity extends NFCActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (allowAllPermission) {
-            startScan();
-        }
-    }
-
-    public void startScan() {
-        if (!checkPermission(Manifest.permission.CAMERA)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermission(Manifest.permission.CAMERA)) {
-                requestPermission(new String[]{Manifest.permission.CAMERA});
-                return;
-            }
-        }
-        Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_SCAN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // 扫描二维码/条码回传
-        if (requestCode == REQUEST_CODE_SCAN && resultCode == RESULT_OK) {
-            if (data != null) {
-                //返回的文本内容
-                String content = data.getStringExtra(DECODED_CONTENT_KEY);
-                //返回的BitMap图像
-//                Bitmap bitmap = data.getParcelableExtra(DECODED_BITMAP_KEY);
-
-                PushJson pushJson = new PushJson();
-                pushJson.setType(PushJson.TYPE_SCAN);
-                pushJson.setContent(content);
-                EventBus eventBus = EventBus.getDefault();
-                eventBus.post(pushJson);
-            }
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
@@ -744,7 +693,7 @@ public class MainActivity extends NFCActivity {
                 mDrawerLayout.closeDrawer(Gravity.START);
                 startActivity(new Intent(mContext, SettingActivity.class));
                 return;
-            case R.id.btn_video:
+            case R.id.btn_playVideo:
                 if (TopicUtil.TOPIC_SEW.equals(mTopic)) {
                     mSewFragment.playVideo();
                 } else if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
@@ -767,16 +716,6 @@ public class MainActivity extends NFCActivity {
                 showLoading();
                 HttpHelper.initData(this);
                 return;
-            case R.id.btn_cutBmp:
-                List<Integer> bmpRes = new ArrayList<>();
-                bmpRes.add(R.drawable.clothingparts1);
-                bmpRes.add(R.drawable.clothingparts2);
-                bmpRes.add(R.drawable.clothingparts3);
-                bmpRes.add(R.drawable.clothingparts4);
-                bmpRes.add(R.drawable.clothingparts5);
-                bmpRes.add(R.drawable.clothingparts6);
-                startActivity(ImageBrowserActivity.getIntent(mContext, bmpRes, true));
-                return;
             case R.id.btn_embroiderInfo:
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     startActivity(EmbroiderActivity.getIntent(mContext, null, mCardInfo.getValue(), mTopic));
@@ -797,31 +736,6 @@ public class MainActivity extends NFCActivity {
                 if (mCutFragment != null) {
                     mCutFragment.markSecondClass();
                 }
-                break;
-            case R.id.btn_processSheets:
-                String mtmOrder = SpUtil.getSalesOrder();
-                String shopOrder = SpUtil.get(SpUtil.KEY_SHOPORDER, null);
-                if (isEmpty(mtmOrder) && isEmpty(shopOrder)) {
-                    ErrorDialog.showAlert(mContext, "请先获取订单数据");
-                } else if (!isEmpty(mtmOrder)) {
-                    String url = PadApplication.MTM_URL + mtmOrder;
-                    startActivity(WebActivity.getIntent(mContext, url));
-                } else {
-                    if (isEmpty(shopOrder)) {
-                        ErrorDialog.showAlert(mContext, "未找到当前订单号");
-                        return;
-                    }
-                    showLoading();
-                    HttpHelper.getProcessSheets(shopOrder, this);
-                }
-                break;
-            case R.id.btn_cutMatInfo:
-                String salesOrder = SpUtil.getSalesOrder();
-                if (isEmpty(salesOrder)) {
-                    ErrorDialog.showAlert(mContext, "找不到该确认单");
-                    return;
-                }
-                HttpHelper.getCutMatInfoPic("query.cutConfirm", salesOrder, this);
                 break;
             case R.id.btn_sortClothTag:
                 if (mSewFragment != null) {
@@ -1173,6 +1087,12 @@ public class MainActivity extends NFCActivity {
                 }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mTv_searchType.setVisibility(View.VISIBLE);
+//                    String workType = mPositionInfo.getWORK_TYPE();
+//                    if ("P".equals(workType)) {
+//                        startActivity(BatchCutActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
+//                        finish();
+//                        return;
+//                    }
                 } else {
                     mTv_searchType.setVisibility(View.GONE);
                 }
@@ -1184,6 +1104,7 @@ public class MainActivity extends NFCActivity {
                 refreshView(url, resultJSON);
 
                 if (mPositionInfo.getBUTTON_INFOR() != null) {
+                    SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
                     initButton(mPositionInfo.getBUTTON_INFOR());
                 }
 
@@ -1235,28 +1156,6 @@ public class MainActivity extends NFCActivity {
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
                 refreshLoginUser();
-            } else if (HttpHelper.XMII_URL.equals(url)) {
-                ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
-                if (processSheets == null) {
-                    ErrorDialog.showAlert(mContext, "该订单无工艺单信息");
-                } else {
-                    new ProcessSheetsDialog(mContext, processSheets).show();
-                }
-            } else if (HttpHelper.getCommonInfoByLogicNo.equals(url)) {
-                if (HttpHelper.isSuccess(resultJSON)) {
-                    JSONArray result = resultJSON.getJSONArray("result");
-                    if (result != null && result.size() != 0) {
-                        List<PocketSizeBo> items = JSON.parseArray(result.toString(), PocketSizeBo.class);
-                        String picUrl = items.get(0).getCONFIRM_URL();
-                        List<String> list = new ArrayList<>();
-                        list.add(picUrl);
-                        startActivity(ImageBrowserActivity.getIntent(mContext, list, 0));
-                    } else {
-                        showErrorDialog("找不到该工单的条格面料裁剪确认单");
-                    }
-                } else {
-                    ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));
-                }
             }
         } else {
             String message = resultJSON.getString("message");

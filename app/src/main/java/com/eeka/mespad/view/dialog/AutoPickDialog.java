@@ -41,8 +41,8 @@ public class AutoPickDialog extends BaseDialog {
         setContentView(mView);
         setCanceledOnTouchOutside(true);
 
-        TextView tv_shopOrder = (TextView) mView.findViewById(R.id.tv_autoPick_shopOrder);
-        TextView tv_lot = (TextView) mView.findViewById(R.id.tv_autoPick_lot);
+        TextView tv_shopOrder = mView.findViewById(R.id.tv_autoPick_shopOrder);
+        TextView tv_lot = mView.findViewById(R.id.tv_autoPick_lot);
         tv_shopOrder.setText(mShopOrder);
         tv_lot.setText(mItemCode);
 

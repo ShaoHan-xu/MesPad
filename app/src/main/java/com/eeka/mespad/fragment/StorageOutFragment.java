@@ -254,7 +254,6 @@ public class StorageOutFragment extends BaseFragment {
                 outBo.setUSER_ID(positionUsers.get(0).getEMPLOYEE_NUMBER());
                 mOutQTY = value;
                 outBo.setQUANTITY(mOutQTY + "");
-                outBo.setCLOTH_TYPE(mClothType.getVALUE());
                 showLoading();
                 HttpHelper.storageOut(outBo, StorageOutFragment.this);
             }

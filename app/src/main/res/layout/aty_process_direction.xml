@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    
+    <include layout="@layout/layout_title" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_border_gray_light"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:text="工单号："
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/tv_processDirection_shopOrder"
+            style="@style/textStyle_default"
+            android:text="12245362354675"
+            android:textColor="@color/orange"
+            android:textStyle="bold" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_marginLeft="100dp"
+            android:text="款号："
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/tv_processDirection_item"
+            style="@style/textStyle_default"
+            android:text="VK02237"
+            android:textColor="@color/orange"
+            android:textStyle="bold" />
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
+        
+        <LinearLayout
+            android:id="@+id/tag"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:gravity="right"
+            android:orientation="vertical">
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divider_gray" />
+            
+            <Button
+                android:id="@+id/btn_processDirection_submit"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_orange"
+                android:text="提交工序流"
+                android:textColor="@color/white" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/tag"
+            android:background="#F9F8F7"
+            android:orientation="horizontal">
+            
+            <LinearLayout
+                android:id="@+id/layout_MLP"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:divider="@drawable/divider_white"
+                android:orientation="vertical"
+                android:showDividers="middle">
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    
+                    <CheckBox
+                        android:id="@+id/ckb_mianBu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_white_orange_checkbox"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="面布"
+                        android:textColor="@drawable/text_black2white"
+                        android:textSize="@dimen/textSize_content" />
+                    
+                    <ImageView
+                        android:id="@+id/iv_processDirection_mianBuTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/ic_processdirection_readed" />
+                
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    
+                    <CheckBox
+                        android:id="@+id/ckb_liBu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_white_orange_checkbox"
+                        android:button="@null"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="里布"
+                        android:textColor="@drawable/text_black2white"
+                        android:textSize="@dimen/textSize_content" />
+                    
+                    <ImageView
+                        android:id="@+id/iv_processDirection_liBuTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/ic_processdirection_readed"
+                        android:visibility="gone" />
+                
+                </RelativeLayout>
+                
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+                    
+                    <CheckBox
+                        android:id="@+id/ckb_poBu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_white_orange_checkbox"
+                        android:button="@null"
+                        android:enabled="false"
+                        android:gravity="center"
+                        android:text="朴布"
+                        android:textColor="@drawable/text_black2white"
+                        android:textSize="@dimen/textSize_content" />
+                    
+                    <ImageView
+                        android:id="@+id/iv_processDirection_poBuTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/ic_processdirection_readed"
+                        android:visibility="gone" />
+                
+                </RelativeLayout>
+            
+            </LinearLayout>
+            
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="210dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_SP"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="拉布"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_SP"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                        
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/arrow_direction_right" />
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_DS"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="吊纱"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_DS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                        
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/arrow_direction_right" />
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_CA"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="裁剪"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_CA"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                    
+                    </LinearLayout>
+                    
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="260dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/arrow_direction_main" />
+                    
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="210dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp"
+                            android:layout_marginRight="30dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_DB"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="点位编号"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_DB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp"
+                            android:layout_marginRight="30dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_FI"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="粘朴"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_FI"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp"
+                            android:layout_marginRight="30dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_CP"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="二度"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_CP"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_CK"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="验片"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_CK"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                    
+                    </LinearLayout>
+                    
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="260dp"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/arrow_direction_down" />
+                    
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_FB"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="分包"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_FB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                        
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/arrow_direction_right" />
+                        
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="45dp">
+                            
+                            <CheckBox
+                                android:id="@+id/ckb_RK"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/ckb_gray_green_radio"
+                                android:button="@null"
+                                android:gravity="center"
+                                android:text="入库"
+                                android:textColor="@drawable/text_gray2white"
+                                android:textSize="@dimen/textSize_content" />
+                            
+                            <ImageView
+                                android:id="@+id/iv_lock_RK"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/ic_lock_processdirection" />
+                        
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+            
+            <ImageView
+                android:id="@+id/iv_processDirection_img"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_border_gray_light"
+                android:padding="10dp"
+                android:src="@drawable/img_sample" />
+        
+        </LinearLayout>
+    
+    </RelativeLayout>
+
+</LinearLayout>

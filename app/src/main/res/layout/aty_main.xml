@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right|center_vertical"
-                android:divider="@drawable/divider_white"
+                android:divider="@drawable/divider_white_5dp"
                 android:orientation="horizontal"
                 android:showDividers="middle" />
         </HorizontalScrollView>

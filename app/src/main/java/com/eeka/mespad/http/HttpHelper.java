@@ -11,6 +11,7 @@ import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.CutRecordQtyBo;
 import com.eeka.mespad.bo.GetLabuDataBo;
+import com.eeka.mespad.bo.ProcessDirectionBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SaveLabuDataBo;
 import com.eeka.mespad.bo.StartWorkParamsBo;
@@ -126,6 +127,11 @@ public class HttpHelper {
     public static final String getStorAreaData = BASE_URL + "wareHouse/getStorAreaData?";
     public static final String markSecondClass = BASE_URL + "logNcPad/saveSecondClassBySfcRef?";
 
+    public static final String getBatchCutOrderList = BASE_URL + "bulkOrderCut/viewJobBulkOrderList?";
+    public static final String getLabuWorkCenter = BASE_URL + "bulkOrderCut/webInitial?";
+    public static final String getProcessDirection = BASE_URL + "bulkOrderCut/viewshopOrderRouterInfo?";
+    public static final String submitProcessDirection = BASE_URL + "bulkOrderCut/createBulkOrderCutRouter?";
+
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
 
@@ -135,6 +141,50 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 提交工序流
+     */
+    public static void submitProcessDirection(ProcessDirectionBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("shopOrderRef", data.getShopOrderRef());
+        params.put("materialCutFlows", JSON.toJSONString(data.getMaterialCutFlows()));
+        HttpRequest.post(submitProcessDirection, params, getResponseHandler(submitProcessDirection, callback));
+    }
+
+    /**
+     * 获取工序流流向
+     */
+    public static void getProcessDirection(String shopOrderBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("shopOrderRef", shopOrderBo);
+        HttpRequest.post(getProcessDirection, params, getResponseHandler(getProcessDirection, callback));
+    }
+
+    /**
+     * 裁剪段获取工作中心
+     */
+    public static void getLabuWorkCenter(HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        HttpRequest.post(getLabuWorkCenter, params, getResponseHandler(getLabuWorkCenter, callback));
+    }
+
+    /**
+     * 获取大货裁剪订单列表
+     *
+     * @param fz_workCenter 缝制工作中心
+     * @param cj_workCenter 裁剪工作中心
+     */
+    public static void getBatchCutOrderList(String shopOrder, String operation, List<String> fz_workCenter, List<String> cj_workCenter, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("shopOrder", shopOrder);
+        json.put("operation", operation);
+        json.put("fz_workCenter", fz_workCenter);
+        json.put("cj_workCenter", cj_workCenter);
+        params.put("params", json.toString());
+        HttpRequest.post(getBatchCutOrderList, params, getResponseHandler(getBatchCutOrderList, callback));
     }
 
     /**
@@ -1095,6 +1145,7 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
+//        PAD_IP = "10.7.26.2";
         return PAD_IP;
     }
 
@@ -1140,7 +1191,7 @@ public class HttpHelper {
             @Override
             public void onFailure(int errorCode, String msg) {
                 super.onFailure(errorCode, msg);
-                if (!TextUtils.isEmpty(msg) && msg.contains("type=\"submit\" name=\"uidPasswordLogon\"")) {
+                if (!TextUtils.isEmpty(msg) && (msg.contains("type=\"submit\" name=\"uidPasswordLogon\""))) {
                     //后台返回登录页面，重新登录
                     cookieOutReLogin(callback);
                 } else if (callback != null) {

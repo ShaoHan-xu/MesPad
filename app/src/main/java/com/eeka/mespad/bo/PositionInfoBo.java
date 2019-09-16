@@ -1,5 +1,6 @@
 package com.eeka.mespad.bo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -124,7 +125,7 @@ public class PositionInfoBo {
         }
     }
 
-    public static class OPERINFORBean {
+    public static class OPERINFORBean implements Serializable {
         /**
          * TOPIC : 10
          * TOPIC_DESC : CUTTING

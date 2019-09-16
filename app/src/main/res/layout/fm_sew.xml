@@ -417,7 +417,7 @@
                 android:id="@+id/layout_sew_matInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:divider="@drawable/divider_white"
+                android:divider="@drawable/divider_white_5dp"
                 android:orientation="horizontal"
                 android:showDividers="middle" />
         </HorizontalScrollView>

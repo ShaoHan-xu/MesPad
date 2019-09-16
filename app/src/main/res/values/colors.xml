@@ -37,5 +37,11 @@
     <color name="status_text">#ffffffff</color>
     <color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
     <color name="viewfinder_mask">#60000000</color>
+    
+    <color name="titleBackground">#B2C657</color>
+    <color name="orange">#D38403</color>
+    <color name="orange_dark">#8D5C0A</color>
+    <color name="green">#7C8B36</color>
+    <color name="green_dark">#445204</color>
 
 </resources>

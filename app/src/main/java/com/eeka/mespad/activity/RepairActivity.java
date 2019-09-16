@@ -229,7 +229,7 @@ public class RepairActivity extends BaseActivity {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getRepairProcess.equals(url)) {
                 mList_type = JSON.parseArray(resultJSON.getJSONArray("result").toString(), JSONObject.class);
-                mAdapter.setData(mList_type);
+                mAdapter.notifyDataSetChanged(mList_type);
                 mAdapter.notifyDataSetChanged();
             } else if (HttpHelper.recordSewNc.equals(url)) {
                 toast("记录成功");

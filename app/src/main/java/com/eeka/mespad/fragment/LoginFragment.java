@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
-import com.eeka.mespad.activity.MainActivity;
+import com.eeka.mespad.activity.BaseActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
 import com.eeka.mespad.adapter.ViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
@@ -133,9 +134,10 @@ public class LoginFragment extends BaseFragment {
         } else if (v.getId() == R.id.iv_login_morePosition) {
             showSiteList(mEt_site);
         } else if (v.getId() == R.id.iv_login_scan) {
-            MainActivity activity = (MainActivity) getActivity();
-            if (activity != null)
-                activity.startScan();
+            FragmentActivity activity = getActivity();
+            if (activity instanceof BaseActivity) {
+                ((BaseActivity) activity).startScan();
+            }
         }
     }
 

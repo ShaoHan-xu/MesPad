@@ -319,7 +319,7 @@ public class RecordCutNCActivity extends BaseActivity {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getBadList.equals(url)) {
                 mList_badRecord = JSON.parseArray(resultJSON.getJSONArray("result").toString(), RecordNCBo.class);
-                mAdapter.setData(mList_badRecord);
+                mAdapter.notifyDataSetChanged(mList_badRecord);
             } else if (HttpHelper.saveBadRecord.equals(url)) {
                 toast("保存成功");
                 //保存成功后清除记录并关闭界面

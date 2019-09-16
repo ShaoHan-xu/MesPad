@@ -6,6 +6,11 @@
     <item name="radioButton4" type="id" />
     <item name="radioButton5" type="id" />
     
+    <item name="btn_firstLabu" type="id" />
+    <item name="btn_lostLabu" type="id" />
+    <item name="btn_addLabu" type="id" />
+    <item name="btn_completed" type="id" />
+    
     <!-- zxing相关 -->
     <item type="id" name="decode"/>
     <item type="id" name="decode_failed"/>
@@ -22,7 +27,7 @@
     <item name="btn_dataCollect" type="id" />
     <item name="btn_resState" type="id" />
     <item name="btn_signOff" type="id" />
-    <item name="btn_video" type="id" />
+    <item name="btn_playVideo" type="id" />
     <item name="btn_login" type="id" />
     <item name="btn_logout" type="id" />
     <item name="btn_start" type="id" />

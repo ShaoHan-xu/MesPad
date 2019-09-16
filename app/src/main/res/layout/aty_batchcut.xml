@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/titleBackground">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
+            
+            <ImageView
+                android:id="@+id/iv_batchCut_login"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_user" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_marginRight="10dp"
+                android:text="当前登录用户："
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            
+            
+            <TextView
+                android:id="@+id/tv_batchCut_loginUser"
+                style="@style/textStyle_default"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/textStyle_default"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/textSize_title"
+            android:textStyle="bold" />
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="10dp">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_border_radius_gray"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:padding="10dp">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:text="工作中心："
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            
+            <RelativeLayout
+                android:id="@+id/layout_batchCut_workCenter"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_radius_gray"
+                android:gravity="center_vertical"
+                android:padding="10dp">
+                
+                <ImageView
+                    android:id="@+id/tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_arrow_down" />
+                
+                <TextView
+                    android:id="@+id/tv_batchCut_workCenter"
+                    style="@style/textStyle_default"
+                    android:layout_width="match_parent"
+                    android:layout_toLeftOf="@id/tag"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+            
+            </RelativeLayout>
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_marginLeft="50dp"
+                android:text="工单号："
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            
+            <EditText
+                android:id="@+id/et_batchCut_shopOrder"
+                style="@style/textStyle_default"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_radius_gray"
+                android:padding="10dp"
+                android:singleLine="true" />
+            
+            <Button
+                android:id="@+id/btn_batchCut_search"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/btn_orange_round"
+                android:text="搜索"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+        
+        </LinearLayout>
+        
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_batchCut_orderList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            app:spanCount="2" />
+    </LinearLayout>
+</LinearLayout>

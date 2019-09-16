@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_border_radius_gray"
+    android:elevation="5dp"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:id="@+id/tag1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:orientation="vertical">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="工单号：" />
+                
+                <TextView
+                    android:id="@+id/tv_shopOrder"
+                    style="@style/textStyle_default"
+                    android:textColor="@color/orange" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="交期：" />
+                
+                <TextView
+                    android:id="@+id/tv_marketTime"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="款号：" />
+                
+                <TextView
+                    android:id="@+id/tv_item"
+                    style="@style/textStyle_default"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="件数：" />
+                
+                <TextView
+                    android:id="@+id/tv_qty"
+                    style="@style/textStyle_default"
+                    android:textColor="@color/orange"
+                    android:textStyle="bold" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="件" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="物料描述：" />
+                
+                <TextView
+                    android:id="@+id/tv_matDesc"
+                    style="@style/textStyle_default" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="已完成数量：" />
+                
+                <TextView
+                    android:id="@+id/tv_completeQty"
+                    style="@style/textStyle_default" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="件" />
+            </LinearLayout>
+        
+        </LinearLayout>
+        
+        <Button
+            android:id="@+id/btn_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="20dp"
+            android:width="150dp"
+            android:background="@drawable/btn_green_round_new"
+            android:text="拉布"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tag1"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp">
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:text="缝制工作中心：" />
+        
+        <TextView
+            android:id="@+id/tv_workCenter"
+            style="@style/textStyle_default" />
+    </LinearLayout>
+    
+    <ImageView
+        android:id="@+id/iv_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_state_cut_working" />
+
+</RelativeLayout>

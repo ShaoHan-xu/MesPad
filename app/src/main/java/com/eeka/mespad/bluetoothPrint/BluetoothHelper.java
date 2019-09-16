@@ -52,7 +52,7 @@ public class BluetoothHelper {
 //            zpSDK.drawText(400, 350, "子卡号：" + cardItemBo.getCardId(), 3, 1, 0, false, false);
 //            zpSDK.drawText(480, 350, "子卡件数：" + cardItemBo.getSubqty(), 3, 1, 0, false, false);
 
-            zpSDK.pageSetup(576, 200);
+            zpSDK.pageSetup(576, 180);
             SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);
             zpSDK.drawText(30, 10, "工单号：" + data.getShopOrder(), 3, 0, 0, false, false);
             zpSDK.drawText(30, 60, "款号：" + data.getItem(), 3, 0, 0, false, false);

@@ -191,7 +191,7 @@
                     android:id="@+id/layout_material1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:divider="@drawable/divider_white"
+                    android:divider="@drawable/divider_white_5dp"
                     android:orientation="horizontal"
                     android:padding="5dp"
                     android:showDividers="middle" />
@@ -207,7 +207,7 @@
                     android:id="@+id/layout_material2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:divider="@drawable/divider_white"
+                    android:divider="@drawable/divider_white_5dp"
                     android:orientation="horizontal"
                     android:padding="5dp"
                     android:showDividers="middle" />
