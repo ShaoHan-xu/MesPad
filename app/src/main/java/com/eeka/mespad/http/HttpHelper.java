@@ -8,9 +8,12 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
+import com.eeka.mespad.bo.BatchCutRecordBo;
+import com.eeka.mespad.bo.BatchSplitPackageSaveBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.CutRecordQtyBo;
 import com.eeka.mespad.bo.GetLabuDataBo;
+import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.bo.ProcessDirectionBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
 import com.eeka.mespad.bo.SaveLabuDataBo;
@@ -127,10 +130,25 @@ public class HttpHelper {
     public static final String getStorAreaData = BASE_URL + "wareHouse/getStorAreaData?";
     public static final String markSecondClass = BASE_URL + "logNcPad/saveSecondClassBySfcRef?";
 
+    public static final String hangerBindMes = PadApplication.INA_URL + "/ina-mes-service/hanger_bind_mes";
+
+    /*
+     * 大货裁剪相关接口
+     * */
     public static final String getBatchCutOrderList = BASE_URL + "bulkOrderCut/viewJobBulkOrderList?";
     public static final String getLabuWorkCenter = BASE_URL + "bulkOrderCut/webInitial?";
     public static final String getProcessDirection = BASE_URL + "bulkOrderCut/viewshopOrderRouterInfo?";
     public static final String submitProcessDirection = BASE_URL + "bulkOrderCut/createBulkOrderCutRouter?";
+    public static final String getBatchMatInfo = BASE_URL + "bulkOrderCut/viewMaterialTypesByShopOrderRef?";
+    public static final String getBatchLayoutInfo = BASE_URL + "bulkOrderCut/viewRabInfoByShopOrderRef?";
+    public static final String getBatchLabuInfo = BASE_URL + "bulkOrderCut/viewRabInfoByLayOutRef?";
+    public static final String saveBatchLabuData = BASE_URL + "bulkOrderCut/createRabInfo?";
+    public static final String getBatchCutWorkingInfo = BASE_URL + "bulkOrderCut/viewRabOperationInfo?";
+    public static final String saveBatchCutData = BASE_URL + "bulkOrderCut/createBulkCutInfo?";
+    public static final String getRabInfoList = BASE_URL + "bulkOrderCut/viewRabOrderInfoByLayOutRef?";
+    public static final String getBatchSplitItem = BASE_URL + "bulkOrderCut/viewSubPackageInfoByCustomRule?";
+    public static final String saveBatchSplitPackageData = BASE_URL + "bulkOrderCut/createSubPackageInfo?";
+    public static final String operationProduce = BASE_URL + "bulkOrderCut/operationProduce?";
 
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
@@ -144,11 +162,138 @@ public class HttpHelper {
     }
 
     /**
+     * 工序开始与结束
+     *
+     * @param operationFlag BEGIN=开始，PAUSE=暂停，RESTART=工序重启
+     */
+    public static void operationProduce(String userId, String operationFlag, String shopOrderRef, String rabRef, String workNo, String operation, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("userId", userId);
+        json.put("shopOrderRef", shopOrderRef);
+        json.put("rabRef", rabRef);
+        json.put("workNo", workNo);
+        json.put("operation", operation);
+        params.put("params", json.toJSONString());
+        params.put("operationFlag", operationFlag);
+        HttpRequest.post(operationProduce, params, getResponseHandler(operationProduce, callback));
+    }
+
+    /**
+     * 获取拉布单信息
+     */
+    public static void saveBatchSplitPackageData(String userId, String operationBo, String resourceBo, BatchCutRecordBo bulkCutInfo, BatchSplitPackageSaveBo bulkSubpackageRequest, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("userId", userId);
+        params.put("bulkCutInfo", JSON.toJSONString(bulkCutInfo));
+        params.put("operationRef", operationBo);
+        params.put("resourceRef", resourceBo);
+        params.put("bulkSubpackageRequest", JSON.toJSONString(bulkSubpackageRequest));
+        HttpRequest.post(saveBatchSplitPackageData, params, getResponseHandler(saveBatchSplitPackageData, callback));
+    }
+
+    /**
+     * 获取拉布单信息
+     */
+    public static void getBatchSplitItem(String shopOrderBo, String sizeCode, int sizeTotal, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("shopOrderRef", shopOrderBo);
+        json.put("sizeCode", sizeCode);
+        json.put("sizeTotal", sizeTotal);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getBatchSplitItem, params, getResponseHandler(getBatchSplitItem, callback));
+    }
+
+    /**
+     * 获取拉布单信息
+     */
+    public static void getRabInfoList(String operation, String shopOrderBo, String matType, String layoutRef, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("operation", operation);
+        params.put("shopOrderRef", shopOrderBo);
+        params.put("materialType", matType);
+        params.put("layOutRef", layoutRef);
+        HttpRequest.post(getRabInfoList, params, getResponseHandler(getRabInfoList, callback));
+    }
+
+    /**
+     * 保存大货裁剪记录
+     */
+    public static void saveBatchCutData(String userId, BatchCutRecordBo data, HttpCallback callback) {
+        data.setSite(SpUtil.getSite());
+        RequestParams params = getBaseParams();
+        params.put("userId", userId);
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveBatchCutData, params, getResponseHandler(saveBatchCutData, callback));
+    }
+
+    /**
+     * 获取大货裁剪作业单数据
+     */
+    public static void getBatchCutWorkingInfo(String matType, String operation, String rabRef, String shopOrderRef,String isFinish, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("materialType", matType);
+        params.put("operation", operation);
+        params.put("rabRef", rabRef);
+        params.put("shopOrderRef", shopOrderRef);
+        params.put("isFinish", matType);
+        HttpRequest.post(getBatchCutWorkingInfo, params, getResponseHandler(getBatchCutWorkingInfo, callback));
+    }
+
+    /**
+     * 保存大货拉布数据
+     */
+    public static void saveBatchLabuData(String userId, PostBatchRecordLabuBo data, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("userId", userId);
+        params.put("params", JSON.toJSONString(data));
+        HttpRequest.post(saveBatchLabuData, params, getResponseHandler(saveBatchLabuData, callback));
+    }
+
+    /**
+     * 获取拉布单信息
+     */
+    public static void getBatchLabuInfo(String operation, String materialType, String shopOrderBo, String layoutRef, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("operation", operation);
+        params.put("shopOrderRef", shopOrderBo);
+        params.put("layOutRef", layoutRef);
+        params.put("materialType", materialType);
+        HttpRequest.post(getBatchLabuInfo, params, getResponseHandler(getBatchLabuInfo, callback));
+    }
+
+    /**
+     * 根据物料类型获取排料图信息
+     */
+    public static void getBatchLayoutInfo(String operation, String shopOrderBo, String matType, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("shopOrderRef", shopOrderBo);
+        json.put("operation", operation);
+        json.put("materialType", matType);
+        params.put("params", json.toString());
+        HttpRequest.post(getBatchLayoutInfo, params, getResponseHandler(getBatchLayoutInfo, callback));
+    }
+
+    /**
+     * 获取大货裁剪物料信息
+     */
+    public static void getBatchMatInfo(String operation, String shopOrderBo, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("operation", operation);
+        params.put("shopOrderRef", shopOrderBo);
+        HttpRequest.post(getBatchMatInfo, params, getResponseHandler(getBatchMatInfo, callback));
+    }
+
+    /**
      * 提交工序流
      */
-    public static void submitProcessDirection(ProcessDirectionBo data, HttpCallback callback) {
+    public static void submitProcessDirection(ProcessDirectionBo data, String userId, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("shopOrderRef", data.getShopOrderRef());
+        params.put("isAllCut", data.getIsAllCut());
+        params.put("userId", userId);
         params.put("materialCutFlows", JSON.toJSONString(data.getMaterialCutFlows()));
         HttpRequest.post(submitProcessDirection, params, getResponseHandler(submitProcessDirection, callback));
     }
@@ -185,6 +330,25 @@ public class HttpHelper {
         json.put("cj_workCenter", cj_workCenter);
         params.put("params", json.toString());
         HttpRequest.post(getBatchCutOrderList, params, getResponseHandler(getBatchCutOrderList, callback));
+    }
+
+    /**
+     * 绑定衣架信息到 MES，上裁站绑定衣架成功后调用
+     *
+     * @param json {
+     *             "HangerID": "12345678",
+     *             "Site": "site001",
+     *             "LineID": "100",
+     *             "StationID": "100-001",
+     *             "Tag": "123",
+     *             "ProductTag": "product001",
+     *             "PartID": "ZH"
+     *             }
+     */
+    public static void hangerBindMes(@NonNull JSONObject json, HttpCallback callback) {
+        RequestParams params = new RequestParams();
+        params.applicationJson(json);
+        HttpRequest.post(hangerBindMes, params, getResponseHandler(hangerBindMes, callback));
     }
 
     /**
@@ -1145,7 +1309,11 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.7.26.2";
+//        PAD_IP = "10.7.26.2";//工序确认
+//        PAD_IP = "10.7.26.13";// D 大货拉布
+//        PAD_IP = "10.7.26.8";// D 大货裁剪
+//        PAD_IP = "10.7.26.7";//大货分包
+//        PAD_IP = "10.7.26.9";//大货吊纱
         return PAD_IP;
     }
 

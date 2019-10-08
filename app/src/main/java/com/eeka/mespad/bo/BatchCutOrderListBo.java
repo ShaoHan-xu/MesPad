@@ -19,6 +19,24 @@ public class BatchCutOrderListBo {
     private String MARKET_TIME;
     private String STATUS;
     private String OPERATION_DESC;
+    private String ITEM_DESC;
+    private String DONE_QTY;
+
+    public String getITEM_DESC() {
+        return ITEM_DESC;
+    }
+
+    public void setITEM_DESC(String ITEM_DESC) {
+        this.ITEM_DESC = ITEM_DESC;
+    }
+
+    public String getDONE_QTY() {
+        return DONE_QTY;
+    }
+
+    public void setDONE_QTY(String DONE_QTY) {
+        this.DONE_QTY = DONE_QTY;
+    }
 
     public String getOPERATION_DESC() {
         return OPERATION_DESC;

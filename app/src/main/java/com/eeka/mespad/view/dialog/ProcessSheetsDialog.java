@@ -103,6 +103,10 @@ public class ProcessSheetsDialog extends BaseDialog {
 
     private void initSizeView() {
         List<ProcessSheetsBo.SpecsBean> technologyList = mData.getSpecs();
+        if (technologyList == null) {
+            ErrorDialog.showAlert(mContext, "尺码列表为空");
+            return;
+        }
         for (ProcessSheetsBo.SpecsBean item : technologyList) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_processsheets_size, null);
             TextView tv_itemName = view.findViewById(R.id.tv_processSheets_itemName);

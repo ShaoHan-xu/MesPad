@@ -33,10 +33,29 @@ public class BaseDialog extends Dialog {
         return TextUtils.isEmpty(str);
     }
 
+    private float mWidth = 0.8f;
+    private float mHeight = 0.9f;
+
+    public BaseDialog setWidth(float width) {
+        mWidth = width;
+        return this;
+    }
+
+    public BaseDialog setHeight(float height) {
+        mHeight = height;
+        return this;
+    }
+
+    public BaseDialog setParams(float width, float height) {
+        mWidth = width;
+        mHeight = height;
+        return this;
+    }
+
     @Override
     public void show() {
         super.show();
-        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.8), (int) (SystemUtils.getScreenHeight(mContext) * 0.9));
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * mWidth), (int) (SystemUtils.getScreenHeight(mContext) * mHeight));
     }
 
 }

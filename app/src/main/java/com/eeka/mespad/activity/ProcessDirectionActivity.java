@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -15,11 +16,15 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.ProcessDirectionBo;
+import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.callback.IntegerCallback;
 import com.eeka.mespad.callback.StringCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.Logger;
+import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.AllCutDialog;
+import com.eeka.mespad.view.dialog.ImageBrowserDialog;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +40,14 @@ public class ProcessDirectionActivity extends BaseActivity {
     private ProcessDirectionBo mData;
 
     private CheckedChangeListener mListener;
-
     private CheckBox mCkb_mianBu, mCkb_liBu, mCkb_poBu;
     private ImageView mIv_liBuTag, mIv_poBuTag;
     private Map<String, CheckBox> mMap_processCheckBox;
     private Map<String, ImageView> mMap_processLock;
+
+    private ImageView mIv_sampleImg;
+
+    private Button mBtn_submit;
 
     private String mMatType;
 
@@ -66,7 +74,8 @@ public class ProcessDirectionActivity extends BaseActivity {
         TextView tv_item = findViewById(R.id.tv_processDirection_item);
         tv_item.setText(getIntent().getStringExtra("item"));
 
-        findViewById(R.id.btn_processDirection_submit).setOnClickListener(this);
+        mBtn_submit = findViewById(R.id.btn_processDirection_submit);
+        mBtn_submit.setOnClickListener(this);
 
         mListener = new CheckedChangeListener();
         mCkb_mianBu = findViewById(R.id.ckb_mianBu);
@@ -76,6 +85,9 @@ public class ProcessDirectionActivity extends BaseActivity {
 
         mIv_liBuTag = findViewById(R.id.iv_processDirection_liBuTag);
         mIv_poBuTag = findViewById(R.id.iv_processDirection_poBuTag);
+
+        mIv_sampleImg = findViewById(R.id.iv_processDirection_img);
+        mIv_sampleImg.setOnClickListener(this);
 
         CheckBox ckb_SP = findViewById(R.id.ckb_SP);
         CheckBox ckb_DS = findViewById(R.id.ckb_DS);
@@ -134,37 +146,39 @@ public class ProcessDirectionActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.btn_processDirection_submit) {
-            ImageView iv_readedTag;
-            if (mCkb_liBu.isEnabled()) {
-                iv_readedTag = findViewById(R.id.iv_processDirection_liBuTag);
-                if (iv_readedTag.getVisibility() == View.GONE) {
-                    showErrorDialog("请查看所有面料工序流后再提交");
-                    return;
-                }
+            List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+            if (positionUsers == null || positionUsers.size() == 0) {
+                showErrorDialog("员工未登陆上岗，无法操作");
+                return;
             }
-            if (mCkb_poBu.isEnabled()) {
-                iv_readedTag = findViewById(R.id.iv_processDirection_poBuTag);
-                if (iv_readedTag.getVisibility() == View.GONE) {
-                    showErrorDialog("请查看所有面料工序流后再提交");
-                    return;
-                }
+            StringBuilder stringBuilder = new StringBuilder();
+            for (UserInfoBo user : positionUsers) {
+                stringBuilder.append(user.getEMPLOYEE_NUMBER()).append(",");
             }
-
-            new AllCutDialog(mContext, new StringCallback() {
+            final String userId = stringBuilder.substring(0, stringBuilder.length() - 1);
+            boolean isAllCut = "Y".equals(mData.getALL_CUT());
+            new AllCutDialog(mContext, isAllCut, new StringCallback() {
                 @Override
                 public void callback(String value) {
                     mData.setIsAllCut(value);
                     showLoading();
-                    HttpHelper.submitProcessDirection(mData, ProcessDirectionActivity.this);
+                    HttpHelper.submitProcessDirection(mData, userId, ProcessDirectionActivity.this);
                 }
             }).show();
 
+        } else if (v.getId() == R.id.iv_processDirection_img) {
+            if (mData == null) {
+                new ImageBrowserDialog(mContext, R.drawable.img_sample).setParams(0.5f, 0.8f).show();
+            } else {
+                new ImageBrowserDialog(mContext, getString(R.string.sampleImgUrl, mData.getITEM())).setParams(0.5f, 0.8f).show();
+            }
         }
     }
 
     private void setupTabView() {
         if (mData != null) {
-            mCkb_mianBu.setChecked(true);
+            Picasso.with(mContext).load(getString(R.string.sampleImgUrl, mData.getITEM())).into(mIv_sampleImg);
+
             List<ProcessDirectionBo.CUTFLOWTEMPLETEBean> cutFlows = mData.getMaterialCutFlows();
             for (ProcessDirectionBo.CUTFLOWTEMPLETEBean item : cutFlows) {
                 CheckBox checkBox = null;
@@ -178,6 +192,7 @@ public class ProcessDirectionActivity extends BaseActivity {
                     checkBox.setOnCheckedChangeListener(mListener);
                 }
             }
+            mCkb_mianBu.setChecked(true);
         }
     }
 
@@ -185,8 +200,9 @@ public class ProcessDirectionActivity extends BaseActivity {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            int viewId = buttonView.getId();
             if (isChecked) {
-                switch (buttonView.getId()) {
+                switch (viewId) {
                     case R.id.ckb_mianBu:
                         mCkb_liBu.setChecked(false);
                         mCkb_poBu.setChecked(false);
@@ -207,6 +223,23 @@ public class ProcessDirectionActivity extends BaseActivity {
                         setupProcessView("N");
                         break;
                 }
+
+                if (viewId == R.id.ckb_mianBu || viewId == R.id.ckb_liBu || viewId == R.id.ckb_poBu) {
+                    boolean submitEnable = true;
+                    if (mCkb_liBu.isEnabled()) {
+                        ImageView iv_readTag = findViewById(R.id.iv_processDirection_liBuTag);
+                        if (iv_readTag.getVisibility() == View.GONE) {
+                            submitEnable = false;
+                        }
+                    }
+                    if (mCkb_poBu.isEnabled()) {
+                        ImageView iv_readTag = findViewById(R.id.iv_processDirection_poBuTag);
+                        if (iv_readTag.getVisibility() == View.GONE) {
+                            submitEnable = false;
+                        }
+                    }
+                    mBtn_submit.setEnabled(submitEnable);
+                }
             }
 
             List<ProcessDirectionBo.CUTFLOWTEMPLETEBean> cutFlows = mData.getMaterialCutFlows();
@@ -219,7 +252,7 @@ public class ProcessDirectionActivity extends BaseActivity {
             }
 
             String operation = null;
-            switch (buttonView.getId()) {
+            switch (viewId) {
                 case R.id.ckb_SP:
                     operation = "SP";
                     break;
@@ -306,6 +339,10 @@ public class ProcessDirectionActivity extends BaseActivity {
                 } else {
                     showErrorDialog("后台返回数据为空");
                 }
+            } else if (HttpHelper.submitProcessDirection.equals(url)) {
+                toast("保存成功");
+                setResult(RESULT_OK);
+                finish();
             }
         }
     }

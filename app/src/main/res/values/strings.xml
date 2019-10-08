@@ -5,7 +5,9 @@
 
     <string name="loading">加载中...</string>
     <string name="efficiency">当前效率</string>
+    <string name="float_1">%.1f</string>
     <string name="float_2">%.2f</string>
+    <string name="sampleImgUrl">http://10.7.121.10/centricQ/%s.png</string>
     
     <string name="bookmark_picker_name">Bookmarks</string>
     <string name="button_add_calendar">Add to calendar</string>

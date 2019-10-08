@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:divider="@drawable/divider_gray_light"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="middle">
+    
+    <TextView
+        android:id="@+id/tv_size"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="2dp" />
+    
+    <TextView
+        android:id="@+id/tv_rate"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="2dp" />
+    
+    <TextView
+        android:id="@+id/tv_need"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="2dp" />
+    
+    <TextView
+        android:id="@+id/tv_yiLa"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="2dp" />
+    
+    <TextView
+        android:id="@+id/tv_unLa"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="2dp" />
+</LinearLayout>

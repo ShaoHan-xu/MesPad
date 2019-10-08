@@ -3,14 +3,19 @@ package com.eeka.mespad.bluetoothPrint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.eeka.mespad.bo.BatchSplitPackagePrintBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.ToastUtil;
+import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
+import com.eeka.mespad.zxing.EncodingHandler;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -21,6 +26,44 @@ import zpSDK.zpSDK.zpBluetoothPrinter;
 public class BluetoothHelper {
     private static final int DEVICE_TYPE_KEYBOARD = 1344;//蓝牙外输设备
     private static final int DEVICE_TYPE_PRINTER = 1664;//蓝牙打印机
+
+    public static void printSubPackageInfo(Activity activity, BatchSplitPackagePrintBo data) {
+        if (data == null) {
+            ErrorDialog.showAlert(activity, "打印内容不能为空");
+            return;
+        }
+        BluetoothDevice device = getBluetoothDevice(activity);
+        if (device == null) {
+            return;
+        }
+        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(activity);
+
+        if (!zpSDK.connect(device.getAddress())) {
+            if (!zpSDK.connect(device.getAddress())) {
+                ToastUtil.showToast(activity, "蓝牙打印机连接失败!", Toast.LENGTH_LONG);
+                return;
+            }
+        }
+
+        zpSDK.pageSetup(576, 180);
+        zpSDK.drawText(20, 0, "包号：" + data.getSubPackageSeq(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 35, "卡号：" + data.getRfid(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 70, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 105, "款号：" + data.getItem(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 140, "码数：" + data.getSizeCode(), 3, 0, 0, false, false);
+        zpSDK.drawText(200, 140, "件数：" + data.getSubPackageQty(), 3, 0, 0, false, false);
+
+        String qrCodeText = data.getRfid();
+        zpSDK.drawQrCode(360, 10, qrCodeText, 0, 6, 0);
+
+        zpSDK.print(0, 1);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        zpSDK.disconnect();
+    }
 
     public static void printSubCardInfo(Activity activity, SplitCardDialog.SplitCardDataBo data) {
         if (data == null || data.getLotInfos() == null) {
@@ -70,7 +113,7 @@ public class BluetoothHelper {
         }
     }
 
-    public static void Print(Activity activity, String content) {
+    public static void print(Activity activity, String content) {
         if (TextUtils.isEmpty(content)) {
             ToastUtil.showToast(activity, "打印内容不能为空", Toast.LENGTH_SHORT);
             return;
@@ -87,19 +130,11 @@ public class BluetoothHelper {
             }
         }
 
-        if (!TextUtils.isEmpty(device.getName()) && device.getName().contains("K316")) {
-            zpSDK.pageSetup(576, 90);
-        } else {
-            zpSDK.pageSetup(576, 114);
-        }
+        zpSDK.pageSetup(576, 114);
         zpSDK.drawText(7, 4, content, 3, 0, 0, false, false);
         zpSDK.drawText(195, 4, content, 3, 0, 0, false, false);
         zpSDK.drawText(390, 4, content, 3, 0, 0, false, false);
-        if (!TextUtils.isEmpty(device.getName()) && device.getName().contains("K316")) {
-            zpSDK.print(0, 1);
-        } else {
-            zpSDK.print(0, 0);
-        }
+        zpSDK.print(0, 0);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {

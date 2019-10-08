@@ -11,12 +11,21 @@ public class ProcessDirectionBo {
      */
 
     private String SHOP_ORDER;
+    private String ALL_CUT;
     private String ITEM;
     private List<CUTFLOWTEMPLETEBean> materialCutFlows;
 
     //回传参数
     private String shopOrderRef;
     private String isAllCut;//是否尽裁 Y/N
+
+    public String getALL_CUT() {
+        return ALL_CUT;
+    }
+
+    public void setALL_CUT(String ALL_CUT) {
+        this.ALL_CUT = ALL_CUT;
+    }
 
     public String getIsAllCut() {
         return isAllCut;

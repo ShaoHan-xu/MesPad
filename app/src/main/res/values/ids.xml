@@ -7,19 +7,28 @@
     <item name="radioButton5" type="id" />
     
     <item name="btn_firstLabu" type="id" />
-    <item name="btn_lostLabu" type="id" />
+    <item name="btn_batchLabu" type="id" />
     <item name="btn_addLabu" type="id" />
     <item name="btn_completed" type="id" />
     
+    <item name="tag_item" type="id" />
+    <item name="tag_layoutRef" type="id" />
+    <item name="tag_layoutImg" type="id" />
+    <item name="tag_layoutNo" type="id" />
+    <item name="tag_rabOrderNum" type="id" />
+    <item name="tag_shopOrderBo" type="id" />
+    <item name="tag_rabBo" type="id" />
+    <item name="tag_status" type="id" />
+    
     <!-- zxing相关 -->
-    <item type="id" name="decode"/>
-    <item type="id" name="decode_failed"/>
-    <item type="id" name="decode_succeeded"/>
-    <item type="id" name="launch_product_query"/>
-    <item type="id" name="quit"/>
-    <item type="id" name="restart_preview"/>
-    <item type="id" name="return_scan_result"/>
-
+    <item name="decode" type="id" />
+    <item name="decode_failed" type="id" />
+    <item name="decode_succeeded" type="id" />
+    <item name="launch_product_query" type="id" />
+    <item name="quit" type="id" />
+    <item name="restart_preview" type="id" />
+    <item name="return_scan_result" type="id" />
+    
     <!-- 主页底部按钮ID -->
     <item name="btn_materialReturn" type="id" />
     <item name="btn_materialFeeding" type="id" />

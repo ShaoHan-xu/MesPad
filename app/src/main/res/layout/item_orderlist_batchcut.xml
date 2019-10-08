@@ -111,6 +111,7 @@
             </LinearLayout>
             
             <LinearLayout
+                android:id="@+id/layout_completedQty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -138,6 +139,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="20dp"
             android:width="150dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/btn_green_round_new"
             android:text="拉布"
             android:textColor="@color/white"

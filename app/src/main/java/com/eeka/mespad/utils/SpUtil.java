@@ -141,6 +141,23 @@ public class SpUtil {
     }
 
     /**
+     * 获取登录员工的工号
+     *
+     * @return 员工工号，多人用","隔开
+     */
+    public static String getLoginUserId() {
+        List<UserInfoBo> infoBos = SpUtil.getPositionUsers();
+        if (infoBos == null || infoBos.size() == 0) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (UserInfoBo user : infoBos) {
+            sb.append(user.getEMPLOYEE_NUMBER()).append(",");
+        }
+        return sb.substring(0, sb.length() - 1);
+    }
+
+    /**
      * 获取站位登录用户信息
      */
     public static List<UserInfoBo> getPositionUsers() {

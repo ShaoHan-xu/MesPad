@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray_light"
+    android:orientation="horizontal"
+    android:showDividers="middle">
+    
+    <TextView
+        android:id="@+id/tv_juanHao"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="center"
+        android:padding="5dp" />
+    
+    <EditText
+        android:id="@+id/et_length"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="center"
+        android:inputType="number"
+        android:padding="5dp"
+        android:singleLine="true" />
+    
+    <EditText
+        android:id="@+id/et_left"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:padding="5dp"
+        android:singleLine="true" />
+    
+    <TextView
+        android:id="@+id/tv_shortNum"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:gravity="center"
+        android:padding="5dp" />
+    
+    <TextView
+        android:id="@+id/tv_del"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="删除"
+        android:textColor="@color/text_red_default" />
+
+</LinearLayout>

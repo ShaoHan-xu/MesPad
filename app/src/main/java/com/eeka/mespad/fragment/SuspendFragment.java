@@ -219,9 +219,14 @@ public class SuspendFragment extends BaseFragment {
         mLayout_matInfo.removeAllViews();
         mLayout_component.removeAllViews();
         List<SuspendComponentBo.COMPONENTSBean> components = mComponent.getCOMPONENTS();
+        int flag = 0;
         for (SuspendComponentBo.COMPONENTSBean component : components) {
             mLayout_component.addView(getComponentView(component));
+            if ("false".equals(component.getIsBound())) {
+                flag++;
+            }
         }
+        isLastPart = flag <= 1;
         mVP_img.setAdapter(null);
         mList_img = null;
     }
@@ -330,6 +335,8 @@ public class SuspendFragment extends BaseFragment {
         }
     }
 
+    private boolean isLastPart;
+
     /**
      * 获取部件布局
      */
@@ -388,6 +395,13 @@ public class SuspendFragment extends BaseFragment {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
+        if (HttpHelper.hangerBindMes.equals(url)) {
+            String code = resultJSON.getString("Code");
+            if (!"0".equals(code)) {
+                showErrorDialog(resultJSON.getString("Message"));
+            }
+            return;
+        }
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
@@ -459,12 +473,36 @@ public class SuspendFragment extends BaseFragment {
                 setupMatInfo(componentInfoBo.getMaterialInfo());
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
+//                hangerBindMes();
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }
         } else {
             mBtn_binding.setEnabled(true);
         }
+    }
+
+    private String mHangerId;
+
+    public void sendHangerId(String hangerId) {
+        mHangerId = hangerId;
+    }
+
+    private void hangerBindMes() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        JSONObject json = new JSONObject();
+        json.put("HangerID", mHangerId);
+        json.put("Site", SpUtil.getSite());
+        json.put("LineID", contextInfo.getLINE_CATEGORY());
+        json.put("StationID", contextInfo.getPOSITION());
+        json.put("Tag", mComponent.getSFC());
+//        if (isLastPart) {
+        json.put("ProductTag", mComponent.getSFC());
+//        } else {
+//            json.put("ProductTag", mComponent.getSFC() + "_" + mCurComponent.getComponentId());
+//        }
+        json.put("PartID", mCurComponent.getComponentId());
+        HttpHelper.hangerBindMes(json, this);
     }
 
     private void setupMatInfo(List<ComponentInfoBo.MaterialInfoBean> matInfo) {
@@ -571,7 +609,7 @@ public class SuspendFragment extends BaseFragment {
                     while (!stopFlag) {
                         if (printFlag) {
                             printFlag = false;
-                            BluetoothHelper.Print(getActivity(), mPrintData);
+                            BluetoothHelper.print(getActivity(), mPrintData);
                         }
                     }
                 }

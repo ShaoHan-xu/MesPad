@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.AlarmReceiver;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
@@ -43,6 +44,7 @@ import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.OmitQCBo;
 import com.eeka.mespad.bo.PositionInfoBo;
+import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.ReworkWarnMsgBo;
 import com.eeka.mespad.bo.UserInfoBo;
@@ -63,6 +65,7 @@ import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MaintenanceDialog;
 import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
+import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.view.dialog.ReworkWarnMsgDialog;
 import com.tencent.bugly.beta.Beta;
 
@@ -292,6 +295,13 @@ public class MainActivity extends NFCActivity {
             }
         } else {
             String content = push.getContent();
+            if (PushJson.TYPE_UI030.equals(type)) {
+                JSONObject json = JSON.parseObject(content);
+                if (mSuspendFragment != null) {
+                    mSuspendFragment.sendHangerId(json.getString("HANGER_ID"));
+                }
+                content = json.getString("RFID");
+            }
             toast("正在刷新页面");
             mEt_orderNum.setText(content);
             isSearchOrder = true;
@@ -684,7 +694,6 @@ public class MainActivity extends NFCActivity {
                 isSearchOrder = true;
                 if (checkResource())
                     searchOrder();
-//                startScan();
                 return;
             case R.id.tv_main_searchType:
                 showSearchTypeWindow();
@@ -819,6 +828,23 @@ public class MainActivity extends NFCActivity {
                     if (mQCFragment != null) {
                         mQCFragment.productOff();
                     }
+                }
+                break;
+            case R.id.btn_processSheets:
+                String mtmOrder = SpUtil.getSalesOrder();
+                String shopOrder = SpUtil.get(SpUtil.KEY_SHOPORDER, null);
+                if (isEmpty(mtmOrder) && isEmpty(shopOrder)) {
+                    ErrorDialog.showAlert(mContext, "请先获取订单数据");
+                } else if (!isEmpty(mtmOrder)) {
+                    String url = PadApplication.MTM_URL + mtmOrder;
+                    startActivity(WebActivity.getIntent(mContext, url));
+                } else {
+                    if (isEmpty(shopOrder)) {
+                        ErrorDialog.showAlert(mContext, "未找到当前订单号");
+                        return;
+                    }
+                    showLoading();
+                    HttpHelper.getProcessSheets(shopOrder, this);
                 }
                 break;
             case R.id.btn_pattern:
@@ -1089,7 +1115,10 @@ public class MainActivity extends NFCActivity {
                     mTv_searchType.setVisibility(View.VISIBLE);
 //                    String workType = mPositionInfo.getWORK_TYPE();
 //                    if ("P".equals(workType)) {
-//                        startActivity(BatchCutActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
+//                        if (mPositionInfo.getBUTTON_INFOR() != null) {
+//                            SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
+//                        }
+//                        startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
 //                        finish();
 //                        return;
 //                    }
@@ -1104,7 +1133,6 @@ public class MainActivity extends NFCActivity {
                 refreshView(url, resultJSON);
 
                 if (mPositionInfo.getBUTTON_INFOR() != null) {
-                    SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
                     initButton(mPositionInfo.getBUTTON_INFOR());
                 }
 
@@ -1117,32 +1145,30 @@ public class MainActivity extends NFCActivity {
                 String orderType = result.getString("ORDER_TYPE");
                 mCardInfo.setCardType(orderType);
                 mCardInfo.setValue(result.getString("RI"));
-                switch (mTopic) {
-                    case TopicUtil.TOPIC_CUT:
-                        if ("M".equals(orderType)) {
-                            //刷的是员工卡，如果是“裁剪计件”在录入记录人则不向下执行
-                            if (mCutFragment.inputRecordUser(mCardInfo.getCardNum())) {
-                                return;
-                            } else {
-                                String cardNum = mCardInfo.getCardNum();
-                                List<UserInfoBo> users = SpUtil.getPositionUsers();
-                                if (users != null) {
-                                    for (int i = 0; i < users.size(); i++) {
-                                        UserInfoBo user = users.get(i);
-                                        if (user.getCARD_NUMBER().equals(cardNum)) {
-                                            mLogoutUserId = user.getEMPLOYEE_NUMBER();
-                                            clockOut(cardNum);
-                                            return;
-                                        }
+                if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+                    if ("M".equals(orderType)) {
+                        //刷的是员工卡，如果是“裁剪计件”在录入记录人则不向下执行
+                        if (mCutFragment.inputRecordUser(mCardInfo.getCardNum())) {
+                            return;
+                        } else {
+                            String cardNum = mCardInfo.getCardNum();
+                            List<UserInfoBo> users = SpUtil.getPositionUsers();
+                            if (users != null) {
+                                for (int i = 0; i < users.size(); i++) {
+                                    UserInfoBo user = users.get(i);
+                                    if (user.getCARD_NUMBER().equals(cardNum)) {
+                                        mLogoutUserId = user.getEMPLOYEE_NUMBER();
+                                        clockOut(cardNum);
+                                        return;
                                     }
                                 }
-                                clockIn(cardNum);
                             }
-                        } else {
-                            mEt_orderNum.setText(mCardInfo.getCardNum());
-                            mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
+                            clockIn(cardNum);
                         }
-                        break;
+                    } else {
+                        mEt_orderNum.setText(mCardInfo.getCardNum());
+                        mCutFragment.searchOrder(orderType, mCardInfo.getCardNum(), mPositionInfo.getRESR_INFOR().getRESOURCE_BO(), mCardInfo.getValue());
+                    }
                 }
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
@@ -1156,6 +1182,13 @@ public class MainActivity extends NFCActivity {
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
                 SpUtil.savePositionUsers(positionUsers);
                 refreshLoginUser();
+            } else if (HttpHelper.XMII_URL.equals(url)) {
+                ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
+                if (processSheets == null) {
+                    ErrorDialog.showAlert(mContext, "根据工单没有查到对应的款号");
+                } else {
+                    new ProcessSheetsDialog(mContext, processSheets).show();
+                }
             }
         } else {
             String message = resultJSON.getString("message");

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray_light"
+    android:orientation="horizontal"
+    android:showDividers="middle">
+    
+    <TextView
+        android:id="@+id/tv_packageNum"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="10dp" />
+    
+    <EditText
+        android:id="@+id/et_qty"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:inputType="number"
+        android:background="@null"
+        android:gravity="center"
+        android:padding="10dp" />
+    
+    <TextView
+        android:id="@+id/tv_printSeq"
+        style="@style/textStyle_default"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/gray_disable"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="打印顺序" />
+
+</LinearLayout>

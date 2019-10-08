@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+    <RelativeLayout
+        android:id="@+id/layout_button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_green_round_new"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拉布单"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_content" />
+            
+            <TextView
+                android:id="@+id/tv_orderNo1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="000008000044001"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+    
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/layout_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_green_round_new"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拉布单"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_content" />
+            
+            <TextView
+                android:id="@+id/tv_orderNo2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123446457574"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+    
+    </RelativeLayout>
+</LinearLayout>

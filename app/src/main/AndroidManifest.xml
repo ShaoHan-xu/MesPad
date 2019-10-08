@@ -58,15 +58,22 @@
         </activity>
         
         <activity
+            android:name=".activity.BatchCutWorkingActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.BatchLabuRecordActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".activity.ProcessDirectionActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.LabuDetailActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.BatchCutActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="landscape" />
+            android:name=".activity.BatchOrderListActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.WebActivity"
             android:screenOrientation="landscape" />

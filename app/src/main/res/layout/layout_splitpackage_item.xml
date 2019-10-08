@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_rootView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray_light"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:showDividers="middle">
+    
+    <TextView
+        android:id="@+id/tv_size"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="码数" />
+    
+    <TextView
+        android:id="@+id/tv_qty"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="件数" />
+    
+    <TextView
+        android:id="@+id/tv_action"
+        style="@style/textStyle_default"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="操作选择" />
+    
+    <CheckBox
+        android:id="@+id/ckb_sizeSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:button="@drawable/checkbox_green"
+        android:gravity="center"
+        android:textSize="@dimen/textSize_content" />
+
+</LinearLayout>

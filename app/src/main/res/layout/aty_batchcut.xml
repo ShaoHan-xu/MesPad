@@ -81,7 +81,7 @@
                 android:padding="10dp">
                 
                 <ImageView
-                    android:id="@+id/tag"
+                    android:id="@+id/layout_buttonList"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -91,7 +91,7 @@
                     android:id="@+id/tv_batchCut_workCenter"
                     style="@style/textStyle_default"
                     android:layout_width="match_parent"
-                    android:layout_toLeftOf="@id/tag"
+                    android:layout_toLeftOf="@id/layout_buttonList"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textSize="18sp" />

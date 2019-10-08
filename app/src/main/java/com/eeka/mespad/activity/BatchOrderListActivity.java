@@ -37,12 +37,16 @@ import com.eeka.mespad.utils.UnitUtil;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 大货裁剪段里面界面/即首页
+ */
 @SuppressLint("InflateParams")
-public class BatchCutActivity extends NFCActivity {
+public class BatchOrderListActivity extends NFCActivity {
+
+    private static final int REQUEST_DETAIL = 0;
 
     private TextView mTv_loginUser;
     private TextView mTv_workCenter;
@@ -63,6 +67,8 @@ public class BatchCutActivity extends NFCActivity {
     private List<String> mCJWorkCenterCondition;
 
     private PositionInfoBo.OPERINFORBean mOperation;
+
+    private int mActionIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +105,8 @@ public class BatchCutActivity extends NFCActivity {
         findViewById(R.id.iv_batchCut_login).setOnClickListener(this);
         findViewById(R.id.layout_batchCut_workCenter).setOnClickListener(this);
         findViewById(R.id.btn_batchCut_search).setOnClickListener(this);
+
+        refreshLoginUser();
     }
 
     @Override
@@ -106,8 +114,8 @@ public class BatchCutActivity extends NFCActivity {
         super.initData();
         mList_fzWorkCenter_checked = new ArrayList<>();
         mList_cjWorkCenter_checked = new ArrayList<>();
-        mWorkCenter_fzAll = new DictionaryDataBo("所有缝制中心", null);
-        mWorkCenter_cjAll = new DictionaryDataBo("所有裁剪中心", null);
+        mWorkCenter_fzAll = new DictionaryDataBo("所有缝制中心", "*");
+        mWorkCenter_cjAll = new DictionaryDataBo("所有裁剪中心", "*");
         mFZWorkCenterCondition = new ArrayList<>();
         mCJWorkCenterCondition = new ArrayList<>();
     }
@@ -131,7 +139,6 @@ public class BatchCutActivity extends NFCActivity {
             toast("再按一次返回键退出应用");
         }
     }
-
 
     /**
      * 收到推送消息
@@ -168,7 +175,25 @@ public class BatchCutActivity extends NFCActivity {
                 break;
             case R.id.btn_batchCut_search:
                 getOrderList();
+//                long millis = System.currentTimeMillis();
+//                BatchSplitPackagePrintBo printBo = new BatchSplitPackagePrintBo();
+//                printBo.setSubPackageSeq(2);
+//                printBo.setShopOrder("00060005862");
+//                printBo.setItem("KVP00601");
+//                printBo.setSizeCode("36");
+//                printBo.setSubPackageQty(50);
+//                printBo.setRfid("" + millis);
+//                BluetoothHelper.printSubPackageInfo(this, printBo);
                 break;
+        }
+    }
+
+    @Override
+    public void onClockIn(boolean success) {
+        if (success) {
+            if (mLoginDialog != null)
+                mLoginDialog.dismiss();
+            refreshLoginUser();
         }
     }
 
@@ -245,7 +270,7 @@ public class BatchCutActivity extends NFCActivity {
      * @param isFZ 是否缝制中心
      */
     private View getCheckBox(DictionaryDataBo item, boolean isFZ) {
-        CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn, null);
+        CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green, null);
         if (isFZ) {
             checkBox.setOnCheckedChangeListener(mCheckboxListener_fz);
         } else {
@@ -352,7 +377,7 @@ public class BatchCutActivity extends NFCActivity {
                     public void onClick(View v) {
                         showLoading();
                         mLogoutUserId = item.getEMPLOYEE_NUMBER();
-                        HttpHelper.positionLogout(mLogoutUserId, BatchCutActivity.this);
+                        HttpHelper.positionLogout(mLogoutUserId, BatchOrderListActivity.this);
                     }
                 });
             }
@@ -423,6 +448,16 @@ public class BatchCutActivity extends NFCActivity {
             holder.setText(R.id.tv_item, item.getITEM());
             holder.setText(R.id.tv_workCenter, item.getCF_WORKCENTER_DESC());
             holder.setText(R.id.btn_action, item.getOPERATION_DESC());
+            holder.setText(R.id.tv_matDesc, item.getITEM_DESC());
+
+            LinearLayout layout_completedQty = holder.getView(R.id.layout_completedQty);
+            String operation = mOperation.getOPERATION();
+            if ("QRCP001".equals(operation)) {
+                layout_completedQty.setVisibility(View.GONE);
+            } else {
+                layout_completedQty.setVisibility(View.VISIBLE);
+                holder.setText(R.id.tv_completeQty, item.getDONE_QTY());
+            }
 
             ImageView iv_state = holder.getView(R.id.iv_state);
             if ("IN_QUEUE".equals(item.getSTATUS())) {
@@ -430,7 +465,7 @@ public class BatchCutActivity extends NFCActivity {
             } else if ("IN_WORK".equals(item.getSTATUS())) {
                 iv_state.setImageResource(R.drawable.ic_state_cut_working);
             } else if ("DONE".equals(item.getSTATUS())) {
-                iv_state.setImageResource(0);
+                iv_state.setImageResource(R.drawable.ic_state_cut_done);
             } else {
                 iv_state.setImageResource(0);
             }
@@ -442,12 +477,18 @@ public class BatchCutActivity extends NFCActivity {
         public void onClick(View v, int position) {
             super.onClick(v, position);
             if (v.getId() == R.id.btn_action) {
+                List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
+                if (positionUsers == null || positionUsers.size() == 0) {
+                    showErrorDialog("员工未登陆上岗，无法操作");
+                    return;
+                }
                 BatchCutOrderListBo batchCutOrder = mList_data.get(position);
                 String operation = mOperation.getOPERATION();
                 if ("QRCP001".equals(operation)) {
-                    startActivity(ProcessDirectionActivity.getIntent(mContext, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()));
+                    mActionIndex = position;
+                    startActivityForResult(ProcessDirectionActivity.getIntent(mContext, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()), REQUEST_DETAIL);
                 } else {
-                    startActivity(new Intent(mContext, LabuDetailActivity.class));
+                    startActivity(LabuDetailActivity.getIntent(mContext, mOperation, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()));
                 }
             }
         }
@@ -477,8 +518,24 @@ public class BatchCutActivity extends NFCActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_DETAIL) {
+                String shopOrder = mEt_shopOrder.getText().toString();
+                if (!isEmpty(shopOrder)) {
+                    mEt_shopOrder.setText(null);
+                    getOrderList();
+                } else {
+                    mItemAdapter.removeData(mActionIndex);
+                }
+            }
+        }
+    }
+
     public static Intent getIntent(Context context, PositionInfoBo.OPERINFORBean operation) {
-        Intent intent = new Intent(context, BatchCutActivity.class);
+        Intent intent = new Intent(context, BatchOrderListActivity.class);
         intent.putExtra("operation", operation);
         return intent;
     }

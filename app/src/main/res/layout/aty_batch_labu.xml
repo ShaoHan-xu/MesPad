@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <include
+        android:id="@id/layout_title"
+        layout="@layout/layout_title" />
+    
+    <LinearLayout
+        android:id="@id/layout_buttonList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+        
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_green_round"
+            android:text="开始"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/btn_green_round_new"
+            android:text="新增"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btn_completed"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/btn_orange_round"
+            android:text="完成"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/btn_layoutImg"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_green_round"
+            android:text="排料图"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_buttonList"
+        android:layout_below="@id/layout_title"
+        android:orientation="vertical"
+        android:padding="10dp">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_layoutimg"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="排料图实际长度录入："
+                android:textStyle="bold" />
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/bg_border_gray_light"
+                android:divider="@drawable/divider_gray_light"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+                
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#D8D8D8"
+                    android:divider="@drawable/divider_gray_light"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:showDividers="middle">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="排料图" />
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="排料图(米)" />
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="实际长度(米)" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/layout_layoutDuan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@drawable/divider_gray_light"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                
+                </LinearLayout>
+            
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1.2"
+                android:background="@drawable/bg_border_gray_light"
+                android:divider="@drawable/divider_gray_light"
+                android:orientation="vertical"
+                android:showDividers="middle">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#D8D8D8"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="排料图1已拉层数汇总表" />
+                
+                <LinearLayout
+                    android:id="@+id/layout_yiLa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray_light"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                    
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/divider_gray_light"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:showDividers="middle">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:padding="2dp"
+                            android:text="码数" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:padding="2dp"
+                            android:text="比例" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="2dp"
+                            android:text="需拉层数" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="2dp"
+                            android:text="已拉层数" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="2dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="2dp"
+                            android:text="待拉层数" />
+                    </LinearLayout>
+                
+                </LinearLayout>
+            
+            </LinearLayout>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_layoutimg"
+                android:gravity="center_vertical"
+                android:minHeight="60dp"
+                android:padding="10dp"
+                android:text="尺码选择："
+                android:textStyle="bold" />
+            
+            <LinearLayout
+                android:id="@+id/layout_sizeList"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_border_gray_light"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+            
+            </LinearLayout>
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_border_gray_light"
+            android:divider="@drawable/divider_gray_light"
+            android:orientation="vertical"
+            android:padding="1dp"
+            android:showDividers="middle">
+            
+            <LinearLayout
+                android:id="@+id/layout_labuRecord_tabTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#D8D8D8"
+                android:divider="@drawable/divider_gray_light"
+                android:orientation="horizontal"
+                android:showDividers="middle">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="卷号" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="面料长度" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="余料" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="短码数" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="操作" />
+            
+            </LinearLayout>
+            
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                
+                <LinearLayout
+                    android:id="@+id/layout_itemList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray_light"
+                    android:orientation="vertical"
+                    android:showDividers="middle">
+                    
+                    <LinearLayout
+                        android:id="@+id/layout_labuRecord_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/divider_gray_light"
+                        android:orientation="horizontal"
+                        android:showDividers="middle">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:text="合计" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp" />
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp" />
+                    
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        
+        </LinearLayout>
+    
+    </LinearLayout>
+
+</RelativeLayout>

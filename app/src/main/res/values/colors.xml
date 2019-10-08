@@ -19,6 +19,7 @@
     <color name="white">#FFFFFF</color>
     <color name="gray_disable">#BFBFBF</color>
     <color name="divider_gray">#CCCCCC</color>
+    <color name="bg_gray">#F0F0F0</color>
 
     <color name="text_black_default">#282828</color>
     <color name="text_gray_default">#545454</color>

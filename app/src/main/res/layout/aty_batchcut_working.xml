@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <include layout="@layout/layout_title" />
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:id="@+id/buttonList"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            
+            <Button
+                android:id="@+id/btn_layoutImg"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_green_round_new"
+                android:text="排料图"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_content" />
+            
+            <Button
+                android:id="@+id/btn_mainMatImg"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_green_round_new"
+                android:text="主面料图"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_content"
+                android:visibility="gone" />
+            
+            <Button
+                android:id="@+id/btn_sampleImg"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_green_round_new"
+                android:text="样衣图"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_content"
+                android:visibility="gone" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:id="@+id/layout_batchCutWork_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_toLeftOf="@id/buttonList"
+            android:background="@drawable/bg_border_gray_light"
+            android:divider="@drawable/divider_gray_light"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+        
+        </LinearLayout>
+    
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/layout_buttonList_cut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/btn_green_round"
+            android:text="开始"
+            android:enabled="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_content" />
+        
+        <Button
+            android:id="@+id/btn_completed"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_orange_round"
+            android:text="完成"
+            android:enabled="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_content" />
+    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/layout_buttonList_splitPackage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        
+        <Button
+            android:id="@+id/btn_splitPackage_qty"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/btn_orange_round"
+            android:text="按件数分包"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_content" />
+        
+        <Button
+            android:id="@+id/btn_splitPackage_orderNum"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_orange_round"
+            android:text="按拉布单分包"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_content" />
+    
+    </LinearLayout>
+
+</LinearLayout>

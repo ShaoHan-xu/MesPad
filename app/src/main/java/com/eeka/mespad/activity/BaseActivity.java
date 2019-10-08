@@ -137,23 +137,6 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_back:
                 finish();
                 break;
-            case R.id.btn_processSheets:
-                String mtmOrder = SpUtil.getSalesOrder();
-                String shopOrder = SpUtil.get(SpUtil.KEY_SHOPORDER, null);
-                if (isEmpty(mtmOrder) && isEmpty(shopOrder)) {
-                    ErrorDialog.showAlert(mContext, "请先获取订单数据");
-                } else if (!isEmpty(mtmOrder)) {
-                    String url = PadApplication.MTM_URL + mtmOrder;
-                    startActivity(WebActivity.getIntent(mContext, url));
-                } else {
-                    if (isEmpty(shopOrder)) {
-                        ErrorDialog.showAlert(mContext, "未找到当前订单号");
-                        return;
-                    }
-                    showLoading();
-                    HttpHelper.getProcessSheets(shopOrder, this);
-                }
-                break;
             case R.id.btn_cutMatInfo:
                 String salesOrder = SpUtil.getSalesOrder();
                 if (isEmpty(salesOrder)) {
@@ -234,16 +217,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onSuccess(String url, JSONObject resultJSON) {
         dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.XMII_URL.equals(url)) {
-                ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
-                if (processSheets == null) {
-                    ErrorDialog.showAlert(mContext, "该订单无工艺单信息");
-                } else {
-                    new ProcessSheetsDialog(mContext, processSheets).show();
-                }
-            }
-        } else if (HttpHelper.getCommonInfoByLogicNo.equals(url)) {
-            if (HttpHelper.isSuccess(resultJSON)) {
+            if (HttpHelper.getCommonInfoByLogicNo.equals(url)) {
                 JSONArray result = resultJSON.getJSONArray("result");
                 if (result != null && result.size() != 0) {
                     List<PocketSizeBo> items = JSON.parseArray(result.toString(), PocketSizeBo.class);
@@ -254,11 +228,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     showErrorDialog("找不到该工单的条格面料裁剪确认单");
                 }
-            } else {
-                ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));
             }
         } else {
-            showErrorDialog(resultJSON.getString("message"));
+            showErrorDialog(HttpHelper.getMessage(resultJSON));
         }
     }
 

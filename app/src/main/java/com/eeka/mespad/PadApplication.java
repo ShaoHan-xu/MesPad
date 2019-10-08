@@ -21,24 +21,20 @@ import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
 public class PadApplication extends Application {
 
     public static Context mContext;
-    public static final String BASE_URL_D = "http://10.7.121.54:50000/eeka-mes/";//D系统
-    public static final String BASE_URL_Q = "http://10.7.121.60:50000/eeka-mes/";//Q系统
-    public static final String BASE_URL_P_LH = "http://10.7.121.64:50000/eeka-mes/";//龙华P系统
-    public static final String BASE_URL_P = "http://10.10.200.16:8000/eeka-mes/";//P系统
 
-    public static final String XMII_URL_D = "http://10.7.121.54:50000/XMII/Runner?";//D系统
-    public static final String XMII_URL_Q = "http://10.7.121.60:50000/XMII/Runner?";//Q系统
-    public static final String XMII_URL_P_LH = "http://10.7.121.64:50000/XMII/Runner?";//龙华P系统
-    public static final String XMII_URL_P = "http://10.10.200.16:8000/XMII/Runner?";//P系统
+    public static final String HOST_D = "http://10.7.121.54:50000";
+    public static final String HOST_Q = "http://10.7.121.60:50000";
+    public static final String HOST_P = "http://10.10.200.16:8000";
+    public static final String HOST_P_LH = "http://10.7.121.64:50000";
 
-    public static final String WEB_URL_D = "http://10.7.121.54:50000/eeka-ws/";//D系统
-    public static final String WEB_URL_Q = "http://10.7.121.60:50000/eeka-ws/";//Q系统
-    public static final String WEB_URL_P_LH = "http://10.7.121.64:50000/eeka-ws/";//龙华P系统
-    public static final String WEB_URL_P = "http://10.10.200.16:8000/eeka-ws/";//P系统
+    public static final String HOST_D_INA = "http://10.7.123.131";
+    public static final String HOST_Q_INA = "http://10.7.123.131";
+    public static final String HOST_P_INA = "http://10.7.123.131";
 
     public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
     public static final String URL_MTM_Q = "http://mtm.ifashioncloud.com:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
     public static final String URL_MTM_P = "https://mtm.ifashioncloud.com:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
+
     public static String MQTT_D = "10.7.121.40"; //MQ地址
     public static String MQTT_Q = "10.7.121.40"; //MQ地址
     public static String MQTT_P = "10.10.200.40"; //MQ地址
@@ -46,6 +42,7 @@ public class PadApplication extends Application {
     public static String XMII_URL;
     public static String WEB_URL;
     public static String MTM_URL;
+    public static String INA_URL;
     public static String MQTT_BROKER; //MQ地址
 
     @Override
@@ -67,29 +64,32 @@ public class PadApplication extends Application {
         //根据不同的系统环境，配置不同的服务器地址
         if (!TextUtils.isEmpty(systemCode)) {
             if ("D".equals(systemCode)) {
-                BASE_URL = BASE_URL_D;
-                WEB_URL = WEB_URL_D;
+                BASE_URL = HOST_D + "/eeka-mes/";
+                WEB_URL = HOST_D + "/eeka-ws/";
                 MQTT_BROKER = MQTT_D;
                 MTM_URL = URL_MTM_D;
-                XMII_URL = XMII_URL_D;
+                XMII_URL = HOST_D + "/XMII/Runner?";
+                INA_URL = HOST_D_INA;
             } else if ("Q".equals(systemCode)) {
-                BASE_URL = BASE_URL_Q;
-                WEB_URL = WEB_URL_Q;
+                BASE_URL = HOST_Q + "/eeka-mes/";
+                WEB_URL = HOST_Q + "/eeka-ws/";
                 MQTT_BROKER = MQTT_Q;
                 MTM_URL = URL_MTM_Q;
-                XMII_URL = XMII_URL_Q;
+                XMII_URL = HOST_Q + "/XMII/Runner?";
+                INA_URL = HOST_Q_INA;
             } else if ("P".equals(systemCode)) {
-                BASE_URL = BASE_URL_P;
-                WEB_URL = WEB_URL_P;
+                BASE_URL = HOST_P + "/eeka-mes/";
+                WEB_URL = HOST_P + "/eeka-ws/";
                 MQTT_BROKER = MQTT_P;
                 MTM_URL = URL_MTM_P;
-                XMII_URL = XMII_URL_P;
+                XMII_URL = HOST_P + "/XMII/Runner?";
+                INA_URL = HOST_P_INA;
             } else if ("LH_P".equals(systemCode)) {
-                BASE_URL = BASE_URL_P_LH;
-                WEB_URL = WEB_URL_P_LH;
+                BASE_URL = HOST_P_LH + "/eeka-mes/";
+                WEB_URL = HOST_P_LH + "/eeka-ws/";
                 MQTT_BROKER = MQTT_Q;
                 MTM_URL = URL_MTM_P;
-                XMII_URL = XMII_URL_P_LH;
+                XMII_URL = HOST_P_LH + "/XMII/Runner?";
             }
         }
 

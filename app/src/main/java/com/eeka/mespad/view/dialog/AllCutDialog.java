@@ -14,10 +14,12 @@ public class AllCutDialog extends BaseDialog {
 
     private StringCallback mListener;
     private CheckBox mCkb_allCut;
+    private boolean isAllCut;
 
-    public AllCutDialog(@NonNull Context context, StringCallback listener) {
+    public AllCutDialog(@NonNull Context context, boolean isAllCut, StringCallback listener) {
         super(context);
         mContext = context;
+        this.isAllCut = isAllCut;
         mListener = listener;
         init();
     }
@@ -29,6 +31,7 @@ public class AllCutDialog extends BaseDialog {
         setContentView(mView);
 
         mCkb_allCut = mView.findViewById(R.id.ckb_allCut);
+        mCkb_allCut.setChecked(isAllCut);
 
         mView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

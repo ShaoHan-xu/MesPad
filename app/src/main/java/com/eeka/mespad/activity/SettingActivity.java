@@ -161,16 +161,16 @@ public class SettingActivity extends BaseActivity {
                     dialog.dismiss();
                     if (which == 0) {
                         SpUtil.save(SpUtil.KEY_SYSTEMCODE, "D");
-                        PadApplication.BASE_URL = PadApplication.BASE_URL_D;
+                        PadApplication.BASE_URL = PadApplication.HOST_D + "/eeka-mes/";
                     } else if (which == 1) {
                         SpUtil.save(SpUtil.KEY_SYSTEMCODE, "Q");
-                        PadApplication.BASE_URL = PadApplication.BASE_URL_Q;
+                        PadApplication.BASE_URL = PadApplication.HOST_Q + "/eeka-mes/";
                     } else if (which == 2) {
                         SpUtil.save(SpUtil.KEY_SYSTEMCODE, "P");
-                        PadApplication.BASE_URL = PadApplication.BASE_URL_P;
+                        PadApplication.BASE_URL = PadApplication.HOST_P + "/eeka-mes/";
                     } else if (which == 3) {
                         SpUtil.save(SpUtil.KEY_SYSTEMCODE, "LH_P");
-                        PadApplication.BASE_URL = PadApplication.BASE_URL_P_LH;
+                        PadApplication.BASE_URL = PadApplication.HOST_P_LH + "/eeka-mes/";
                     }
                     ErrorDialog.showConfirmAlert(mContext, "系统切换成功，重启应用后生效。", new View.OnClickListener() {
                         @Override
