@@ -34,7 +34,6 @@ public class ImageBrowserDialog extends BaseDialog {
         setCanceledOnTouchOutside(true);
 
         PhotoView imageView = mView.findViewById(R.id.imageView);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.enable();
         if (!isEmpty(mUrl)) {
             Picasso.with(mContext).load(mUrl).into(imageView);

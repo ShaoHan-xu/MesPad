@@ -25,6 +25,8 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.BatchCutOrderListBo;
+import com.eeka.mespad.bo.BatchCutRecordBo;
+import com.eeka.mespad.bo.BatchLabuRecordPrintBo;
 import com.eeka.mespad.bo.DictionaryDataBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PushJson;
@@ -34,6 +36,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.UnitUtil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -51,6 +54,7 @@ public class BatchOrderListActivity extends NFCActivity {
     private TextView mTv_loginUser;
     private TextView mTv_workCenter;
     private EditText mEt_shopOrder;
+    private EditText mEt_item;
 
     private ItemAdapter mItemAdapter;
     private List<BatchCutOrderListBo> mList_data;
@@ -70,6 +74,8 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private int mActionIndex;
 
+    private String mRFID;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +85,15 @@ public class BatchOrderListActivity extends NFCActivity {
 
         initView();
         initData();
-        getOrderList();
+        search();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -99,12 +113,14 @@ public class BatchOrderListActivity extends NFCActivity {
 
         mTv_workCenter = findViewById(R.id.tv_batchCut_workCenter);
         mEt_shopOrder = findViewById(R.id.et_batchCut_shopOrder);
+        mEt_item = findViewById(R.id.et_batchCut_item);
 
         mTv_loginUser = findViewById(R.id.tv_batchCut_loginUser);
         mTv_loginUser.setOnClickListener(this);
         findViewById(R.id.iv_batchCut_login).setOnClickListener(this);
         findViewById(R.id.layout_batchCut_workCenter).setOnClickListener(this);
         findViewById(R.id.btn_batchCut_search).setOnClickListener(this);
+        findViewById(R.id.btn_batchCut_scan).setOnClickListener(this);
 
         refreshLoginUser();
     }
@@ -120,10 +136,11 @@ public class BatchOrderListActivity extends NFCActivity {
         mCJWorkCenterCondition = new ArrayList<>();
     }
 
-    private void getOrderList() {
+    private void search() {
         showLoading();
         String shopOrder = mEt_shopOrder.getText().toString();
-        HttpHelper.getBatchCutOrderList(shopOrder, mOperation.getOPERATION(), mFZWorkCenterCondition, mCJWorkCenterCondition, this);
+        String item = mEt_item.getText().toString();
+        HttpHelper.getBatchCutOrderList(shopOrder, item, mOperation.getOPERATION(), mFZWorkCenterCondition, mCJWorkCenterCondition, this);
     }
 
     private long mLastMillis;
@@ -147,7 +164,18 @@ public class BatchOrderListActivity extends NFCActivity {
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
         if (PushJson.TYPE_RFID.equals(type)) {
-            mEt_shopOrder.setText(push.getContent());
+            mRFID = push.getContent();
+//            mEt_shopOrder.setText(mRFID);
+            showLoading();
+            HttpHelper.getBatchCardInfo(mRFID, this);
+        } else if (PushJson.TYPE_SCAN.equals(type)) {
+            String content = push.getContent();
+            BatchLabuRecordPrintBo printBo = JSON.parseObject(content, BatchLabuRecordPrintBo.class);
+            BatchCutRecordBo data = new BatchCutRecordBo();
+            data.setRabRef(printBo.getRabOrder());
+            data.setMaterialType(printBo.getMatType());
+            Intent intent = BatchCutWorkingActivity.getIntent(mContext, data, mOperation);
+            startActivity(intent);
         }
     }
 
@@ -174,7 +202,7 @@ public class BatchOrderListActivity extends NFCActivity {
                 mPPW_workCenter.dismiss();
                 break;
             case R.id.btn_batchCut_search:
-                getOrderList();
+                search();
 //                long millis = System.currentTimeMillis();
 //                BatchSplitPackagePrintBo printBo = new BatchSplitPackagePrintBo();
 //                printBo.setSubPackageSeq(2);
@@ -184,6 +212,9 @@ public class BatchOrderListActivity extends NFCActivity {
 //                printBo.setSubPackageQty(50);
 //                printBo.setRfid("" + millis);
 //                BluetoothHelper.printSubPackageInfo(this, printBo);
+                break;
+            case R.id.btn_batchCut_scan:
+                startScan();
                 break;
         }
     }
@@ -488,7 +519,7 @@ public class BatchOrderListActivity extends NFCActivity {
                     mActionIndex = position;
                     startActivityForResult(ProcessDirectionActivity.getIntent(mContext, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()), REQUEST_DETAIL);
                 } else {
-                    startActivity(LabuDetailActivity.getIntent(mContext, mOperation, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()));
+                    startActivity(BatchLabuDetailActivity.getIntent(mContext, mOperation, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()));
                 }
             }
         }
@@ -498,9 +529,12 @@ public class BatchOrderListActivity extends NFCActivity {
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.getBatchCutOrderList.equals(url)) {
+            if (HttpHelper.getBatchCutOrderList.equals(url) || HttpHelper.searchBatchRFIDInfo.equals(url)) {
                 mList_data = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchCutOrderListBo.class);
                 mItemAdapter.notifyDataSetChanged(mList_data);
+                if (mList_data == null || mList_data.size() == 0) {
+                    toast("返回数据为空");
+                }
             } else if (HttpHelper.getLabuWorkCenter.equals(url)) {
                 JSONObject jsonObject = resultJSON.getJSONObject("result");
                 mList_fzWorkCenter = JSON.parseArray(jsonObject.getJSONArray("fzWorkCenterOptions").toString(), DictionaryDataBo.class);
@@ -514,6 +548,27 @@ public class BatchOrderListActivity extends NFCActivity {
             } else if (HttpHelper.positionLogout_url.equals(url)) {
                 toast("用户下岗成功");
                 logoutSuccess();
+            } else if (HttpHelper.getBatchCardInfo.equals(url)) {
+                JSONObject result = resultJSON.getJSONObject("result");
+                String orderType = result.getString("ORDER_TYPE");
+                if ("M".equals(orderType)) {
+                    List<UserInfoBo> users = SpUtil.getPositionUsers();
+                    if (users != null) {
+                        for (int i = 0; i < users.size(); i++) {
+                            UserInfoBo user = users.get(i);
+                            if (user.getCARD_NUMBER().equals(mRFID)) {
+                                mLogoutUserId = user.getEMPLOYEE_NUMBER();
+                                clockOut(mRFID);
+                                return;
+                            }
+                        }
+                    }
+                    clockIn(mRFID);
+                } else {
+                    String ri = result.getString("RI");
+                    showLoading();
+                    HttpHelper.searchBatchRFIDInfo(mOperation.getOPERATION(), ri, orderType, this);
+                }
             }
         }
     }
@@ -526,7 +581,7 @@ public class BatchOrderListActivity extends NFCActivity {
                 String shopOrder = mEt_shopOrder.getText().toString();
                 if (!isEmpty(shopOrder)) {
                     mEt_shopOrder.setText(null);
-                    getOrderList();
+                    search();
                 } else {
                     mItemAdapter.removeData(mActionIndex);
                 }

@@ -74,7 +74,7 @@
             
             <RelativeLayout
                 android:id="@+id/layout_batchCut_workCenter"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_gray"
                 android:gravity="center_vertical"
@@ -100,7 +100,7 @@
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="20dp"
                 android:text="工单号："
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -108,7 +108,23 @@
             <EditText
                 android:id="@+id/et_batchCut_shopOrder"
                 style="@style/textStyle_default"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_radius_gray"
+                android:padding="10dp"
+                android:singleLine="true" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_marginLeft="20dp"
+                android:text="款号："
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            
+            <EditText
+                android:id="@+id/et_batchCut_item"
+                style="@style/textStyle_default"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_gray"
                 android:padding="10dp"
@@ -116,11 +132,21 @@
             
             <Button
                 android:id="@+id/btn_batchCut_search"
-                android:layout_width="150dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="20dp"
                 android:background="@drawable/btn_orange_round"
                 android:text="搜索"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+            
+            <Button
+                android:id="@+id/btn_batchCut_scan"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/btn_orange_round"
+                android:text="扫码作业"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         

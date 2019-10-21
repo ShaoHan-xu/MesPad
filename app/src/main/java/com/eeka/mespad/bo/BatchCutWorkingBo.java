@@ -14,6 +14,88 @@ public class BatchCutWorkingBo {
     private int ORDER_SEQ;
     private List<RABINFOBean> RAB_INFO;
 
+    private String ITEM;
+    private String MATERIAL_TYPE;
+    private String Z_RAB_BO;
+    private String LAYOUT_NO;
+    private String Z_LAYOUT_BO;
+    private String IS_FINISH;
+    private String LAYOUT_IMAGE;
+    private String SHOP_ORDER;
+    private String SHOP_ORDER_BO;
+
+    public String getSHOP_ORDER() {
+        return SHOP_ORDER;
+    }
+
+    public void setSHOP_ORDER(String SHOP_ORDER) {
+        this.SHOP_ORDER = SHOP_ORDER;
+    }
+
+    public String getSHOP_ORDER_BO() {
+        return SHOP_ORDER_BO;
+    }
+
+    public void setSHOP_ORDER_BO(String SHOP_ORDER_BO) {
+        this.SHOP_ORDER_BO = SHOP_ORDER_BO;
+    }
+
+    public String getLAYOUT_IMAGE() {
+        return LAYOUT_IMAGE;
+    }
+
+    public void setLAYOUT_IMAGE(String LAYOUT_IMAGE) {
+        this.LAYOUT_IMAGE = LAYOUT_IMAGE;
+    }
+
+    public String getITEM() {
+        return ITEM;
+    }
+
+    public void setITEM(String ITEM) {
+        this.ITEM = ITEM;
+    }
+
+    public String getMATERIAL_TYPE() {
+        return MATERIAL_TYPE;
+    }
+
+    public void setMATERIAL_TYPE(String MATERIAL_TYPE) {
+        this.MATERIAL_TYPE = MATERIAL_TYPE;
+    }
+
+    public String getZ_RAB_BO() {
+        return Z_RAB_BO;
+    }
+
+    public void setZ_RAB_BO(String z_RAB_BO) {
+        Z_RAB_BO = z_RAB_BO;
+    }
+
+    public String getLAYOUT_NO() {
+        return LAYOUT_NO;
+    }
+
+    public void setLAYOUT_NO(String LAYOUT_NO) {
+        this.LAYOUT_NO = LAYOUT_NO;
+    }
+
+    public String getZ_LAYOUT_BO() {
+        return Z_LAYOUT_BO;
+    }
+
+    public void setZ_LAYOUT_BO(String z_LAYOUT_BO) {
+        Z_LAYOUT_BO = z_LAYOUT_BO;
+    }
+
+    public String getIS_FINISH() {
+        return IS_FINISH;
+    }
+
+    public void setIS_FINISH(String IS_FINISH) {
+        this.IS_FINISH = IS_FINISH;
+    }
+
     public String getORDER_NO() {
         return ORDER_NO;
     }
@@ -56,10 +138,19 @@ public class BatchCutWorkingBo {
         private String Z_RAB_BO;
         private String MATERIAL_TYPE;
         private String SIZE_CODE;
+        private int CUT_NUM;
         private int SIZE_TOTAL;
         private int SIZE_FEN;
         private int SIZE_LEFT;
         private String STATUS;
+
+        public int getCUT_NUM() {
+            return CUT_NUM;
+        }
+
+        public void setCUT_NUM(int CUT_NUM) {
+            this.CUT_NUM = CUT_NUM;
+        }
 
         public String getSITE() {
             return SITE;

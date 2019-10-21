@@ -28,6 +28,9 @@ public class LoadingDialog {
             TextView tv_loadingMsg = view.findViewById(R.id.tv_loading_msg);
             tv_loadingMsg.setText(msg);
         }
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
         mDialog = new Dialog(context);
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.setCancelable(false);

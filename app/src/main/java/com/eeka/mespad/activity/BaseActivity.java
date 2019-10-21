@@ -53,7 +53,7 @@ import java.util.List;
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener, HttpCallback, LoginFragment.OnLoginCallback, LoginFragment.OnClockCallback {
 
     private static final String DECODED_CONTENT_KEY = "codedContent";
-    private static final int REQUEST_CODE_SCAN = 0x0000;
+    public static final int REQUEST_CODE_SCAN = 999;
 
     public static int REQUEST_PERMISSION = 998;
 
@@ -276,8 +276,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
                 PushJson pushJson = new PushJson();
                 pushJson.setType(PushJson.TYPE_SCAN);
                 pushJson.setContent(content);
-                EventBus eventBus = EventBus.getDefault();
-                eventBus.post(pushJson);
+                EventBus.getDefault().post(pushJson);
             }
         }
     }

@@ -146,13 +146,14 @@
                 android:showDividers="middle">
                 
                 <TextView
+                    android:id="@+id/tv_layoutNoTitle"
                     style="@style/textStyle_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#D8D8D8"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="排料图1已拉层数汇总表" />
+                    android:text="排料图已拉层数汇总表" />
                 
                 <LinearLayout
                     android:id="@+id/layout_yiLa"
@@ -169,6 +170,11 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:showDividers="middle">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:padding="2dp"
+                            android:text="段数" />
                         
                         <TextView
                             style="@style/textStyle_default"
@@ -224,7 +230,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_layoutimg"
                 android:gravity="center_vertical"
-                android:minHeight="60dp"
+                android:minHeight="80dp"
                 android:padding="10dp"
                 android:text="尺码选择："
                 android:textStyle="bold" />
@@ -232,11 +238,12 @@
             <LinearLayout
                 android:id="@+id/layout_sizeList"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="80dp"
                 android:background="@drawable/bg_border_gray_light"
+                android:divider="@drawable/divider_gray_light"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:showDividers="middle|end">
             
             </LinearLayout>
         

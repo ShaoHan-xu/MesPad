@@ -3,14 +3,23 @@
     android:id="@+id/layout_rootView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:divider="@drawable/divider_gray_light"
     android:gravity="center"
     android:orientation="vertical"
     android:showDividers="middle">
     
     <TextView
+        android:id="@+id/tv_cutNum"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="段数" />
+    
+    <TextView
         android:id="@+id/tv_size"
         style="@style/textStyle_default"
+        android:layout_width="match_parent"
         android:gravity="center"
         android:padding="10dp"
         android:text="码数" />
@@ -43,6 +52,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:button="@drawable/checkbox_green"
+        android:clickable="false"
         android:gravity="center"
         android:textSize="@dimen/textSize_content" />
 

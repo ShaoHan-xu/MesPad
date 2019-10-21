@@ -5,7 +5,6 @@
     android:layout_marginBottom="10dp"
     android:background="@drawable/bg_border_radius_gray"
     android:divider="@drawable/divider_gray_light"
-    android:gravity="center"
     android:orientation="horizontal"
     android:showDividers="middle">
     
@@ -90,32 +89,54 @@
         android:layout_height="match_parent"
         android:divider="@drawable/divider_gray_light"
         android:orientation="horizontal"
-        android:showDividers="middle">
+        android:showDividers="middle" />
     
-    </LinearLayout>
-    
-    <LinearLayout
-        android:id="@+id/layout_labuTable_labuBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:visibility="gone" />
-    
-    <HorizontalScrollView
-        android:id="@+id/layout_labuTable_labuOrderBtnWrap"
+    <RelativeLayout
+        android:id="@+id/layout_labuTable_btnWrap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
         
+        <Button
+            android:id="@+id/btn_rabHistory"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_orange"
+            android:gravity="center"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:text="已拉布记录"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_content"
+            android:visibility="gone" />
+        
         <LinearLayout
-            android:id="@+id/layout_labuTable_labuOrderBtn"
-            android:layout_width="wrap_content"
+            android:id="@+id/layout_labuTable_labuBtn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/btn_rabHistory"
             android:orientation="horizontal"
-            android:padding="10dp" />
-    
-    </HorizontalScrollView>
+            android:padding="10dp"
+            android:visibility="gone" />
+        
+        <HorizontalScrollView
+            android:id="@+id/layout_labuTable_labuOrderBtnWrap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/btn_rabHistory"
+            android:visibility="gone">
+            
+            <LinearLayout
+                android:id="@+id/layout_labuTable_labuOrderBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp" />
+        
+        </HorizontalScrollView>
+    </RelativeLayout>
 </LinearLayout>

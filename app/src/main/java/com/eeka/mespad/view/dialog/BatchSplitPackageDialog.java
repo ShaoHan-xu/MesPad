@@ -39,12 +39,18 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
 
     private List<BatchSplitPackagePrintBo> mList_printData;
 
-    public BatchSplitPackageDialog(@NonNull Context context, boolean editable, BatchCutRecordBo data, String sizeCode, int sizeTotal) {
+    private boolean cancelAble;//弹框是否允许消掉
+
+    private boolean isOnlyPrint;
+
+    public BatchSplitPackageDialog(@NonNull Context context, boolean editable, BatchCutRecordBo data, String sizeCode, int sizeTotal, boolean onlyPrint) {
         super(context);
         isEditable = editable;
         mData = data;
         mSizeCode = sizeCode;
         mSizeTotal = sizeTotal;
+        isOnlyPrint = onlyPrint;
+        cancelAble = true;
         init();
     }
 
@@ -60,6 +66,10 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         TextView tv_layoutNo = mView.findViewById(R.id.tv_layoutNo);
         TextView tv_size = mView.findViewById(R.id.tv_size);
         TextView tv_qty = mView.findViewById(R.id.tv_qty);
+        TextView tv_typeTitle = mView.findViewById(R.id.tv_splitCard_typeTitle);
+        if (!isEditable) {
+            tv_typeTitle.setText("按拉布单分包");
+        }
 
         tv_shopOrder.setText(mData.getShopOrder());
         tv_item.setText(mData.getItem());
@@ -74,8 +84,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         mView.findViewById(R.id.btn_cancel).setOnClickListener(this);
         mView.findViewById(R.id.btn_ok).setOnClickListener(this);
 
-        LoadingDialog.show(mContext);
-        HttpHelper.getBatchSplitItem(mData.getShopOrderRef(), mSizeCode, mSizeTotal, this);
     }
 
     private View.OnClickListener mOnSaveListener;
@@ -91,7 +99,19 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cancel:
-                cancel();
+                if (isOnlyPrint) {
+                    dismiss();
+                } else {
+                    if (cancelAble) {
+                        if (findViewById(R.id.btn_ok).getVisibility() == View.VISIBLE) {
+                            dismiss();
+                        } else {
+                            cancel();
+                        }
+                    } else {
+                        ErrorDialog.showAlert(mContext, "请打印完所有分包数据");
+                    }
+                }
                 break;
             case R.id.btn_add:
                 int qty = 0;
@@ -116,22 +136,49 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 break;
             case R.id.tv_printSeq:
                 print(v);
+
+                int index = (int) v.getTag();
+                if (index == 0) {
+                    cancelAble = true;
+
+                    completed();
+                }
                 break;
         }
     }
 
+    private void completed() {
+        String userId = SpUtil.getLoginUserId();
+        if (isEmpty(userId)) {
+            ErrorDialog.showAlert(mContext, "需要员工登录上岗才能操作");
+            return;
+        }
+
+        LoadingDialog.show(mContext);
+        mData.setCutSizes(null);
+        HttpHelper.completedSplitPrint(userId, mData, this);
+    }
+
     private void print(View v) {
+        v.setEnabled(false);
         int index = (int) v.getTag();
         BatchSplitPackagePrintBo printBo = mList_printData.get(index);
         printBo.setSizeCode(mSizeCode);
-        new BatchSplitPackagePrintContentDialog(mContext, printBo).setParams(0.4f, 0.45f).show();
         BluetoothHelper.printSubPackageInfo(getOwnerActivity(), printBo);
-        if (index > 0) {
-            setPrintEnable(index - 1);
+        new BatchSplitPackagePrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f).show();
+
+        LoadingDialog.show(mContext);
+        HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq() + "", this);
+
+        if (!isOnlyPrint) {
+            if (index > 0) {
+                setPrintEnable(index - 1);
+            }
         }
     }
 
     private void check() {
+        int qtyAll = 0;
         for (int i = 0; i < mLayout_items.getChildCount() - 1; i++) {
             View view = mLayout_items.getChildAt(i);
             EditText editText = view.findViewById(R.id.et_qty);
@@ -140,16 +187,22 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 ErrorDialog.showAlert(mContext, "分包号 " + tv_packageNum.getText().toString() + "，数量不能为空");
                 return;
             }
+            int qty = FormatUtil.strToInt(editText.getText().toString());
+            qtyAll += qty;
+        }
+        if (qtyAll != mSizeTotal) {
+            ErrorDialog.showAlert(mContext, "当前拉布单分包数量与总数不符，请检查");
+            return;
         }
         new SplitPackageCheckDialog(mContext, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                completed();
+                save();
             }
         }).setParams(0.5f, 0.5f).show();
     }
 
-    private void completed() {
+    private void save() {
         List<BatchSplitPackageSaveBo.SubPackagesBean> list = new ArrayList<>();
         for (int i = 0; i < mLayout_items.getChildCount() - 1; i++) {
             View view = mLayout_items.getChildAt(i);
@@ -172,6 +225,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         data.setSubPackages(list);
         data.setSubSeq(mData.getWorkSeq());
         data.setSubOrder(mData.getWorkNo());
+        data.setMaterialType(mData.getMaterialType());
 
         List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
         if (positionUsers == null || positionUsers.size() == 0) {
@@ -192,19 +246,47 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         findViewById(R.id.btn_ok).setVisibility(View.GONE);
         TextView tv_cancel = findViewById(R.id.btn_cancel);
         tv_cancel.setText("关闭");
+        TextView tv_tag = findViewById(R.id.tv_packageNum_tag);
+        tv_tag.setText("包号");
 
         //删除新增按钮
         mLayout_items.removeViewAt(mLayout_items.getChildCount() - 1);
 
         mLayout_items.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE | LinearLayout.SHOW_DIVIDER_END);
 
+        int index = mLayout_items.getChildCount() - 1;
         for (int i = 0; i < mLayout_items.getChildCount(); i++) {
+            BatchSplitPackagePrintBo printBo = mList_printData.get(i);
             View view = mLayout_items.getChildAt(i);
+            TextView tv_packageNum = view.findViewById(R.id.tv_packageNum);
+            tv_packageNum.setText(printBo.getSubPackageSeq() + "");
             EditText editText = view.findViewById(R.id.et_qty);
+            editText.setText(printBo.getSubPackageQty() + "");
             editText.setEnabled(false);
+
+            if (isOnlyPrint) {
+                TextView tv_printSeq = view.findViewById(R.id.tv_printSeq);
+                tv_printSeq.setEnabled(true);
+                if (printBo.isPrinted()) {
+                    tv_printSeq.setBackgroundResource(R.drawable.btn_disable);
+                }
+            } else {
+                if (index == mLayout_items.getChildCount() - 1 && printBo.isPrinted()) {
+                    index = i - 1;
+                }
+            }
         }
 
-        setPrintEnable(mLayout_items.getChildCount() - 1);
+        if (!isOnlyPrint) {
+            //只有主面料可以打印二维码
+            if ("M".equals(mData.getMaterialType())) {
+                setPrintEnable(index);
+            } else {
+                cancelAble = true;
+            }
+        } else {
+            cancelAble = true;
+        }
     }
 
     /**
@@ -217,27 +299,35 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             View view = mLayout_items.getChildAt(i);
             TextView tv_printSeq = view.findViewById(R.id.tv_printSeq);
             tv_printSeq.setEnabled(false);
-            tv_printSeq.setOnClickListener(this);
 
-            if (i == index) {
-                tv_printSeq.setBackgroundResource(R.drawable.btn_orange);
+            if (isOnlyPrint || i == index) {
                 tv_printSeq.setEnabled(true);
             }
         }
     }
 
-    private View getItemView(BatchSplitPackageItemBo item, int position) {
+    private <T> View getItemView(T data, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_split_print_item, null);
         TextView tv_packageNum = view.findViewById(R.id.tv_packageNum);
         tv_packageNum.setText((position + 1) + "");
 
         TextView tv_printSeq = view.findViewById(R.id.tv_printSeq);
         tv_printSeq.setTag(position);
-        tv_printSeq.setText("打印顺序" + (mList_item.size() - position));
+        tv_printSeq.setOnClickListener(this);
 
         EditText editText = view.findViewById(R.id.et_qty);
-        editText.setText(item.getSubPackageQty() + "");
         editText.setEnabled(isEditable);
+
+        if (data instanceof BatchSplitPackageItemBo) {
+            BatchSplitPackageItemBo item = (BatchSplitPackageItemBo) data;
+            editText.setText(item.getSubPackageQty() + "");
+            tv_printSeq.setText("打印顺序" + (mList_item.size() - position));
+        } else if (data instanceof BatchSplitPackagePrintBo) {
+            BatchSplitPackagePrintBo item = (BatchSplitPackagePrintBo) data;
+            editText.setText(item.getSubPackageQty() + "");
+            tv_printSeq.setEnabled(true);
+            tv_printSeq.setText("打印顺序" + (mList_printData.size() - position));
+        }
         return view;
     }
 
@@ -248,6 +338,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         for (int i = 0; i < mLayout_items.getChildCount() - 1; i++) {
             View view = mLayout_items.getChildAt(i);
             TextView tv_printSeq = view.findViewById(R.id.tv_printSeq);
+            tv_printSeq.setTag(i);
             tv_printSeq.setText("打印顺序" + (mLayout_items.getChildCount() - 1 - i));
         }
     }
@@ -256,7 +347,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
     public void onSuccess(String url, JSONObject resultJSON) {
         LoadingDialog.dismiss();
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.getBatchSplitItem.equals(url)) {
+            if (HttpHelper.getBatchSplitItemByCustom.equals(url) || HttpHelper.getBatchSplitItemByRabRef.equals(url)) {
                 mLayout_items.removeViews(0, mLayout_items.getChildCount() - 1);
                 mList_item = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchSplitPackageItemBo.class);
                 if (mList_item == null || mList_item.size() == 0) {
@@ -267,20 +358,54 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                     BatchSplitPackageItemBo itemBo = mList_item.get(i);
                     mLayout_items.addView(getItemView(itemBo, i), mLayout_items.getChildCount() - 1);
                 }
+                if (!isEditable) {
+                    findViewById(R.id.btn_add).setVisibility(View.INVISIBLE);
+                }
             } else if (HttpHelper.saveBatchSplitPackageData.equals(url)) {
                 mList_printData = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchSplitPackagePrintBo.class);
+                cancelAble = false;
                 refreshItemView();
                 if (mOnSaveListener != null) {
                     mOnSaveListener.onClick(null);
                 }
+            } else if (HttpHelper.getBatchSplitItemBySize.equals(url)) {
+                mList_printData = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchSplitPackagePrintBo.class);
+                for (int i = 0; i < mList_printData.size(); i++) {
+                    BatchSplitPackagePrintBo itemBo = mList_printData.get(i);
+                    mLayout_items.addView(getItemView(itemBo, i), mLayout_items.getChildCount() - 1);
+                }
+                refreshItemView();
             }
         } else {
             ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
+
+            //获取数据失败时关闭弹框
+            if (!HttpHelper.saveBatchSplitPackageData.equals(url)) {
+                dismiss();
+            }
         }
     }
 
     @Override
     public void onFailure(String url, int code, String message) {
+        LoadingDialog.dismiss();
         ErrorDialog.showAlert(mContext, message);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        LoadingDialog.show(mContext);
+        if (isOnlyPrint) {
+            TextView tv_tag = findViewById(R.id.tv_packageNum_tag);
+            tv_tag.setText("包号");
+            HttpHelper.getBatchSplitItemBySize(mData.getOperation(), mSizeCode, mData.getRabRef(), this);
+        } else {
+            if (isEditable) {
+                HttpHelper.getBatchSplitItemByCustom(mData.getShopOrderRef(), mSizeCode, mSizeTotal, this);
+            } else {
+                HttpHelper.getBatchSplitItemByRabRef(mData.getShopOrderRef(), mSizeCode, mData.getRabRef(), this);
+            }
+        }
     }
 }

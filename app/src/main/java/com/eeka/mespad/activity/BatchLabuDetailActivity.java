@@ -31,6 +31,8 @@ import com.eeka.mespad.bo.DictionaryDataBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
+import com.eeka.mespad.bo.RecordNCBo;
+import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
@@ -41,14 +43,16 @@ import com.eeka.mespad.view.dialog.PatternDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LabuDetailActivity extends BaseActivity {
+public class BatchLabuDetailActivity extends BaseActivity {
 
     private static final int REQUEST_RECORD_LABU = 0;
     private static final int REQUEST_RECORD_CUT = 1;
+    private static final int REQUEST_RECORD_NC = 2;
 
     private String mShopOrder;
     private String mShopOrderBo;
@@ -187,18 +191,18 @@ public class LabuDetailActivity extends BaseActivity {
     private void refreshMatView() {
         if (!mMap_layoutInfo.containsKey(mMatType)) {
             showLoading();
-            HttpHelper.getBatchLayoutInfo(mOperation.getOPERATION(), mShopOrderBo, mMatType, LabuDetailActivity.this);
+            HttpHelper.getBatchLayoutInfo(mOperation.getOPERATION(), mShopOrderBo, mMatType, BatchLabuDetailActivity.this);
         } else {
             BatchLabuDetailBo data = mMap_layoutInfo.get(mMatType);
             assert data != null;
-
+            boolean isFirst = data.isDISPLAY();
             ImageView iv_mainMat = findViewById(R.id.iv_labuDetail_mainMat);
             iv_mainMat.setOnClickListener(this);
             if (data.getMAT_URL() != null) {
                 Picasso.with(mContext).load(data.getMAT_URL()).into(iv_mainMat);
             }
 
-            getTableView(data, BatchLabuDetailBo.class, 0);
+            getTableView(data, BatchLabuDetailBo.class, false, 0);
 
             mLayout_layoutList.removeAllViews();
             List<BatchLabuDetailBo.LAYOUTINFOBean> layoutInfo = data.getLAYOUT_INFO();
@@ -206,17 +210,17 @@ public class LabuDetailActivity extends BaseActivity {
             params.bottomMargin = UnitUtil.dip2px(mContext, 10);
             for (int i = 0; i < layoutInfo.size(); i++) {
                 BatchLabuDetailBo.LAYOUTINFOBean layoutBean = layoutInfo.get(i);
-                mLayout_layoutList.addView(getTableView(layoutBean, BatchLabuDetailBo.LAYOUTINFOBean.class, i), params);
+                mLayout_layoutList.addView(getTableView(layoutBean, BatchLabuDetailBo.LAYOUTINFOBean.class, isFirst, i), params);
             }
 
-            isInitButton = true;
             //默认显示按钮
-            for (int i = 0; i < mLayout_layoutList.getChildCount(); i++) {
-                View view = mLayout_layoutList.getChildAt(i);
-                CheckBox checkBox = view.findViewById(R.id.ckb_labuTable_toggle);
-                checkBox.setChecked(true);
-            }
-            isInitButton = false;
+//            isInitButton = true;
+//            for (int i = 0; i < mLayout_layoutList.getChildCount(); i++) {
+//                View view = mLayout_layoutList.getChildAt(i);
+//                CheckBox checkBox = view.findViewById(R.id.ckb_labuTable_toggle);
+//                checkBox.setChecked(true);
+//            }
+//            isInitButton = false;
             refreshProcessDirection(data.getORDER_STATUS());
         }
     }
@@ -342,7 +346,7 @@ public class LabuDetailActivity extends BaseActivity {
             case R.id.btn_firstLabu:
             case R.id.btn_batchLabu:
             case R.id.btn_addLabu:
-                startLabuRecordActivity(v);
+                startLabuRecordActivity(v, true);
                 break;
             case R.id.btn_materialReturn:
                 returnAndFeedingMat(true);
@@ -392,31 +396,37 @@ public class LabuDetailActivity extends BaseActivity {
                 break;
             case R.id.layout_button1:
             case R.id.layout_button2:
-                String orderNum = (String) v.getTag(R.id.tag_rabOrderNum);
                 String rabBo = (String) v.getTag(R.id.tag_rabBo);
-                String layoutImg = (String) v.getTag(R.id.tag_layoutImg);
-                String layoutRef = (String) v.getTag(R.id.tag_layoutRef);
-                String layoutNo = (String) v.getTag(R.id.tag_layoutNo);
+                String rabNo = (String) v.getTag(R.id.tag_rabNo);
                 String status = (String) v.getTag(R.id.tag_status);
+                if ("SP".equals(mOperation.getOPERATION())) {
+                    startLabuRecordActivity(v, false);
+                } else {
+                    BatchCutRecordBo data = new BatchCutRecordBo();
+                    data.setRabRef(rabBo);
+                    data.setRabNo(rabNo);
+                    data.setMaterialType(mMatType);
+                    data.setIsFinish("DONE".equals(status) ? "true" : "false");
 
-                BatchCutRecordBo data = new BatchCutRecordBo();
-                data.setRabRef(rabBo);
-                data.setShopOrder(mShopOrder);
-                data.setShopOrderRef(mShopOrderBo);
-                data.setItem(mItem);
-                data.setLayOutRef(layoutRef);
-                data.setOperation(mOperation.getOPERATION());
-                data.setWorkNo(orderNum);
-                data.setMaterialType(mMatType);
-                data.setLayoutNo(layoutNo);
-                data.setIsFinish("DONE".equals(status) ? "true" : "false");
-
-                startActivityForResult(BatchCutWorkingActivity.getIntent(mContext, data, mOperation, mItem, layoutImg), REQUEST_RECORD_CUT);
+                    startActivityForResult(BatchCutWorkingActivity.getIntent(mContext, data, mOperation), REQUEST_RECORD_CUT);
+                }
+                break;
+            case R.id.btn_rabHistory:
+                mActionIndex = (int) v.getTag(R.id.tag_position);
+                View labuOrderBtnWrap = mLayout_layoutList.getChildAt(mActionIndex).findViewById(R.id.layout_labuTable_labuOrderBtnWrap);
+                if (labuOrderBtnWrap.getVisibility() == View.VISIBLE) {
+                    mLayout_layoutList.getChildAt(mActionIndex).findViewById(R.id.layout_labuTable_labuBtn).setVisibility(View.VISIBLE);
+                    labuOrderBtnWrap.setVisibility(View.GONE);
+                } else {
+                    String layoutRef = (String) v.getTag(R.id.tag_layoutRef);
+                    showLoading();
+                    HttpHelper.getRabHistoryList(mShopOrderBo, layoutRef, mMatType, this);
+                }
                 break;
         }
     }
 
-    private void startLabuRecordActivity(View view) {
+    private void startLabuRecordActivity(View view, boolean editAble) {
         PostBatchRecordLabuBo data = new PostBatchRecordLabuBo();
         data.setOperation(mOperation.getOPERATION());
         data.setShopOrderRef(mShopOrderBo);
@@ -424,20 +434,28 @@ public class LabuDetailActivity extends BaseActivity {
 
         String layoutRef = (String) view.getTag(R.id.tag_layoutRef);
         String layoutImg = (String) view.getTag(R.id.tag_layoutImg);
-        String item = (String) view.getTag(R.id.tag_item);
+        String layoutNo = (String) view.getTag(R.id.tag_layoutNo);
+        String rabNo = (String) view.getTag(R.id.tag_rabNo);
         data.setLayOutRef(layoutRef);
-        data.setItem(item);
+        data.setItem(mItem);
         data.setLayoutImgUrl(layoutImg);
+        data.setLayoutNo(layoutNo);
+        data.setMaterialType(mMatType);
+        data.setRabOrderNo(rabNo);
 
-        startActivityForResult(BatchLabuRecordActivity.getIntent(mContext, data), REQUEST_RECORD_LABU);
+        startActivityForResult(BatchLabuRecordActivity.getIntent(mContext, data, editAble), REQUEST_RECORD_LABU);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            mMap_layoutInfo.remove(mMatType);
-            refreshMatView();
+            if (requestCode == REQUEST_RECORD_NC) {
+                mList_recordNC = (List<RecordNCBo>) data.getSerializableExtra("badList");
+            } else if (requestCode == REQUEST_RECORD_LABU || requestCode == REQUEST_RECORD_CUT) {
+                mMap_layoutInfo.remove(mMatType);
+                refreshMatView();
+            }
         }
     }
 
@@ -452,12 +470,32 @@ public class LabuDetailActivity extends BaseActivity {
         new PatternDialog(mContext, shopOrder).show();
     }
 
+    private List<RecordNCBo> mList_recordNC;//记录不良
+
     public void recordNC() {
-//        if (mTailorInfo == null) {
-//            showErrorDialog("请先获取订单数据");
-//            return;
-//        }
-//        startActivityForResult(RecordCutNCActivity.getIntent(mContext, mTailorInfo, mList_recordNC), REQUEST_RECORD_NC);
+        BatchLabuDetailBo labuDetailBo = mMap_layoutInfo.get(mMatType);
+        if (labuDetailBo == null) {
+            showErrorDialog("无工单对应数据");
+            return;
+        }
+        TailorInfoBo infoBo = new TailorInfoBo();
+        infoBo.setOrderType("P");
+        infoBo.setRFID("");
+        infoBo.setSFC_BO("");
+
+        TailorInfoBo.SHOPORDERINFORBean shopOrderInfo = new TailorInfoBo.SHOPORDERINFORBean();
+        shopOrderInfo.setSHOP_ORDER(labuDetailBo.getSHOP_ORDER());
+        shopOrderInfo.setSHOP_ORDER_BO(labuDetailBo.getSHOP_ORDER_BO());
+        infoBo.setSHOP_ORDER_INFOR(shopOrderInfo);
+
+        List<TailorInfoBo.OPERINFORBean> operaList = new ArrayList<>();
+        TailorInfoBo.OPERINFORBean operaInfo = new TailorInfoBo.OPERINFORBean();
+        operaInfo.setOPERATION(mOperation.getOPERATION());
+        operaInfo.setOPERATION_BO(mOperation.getOPERATION_BO());
+        operaList.add(operaInfo);
+        infoBo.setOPER_INFOR(operaList);
+
+        startActivityForResult(RecordCutNCActivity.getIntent(mContext, infoBo, mList_recordNC), REQUEST_RECORD_NC);
     }
 
     public void playVideo() {
@@ -492,24 +530,24 @@ public class LabuDetailActivity extends BaseActivity {
 //        }
     }
 
-    private <T> View getTableView(T data, Class<T> clas, int position) {
+    private <T> View getTableView(T data, Class<T> clas, boolean isFirst, int position) {
         List<BatchLabuDetailBo.LAYOUTINFOBean.SINGLELAYOUTBean> list;
-        boolean isFirst = false;
-        String item = null;
         String layoutRef = null;
         String layoutImg = null;
+        String layoutNo = null;
+        boolean rabDisplay = false;
         View view;
         if (clas == BatchLabuDetailBo.LAYOUTINFOBean.class) {
             view = LayoutInflater.from(mContext).inflate(R.layout.layout_labu_table, null);
 
             BatchLabuDetailBo.LAYOUTINFOBean bean = (BatchLabuDetailBo.LAYOUTINFOBean) data;
+            layoutNo = bean.getLAY_NO();
             TextView tv_number = view.findViewById(R.id.tv_labuTable_number);
             tv_number.setText(bean.getLAY_NO());
             list = bean.getSINGLE_LAYOUT();
-            isFirst = bean.isDISPLAY();
-            item = bean.getITEM();
             layoutRef = bean.getZ_LAYOUT_BO();
             layoutImg = bean.getPICTURE_URL();
+            rabDisplay = bean.isLAB_DISPLAY();
 
             List<BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean> rabOrderInfo = bean.getRAB_ORDER_INFO();
             refreshButton(view, rabOrderInfo, position);
@@ -569,22 +607,33 @@ public class LabuDetailActivity extends BaseActivity {
             layout_table.addView(item1, mLayoutParams_weight1_horizontal);
         }
 
+        Button btn_rabHistory = view.findViewById(R.id.btn_rabHistory);
+        btn_rabHistory.setTag(R.id.tag_layoutRef, layoutRef);
+        btn_rabHistory.setTag(R.id.tag_position, position);
+        btn_rabHistory.setOnClickListener(this);
+
         LinearLayout layout_actionList = view.findViewById(R.id.layout_labuTable_labuBtn);
         for (int i = isFirst ? 0 : 1; i < 3; i++) {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button_green, null);
             button.setTag(R.id.tag_layoutRef, layoutRef);
-            button.setTag(R.id.tag_item, item);
             button.setTag(R.id.tag_layoutImg, layoutImg);
+            button.setTag(R.id.tag_layoutNo, layoutNo);
             switch (i) {
                 case 0:
                     button.setId(R.id.btn_firstLabu);
                     button.setText("首期拉布单");
                     break;
                 case 1:
+                    if (!rabDisplay) {
+                        button.setBackgroundResource(R.drawable.btn_disable_round);
+                    }
                     button.setId(R.id.btn_batchLabu);
                     button.setText("大货拉布单");
                     break;
                 case 2:
+                    if (!rabDisplay) {
+                        button.setBackgroundResource(R.drawable.btn_disable_round);
+                    }
                     button.setId(R.id.btn_addLabu);
                     button.setText("补料拉布单");
                     break;
@@ -603,17 +652,12 @@ public class LabuDetailActivity extends BaseActivity {
         return view;
     }
 
-    private boolean isInitButton;
     private int mActionIndex = -1;
 
     /**
      * 刷新拉布单按钮
      */
     private void refreshButton(View parent, List<BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean> rabOrderInfo, int index) {
-        BatchLabuDetailBo.LAYOUTINFOBean bean = mMap_layoutInfo.get(mMatType).getLAYOUT_INFO().get(index);
-        String layoutRef = bean.getZ_LAYOUT_BO();
-        String layoutImg = bean.getPICTURE_URL();
-        String layoutNo = bean.getLAY_NO();
         View view = mLayout_layoutList.getChildAt(index);
         if (view == null) {
             view = parent;
@@ -627,7 +671,7 @@ public class LabuDetailActivity extends BaseActivity {
             tv_orderNo1.setText(bean1.getRAB_NO());
 
             View button1 = view1.findViewById(R.id.layout_button1);
-            setButtonStatus(button1, bean1.getSTATUS(), bean1.getRAB_NO(), bean1.getZ_RAB_BO(), layoutRef, layoutImg, layoutNo);
+            setButtonStatus(button1, bean1.getSTATUS(), bean1.getZ_RAB_BO(), bean1.getRAB_NO());
 
             if (i + 1 < rabOrderInfo.size()) {
                 BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean bean2 = rabOrderInfo.get(i + 1);
@@ -635,7 +679,7 @@ public class LabuDetailActivity extends BaseActivity {
                 tv_orderNo2.setText(bean2.getRAB_NO());
 
                 View button2 = view1.findViewById(R.id.layout_button2);
-                setButtonStatus(button2, bean2.getSTATUS(), bean2.getRAB_NO(), bean2.getZ_RAB_BO(), layoutRef, layoutImg, layoutNo);
+                setButtonStatus(button2, bean2.getSTATUS(), bean2.getZ_RAB_BO(), bean2.getRAB_NO());
             } else {
                 view1.findViewById(R.id.layout_button2).setVisibility(View.INVISIBLE);
             }
@@ -643,16 +687,13 @@ public class LabuDetailActivity extends BaseActivity {
         }
     }
 
-    private void setButtonStatus(View view, String status, String rabNo, String rabBo, String layoutRef, String layoutImg, String layoutNo) {
+    private void setButtonStatus(View view, String status, String rabBo, String rabNo) {
         if ("DONE".equals(status)) {
             view.setBackgroundResource(R.drawable.btn_gray_round);
         }
-        view.setTag(status);
-        view.setTag(R.id.tag_rabOrderNum, rabNo);
+        view.setTag(R.id.tag_status, status);
         view.setTag(R.id.tag_rabBo, rabBo);
-        view.setTag(R.id.tag_layoutRef, layoutRef);
-        view.setTag(R.id.tag_layoutImg, layoutImg);
-        view.setTag(R.id.tag_layoutNo, layoutNo);
+        view.setTag(R.id.tag_rabNo, rabNo);
         view.setOnClickListener(this);
     }
 
@@ -667,25 +708,21 @@ public class LabuDetailActivity extends BaseActivity {
             View childAt = mLayout_layoutList.getChildAt(index);
             if (isChecked) {
                 childAt.findViewById(R.id.layout_labuTable_detail).setVisibility(View.GONE);
+                childAt.findViewById(R.id.layout_labuTable_btnWrap).setVisibility(View.VISIBLE);
 
                 if ("SP".equals(mOperation.getOPERATION())) {
+                    childAt.findViewById(R.id.btn_rabHistory).setVisibility(View.VISIBLE);
                     childAt.findViewById(R.id.layout_labuTable_labuBtn).setVisibility(View.VISIBLE);
+                    childAt.findViewById(R.id.layout_labuTable_labuOrderBtnWrap).setVisibility(View.GONE);
                 } else {
                     childAt.findViewById(R.id.layout_labuTable_labuOrderBtnWrap).setVisibility(View.VISIBLE);
 
-                    if (!isInitButton) {
-                        String layoutRef = (String) buttonView.getTag(R.id.tag_layoutRef);
-                        HttpHelper.getRabInfoList(mOperation.getOPERATION(), mShopOrderBo, mMatType, layoutRef, LabuDetailActivity.this);
-                    }
+                    String layoutRef = (String) buttonView.getTag(R.id.tag_layoutRef);
+                    HttpHelper.getRabInfoList(mOperation.getOPERATION(), mShopOrderBo, mMatType, layoutRef, BatchLabuDetailActivity.this);
                 }
             } else {
                 childAt.findViewById(R.id.layout_labuTable_detail).setVisibility(View.VISIBLE);
-
-                if ("SP".equals(mOperation.getOPERATION())) {
-                    childAt.findViewById(R.id.layout_labuTable_labuBtn).setVisibility(View.GONE);
-                } else {
-                    childAt.findViewById(R.id.layout_labuTable_labuOrderBtnWrap).setVisibility(View.GONE);
-                }
+                childAt.findViewById(R.id.layout_labuTable_btnWrap).setVisibility(View.GONE);
             }
         }
     }
@@ -724,13 +761,23 @@ public class LabuDetailActivity extends BaseActivity {
                     List<BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean> rabOrderInfo = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean.class);
                     if (rabOrderInfo != null)
                         refreshButton(null, rabOrderInfo, mActionIndex);
+                } else if (HttpHelper.getRabHistoryList.equals(url)) {
+                    List<BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean> rabListInfo = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean.class);
+                    if (rabListInfo == null || rabListInfo.size() == 0) {
+                        showErrorDialog("该排料图暂无拉布记录");
+                        return;
+                    }
+                    mLayout_layoutList.getChildAt(mActionIndex).findViewById(R.id.layout_labuTable_labuBtn).setVisibility(View.GONE);
+                    mLayout_layoutList.getChildAt(mActionIndex).findViewById(R.id.layout_labuTable_labuOrderBtnWrap).setVisibility(View.VISIBLE);
+                    refreshButton(null, rabListInfo, mActionIndex);
+//                    new RabNoListDialog(mContext, rabListInfo).setParams(0.6f, 0.6f).show();
                 }
             }
         }
     }
 
     public static Intent getIntent(Context context, PositionInfoBo.OPERINFORBean operation, String shopOrder, String shopOderBo, String item) {
-        Intent intent = new Intent(context, LabuDetailActivity.class);
+        Intent intent = new Intent(context, BatchLabuDetailActivity.class);
         intent.putExtra("operation", operation);
         intent.putExtra("shopOrder", shopOrder);
         intent.putExtra("shopOrderBo", shopOderBo);

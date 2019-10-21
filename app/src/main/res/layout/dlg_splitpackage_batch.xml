@@ -59,12 +59,24 @@
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="20dp"
                 android:text="款号："
                 android:textColor="@color/white" />
             
             <TextView
                 android:id="@+id/tv_item"
+                style="@style/textStyle_default"
+                android:text=""
+                android:textColor="@color/white" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_marginLeft="20dp"
+                android:text="排料图："
+                android:textColor="@color/white" />
+            
+            <TextView
+                android:id="@+id/tv_layoutNo"
                 style="@style/textStyle_default"
                 android:text=""
                 android:textColor="@color/white" />
@@ -84,18 +96,6 @@
             
             <TextView
                 android:id="@+id/tv_workNo"
-                style="@style/textStyle_default"
-                android:text=""
-                android:textColor="@color/white" />
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_marginLeft="20dp"
-                android:text="排料图："
-                android:textColor="@color/white" />
-            
-            <TextView
-                android:id="@+id/tv_layoutNo"
                 style="@style/textStyle_default"
                 android:text=""
                 android:textColor="@color/white" />
@@ -145,6 +145,7 @@
         android:showDividers="middle">
         
         <TextView
+            android:id="@+id/tv_splitCard_typeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gray_disable"
@@ -162,13 +163,14 @@
             android:showDividers="middle">
             
             <TextView
+                android:id="@+id/tv_packageNum_tag"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="包号" />
+                android:text="序列号" />
             
             <TextView
                 style="@style/textStyle_default"

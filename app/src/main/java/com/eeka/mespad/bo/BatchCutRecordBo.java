@@ -19,6 +19,7 @@ public class BatchCutRecordBo implements Serializable {
 
     private String site;
     private String rabRef;
+    private String rabNo;
     private String shopOrder;
     private String shopOrderRef;
     private String layOutRef;
@@ -30,7 +31,24 @@ public class BatchCutRecordBo implements Serializable {
     private String isFinish;
     private String item;
     private String layoutNo;
+    private String layoutImg;
     private List<CutSizesBean> cutSizes;
+
+    public String getRabNo() {
+        return rabNo;
+    }
+
+    public void setRabNo(String rabNo) {
+        this.rabNo = rabNo;
+    }
+
+    public String getLayoutImg() {
+        return layoutImg;
+    }
+
+    public void setLayoutImg(String layoutImg) {
+        this.layoutImg = layoutImg;
+    }
 
     public String getOperationBo() {
         return operationBo;
@@ -156,6 +174,15 @@ public class BatchCutRecordBo implements Serializable {
         private int sizeTotal;
         private int sizeFen;
         private int sizeLeft;
+        private int cutNum;
+
+        public int getCutNum() {
+            return cutNum;
+        }
+
+        public void setCutNum(int cutNum) {
+            this.cutNum = cutNum;
+        }
 
         public String getSizeCode() {
             return sizeCode;

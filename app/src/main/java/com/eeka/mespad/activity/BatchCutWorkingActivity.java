@@ -64,12 +64,6 @@ public class BatchCutWorkingActivity extends BaseActivity {
 
         mLayout_items = findViewById(R.id.layout_batchCutWork_table);
 
-        if ("FB".equals(mOperation.getOPERATION())) {
-            findViewById(R.id.layout_buttonList_splitPackage).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.layout_buttonList_cut).setVisibility(View.VISIBLE);
-        }
-
         mBtn_start = findViewById(R.id.btn_start);
         mBtn_start.setOnClickListener(this);
 
@@ -87,14 +81,14 @@ public class BatchCutWorkingActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btn_layoutImg:
-                String layoutImg = getIntent().getStringExtra("layoutImg");
+                String layoutImg = mPostData.getLayoutImg();
                 new ImageBrowserDialog(mContext, layoutImg).setParams(0.8f, 0.8f).show();
                 break;
             case R.id.btn_mainMatImg:
 
                 break;
             case R.id.btn_sampleImg:
-                String item = getIntent().getStringExtra("item");
+                String item = mPostData.getItem();
                 String sampleImgUrl = getString(R.string.sampleImgUrl, item);
                 new ImageBrowserDialog(mContext, sampleImgUrl).setParams(0.5f, 0.8f).show();
                 break;
@@ -127,12 +121,27 @@ public class BatchCutWorkingActivity extends BaseActivity {
             case R.id.layout_rootView:
                 int index = (int) v.getTag();
                 View view = mLayout_items.getChildAt(index);
-                CheckBox checkBox = view.findViewById(R.id.ckb_sizeSelect);
-                if (checkBox.isEnabled())
-                    checkBox.setChecked(!checkBox.isChecked());
+                TextView tv_size = view.findViewById(R.id.tv_size);
+                String size = tv_size.getText().toString();
+                mSelectCheckBox = view.findViewById(R.id.ckb_sizeSelect);
+                if (mSelectCheckBox.isEnabled()) {
+                    showLoading();
+                    String flag = mSelectCheckBox.isChecked() ? "UNSELECT" : "SELECT";
+                    BatchCutWorkingBo.RABINFOBean bean = mData.getRAB_INFO().get(index - 1);
+                    HttpHelper.markSelectedSize(mOperation.getOPERATION(), mPostData.getRabRef(), mPostData.getShopOrderRef(), bean.getCUT_NUM(), size, flag, this);
+                } else {
+                    if ("FB".equals(mOperation.getOPERATION())) {
+                        List<BatchCutWorkingBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
+                        BatchCutWorkingBo.RABINFOBean bean = rabInfo.get(index - 1);
+
+                        showSplitPrintDialog(false, bean.getSIZE_CODE(), bean.getSIZE_TOTAL(), true);
+                    }
+                }
                 break;
         }
     }
+
+    private CheckBox mSelectCheckBox;
 
     /**
      * @param type 0=件数分包，1=工单号分包
@@ -149,7 +158,12 @@ public class BatchCutWorkingActivity extends BaseActivity {
         }
         mPostData.setCutSizes(selectedSize);
         BatchCutRecordBo.CutSizesBean sizesBean = selectedSize.get(0);
-        BatchSplitPackageDialog dialog = new BatchSplitPackageDialog(mContext, type == 0, mPostData, sizesBean.getSizeCode(), sizesBean.getSizeTotal());
+        showSplitPrintDialog(type == 0, sizesBean.getSizeCode(), sizesBean.getSizeTotal(), false);
+    }
+
+    private void showSplitPrintDialog(boolean editable, String sizeCode, int sizeTotal, boolean onlyPrint) {
+        mPostData.setWorkSeq(mData.getORDER_SEQ());
+        BatchSplitPackageDialog dialog = new BatchSplitPackageDialog(mContext, editable, mPostData, sizeCode, sizeTotal, onlyPrint);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
@@ -195,6 +209,7 @@ public class BatchCutWorkingActivity extends BaseActivity {
                     bean.setSizeFen(item.getSIZE_FEN());
                     bean.setSizeLeft(item.getSIZE_LEFT());
                     bean.setSizeTotal(item.getSIZE_TOTAL());
+                    bean.setCutNum(item.getCUT_NUM());
                     list.add(bean);
                 } else {
                     isFinish = false;
@@ -241,12 +256,20 @@ public class BatchCutWorkingActivity extends BaseActivity {
             tv_title.setText(mOperation.getDESCRIPTION() + "作业单：" + mData.getORDER_NO());
         }
 
+        if ("false".equals(mPostData.getIsFinish())) {
+            if ("FB".equals(mOperation.getOPERATION())) {
+                findViewById(R.id.layout_buttonList_splitPackage).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.layout_buttonList_cut).setVisibility(View.VISIBLE);
+            }
+        }
+
         mLayout_items.removeAllViews();
         List<BatchCutWorkingBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
         if (rabInfo == null) {
             rabInfo = new ArrayList<>();
         }
-        if (rabInfo.size() != 0) {
+        if (rabInfo.size() != 0 && "false".equals(mData.getIS_FINISH())) {
             mBtn_start.setEnabled(true);
             findViewById(R.id.btn_completed).setEnabled(true);
         }
@@ -257,19 +280,21 @@ public class BatchCutWorkingActivity extends BaseActivity {
         params.weight = 1;
         for (int i = 0; i < size; i++) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.layout_batchcut_tableitem, null);
+            TextView tv_cutNum = view.findViewById(R.id.tv_cutNum);
             TextView tv_size = view.findViewById(R.id.tv_size);
             TextView tv_completed = view.findViewById(R.id.tv_completed);
             TextView tv_wait = view.findViewById(R.id.tv_waiting);
             TextView tv_action = view.findViewById(R.id.tv_action);
             CheckBox checkBox = view.findViewById(R.id.ckb_sizeSelect);
             if (i == 0) {
-                tv_size.setText("码数");
                 tv_completed.setText("已" + mOperation.getDESCRIPTION() + "(件)");
                 tv_wait.setText("待" + mOperation.getDESCRIPTION() + "(件)");
 
                 checkBox.setVisibility(View.GONE);
             } else if (i == size - 1) {
-                tv_size.setText("合计");
+                tv_cutNum.setText("合计");
+                tv_size.setText(null);
+                tv_size.setBackgroundResource(R.color.gray_disable);
                 checkBox.setVisibility(View.INVISIBLE);
                 tv_completed.setText(completedTotal + "");
                 tv_wait.setText(waitingTotal + "");
@@ -280,6 +305,7 @@ public class BatchCutWorkingActivity extends BaseActivity {
                 view.findViewById(R.id.layout_rootView).setOnClickListener(this);
                 view.setTag(i);
                 BatchCutWorkingBo.RABINFOBean bean = rabInfo.get(i - 1);
+                tv_cutNum.setText(bean.getCUT_NUM() + "");
                 tv_size.setText(bean.getSIZE_CODE());
                 tv_completed.setText(bean.getSIZE_FEN() + "");
                 tv_wait.setText(bean.getSIZE_LEFT() + "");
@@ -288,10 +314,6 @@ public class BatchCutWorkingActivity extends BaseActivity {
 
                 if ("DONE".equals(bean.getSTATUS())) {
                     checkBox.setEnabled(false);
-                } else {
-                    if (!"FB".equals(mOperation.getOPERATION())) {
-                        checkBox.setChecked(true);
-                    }
                 }
 
                 tv_action.setVisibility(View.GONE);
@@ -304,8 +326,13 @@ public class BatchCutWorkingActivity extends BaseActivity {
     protected void initData() {
         super.initData();
 
+        String loginUserId = SpUtil.getLoginUserId();
+        if (isEmpty(loginUserId)) {
+            showErrorDialog("请员工先登录");
+            return;
+        }
         showLoading();
-        HttpHelper.getBatchCutWorkingInfo(mPostData.getMaterialType(), mOperation.getOPERATION(), mPostData.getRabRef(), mPostData.getShopOrderRef(), mPostData.getIsFinish(), this);
+        HttpHelper.getBatchCutWorkingInfo(loginUserId, mPostData.getMaterialType(), mOperation.getOPERATION(), mPostData.getRabNo(), mPostData.getIsFinish(), this);
     }
 
     @Override
@@ -314,6 +341,18 @@ public class BatchCutWorkingActivity extends BaseActivity {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getBatchCutWorkingInfo.equals(url)) {
                 mData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), BatchCutWorkingBo.class);
+                mPostData.setIsFinish(mData.getIS_FINISH());
+                mPostData.setWorkNo(mData.getORDER_NO());
+                mPostData.setOperation(mOperation.getOPERATION());
+                mPostData.setOperationBo(mOperation.getOPERATION_BO());
+                mPostData.setLayoutNo(mData.getLAYOUT_NO());
+                mPostData.setItem(mData.getITEM());
+                mPostData.setShopOrder(mData.getSHOP_ORDER());
+                mPostData.setShopOrderRef(mData.getSHOP_ORDER_BO());
+                mPostData.setLayOutRef(mData.getZ_LAYOUT_BO());
+                mPostData.setLayoutImg(mData.getLAYOUT_IMAGE());
+                mPostData.setRabRef(mData.getZ_RAB_BO());
+
                 setupView();
 
                 //多个尺码未选完保存的时候，自动开始新单
@@ -338,16 +377,16 @@ public class BatchCutWorkingActivity extends BaseActivity {
                     mBtn_start.setText("继续");
                     mBtn_start.setBackgroundResource(R.drawable.btn_green_round);
                 }
+            } else if (HttpHelper.markSelectedSize.equals(url)) {
+                mSelectCheckBox.setChecked(!mSelectCheckBox.isChecked());
             }
         }
     }
 
-    public static Intent getIntent(Context context, BatchCutRecordBo data, PositionInfoBo.OPERINFORBean operation, String item, String layoutImg) {
+    public static Intent getIntent(Context context, BatchCutRecordBo data, PositionInfoBo.OPERINFORBean operation) {
         Intent intent = new Intent(context, BatchCutWorkingActivity.class);
         intent.putExtra("data", data);
         intent.putExtra("operation", operation);
-        intent.putExtra("item", item);
-        intent.putExtra("layoutImg", layoutImg);
         return intent;
     }
 }

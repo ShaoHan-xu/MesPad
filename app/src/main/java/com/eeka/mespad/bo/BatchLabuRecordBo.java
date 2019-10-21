@@ -5,10 +5,54 @@ import java.util.List;
 public class BatchLabuRecordBo {
 
     private List<SEGMENTINFOBean> SEGMENT_INFO;
-    private List<String> SIZE_CODES;
     private List<RABINFOBean> RAB_INFO;
     private String ORDER_NO;
     private String ORDER_SEQ;
+    private String SHOP_ORDER;
+    private String ITEM;
+    private String LAYOUT_NO;
+    private String LAYOUT_IMAGE;
+    private List<VolumnInfoBean> VOLUMN_INFO;
+
+    public String getLAYOUT_NO() {
+        return LAYOUT_NO;
+    }
+
+    public void setLAYOUT_NO(String LAYOUT_NO) {
+        this.LAYOUT_NO = LAYOUT_NO;
+    }
+
+    public String getLAYOUT_IMAGE() {
+        return LAYOUT_IMAGE;
+    }
+
+    public void setLAYOUT_IMAGE(String LAYOUT_IMAGE) {
+        this.LAYOUT_IMAGE = LAYOUT_IMAGE;
+    }
+
+    public List<VolumnInfoBean> getVOLUMN_INFO() {
+        return VOLUMN_INFO;
+    }
+
+    public void setVOLUMN_INFO(List<VolumnInfoBean> VOLUMN_INFO) {
+        this.VOLUMN_INFO = VOLUMN_INFO;
+    }
+
+    public String getITEM() {
+        return ITEM;
+    }
+
+    public void setITEM(String ITEM) {
+        this.ITEM = ITEM;
+    }
+
+    public String getSHOP_ORDER() {
+        return SHOP_ORDER;
+    }
+
+    public void setSHOP_ORDER(String SHOP_ORDER) {
+        this.SHOP_ORDER = SHOP_ORDER;
+    }
 
     public String getORDER_NO() {
         return ORDER_NO;
@@ -32,14 +76,6 @@ public class BatchLabuRecordBo {
 
     public void setSEGMENT_INFO(List<SEGMENTINFOBean> SEGMENT_INFO) {
         this.SEGMENT_INFO = SEGMENT_INFO;
-    }
-
-    public List<String> getSIZE_CODES() {
-        return SIZE_CODES;
-    }
-
-    public void setSIZE_CODES(List<String> SIZE_CODES) {
-        this.SIZE_CODES = SIZE_CODES;
     }
 
     public List<RABINFOBean> getRAB_INFO() {
@@ -100,7 +136,6 @@ public class BatchLabuRecordBo {
              * sizeAmount : 1
              * sizeCode : 36
              */
-
             private int sizeAmount;
             private String sizeCode;
 
@@ -142,6 +177,15 @@ public class BatchLabuRecordBo {
         private int SIZE_TOTAL;
         private int SIZE_FEN;
         private int SIZE_LEFT;
+        private int CUT_NUM;
+
+        public int getCUT_NUM() {
+            return CUT_NUM;
+        }
+
+        public void setCUT_NUM(int CUT_NUM) {
+            this.CUT_NUM = CUT_NUM;
+        }
 
         public String getSITE() {
             return SITE;
@@ -205,6 +249,98 @@ public class BatchLabuRecordBo {
 
         public void setSIZE_LEFT(int SIZE_LEFT) {
             this.SIZE_LEFT = SIZE_LEFT;
+        }
+    }
+
+    public static class VolumnInfoBean {
+
+        /**
+         * bulkRabSegments : [{"cutNum":1,"layers":2}]
+         * leftNum : 1.0
+         * shortNum : 6.2
+         * volumn : 1
+         * volumnRef : ZBulkRabVolumBO:8081,ZBulkRabBO:8081,ZLayoutBO:000008002439_MLA0010067W001_1.cut:000008002439,000008002439001,1
+         */
+
+        private double leftNum;
+        private double shortNum;
+        private double length;
+        private int volumn;
+        private String volumnRef;
+        private List<BulkRabSegmentsBean> bulkRabSegments;
+
+        public double getLength() {
+            return length;
+        }
+
+        public void setLength(double length) {
+            this.length = length;
+        }
+
+        public double getLeftNum() {
+            return leftNum;
+        }
+
+        public void setLeftNum(double leftNum) {
+            this.leftNum = leftNum;
+        }
+
+        public double getShortNum() {
+            return shortNum;
+        }
+
+        public void setShortNum(double shortNum) {
+            this.shortNum = shortNum;
+        }
+
+        public int getVolumn() {
+            return volumn;
+        }
+
+        public void setVolumn(int volumn) {
+            this.volumn = volumn;
+        }
+
+        public String getVolumnRef() {
+            return volumnRef;
+        }
+
+        public void setVolumnRef(String volumnRef) {
+            this.volumnRef = volumnRef;
+        }
+
+        public List<BulkRabSegmentsBean> getBulkRabSegments() {
+            return bulkRabSegments;
+        }
+
+        public void setBulkRabSegments(List<BulkRabSegmentsBean> bulkRabSegments) {
+            this.bulkRabSegments = bulkRabSegments;
+        }
+
+        public static class BulkRabSegmentsBean {
+            /**
+             * cutNum : 1
+             * layers : 2.0
+             */
+
+            private int cutNum;
+            private double layers;
+
+            public int getCutNum() {
+                return cutNum;
+            }
+
+            public void setCutNum(int cutNum) {
+                this.cutNum = cutNum;
+            }
+
+            public double getLayers() {
+                return layers;
+            }
+
+            public void setLayers(double layers) {
+                this.layers = layers;
+            }
         }
     }
 }

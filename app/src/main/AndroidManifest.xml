@@ -68,7 +68,7 @@
             android:name=".activity.ProcessDirectionActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.LabuDetailActivity"
+            android:name=".activity.BatchLabuDetailActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.BatchOrderListActivity"

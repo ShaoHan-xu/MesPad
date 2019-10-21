@@ -3,19 +3,18 @@ package com.eeka.mespad.bluetoothPrint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.eeka.mespad.bo.BatchLabuRecordPrintBo;
 import com.eeka.mespad.bo.BatchSplitPackagePrintBo;
+import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.ToastUtil;
-import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
-import com.eeka.mespad.zxing.EncodingHandler;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -26,6 +25,59 @@ import zpSDK.zpSDK.zpBluetoothPrinter;
 public class BluetoothHelper {
     private static final int DEVICE_TYPE_KEYBOARD = 1344;//蓝牙外输设备
     private static final int DEVICE_TYPE_PRINTER = 1664;//蓝牙打印机
+
+    public static void printLabuInfo(Activity activity, BatchLabuRecordPrintBo data) {
+        if (data == null) {
+            ErrorDialog.showAlert(activity, "打印内容不能为空");
+            return;
+        }
+        BluetoothDevice device = getBluetoothDevice(activity);
+        if (device == null) {
+            return;
+        }
+        zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(activity);
+
+        if (!zpSDK.connect(device.getAddress())) {
+            if (!zpSDK.connect(device.getAddress())) {
+                ToastUtil.showToast(activity, "蓝牙打印机连接失败!", Toast.LENGTH_LONG);
+                return;
+            }
+        }
+
+        StringBuilder sizeCode = new StringBuilder();
+        StringBuilder layer = new StringBuilder();
+        for (PostBatchRecordLabuBo.CutSizeBean item : data.getSizeList()) {
+            int lays = item.getLayers();
+            String code = item.getSizeCode();
+            sizeCode.append(code).append(" ");
+            if (lays < 10) {
+                layer.append("0");
+            }
+            layer.append(lays).append(" ");
+        }
+
+        String rabOrder = data.getRabOrder().replace(data.getShopOrder(), "");
+        zpSDK.pageSetup(576, 180);
+        zpSDK.drawText(10, 0, "码数：" + sizeCode.toString(), 3, 0, 0, false, false);
+        zpSDK.drawText(10, 35, "层数：" + layer.toString(), 3, 0, 0, false, false);
+        zpSDK.drawText(10, 70, "款号：" + data.getItem(), 3, 0, 0, false, false);
+        zpSDK.drawText(10, 105, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
+        zpSDK.drawText(10, 140, "拉布单号：" + rabOrder, 3, 0, 0, false, false);
+
+        BatchLabuRecordPrintBo print = new BatchLabuRecordPrintBo();
+        print.setMatType(data.getMatType());
+        print.setRabOrder(data.getRabOrder());
+        String qrCodeText = JSON.toJSONString(print);
+        zpSDK.drawQrCode(370, 5, qrCodeText, 0, 5, 0);
+
+        zpSDK.print(0, 1);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        zpSDK.disconnect();
+    }
 
     public static void printSubPackageInfo(Activity activity, BatchSplitPackagePrintBo data) {
         if (data == null) {
@@ -47,14 +99,14 @@ public class BluetoothHelper {
 
         zpSDK.pageSetup(576, 180);
         zpSDK.drawText(20, 0, "包号：" + data.getSubPackageSeq(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 35, "卡号：" + data.getRfid(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 70, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 105, "款号：" + data.getItem(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 140, "码数：" + data.getSizeCode(), 3, 0, 0, false, false);
-        zpSDK.drawText(200, 140, "件数：" + data.getSubPackageQty(), 3, 0, 0, false, false);
+        zpSDK.drawText(160, 0, "码数：" + data.getSizeCode(), 4, 0, 0, false, false);
+        zpSDK.drawText(20, 35, "件数：" + data.getSubPackageQty(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 70, "卡号：" + data.getRfid(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 105, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 140, "款号：" + data.getItem(), 3, 0, 0, false, false);
 
         String qrCodeText = data.getRfid();
-        zpSDK.drawQrCode(360, 10, qrCodeText, 0, 6, 0);
+        zpSDK.drawQrCode(370, 10, qrCodeText, 0, 6, 0);
 
         zpSDK.print(0, 1);
         try {

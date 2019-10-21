@@ -22,7 +22,16 @@ public class BatchSplitPackageSaveBo {
     private int subSeq;
     private String layOutRef;
     private String sizeCode;
+    private String materialType;
     private List<SubPackagesBean> subPackages;
+
+    public String getMaterialType() {
+        return materialType;
+    }
+
+    public void setMaterialType(String materialType) {
+        this.materialType = materialType;
+    }
 
     public String getSubOrder() {
         return subOrder;

@@ -12,22 +12,38 @@ public class PostBatchRecordLabuBo implements Serializable {
      * rabOrderNo : 000008000044001
      * rabSeq : 1
      * materialType : M
-     * sizes : ["36","38","40"]
-     * bulkRabSegments : [{"cutNum":1,"standLength":1,"actualLenth":1.1,"lays":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"lays":1}]
-     * bulkRabRolls : [{"volumn":1,"length":2,"leftNum":1,"shortNum":1,"bulkRabSegments":[{"cutNum":1,"standLength":1,"actualLenth":1.1,"lays":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"lays":1}]},{"volumn":2,"length":2,"leftNum":1,"shortNum":1,"bulkRabSegments":[{"cutNum":1,"standLength":1,"actualLenth":1.1,"lays":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"lays":1}]}]
+     * bulkRabSegments : [{"cutNum":1,"standLength":1,"actualLenth":1.1,"layers":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"layers":1}]
+     * bulkRabRolls : [{"volumn":1,"length":2,"leftNum":1,"shortNum":1,"bulkRabSegments":[{"cutNum":1,"standLength":1,"actualLenth":1.1,"layers":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"layers":1}]},{"volumn":2,"length":2,"leftNum":1,"shortNum":1,"bulkRabSegments":[{"cutNum":1,"standLength":1,"actualLenth":1.1,"layers":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"layers":1}]}]
      */
 
     private String operation;
     private String shopOrderRef;
     private String item;
     private String layOutRef;
+    private String layoutNo;
     private String rabOrderNo;
     private String rabSeq;
     private String materialType;
     private String layoutImgUrl;
-    private List<String> sizes;
+    private List<CutSizeBean> cutSizes;
     private List<BulkRabRollsBean.BulkRabSegmentsBean> bulkRabSegments;
     private List<BulkRabRollsBean> bulkRabRolls;
+
+    public List<CutSizeBean> getCutSizes() {
+        return cutSizes;
+    }
+
+    public void setCutSizes(List<CutSizeBean> cutSizes) {
+        this.cutSizes = cutSizes;
+    }
+
+    public String getLayoutNo() {
+        return layoutNo;
+    }
+
+    public void setLayoutNo(String layoutNo) {
+        this.layoutNo = layoutNo;
+    }
 
     public String getLayoutImgUrl() {
         return layoutImgUrl;
@@ -93,14 +109,6 @@ public class PostBatchRecordLabuBo implements Serializable {
         this.materialType = materialType;
     }
 
-    public List<String> getSizes() {
-        return sizes;
-    }
-
-    public void setSizes(List<String> sizes) {
-        this.sizes = sizes;
-    }
-
     public List<BulkRabRollsBean.BulkRabSegmentsBean> getBulkRabSegments() {
         return bulkRabSegments;
     }
@@ -123,7 +131,7 @@ public class PostBatchRecordLabuBo implements Serializable {
          * length : 2.0
          * leftNum : 1.0
          * shortNum : 1.0
-         * bulkRabSegments : [{"cutNum":1,"standLength":1,"actualLenth":1.1,"lays":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"lays":1}]
+         * bulkRabSegments : [{"cutNum":1,"standLength":1,"actualLenth":1.1,"layers":1},{"cutNum":2,"standLength":1,"actualLenth":1.2,"layers":1}]
          */
 
         private String volumn;
@@ -177,13 +185,13 @@ public class PostBatchRecordLabuBo implements Serializable {
              * cutNum : 1
              * standLength : 1.0
              * actualLenth : 1.1
-             * lays : 1
+             * layers : 1
              */
 
             private int cutNum;
             private String standLength;
             private String actualLenth;
-            private String lays;
+            private String layers;
 
             public int getCutNum() {
                 return cutNum;
@@ -209,13 +217,43 @@ public class PostBatchRecordLabuBo implements Serializable {
                 this.actualLenth = actualLenth;
             }
 
-            public String getLays() {
-                return lays;
+            public String getLayers() {
+                return layers;
             }
 
-            public void setLays(String lays) {
-                this.lays = lays;
+            public void setLayers(String layers) {
+                this.layers = layers;
             }
+        }
+    }
+
+    public static class CutSizeBean {
+        private int cutNum;
+        private String sizeCode;
+        private int layers;
+
+        public int getLayers() {
+            return layers;
+        }
+
+        public void setLayers(int layers) {
+            this.layers = layers;
+        }
+
+        public int getCutNum() {
+            return cutNum;
+        }
+
+        public void setCutNum(int cutNum) {
+            this.cutNum = cutNum;
+        }
+
+        public String getSizeCode() {
+            return sizeCode;
+        }
+
+        public void setSizeCode(String sizeCode) {
+            this.sizeCode = sizeCode;
         }
     }
 }

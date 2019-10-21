@@ -17,9 +17,18 @@ public class BatchLabuDetailBo {
     private String SHOP_ORDER;
     private String SHOP_ORDER_BO;
     private String MAT_URL;
+    private boolean DISPLAY;
     private List<LAYOUTINFOBean.SINGLELAYOUTBean> ORDER_INFO;
     private List<LAYOUTINFOBean> LAYOUT_INFO;
     private List<ORDERSTATUSBean> ORDER_STATUS;
+
+    public boolean isDISPLAY() {
+        return DISPLAY;
+    }
+
+    public void setDISPLAY(boolean DISPLAY) {
+        this.DISPLAY = DISPLAY;
+    }
 
     public String getMAT_URL() {
         return MAT_URL;
@@ -92,13 +101,21 @@ public class BatchLabuDetailBo {
          * DISPLAY : true
          */
         private String LAY_NO;
-        private boolean DISPLAY;
         private String ITEM;
         private String SHOP_ORDER_BO;
         private String Z_LAYOUT_BO;
         private String PICTURE_URL;
+        private boolean LAB_DISPLAY;
         private List<SINGLELAYOUTBean> SINGLE_LAYOUT;
         private List<RABORDERINFOBean> RAB_ORDER_INFO;
+
+        public boolean isLAB_DISPLAY() {
+            return LAB_DISPLAY;
+        }
+
+        public void setLAB_DISPLAY(boolean LAB_DISPLAY) {
+            this.LAB_DISPLAY = LAB_DISPLAY;
+        }
 
         public List<RABORDERINFOBean> getRAB_ORDER_INFO() {
             return RAB_ORDER_INFO;
@@ -146,14 +163,6 @@ public class BatchLabuDetailBo {
 
         public void setLAY_NO(String LAY_NO) {
             this.LAY_NO = LAY_NO;
-        }
-
-        public boolean isDISPLAY() {
-            return DISPLAY;
-        }
-
-        public void setDISPLAY(boolean DISPLAY) {
-            this.DISPLAY = DISPLAY;
         }
 
         public List<SINGLELAYOUTBean> getSINGLE_LAYOUT() {

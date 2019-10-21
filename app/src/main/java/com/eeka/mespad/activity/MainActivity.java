@@ -42,6 +42,7 @@ import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.CardInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.INARequestBo;
 import com.eeka.mespad.bo.OmitQCBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
@@ -54,6 +55,7 @@ import com.eeka.mespad.fragment.SewFragment;
 import com.eeka.mespad.fragment.StorageOutFragment;
 import com.eeka.mespad.fragment.SuspendFragment;
 import com.eeka.mespad.http.HttpHelper;
+import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.service.MQTTService;
 import com.eeka.mespad.utils.DateUtil;
@@ -117,6 +119,8 @@ public class MainActivity extends NFCActivity {
         LogUtil.deletePastLogFile();
         SpUtil.saveSalesOrder(null);
         SpUtil.save(SpUtil.KEY_SHOPORDER, null);
+
+        mWebServiceCallback = new WebServiceCallback();
 
         registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
@@ -798,14 +802,18 @@ public class MainActivity extends NFCActivity {
                 break;
             case R.id.btn_manualStart:
                 if (mSewFragment != null) {
-                    String searchKey = mEt_orderNum.getText().toString();
-                    mSewFragment.manualStart(searchKey);
+                    mRFID = mEt_orderNum.getText().toString();
+                    mSewFragment.manualStart(mRFID);
+                } else {
+                    manualStart();
                 }
                 break;
             case R.id.btn_manualComplete:
                 if (mSewFragment != null) {
-                    String searchKey = mEt_orderNum.getText().toString();
-                    mSewFragment.manualComplete(searchKey);
+                    mRFID = mEt_orderNum.getText().toString();
+                    mSewFragment.manualComplete(mRFID);
+                } else {
+                    manualComplete();
                 }
                 break;
             case R.id.btn_productOn:
@@ -1047,6 +1055,93 @@ public class MainActivity extends NFCActivity {
         }
     }
 
+    private String mRFID;
+
+    /**
+     * 手工开始
+     */
+    public void manualStart() {
+        if (isEmpty(mRFID)) {
+            showErrorDialog("请输入条码获取数据");
+            return;
+        }
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        showLoading();
+        WebServiceUtils.inaIn(bo, mWebServiceCallback);
+    }
+
+    private void inaDoing() {
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        showLoading();
+        WebServiceUtils.inaDoing(bo, mWebServiceCallback);
+    }
+
+    /**
+     * 手工完成
+     */
+    public void manualComplete() {
+        if (isEmpty(mRFID)) {
+            showErrorDialog("请输入条码获取数据");
+            return;
+        }
+        INARequestBo bo = getINARequestParams();
+        if (bo == null) {
+            return;
+        }
+        showLoading();
+        WebServiceUtils.inaOut(bo, mWebServiceCallback);
+    }
+
+    private WebServiceCallback mWebServiceCallback;
+
+    private class WebServiceCallback implements WebServiceUtils.HttpCallBack {
+
+        @Override
+        public void onSuccess(String method, JSONObject result) {
+            dismissLoading();
+            if (WebServiceUtils.INA_IN.equals(method)) {
+                inaDoing();
+            } else if (WebServiceUtils.INA_OUT.equals(method)) {
+                String nextLine = result.getString("nextLineId");
+                String nextPosition = result.getString("nextStationId");
+                String msg = "操作成功，下一个站位" + nextLine + "线" + nextPosition + "站位";
+                ErrorDialog.showAlert(mContext, msg, ErrorDialog.TYPE.ALERT, null, true);
+            } else if (WebServiceUtils.INA_DOING.equals(method)) {
+
+            }
+        }
+
+        @Override
+        public void onFail(String errMsg) {
+            dismissLoading();
+            //webservice的接口报错时都会有推送，所以此处不需要显示
+//            showErrorDialog(errMsg);
+        }
+    }
+
+    private INARequestBo getINARequestParams() {
+        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+        if (contextInfo == null) {
+            ErrorDialog.showAlert(mContext, "站位数据为空，请重启应用获取");
+            return null;
+        }
+        INARequestBo bo = new INARequestBo();
+        bo.setSite(SpUtil.getSite());
+        bo.setLineId(contextInfo.getLINE_CATEGORY());
+        bo.setStationId(contextInfo.getPOSITION());
+        bo.setInTime(System.currentTimeMillis() + "");
+        bo.setOutTime(System.currentTimeMillis() + "");
+        bo.setDoTime(System.currentTimeMillis() + "");
+        bo.setHangerId(mRFID);
+        return bo;
+    }
+
     private Dialog mLogoutDialog;
     private CommonRecyclerAdapter mLogoutAdapter;
     private String mLogoutUserId;//离岗员工ID
@@ -1113,15 +1208,15 @@ public class MainActivity extends NFCActivity {
                 }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mTv_searchType.setVisibility(View.VISIBLE);
-//                    String workType = mPositionInfo.getWORK_TYPE();
-//                    if ("P".equals(workType)) {
-//                        if (mPositionInfo.getBUTTON_INFOR() != null) {
-//                            SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
-//                        }
-//                        startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
-//                        finish();
-//                        return;
-//                    }
+                    String workType = mPositionInfo.getWORK_TYPE();
+                    if ("P".equals(workType)) {
+                        if (mPositionInfo.getBUTTON_INFOR() != null) {
+                            SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
+                        }
+                        startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
+                        finish();
+                        return;
+                    }
                 } else {
                     mTv_searchType.setVisibility(View.GONE);
                 }

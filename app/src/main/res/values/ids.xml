@@ -6,6 +6,8 @@
     <item name="radioButton4" type="id" />
     <item name="radioButton5" type="id" />
     
+    <item name="linearLayout" type="id" />
+    
     <item name="btn_firstLabu" type="id" />
     <item name="btn_batchLabu" type="id" />
     <item name="btn_addLabu" type="id" />
@@ -18,6 +20,7 @@
     <item name="tag_rabOrderNum" type="id" />
     <item name="tag_shopOrderBo" type="id" />
     <item name="tag_rabBo" type="id" />
+    <item name="tag_rabNo" type="id" />
     <item name="tag_status" type="id" />
     
     <!-- zxing相关 -->

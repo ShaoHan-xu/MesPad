@@ -9,6 +9,12 @@
     android:showDividers="middle">
     
     <TextView
+        android:id="@+id/tv_cutNum"
+        style="@style/textStyle_default"
+        android:gravity="center"
+        android:padding="2dp" />
+    
+    <TextView
         android:id="@+id/tv_size"
         style="@style/textStyle_default"
         android:gravity="center"

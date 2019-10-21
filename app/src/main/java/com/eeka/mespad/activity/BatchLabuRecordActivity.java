@@ -1,6 +1,7 @@
 package com.eeka.mespad.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +22,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
+import com.eeka.mespad.bluetoothPrint.BluetoothHelper;
 import com.eeka.mespad.bo.BatchLabuRecordBo;
+import com.eeka.mespad.bo.BatchLabuRecordPrintBo;
 import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
@@ -29,6 +32,8 @@ import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.MyInputFilter;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.UnitUtil;
+import com.eeka.mespad.view.dialog.BaseDialog;
+import com.eeka.mespad.view.dialog.BatchLabuRecordPrintContentDialog;
 import com.eeka.mespad.view.dialog.ImageBrowserDialog;
 import com.eeka.mespad.view.dialog.LabuCheckDialog;
 
@@ -49,11 +54,14 @@ public class BatchLabuRecordActivity extends BaseActivity {
 
     private Button mBtn_start;
 
+    private boolean editAble;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_batch_labu);
 
+        editAble = getIntent().getBooleanExtra("editAble", false);
         mPostData = (PostBatchRecordLabuBo) getIntent().getSerializableExtra("data");
         mOperationFlag = "BEGIN";
 
@@ -74,25 +82,31 @@ public class BatchLabuRecordActivity extends BaseActivity {
         mLayout_itemTotal = findViewById(R.id.layout_labuRecord_total);
         mLayout_items = findViewById(R.id.layout_itemList);
 
-        mBtn_start = findViewById(R.id.btn_start);
-        mBtn_start.setOnClickListener(this);
-        findViewById(R.id.btn_layoutImg).setOnClickListener(this);
-        findViewById(R.id.btn_add).setOnClickListener(this);
-        findViewById(R.id.btn_completed).setOnClickListener(this);
+        TextView tv_layoutNoTitle = findViewById(R.id.tv_layoutNoTitle);
+        tv_layoutNoTitle.setText("排料图" + mPostData.getLayoutNo() + "已拉层数汇总表");
+
+        if (editAble) {
+            mBtn_start = findViewById(R.id.btn_start);
+            mBtn_start.setOnClickListener(this);
+            findViewById(R.id.btn_layoutImg).setOnClickListener(this);
+            findViewById(R.id.btn_add).setOnClickListener(this);
+            findViewById(R.id.btn_completed).setOnClickListener(this);
+        } else {
+            mLayout_itemTitle.removeViewAt(mLayout_itemTitle.getChildCount() - 1);
+            mLayout_itemTotal.removeViewAt(mLayout_itemTotal.getChildCount() - 1);
+            findViewById(R.id.layout_buttonList).setVisibility(View.GONE);
+        }
     }
 
     private void setupView() {
         TextView tv_title = findViewById(R.id.tv_title);
         tv_title.setText("拉布单：" + mData.getORDER_NO());
 
-        //初始加一行
-        mLayout_items.addView(getItemView(), mLayout_items.getChildCount() - 1);
-
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
-        List<BatchLabuRecordBo.SEGMENTINFOBean> cutNum = mData.getSEGMENT_INFO();
-        for (int i = 0; i < cutNum.size(); i++) {
-            BatchLabuRecordBo.SEGMENTINFOBean item = cutNum.get(i);
+        List<BatchLabuRecordBo.SEGMENTINFOBean> segmentInfo = mData.getSEGMENT_INFO();
+        for (int i = 0; i < segmentInfo.size(); i++) {
+            BatchLabuRecordBo.SEGMENTINFOBean item = segmentInfo.get(i);
             View view = LayoutInflater.from(mContext).inflate(R.layout.layout_labu_layout_length, null);
             TextView tv_duan = view.findViewById(R.id.tv_duan);
             tv_duan.setText(item.getCutNum() + "段");
@@ -111,17 +125,57 @@ public class BatchLabuRecordActivity extends BaseActivity {
 
             TextView total = (TextView) LayoutInflater.from(mContext).inflate(R.layout.textview_common, null);
             mLayout_itemTotal.addView(total, 2 + i, params);
+
+            //码数选择部分
+            TextView tv_sizeDuan = new TextView(mContext);
+            tv_sizeDuan.setTextColor(getResources().getColor(R.color.text_black_default));
+            tv_sizeDuan.setTextSize(18);
+            tv_sizeDuan.setGravity(Gravity.CENTER);
+            tv_sizeDuan.setPadding(5, 5, 5, 5);
+            tv_sizeDuan.setText(item.getCutNum() + "段");
+
+            LinearLayout sizeLayout = new LinearLayout(mContext);
+            sizeLayout.setPadding(10, 10, 0, 10);
+            sizeLayout.setId(R.id.linearLayout);
+            sizeLayout.setGravity(Gravity.CENTER);
+            sizeLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(UnitUtil.dip2px(mContext, 100), ViewGroup.LayoutParams.MATCH_PARENT);
+            params1.rightMargin = UnitUtil.dip2px(mContext, 10);
+            List<BatchLabuRecordBo.SEGMENTINFOBean.SizeCodesBean> sizeCodes = item.getSizeCodes();
+            for (BatchLabuRecordBo.SEGMENTINFOBean.SizeCodesBean sizeCodesBean : sizeCodes) {
+                CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green, null);
+                checkBox.setChecked(true);
+                checkBox.setText(sizeCodesBean.getSizeCode());
+                sizeLayout.addView(checkBox, params1);
+            }
+
+            LinearLayout duanLayout = new LinearLayout(mContext);
+            duanLayout.setTag(item.getCutNum());
+            duanLayout.setGravity(Gravity.CENTER);
+            duanLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+            duanLayout.setDividerDrawable(getResources().getDrawable(R.drawable.divider_gray_light));
+            duanLayout.setOrientation(LinearLayout.VERTICAL);
+
+            duanLayout.addView(tv_sizeDuan);
+            duanLayout.addView(sizeLayout);
+            mLayout_sizeList.addView(duanLayout);
         }
 
         LinearLayout layout_yila = findViewById(R.id.layout_yiLa);
         List<BatchLabuRecordBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
-        for (BatchLabuRecordBo.RABINFOBean item : rabInfo) {
+        for (int i = 0; i < rabInfo.size(); i++) {
+            BatchLabuRecordBo.RABINFOBean item = rabInfo.get(i);
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_layout_yila, null);
+            TextView tv_cutNum = view.findViewById(R.id.tv_cutNum);
             TextView tv_size = view.findViewById(R.id.tv_size);
             TextView tv_rate = view.findViewById(R.id.tv_rate);
             TextView tv_need = view.findViewById(R.id.tv_need);
             TextView tv_yiLa = view.findViewById(R.id.tv_yiLa);
             TextView tv_unLa = view.findViewById(R.id.tv_unLa);
+
+            int cutNum = item.getCUT_NUM();
+            tv_cutNum.setText(cutNum + "");
             tv_size.setText(item.getSIZE_CODE());
             tv_rate.setText(item.getSIZE_AMOUNT() + "");
             tv_need.setText(item.getSIZE_TOTAL() + "");
@@ -131,13 +185,40 @@ public class BatchLabuRecordActivity extends BaseActivity {
             layout_yila.addView(view, params);
         }
 
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(UnitUtil.dip2px(mContext, 100), ViewGroup.LayoutParams.MATCH_PARENT);
-        params1.rightMargin = UnitUtil.dip2px(mContext, 10);
-        List<String> sizeCodes = mData.getSIZE_CODES();
-        for (String item : sizeCodes) {
-            CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green, null);
-            checkBox.setText(item);
-            mLayout_sizeList.addView(checkBox, params1);
+        if (editAble) {
+            //初始加一行
+            mLayout_items.addView(getItemView(null), mLayout_items.getChildCount() - 1);
+        } else {
+            List<BatchLabuRecordBo.VolumnInfoBean> volumnInfo = mData.getVOLUMN_INFO();
+            double lengthTotal = 0;
+            double leftTotal = 0;
+            double shortTotal = 0;
+            double[] layers = null;
+            for (BatchLabuRecordBo.VolumnInfoBean item : volumnInfo) {
+                mLayout_items.addView(getItemView(item), mLayout_items.getChildCount() - 1);
+                lengthTotal += item.getLength();
+                leftTotal += item.getLeftNum();
+                shortTotal += item.getShortNum();
+
+                List<BatchLabuRecordBo.VolumnInfoBean.BulkRabSegmentsBean> rabSegments = item.getBulkRabSegments();
+                if (layers == null) {
+                    layers = new double[rabSegments.size()];
+                }
+                for (int i = 0; i < rabSegments.size(); i++) {
+                    layers[i] += rabSegments.get(i).getLayers();
+                }
+            }
+
+            TextView tv_lengthTotal = (TextView) mLayout_itemTotal.getChildAt(1);
+            tv_lengthTotal.setText(getString(R.string.float_2, lengthTotal));
+            TextView tv_leftTotal = (TextView) mLayout_itemTotal.getChildAt(layers.length + 2);
+            tv_leftTotal.setText(getString(R.string.float_2, leftTotal));
+            TextView tv_shortTotal = (TextView) mLayout_itemTotal.getChildAt(layers.length + 3);
+            tv_shortTotal.setText(getString(R.string.float_2, shortTotal));
+            for (int i = 0; i < layers.length; i++) {
+                TextView tv_layersTotal = (TextView) mLayout_itemTotal.getChildAt(i + 2);
+                tv_layersTotal.setText(layers[i] + "");
+            }
         }
     }
 
@@ -150,7 +231,11 @@ public class BatchLabuRecordActivity extends BaseActivity {
 
     private void getData() {
         showLoading();
-        HttpHelper.getBatchLabuInfo(mPostData.getOperation(), mPostData.getMaterialType(), mPostData.getShopOrderRef(), mPostData.getLayOutRef(), this);
+        if (editAble) {
+            HttpHelper.getBatchLabuInfo(mPostData.getOperation(), mPostData.getMaterialType(), mPostData.getShopOrderRef(), mPostData.getLayOutRef(), this);
+        } else {
+            HttpHelper.getRabHistoryByRabNo(mPostData.getRabOrderNo(), mPostData.getOperation(), mPostData.getMaterialType(), this);
+        }
     }
 
     @Override
@@ -161,7 +246,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
                 new ImageBrowserDialog(mContext, mPostData.getLayoutImgUrl()).show();
                 break;
             case R.id.btn_add:
-                mLayout_items.addView(getItemView(), mLayout_items.getChildCount() - 1);
+                mLayout_items.addView(getItemView(null), mLayout_items.getChildCount() - 1);
                 break;
             case R.id.btn_completed:
                 new LabuCheckDialog(mContext, new View.OnClickListener() {
@@ -169,7 +254,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
                     public void onClick(View v) {
                         completed();
                     }
-                }).setParams(0.5f, 0.5f).show();
+                }).setParams(0.5f, 0.6f).show();
                 break;
             case R.id.btn_start:
                 start();
@@ -190,21 +275,27 @@ public class BatchLabuRecordActivity extends BaseActivity {
         HttpHelper.operationProduce(userId, mOperationFlag, mPostData.getShopOrderRef(), rabRef, mData.getORDER_NO(), mPostData.getOperation(), this);
     }
 
-
     private void completed() {
-        List<String> sizeList = new ArrayList<>();
+        List<PostBatchRecordLabuBo.CutSizeBean> sizeList = new ArrayList<>();
         for (int i = 0; i < mLayout_sizeList.getChildCount(); i++) {
             View child = mLayout_sizeList.getChildAt(i);
-            CheckBox checkBox = child.findViewById(R.id.checkbox);
-            if (checkBox.isChecked()) {
-                sizeList.add(checkBox.getText().toString());
+            LinearLayout layout = child.findViewById(R.id.linearLayout);
+            for (int j = 0; j < layout.getChildCount(); j++) {
+                CheckBox checkBox = (CheckBox) layout.getChildAt(j);
+                String size = checkBox.getText().toString();
+                if (checkBox.isChecked()) {
+                    PostBatchRecordLabuBo.CutSizeBean bean = new PostBatchRecordLabuBo.CutSizeBean();
+                    bean.setSizeCode(size);
+                    bean.setCutNum((Integer) child.getTag());
+                    sizeList.add(bean);
+                }
             }
         }
         if (sizeList.size() == 0) {
             showErrorDialog("请选择尺码");
             return;
         }
-        mPostData.setSizes(sizeList);
+        mPostData.setCutSizes(sizeList);
 
         List<PostBatchRecordLabuBo.BulkRabRollsBean.BulkRabSegmentsBean> cutNum = new ArrayList<>();
         List<BatchLabuRecordBo.SEGMENTINFOBean> cut_num = mData.getSEGMENT_INFO();
@@ -243,8 +334,13 @@ public class BatchLabuRecordActivity extends BaseActivity {
                     return;
                 }
                 PostBatchRecordLabuBo.BulkRabRollsBean.BulkRabSegmentsBean bean = cutNum.get(j);
-                bean.setLays(layer);
-                cuts.add(bean);
+                PostBatchRecordLabuBo.BulkRabRollsBean.BulkRabSegmentsBean bean1 = new PostBatchRecordLabuBo.BulkRabRollsBean.BulkRabSegmentsBean();
+                bean1.setActualLenth(bean.getActualLenth());
+                bean1.setCutNum(bean.getCutNum());
+//                bean.setLayers(layer);
+                bean1.setLayers(layer);
+                bean1.setStandLength(bean.getStandLength());
+                cuts.add(bean1);
             }
 
             TextView tv_left = itemView.findViewById(R.id.et_left);
@@ -277,26 +373,46 @@ public class BatchLabuRecordActivity extends BaseActivity {
         HttpHelper.saveBatchLabuData(sb.substring(0, sb.length() - 1), mPostData, this);
     }
 
-    private View getItemView() {
+    private View getItemView(BatchLabuRecordBo.VolumnInfoBean item) {
         int childCount = mLayout_items.getChildCount();
         List<BatchLabuRecordBo.SEGMENTINFOBean> cutNum = mData.getSEGMENT_INFO();
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_labu_record, null);
         TextView tv_juanHao = view.findViewById(R.id.tv_juanHao);
+        TextView tv_shortNum = view.findViewById(R.id.tv_shortNum);
         tv_juanHao.setText(childCount + "");
         EditText et_length = view.findViewById(R.id.et_length);
         EditText et_left = view.findViewById(R.id.et_left);
-        et_length.setTag(1);
-        et_left.setTag((2 + cutNum.size()));
-        et_left.setFilters(new InputFilter[]{new MyInputFilter().setDigits(1)});
-        et_length.addTextChangedListener(new InputChangeListener(et_length));
-        et_left.addTextChangedListener(new InputChangeListener(et_left));
+        if (!editAble) {
+            view.findViewById(R.id.tv_del).setVisibility(View.GONE);
+            tv_juanHao.setText(item.getVolumn() + "");
+            tv_shortNum.setText(item.getShortNum() + "");
+
+            et_length.setEnabled(false);
+            et_left.setEnabled(false);
+            et_left.setText(item.getLeftNum() + "");
+            et_length.setText(item.getLength() + "");
+        } else {
+            et_length.setTag(1);
+            et_left.setTag((2 + cutNum.size()));
+            et_left.setFilters(new InputFilter[]{new MyInputFilter().setDigits(1)});
+            et_length.addTextChangedListener(new InputChangeListener(et_length));
+            et_left.addTextChangedListener(new InputChangeListener(et_left));
+        }
 
         LinearLayout layout = view.findViewById(R.id.layout_rootView);
         layout.setTag(childCount - 1);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
+        List<BatchLabuRecordBo.VolumnInfoBean.BulkRabSegmentsBean> rabSegments = null;
+        if (item != null) {
+            rabSegments = item.getBulkRabSegments();
+        }
         for (int i = 0; i < cutNum.size(); i++) {
             EditText editText = (EditText) LayoutInflater.from(mContext).inflate(R.layout.edittext_common, null);
+            if (!editAble) {
+                editText.setEnabled(false);
+                editText.setText(rabSegments.get(i).getLayers() + "");
+            }
             editText.setPadding(0, 0, 0, 0);
             editText.setBackgroundResource(0);
             editText.setGravity(Gravity.CENTER);
@@ -481,15 +597,49 @@ public class BatchLabuRecordActivity extends BaseActivity {
     public void onSuccess(String url, JSONObject resultJSON) {
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.getBatchLabuInfo.equals(url)) {
+            if (HttpHelper.getBatchLabuInfo.equals(url) || HttpHelper.getRabHistoryByRabNo.equals(url)) {
                 mData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), BatchLabuRecordBo.class);
+                if (HttpHelper.getRabHistoryByRabNo.equals(url)) {
+                    TextView tv_layoutNoTitle = findViewById(R.id.tv_layoutNoTitle);
+                    tv_layoutNoTitle.setText("排料图" + mData.getLAYOUT_NO() + "已拉层数汇总表");
+                    mPostData.setLayoutImgUrl(mData.getLAYOUT_IMAGE());
+                }
                 if (mData != null) {
                     setupView();
                 }
             } else if (HttpHelper.saveBatchLabuData.equals(url)) {
                 toast("操作成功");
-                setResult(RESULT_OK);
-                finish();
+                BatchLabuRecordPrintBo printBo = new BatchLabuRecordPrintBo();
+                printBo.setShopOrder(mData.getSHOP_ORDER());
+                printBo.setRabOrder(mData.getORDER_NO());
+                printBo.setItem(mPostData.getItem());
+                printBo.setMatType(mPostData.getMaterialType());
+
+                List<BatchLabuRecordBo.SEGMENTINFOBean> segmentInfo = mData.getSEGMENT_INFO();
+                List<PostBatchRecordLabuBo.CutSizeBean> sizes = mPostData.getCutSizes();
+                for (int i = 0; i < segmentInfo.size(); i++) {
+                    BatchLabuRecordBo.SEGMENTINFOBean bean1 = segmentInfo.get(i);
+                    for (int j = 0; j < sizes.size(); j++) {
+                        PostBatchRecordLabuBo.CutSizeBean bean = sizes.get(j);
+                        if (bean.getCutNum() == bean1.getCutNum()) {
+                            TextView totalText = (TextView) mLayout_itemTotal.getChildAt(i + 2);
+                            String totalStr = totalText.getText().toString();
+                            bean.setLayers(FormatUtil.strToInt(totalStr));
+                        }
+                    }
+                }
+                printBo.setSizeList(sizes);
+
+                BaseDialog dialog = new BatchLabuRecordPrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f);
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
+                dialog.show();
+                BluetoothHelper.printLabuInfo(this, printBo);
             } else if (HttpHelper.operationProduce.equals(url)) {
                 if ("BEGIN".equals(mOperationFlag) || "RESTART".equals(mOperationFlag)) {
                     mOperationFlag = "PAUSE";
@@ -502,9 +652,10 @@ public class BatchLabuRecordActivity extends BaseActivity {
         }
     }
 
-    public static Intent getIntent(Context context, PostBatchRecordLabuBo data) {
+    public static Intent getIntent(Context context, PostBatchRecordLabuBo data, boolean editAble) {
         Intent intent = new Intent(context, BatchLabuRecordActivity.class);
         intent.putExtra("data", data);
+        intent.putExtra("editAble", editAble);
         return intent;
     }
 }

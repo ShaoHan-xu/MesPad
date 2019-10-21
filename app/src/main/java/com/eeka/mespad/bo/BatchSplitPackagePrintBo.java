@@ -16,8 +16,17 @@ public class BatchSplitPackagePrintBo {
     private String rfid;
     private String sizeCode;
     private String shopOrder;
+    private boolean isPrinted;
     private int subPackageQty;
     private int subPackageSeq;
+
+    public boolean isPrinted() {
+        return isPrinted;
+    }
+
+    public void setPrinted(boolean printed) {
+        isPrinted = printed;
+    }
 
     public String getSizeCode() {
         return sizeCode;

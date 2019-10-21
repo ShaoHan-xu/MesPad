@@ -76,6 +76,13 @@
             android:padding="10dp"
             android:text="核对唛架款号、码数、错放"
             android:textSize="@dimen/textSize_title" />
+        
+        <CheckBox
+            style="@style/textStyle_default"
+            android:button="@drawable/checkbox_green"
+            android:padding="10dp"
+            android:text="在唛架纸上记录流水号"
+            android:textSize="@dimen/textSize_title" />
     
     </LinearLayout>
 

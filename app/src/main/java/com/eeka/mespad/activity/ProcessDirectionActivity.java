@@ -340,7 +340,7 @@ public class ProcessDirectionActivity extends BaseActivity {
                     showErrorDialog("后台返回数据为空");
                 }
             } else if (HttpHelper.submitProcessDirection.equals(url)) {
-                toast("保存成功");
+                toast(resultJSON.getString("result"));
                 setResult(RESULT_OK);
                 finish();
             }

@@ -1,5 +1,6 @@
 package com.eeka.mespad.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -64,7 +65,7 @@ import java.util.List;
  * 缝制界面
  * Created by Lenovo on 2017/7/26.
  */
-
+@SuppressLint("InflateParams")
 public class SewFragment extends BaseFragment {
 
     private LinearLayout mLayout_MTMOrderNum;
@@ -884,6 +885,7 @@ public class SewFragment extends BaseFragment {
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getSewData.equals(url)) {
                 mSewData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), SewDataBo.class);
+                assert mSewData != null;
                 String sfc = mSewData.getSfc();
                 if (!isEmpty(sfc)) {
                     mActivity.setButtonState(R.id.btn_subStart, true);
