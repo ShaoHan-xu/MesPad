@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 121
+        versionCode 122
 
-        versionName "3.121"
+        versionName "3.122"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {

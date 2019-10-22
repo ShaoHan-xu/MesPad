@@ -16,9 +16,18 @@ public class BatchSplitPackagePrintBo {
     private String rfid;
     private String sizeCode;
     private String shopOrder;
+    private String workNo;
     private boolean isPrinted;
     private int subPackageQty;
     private int subPackageSeq;
+
+    public String getWorkNo() {
+        return workNo;
+    }
+
+    public void setWorkNo(String workNo) {
+        this.workNo = workNo;
+    }
 
     public boolean isPrinted() {
         return isPrinted;

@@ -1,5 +1,6 @@
 package com.eeka.mespad.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.eeka.mespad.R;
-import com.eeka.mespad.bo.BatchLabuRecordBo;
 import com.eeka.mespad.bo.BatchLabuRecordPrintBo;
 import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.utils.UnitUtil;
@@ -28,6 +28,7 @@ public class BatchLabuRecordPrintContentDialog extends BaseDialog {
         init();
     }
 
+    @SuppressLint("InflateParams")
     @Override
     protected void init() {
         super.init();

@@ -27,12 +27,21 @@ public class BatchCutRecordBo implements Serializable {
     private String operationBo;
     private String workNo;
     private int workSeq;
+    private int cutNum;
     private String materialType;
     private String isFinish;
     private String item;
     private String layoutNo;
     private String layoutImg;
     private List<CutSizesBean> cutSizes;
+
+    public int getCutNum() {
+        return cutNum;
+    }
+
+    public void setCutNum(int cutNum) {
+        this.cutNum = cutNum;
+    }
 
     public String getRabNo() {
         return rabNo;

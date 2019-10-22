@@ -3,6 +3,7 @@ package com.eeka.mespad.zxing.android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -50,6 +51,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     // 声音、震动控制
     private BeepManager beepManager;
 
+    private boolean isBackCamera;
+
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
     }
@@ -77,6 +80,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.aty_scan);
 
+        isBackCamera = getIntent().getBooleanExtra("isBack", false);
+
         hasSurface = false;
 
         inactivityTimer = new InactivityTimer(this);
@@ -101,7 +106,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         // 当扫描框的尺寸不正确时会出现bug
         cameraManager = new CameraManager(getApplication());
 
-        int camId = findFrontCamera();
+        int camId = findCameraId();
         if (camId > 0) {
             cameraManager.setManualCameraId(camId);
         }
@@ -130,13 +135,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         characterSet = null;
     }
 
-    private int findFrontCamera() {//判断是否有前置摄像头，得到返回值
+    private int findCameraId() {
         int cameraCount;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         cameraCount = Camera.getNumberOfCameras(); // get cameras number
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.getCameraInfo(camIdx, cameraInfo); // get camerainfo
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            int cameraId = isBackCamera ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
+            if (cameraInfo.facing == cameraId) {
                 // 代表摄像头的方位，目前有定义值两个分别为CAMERA_FACING_FRONT前置和CAMERA_FACING_BACK后置
                 return camIdx;
             }
@@ -247,4 +253,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         builder.show();
     }
 
+    /**
+     * @param isBack 是否后置摄像头
+     */
+    public static Intent getIntent(Context context, boolean isBack) {
+        Intent intent = new Intent(context, CaptureActivity.class);
+        intent.putExtra("isBack", isBack);
+        return intent;
+    }
 }

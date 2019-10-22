@@ -1,7 +1,11 @@
 package com.eeka.mespad.view.dialog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -20,12 +24,15 @@ public class BatchSplitPackagePrintContentDialog extends BaseDialog {
 
     private BatchSplitPackagePrintBo mData;
 
-    public BatchSplitPackagePrintContentDialog(@NonNull Context context, BatchSplitPackagePrintBo printBo) {
+    private Handler mHandler;
+
+    BatchSplitPackagePrintContentDialog(@NonNull Context context, BatchSplitPackagePrintBo printBo) {
         super(context);
         mData = printBo;
         init();
     }
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void init() {
         super.init();
@@ -60,5 +67,26 @@ public class BatchSplitPackagePrintContentDialog extends BaseDialog {
             e.printStackTrace();
         }
 
+        setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mHandler.removeCallbacksAndMessages(null);
+            }
+        });
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                dismiss();
+            }
+        };
     }
+
+    @Override
+    public void show() {
+        super.show();
+        mHandler.sendEmptyMessageDelayed(0, 2000);
+    }
+
 }

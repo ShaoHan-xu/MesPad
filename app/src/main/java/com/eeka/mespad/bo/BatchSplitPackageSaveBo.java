@@ -20,10 +20,19 @@ public class BatchSplitPackageSaveBo {
     private String item;
     private String shopOrderRef;
     private int subSeq;
+    private int cutNum;
     private String layOutRef;
     private String sizeCode;
     private String materialType;
     private List<SubPackagesBean> subPackages;
+
+    public int getCutNum() {
+        return cutNum;
+    }
+
+    public void setCutNum(int cutNum) {
+        this.cutNum = cutNum;
+    }
 
     public String getMaterialType() {
         return materialType;

@@ -196,12 +196,15 @@ public class HttpHelper {
     /**
      * 记录打印状态
      */
-    public static void recordSubPackagePrintInfo(String shopOrderBo, String sizeCode, String subSeq, HttpCallback callback) {
+    public static void recordSubPackagePrintInfo(String shopOrderBo, String sizeCode, int subSeq, String oldRfid, String newRfid, String processLotRef, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("shopOrderRef", shopOrderBo);
         json.put("sizeCode", sizeCode);
-        json.put("subSeq", subSeq);
+        json.put("subSeq", subSeq + "");
+        json.put("newRfid", newRfid);
+        json.put("oldRfid", oldRfid);
+        json.put("processLotRef", processLotRef);
         params.put("params", json.toJSONString());
         HttpRequest.post(recordSubPackagePrintInfo, params, getResponseHandler(recordSubPackagePrintInfo, callback));
     }
@@ -294,12 +297,13 @@ public class HttpHelper {
     /**
      * 通过码数获取分包数据
      */
-    public static void getBatchSplitItemBySize(String operation, String sizeCode, String rabRef, HttpCallback callback) {
+    public static void getBatchSplitItemBySize(String operation, String sizeCode, String rabRef, int cutNum, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("operation", operation);
         json.put("sizeCode", sizeCode);
         json.put("rabRef", rabRef);
+        json.put("cutNum", cutNum);
         params.put("params", json.toJSONString());
         HttpRequest.post(getBatchSplitItemBySize, params, getResponseHandler(getBatchSplitItemBySize, callback));
     }
@@ -307,12 +311,13 @@ public class HttpHelper {
     /**
      * 通过拉布单获取分包数据
      */
-    public static void getBatchSplitItemByRabRef(String shopOrderBo, String sizeCode, String rabRef, HttpCallback callback) {
+    public static void getBatchSplitItemByRabRef(String shopOrderBo, String sizeCode, String rabRef, int cutNum, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("shopOrderRef", shopOrderBo);
         json.put("sizeCode", sizeCode);
         json.put("rabRef", rabRef);
+        json.put("cutNum", cutNum);
         params.put("params", json.toJSONString());
         HttpRequest.post(getBatchSplitItemByRabRef, params, getResponseHandler(getBatchSplitItemByRabRef, callback));
     }
@@ -1441,7 +1446,7 @@ public class HttpHelper {
 //        PAD_IP = "10.7.26.444";//验片
 //        PAD_IP = "10.7.26.555";//粘朴
 //        PAD_IP = "10.7.26.666";//二度
-        PAD_IP = "10.7.26.777";//点位
+//        PAD_IP = "10.7.26.777";//点位
 //        PAD_IP = "10.7.26.888";//分包
 //        PAD_IP = "10.7.26.999";//工序确认
 //        PAD_IP = "10.7.26.9";//拉布2

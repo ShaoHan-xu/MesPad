@@ -76,7 +76,7 @@ final class CameraConfigurationManager {
 
     }
 
-    void setDesiredCameraParameters(Camera camera, boolean safeMode) {
+    void setDesiredCameraParameters(Camera camera, boolean safeMode, int cameraId) {
         Camera.Parameters parameters = camera.getParameters();
 
         if (parameters == null) {
@@ -100,7 +100,10 @@ final class CameraConfigurationManager {
 
         parameters.setPreviewSize(cameraResolution.x, cameraResolution.y);
         /****************** 竖屏更改2 *********************/
-        setDisplayOrientation(camera, 0);
+        if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT)
+            setDisplayOrientation(camera, 180);
+        else
+            setDisplayOrientation(camera, 0);
 
         Log.i(TAG, "Final camera parameters: " + parameters.flatten());
 

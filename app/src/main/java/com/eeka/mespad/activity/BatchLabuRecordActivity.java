@@ -111,10 +111,15 @@ public class BatchLabuRecordActivity extends BaseActivity {
             TextView tv_duan = view.findViewById(R.id.tv_duan);
             tv_duan.setText(item.getCutNum() + "段");
             TextView tv_length = view.findViewById(R.id.tv_length);
-            tv_length.setText(getString(R.string.float_2, item.getStandLength()));
+            float standLength = item.getStandLength();
+            tv_length.setText(getString(R.string.float_2, standLength));
 
+            float actualLength = item.getActualLength();
+            if (actualLength == 0) {
+                actualLength = standLength;
+            }
             EditText editText = view.findViewById(R.id.et_actualLength);
-            editText.setText(getString(R.string.float_2, item.getStandLength()));
+            editText.setText(getString(R.string.float_2, actualLength));
             editText.setFilters(new InputFilter[]{new MyInputFilter()});
 
             mLayout_cutNum.addView(view, params);
@@ -543,23 +548,12 @@ public class BatchLabuRecordActivity extends BaseActivity {
 
             //计算短码数：（1段长*层数+2段长*层数）+余料-总米数=短码数
             LinearLayout parent = (LinearLayout) mLayout_items.getChildAt(verticalIndex);
-            String lengthText = ((TextView) parent.getChildAt(1)).getText().toString();
-            if (isEmpty(lengthText)) {
-                return;
-            }
-            int length = Integer.parseInt(lengthText);
-
-            String leftText = ((TextView) parent.getChildAt(2 + mLayout_cutNum.getChildCount())).getText().toString();
-            if (isEmpty(leftText)) {
-                return;
-            }
-            float left = FormatUtil.strToFloat(leftText);
-
             float layerLength = 0;
             for (int i = 0; i < mLayout_cutNum.getChildCount(); i++) {
                 LinearLayout childAt = (LinearLayout) mLayout_cutNum.getChildAt(i);
                 String realLengthText = ((TextView) childAt.findViewById(R.id.et_actualLength)).getText().toString();
-                if (isEmpty(realLengthText)) {
+                if (isEmpty(realLengthText) || "0".equals(realLengthText)) {
+                    showErrorDialog("请输入排料图实际长度");
                     return;
                 }
                 float realLength = FormatUtil.strToFloat(realLengthText);
@@ -571,6 +565,18 @@ public class BatchLabuRecordActivity extends BaseActivity {
 
                 layerLength += (realLength * layer);
             }
+
+            String lengthText = ((TextView) parent.getChildAt(1)).getText().toString();
+            if (isEmpty(lengthText)) {
+                return;
+            }
+            int length = Integer.parseInt(lengthText);
+
+            String leftText = ((TextView) parent.getChildAt(2 + mLayout_cutNum.getChildCount())).getText().toString();
+            if (isEmpty(leftText)) {
+                return;
+            }
+            float left = FormatUtil.strToFloat(leftText);
 
             float shortNum = layerLength + left - length;
             TextView tv_shortNum = parent.findViewById(R.id.tv_shortNum);

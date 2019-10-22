@@ -134,7 +134,7 @@ public class BatchCutWorkingActivity extends BaseActivity {
                         List<BatchCutWorkingBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
                         BatchCutWorkingBo.RABINFOBean bean = rabInfo.get(index - 1);
 
-                        showSplitPrintDialog(false, bean.getSIZE_CODE(), bean.getSIZE_TOTAL(), true);
+                        showSplitPrintDialog(false, bean.getSIZE_CODE(), bean.getSIZE_TOTAL(), bean.getCUT_NUM(), true);
                     }
                 }
                 break;
@@ -158,11 +158,12 @@ public class BatchCutWorkingActivity extends BaseActivity {
         }
         mPostData.setCutSizes(selectedSize);
         BatchCutRecordBo.CutSizesBean sizesBean = selectedSize.get(0);
-        showSplitPrintDialog(type == 0, sizesBean.getSizeCode(), sizesBean.getSizeTotal(), false);
+        showSplitPrintDialog(type == 0, sizesBean.getSizeCode(), sizesBean.getSizeTotal(), sizesBean.getCutNum(), false);
     }
 
-    private void showSplitPrintDialog(boolean editable, String sizeCode, int sizeTotal, boolean onlyPrint) {
+    private void showSplitPrintDialog(boolean editable, String sizeCode, int sizeTotal, int cutNum, boolean onlyPrint) {
         mPostData.setWorkSeq(mData.getORDER_SEQ());
+        mPostData.setCutNum(cutNum);
         BatchSplitPackageDialog dialog = new BatchSplitPackageDialog(mContext, editable, mPostData, sizeCode, sizeTotal, onlyPrint);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -294,7 +295,6 @@ public class BatchCutWorkingActivity extends BaseActivity {
             } else if (i == size - 1) {
                 tv_cutNum.setText("合计");
                 tv_size.setText(null);
-                tv_size.setBackgroundResource(R.color.gray_disable);
                 checkBox.setVisibility(View.INVISIBLE);
                 tv_completed.setText(completedTotal + "");
                 tv_wait.setText(waitingTotal + "");

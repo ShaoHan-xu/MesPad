@@ -172,7 +172,7 @@ public class BatchOrderListActivity extends NFCActivity {
             String content = push.getContent();
             BatchLabuRecordPrintBo printBo = JSON.parseObject(content, BatchLabuRecordPrintBo.class);
             BatchCutRecordBo data = new BatchCutRecordBo();
-            data.setRabRef(printBo.getRabOrder());
+            data.setRabNo(printBo.getRabOrder());
             data.setMaterialType(printBo.getMatType());
             Intent intent = BatchCutWorkingActivity.getIntent(mContext, data, mOperation);
             startActivity(intent);
@@ -214,7 +214,7 @@ public class BatchOrderListActivity extends NFCActivity {
 //                BluetoothHelper.printSubPackageInfo(this, printBo);
                 break;
             case R.id.btn_batchCut_scan:
-                startScan();
+                startScan(true);
                 break;
         }
     }

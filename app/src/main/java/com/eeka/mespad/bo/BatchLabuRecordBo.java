@@ -97,7 +97,16 @@ public class BatchLabuRecordBo {
         private int cutNum;
         private int lays;
         private float standLength;
+        private float actualLength;
         private List<SizeCodesBean> sizeCodes;
+
+        public float getActualLength() {
+            return actualLength;
+        }
+
+        public void setActualLength(float actualLength) {
+            this.actualLength = actualLength;
+        }
 
         public int getCutNum() {
             return cutNum;

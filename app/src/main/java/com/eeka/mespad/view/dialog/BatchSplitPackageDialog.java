@@ -18,6 +18,7 @@ import com.eeka.mespad.bo.BatchSplitPackagePrintBo;
 import com.eeka.mespad.bo.BatchSplitPackageSaveBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.callback.StringCallback;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.FormatUtil;
@@ -135,16 +136,32 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 check();
                 break;
             case R.id.tv_printSeq:
-                print(v);
-
-                int index = (int) v.getTag();
-                if (index == 0) {
-                    cancelAble = true;
-
-                    completed();
+                mPrintingIndex = (int) v.getTag();
+                BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
+                if (printBo.isPrinted()) {
+                    recordPrintState(v, null);
+                } else {
+                    showBindRfidDialog(v, printBo.getRfid());
                 }
                 break;
         }
+    }
+
+    private int mPrintingIndex;
+    private String mNewRfid;
+
+    private void showBindRfidDialog(final View v, String oldRfid) {
+        new BindRfidCardDialog(mContext, oldRfid, new StringCallback() {
+            @Override
+            public void callback(String value) {
+                mNewRfid = value;
+                recordPrintState(v, mNewRfid);
+                if (mPrintingIndex == 0) {
+                    cancelAble = true;
+                    completed();
+                }
+            }
+        }).setParams(0.4f, 0.5f).show();
     }
 
     private void completed() {
@@ -156,23 +173,32 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
 
         LoadingDialog.show(mContext);
         mData.setCutSizes(null);
+        BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
+        mData.setWorkNo(printBo.getWorkNo());
         HttpHelper.completedSplitPrint(userId, mData, this);
     }
 
-    private void print(View v) {
+    private void recordPrintState(View v, String newRfid) {
         v.setEnabled(false);
-        int index = (int) v.getTag();
-        BatchSplitPackagePrintBo printBo = mList_printData.get(index);
+        BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
         printBo.setSizeCode(mSizeCode);
+
+        if (!printBo.isPrinted()) {
+            LoadingDialog.show(mContext);
+            HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq(), printBo.getRfid(), newRfid, printBo.getProcessLotRef(), this);
+        } else {
+            print();
+        }
+    }
+
+    private void print() {
+        BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
         BluetoothHelper.printSubPackageInfo(getOwnerActivity(), printBo);
         new BatchSplitPackagePrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f).show();
 
-        LoadingDialog.show(mContext);
-        HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq() + "", this);
-
         if (!isOnlyPrint) {
-            if (index > 0) {
-                setPrintEnable(index - 1);
+            if (mPrintingIndex > 0) {
+                setPrintEnable(mPrintingIndex - 1);
             }
         }
     }
@@ -226,6 +252,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         data.setSubSeq(mData.getWorkSeq());
         data.setSubOrder(mData.getWorkNo());
         data.setMaterialType(mData.getMaterialType());
+        data.setCutNum(mData.getCutNum());
 
         List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
         if (positionUsers == null || positionUsers.size() == 0) {
@@ -345,7 +372,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-        LoadingDialog.dismiss();
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getBatchSplitItemByCustom.equals(url) || HttpHelper.getBatchSplitItemByRabRef.equals(url)) {
                 mLayout_items.removeViews(0, mLayout_items.getChildCount() - 1);
@@ -373,8 +399,16 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 for (int i = 0; i < mList_printData.size(); i++) {
                     BatchSplitPackagePrintBo itemBo = mList_printData.get(i);
                     mLayout_items.addView(getItemView(itemBo, i), mLayout_items.getChildCount() - 1);
+                    if (i == 0) {
+                        TextView tv_workNo = mView.findViewById(R.id.tv_workNo);
+                        tv_workNo.setText(itemBo.getWorkNo());
+                    }
                 }
                 refreshItemView();
+            } else if (HttpHelper.recordSubPackagePrintInfo.equals(url)) {
+                BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
+                printBo.setRfid(mNewRfid);
+                print();
             }
         } else {
             ErrorDialog.showAlert(mContext, resultJSON.getString("message"));
@@ -384,6 +418,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 dismiss();
             }
         }
+        LoadingDialog.dismiss();
     }
 
     @Override
@@ -399,12 +434,12 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         if (isOnlyPrint) {
             TextView tv_tag = findViewById(R.id.tv_packageNum_tag);
             tv_tag.setText("包号");
-            HttpHelper.getBatchSplitItemBySize(mData.getOperation(), mSizeCode, mData.getRabRef(), this);
+            HttpHelper.getBatchSplitItemBySize(mData.getOperation(), mSizeCode, mData.getRabRef(), mData.getCutNum(), this);
         } else {
             if (isEditable) {
                 HttpHelper.getBatchSplitItemByCustom(mData.getShopOrderRef(), mSizeCode, mSizeTotal, this);
             } else {
-                HttpHelper.getBatchSplitItemByRabRef(mData.getShopOrderRef(), mSizeCode, mData.getRabRef(), this);
+                HttpHelper.getBatchSplitItemByRabRef(mData.getShopOrderRef(), mSizeCode, mData.getRabRef(), mData.getCutNum(), this);
             }
         }
     }

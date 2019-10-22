@@ -24,10 +24,8 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.PocketSizeBo;
-import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
@@ -36,7 +34,6 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LoadingDialog;
-import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.eeka.mespad.zxing.android.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -183,7 +180,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
             }
             if (allowAllPermission) {
                 if (isScan) {
-                    startScan();
+                    startScan(isBackCamera);
                     isScan = false;
                 }
             } else {
@@ -249,16 +246,18 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean isScan;
+    private boolean isBackCamera;
 
-    public void startScan() {
+    public void startScan(boolean isBackCamera) {
         if (!checkPermission(Manifest.permission.CAMERA)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermission(Manifest.permission.CAMERA)) {
                 isScan = true;
+                this.isBackCamera = isBackCamera;
                 requestPermission(new String[]{Manifest.permission.CAMERA});
                 return;
             }
         }
-        Intent intent = new Intent(mContext, CaptureActivity.class);
+        Intent intent = CaptureActivity.getIntent(mContext, isBackCamera);
         startActivityForResult(intent, REQUEST_CODE_SCAN);
     }
 

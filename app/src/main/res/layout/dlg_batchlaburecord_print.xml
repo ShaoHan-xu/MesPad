@@ -4,168 +4,172 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     
-    <RelativeLayout
-        android:id="@+id/tag1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
-        android:background="@drawable/bg_border_gray_light">
+        android:gravity="center"
+        android:orientation="vertical">
         
         <RelativeLayout
-            android:id="@+id/tag"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:padding="5dp">
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/bg_border_gray_light">
             
-            <ImageView
-                android:id="@+id/iv_qrCode"
+            <RelativeLayout
+                android:id="@+id/tag"
                 android:layout_width="200dp"
-                android:layout_height="200dp" />
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:padding="5dp">
+                
+                <ImageView
+                    android:id="@+id/iv_qrCode"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp" />
+            </RelativeLayout>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/tag"
+                android:background="@drawable/bg_border_gray_light"
+                android:divider="@drawable/divider_gray_light"
+                android:orientation="vertical"
+                android:padding="0.5dp"
+                android:showDividers="middle">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/bg_gray"
+                    android:divider="@drawable/divider_gray_light"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="90dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="码数" />
+                    
+                    <TextView
+                        android:id="@+id/tv_sizeCode"
+                        style="@style/textStyle_default"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:divider="@drawable/divider_gray_light"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="90dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="层数" />
+                    
+                    <TextView
+                        android:id="@+id/tv_layer"
+                        style="@style/textStyle_default"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/bg_gray"
+                    android:divider="@drawable/divider_gray_light"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="90dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="款号" />
+                    
+                    <TextView
+                        android:id="@+id/tv_item"
+                        style="@style/textStyle_default"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:divider="@drawable/divider_gray_light"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="90dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="订单号" />
+                    
+                    <TextView
+                        android:id="@+id/tv_shopOrder"
+                        style="@style/textStyle_default"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/bg_gray"
+                    android:divider="@drawable/divider_gray_light"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="90dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="拉布单号" />
+                    
+                    <TextView
+                        android:id="@+id/tv_rabOrder"
+                        style="@style/textStyle_default"
+                        android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:padding="5dp" />
+                </LinearLayout>
+            
+            </LinearLayout>
         </RelativeLayout>
         
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@id/tag"
-            android:background="@drawable/bg_border_gray_light"
-            android:divider="@drawable/divider_gray_light"
-            android:orientation="vertical"
-            android:padding="0.5dp"
-            android:showDividers="middle">
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/bg_gray"
-                android:divider="@drawable/divider_gray_light"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle">
-                
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="90dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="码数" />
-                
-                <TextView
-                    android:id="@+id/tv_sizeCode"
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:padding="5dp" />
-            </LinearLayout>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:divider="@drawable/divider_gray_light"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle">
-                
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="90dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="层数" />
-                
-                <TextView
-                    android:id="@+id/tv_layer"
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:padding="5dp" />
-            </LinearLayout>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/bg_gray"
-                android:divider="@drawable/divider_gray_light"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle">
-                
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="90dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="款号" />
-                
-                <TextView
-                    android:id="@+id/tv_item"
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:padding="5dp" />
-            </LinearLayout>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:divider="@drawable/divider_gray_light"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle">
-                
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="90dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="订单号" />
-                
-                <TextView
-                    android:id="@+id/tv_shopOrder"
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:padding="5dp" />
-            </LinearLayout>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@color/bg_gray"
-                android:divider="@drawable/divider_gray_light"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle">
-                
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="90dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="拉布单号" />
-                
-                <TextView
-                    android:id="@+id/tv_rabOrder"
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:gravity="center"
-                    android:padding="5dp" />
-            </LinearLayout>
-        
-        </LinearLayout>
-    </RelativeLayout>
-    
-    <TextView
-        style="@style/textStyle_default"
-        android:layout_below="@id/tag1"
-        android:layout_centerHorizontal="true"
-        android:text="打印成功！"
-        android:textColor="@color/green" />
-
+        <TextView
+            style="@style/textStyle_default"
+            android:text="打印成功！"
+            android:textColor="@color/green" />
+    </LinearLayout>
 </RelativeLayout>

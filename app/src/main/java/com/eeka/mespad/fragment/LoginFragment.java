@@ -136,7 +136,7 @@ public class LoginFragment extends BaseFragment {
         } else if (v.getId() == R.id.iv_login_scan) {
             FragmentActivity activity = getActivity();
             if (activity instanceof BaseActivity) {
-                ((BaseActivity) activity).startScan();
+                ((BaseActivity) activity).startScan(false);
             }
         }
     }
