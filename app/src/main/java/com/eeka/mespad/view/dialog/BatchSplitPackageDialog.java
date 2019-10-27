@@ -138,7 +138,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             case R.id.tv_printSeq:
                 mPrintingIndex = (int) v.getTag();
                 BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
-                if (printBo.isPrinted()) {
+                if (printBo.isPrinted() || !"M".equals(mData.getMaterialType())) {
                     recordPrintState(v, null);
                 } else {
                     showBindRfidDialog(v, printBo.getRfid());
@@ -157,7 +157,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 mNewRfid = value;
                 recordPrintState(v, mNewRfid);
                 if (mPrintingIndex == 0) {
-                    cancelAble = true;
                     completed();
                 }
             }
@@ -186,6 +185,9 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         if (!printBo.isPrinted()) {
             LoadingDialog.show(mContext);
             HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq(), printBo.getRfid(), newRfid, printBo.getProcessLotRef(), this);
+            if (mPrintingIndex == 0){
+                completed();
+            }
         } else {
             print();
         }
@@ -193,6 +195,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
 
     private void print() {
         BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
+        printBo.setMatType(mData.getMaterialType());
         BluetoothHelper.printSubPackageInfo(getOwnerActivity(), printBo);
         new BatchSplitPackagePrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f).show();
 
@@ -305,12 +308,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         }
 
         if (!isOnlyPrint) {
-            //只有主面料可以打印二维码
-            if ("M".equals(mData.getMaterialType())) {
-                setPrintEnable(index);
-            } else {
-                cancelAble = true;
-            }
+            setPrintEnable(index);
         } else {
             cancelAble = true;
         }
@@ -409,6 +407,8 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
                 printBo.setRfid(mNewRfid);
                 print();
+            } else if (HttpHelper.completedSplitPrint.equals(url)) {
+                cancelAble = true;
             }
         } else {
             ErrorDialog.showAlert(mContext, resultJSON.getString("message"));

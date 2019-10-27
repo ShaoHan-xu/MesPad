@@ -97,16 +97,25 @@ public class BluetoothHelper {
             }
         }
 
+        String rfid;
+        if ("M".equals(data.getMatType())) {
+            rfid = "卡号：" + data.getRfid();
+        } else {
+            rfid = "工单号：" + data.getWorkNo();
+        }
+
         zpSDK.pageSetup(576, 180);
         zpSDK.drawText(20, 0, "包号：" + data.getSubPackageSeq(), 3, 0, 0, false, false);
         zpSDK.drawText(160, 0, "码数：" + data.getSizeCode(), 4, 0, 0, false, false);
         zpSDK.drawText(20, 35, "件数：" + data.getSubPackageQty(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 70, "卡号：" + data.getRfid(), 3, 0, 0, false, false);
+        zpSDK.drawText(20, 70, rfid, 3, 0, 0, false, false);
         zpSDK.drawText(20, 105, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
         zpSDK.drawText(20, 140, "款号：" + data.getItem(), 3, 0, 0, false, false);
 
-        String qrCodeText = data.getRfid();
-        zpSDK.drawQrCode(370, 10, qrCodeText, 0, 6, 0);
+        if ("M".equals(data.getMatType())) {
+            String qrCodeText = data.getRfid();
+            zpSDK.drawQrCode(370, 10, qrCodeText, 0, 6, 0);
+        }
 
         zpSDK.print(0, 1);
         try {

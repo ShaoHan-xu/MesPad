@@ -17,9 +17,18 @@ public class BatchSplitPackagePrintBo {
     private String sizeCode;
     private String shopOrder;
     private String workNo;
+    private String matType;
     private boolean isPrinted;
     private int subPackageQty;
     private int subPackageSeq;
+
+    public String getMatType() {
+        return matType;
+    }
+
+    public void setMatType(String matType) {
+        this.matType = matType;
+    }
 
     public String getWorkNo() {
         return workNo;

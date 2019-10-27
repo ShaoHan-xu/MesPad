@@ -57,14 +57,16 @@ public class BatchSplitPackagePrintContentDialog extends BaseDialog {
         tv_sizeCode.setText(sizeCode);
         tv_qty.setText(qty);
 
-        try {
-            Bitmap code = EncodingHandler.create2Code(JSON.toJSONString(mData), UnitUtil.dip2px(mContext, 200));
-            ImageView iv_qrCode = mView.findViewById(R.id.iv_qrCode);
-            iv_qrCode.setImageBitmap(code);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if ("M".equals(mData.getMatType())) {
+            try {
+                Bitmap code = EncodingHandler.create2Code(mData.getRfid(), UnitUtil.dip2px(mContext, 200));
+                ImageView iv_qrCode = mView.findViewById(R.id.iv_qrCode);
+                iv_qrCode.setImageBitmap(code);
+            } catch (WriterException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
 
         setOnDismissListener(new OnDismissListener() {
