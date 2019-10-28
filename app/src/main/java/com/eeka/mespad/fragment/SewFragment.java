@@ -76,6 +76,7 @@ public class SewFragment extends BaseFragment {
     private TextView mTv_size;//尺码
     private TextView mTv_matDesc;//物料描述
     private TextView mTv_workEfficiency;//效率
+    private TextView mTv_dayOutput;//日产量
     private TextView mTv_craftDesc;//工艺说明
     private TextView mTv_qualityReq;//质量要求
     private TextView mTv_special;//特殊要求
@@ -137,6 +138,7 @@ public class SewFragment extends BaseFragment {
         mTv_style = mView.findViewById(R.id.tv_sew_style);
         mTv_size = mView.findViewById(R.id.tv_sew_size);
         mTv_workEfficiency = mView.findViewById(R.id.tv_sew_workEfficiency);
+        mTv_dayOutput = mView.findViewById(R.id.tv_sew_dayOutput);
         mTv_craftDesc = mView.findViewById(R.id.tv_sew_craftDesc);
         mTv_qualityReq = mView.findViewById(R.id.tv_sew_qualityReq);
         mTv_special = mView.findViewById(R.id.tv_sew_special);
@@ -784,12 +786,15 @@ public class SewFragment extends BaseFragment {
                 mLayout_ncData.setVisibility(View.GONE);
             }
 
+            //二等品
             String secondClass = extInfoMap.getSecondClass();
             if (isEmpty(secondClass)) {
                 mTv_secondClass.setVisibility(View.GONE);
             } else {
                 mTv_secondClass.setVisibility(View.VISIBLE);
             }
+
+            mTv_dayOutput.setText(extInfoMap.getDAY_OUTPUT());
         } else {
             mLayout_ncData.setVisibility(View.GONE);
             mTv_secondClass.setVisibility(View.GONE);

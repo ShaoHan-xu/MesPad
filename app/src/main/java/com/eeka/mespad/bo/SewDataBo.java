@@ -163,6 +163,15 @@ public class SewDataBo implements Serializable {
 
         private NcDataBo NC_DATA;
         private String secondClass;
+        private String DAY_OUTPUT;
+
+        public String getDAY_OUTPUT() {
+            return DAY_OUTPUT;
+        }
+
+        public void setDAY_OUTPUT(String DAY_OUTPUT) {
+            this.DAY_OUTPUT = DAY_OUTPUT;
+        }
 
         public String getSecondClass() {
             return secondClass;

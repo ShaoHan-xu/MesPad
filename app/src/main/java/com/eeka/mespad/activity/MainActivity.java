@@ -101,7 +101,6 @@ public class MainActivity extends NFCActivity {
     private TextView mTv_searchType;
     private EditText mEt_orderNum;
     private EditText mEt_position;
-    private String mTopic;
     private CardInfoBo mCardInfo;
     private boolean isSearchOrder;
 
@@ -1208,15 +1207,15 @@ public class MainActivity extends NFCActivity {
                 }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mTv_searchType.setVisibility(View.VISIBLE);
-                    String workType = mPositionInfo.getWORK_TYPE();
-                    if ("P".equals(workType)) {
-                        if (mPositionInfo.getBUTTON_INFOR() != null) {
-                            SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
-                        }
-                        startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
-                        finish();
-                        return;
-                    }
+//                    String workType = mPositionInfo.getWORK_TYPE();
+//                    if ("P".equals(workType)) {
+//                        if (mPositionInfo.getBUTTON_INFOR() != null) {
+//                            SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
+//                        }
+//                        startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
+//                        finish();
+//                        return;
+//                    }
                 } else {
                     mTv_searchType.setVisibility(View.GONE);
                 }

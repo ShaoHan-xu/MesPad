@@ -29,6 +29,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+import com.eeka.mespad.utils.TopicUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,9 +52,14 @@ public class LoginFragment extends BaseFragment {
     private OnLoginCallback mLoginCallback;
     private OnClockCallback mClockCallback;
     private int mType;
+    private String mTopic;
 
     public void setType(int mType) {
         this.mType = mType;
+    }
+
+    public void setTopic(String topic) {
+        mTopic = topic;
     }
 
     @Nullable
@@ -195,7 +201,8 @@ public class LoginFragment extends BaseFragment {
             HttpHelper.login(user, pwd, this);
         } else {
             showLoading();
-            HttpHelper.positionLogin(user, this);
+            String isSingleUser = TopicUtil.TOPIC_CUT.equals(mTopic) ? "N" : "Y";
+            HttpHelper.positionLogin(user, isSingleUser, this);
         }
     }
 

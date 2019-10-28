@@ -683,10 +683,11 @@ public class HttpHelper {
      * @param cardId   卡号
      * @param callback 回调
      */
-    public static void positionLogin(String cardId, HttpCallback callback) {
+    public static void positionLogin(String cardId, String isSingleUser, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("PAD_IP", PAD_IP);
         json.put("CARD_ID", cardId);
+        json.put("IS_SINGLE_USER", isSingleUser);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
         HttpRequest.post(positionLogin_url, params, getResponseHandler(positionLogin_url, callback));

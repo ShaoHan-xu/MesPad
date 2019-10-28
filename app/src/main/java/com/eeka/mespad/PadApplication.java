@@ -30,6 +30,7 @@ public class PadApplication extends Application {
     public static final String HOST_D_INA = "http://10.7.123.131";
     public static final String HOST_Q_INA = "http://10.7.123.131";
     public static final String HOST_P_INA = "http://10.7.123.131";
+    public static final String HOST_LH_P_INA = "http://10.7.123.131";
 
     public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
     public static final String URL_MTM_Q = "http://mtm.ifashioncloud.com:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
@@ -90,6 +91,7 @@ public class PadApplication extends Application {
                 MQTT_BROKER = MQTT_Q;
                 MTM_URL = URL_MTM_P;
                 XMII_URL = HOST_P_LH + "/XMII/Runner?";
+                INA_URL = HOST_LH_P_INA;
             }
         }
 

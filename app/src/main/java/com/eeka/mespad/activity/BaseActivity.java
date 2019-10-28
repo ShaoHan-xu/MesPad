@@ -32,6 +32,7 @@ import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.ToastUtil;
+import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LoadingDialog;
 import com.eeka.mespad.zxing.android.CaptureActivity;
@@ -58,6 +59,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
     protected FragmentManager mFragmentManager;
     protected Dialog mLoginDialog;
+    protected String mTopic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +88,8 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
      * 刷卡上岗
      */
     public void clockIn(String cardNum) {
-        HttpHelper.positionLogin(cardNum, this);
+        String isSingleUser = TopicUtil.TOPIC_CUT.equals(mTopic) ? "N" : "Y";
+        HttpHelper.positionLogin(cardNum, isSingleUser, this);
     }
 
     /**
@@ -199,6 +202,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
         final LoginFragment loginFragment = (LoginFragment) mFragmentManager.findFragmentById(R.id.loginFragment);
         assert loginFragment != null;
+        loginFragment.setTopic(mTopic);
         loginFragment.setOnClockCallback(this);
 
         mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
