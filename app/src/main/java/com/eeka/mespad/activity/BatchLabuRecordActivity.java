@@ -645,7 +645,15 @@ public class BatchLabuRecordActivity extends BaseActivity {
                     }
                 });
                 dialog.show();
-                BluetoothHelper.printLabuInfo(this, printBo);
+
+                int rateCount = 0;
+                List<BatchLabuRecordBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
+                for (BatchLabuRecordBo.RABINFOBean item : rabInfo) {
+                    rateCount += item.getSIZE_AMOUNT();
+                }
+                for (int i = 0; i < rateCount * 2; i++) {
+                    BluetoothHelper.printLabuInfo(this, printBo);
+                }
             } else if (HttpHelper.operationProduce.equals(url)) {
                 if ("BEGIN".equals(mOperationFlag) || "RESTART".equals(mOperationFlag)) {
                     mOperationFlag = "PAUSE";
