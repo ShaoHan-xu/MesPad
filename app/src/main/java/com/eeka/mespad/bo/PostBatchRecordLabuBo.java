@@ -20,6 +20,7 @@ public class PostBatchRecordLabuBo implements Serializable {
     private String shopOrderRef;
     private String item;
     private String layOutRef;
+    private String layOutName;
     private String layoutNo;
     private String rabOrderNo;
     private String rabSeq;
@@ -28,6 +29,14 @@ public class PostBatchRecordLabuBo implements Serializable {
     private List<CutSizeBean> cutSizes;
     private List<BulkRabRollsBean.BulkRabSegmentsBean> bulkRabSegments;
     private List<BulkRabRollsBean> bulkRabRolls;
+
+    public String getLayOutName() {
+        return layOutName;
+    }
+
+    public void setLayOutName(String layOutName) {
+        this.layOutName = layOutName;
+    }
 
     public List<CutSizeBean> getCutSizes() {
         return cutSizes;

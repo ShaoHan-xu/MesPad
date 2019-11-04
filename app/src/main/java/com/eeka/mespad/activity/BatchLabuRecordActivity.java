@@ -237,7 +237,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
     private void getData() {
         showLoading();
         if (editAble) {
-            HttpHelper.getBatchLabuInfo(mPostData.getOperation(), mPostData.getMaterialType(), mPostData.getShopOrderRef(), mPostData.getLayOutRef(), this);
+            HttpHelper.getBatchLabuInfo(mPostData.getOperation(), mPostData.getMaterialType(), mPostData.getShopOrderRef(), mPostData.getLayOutRef(),mPostData.getLayOutName(), this);
         } else {
             HttpHelper.getRabHistoryByRabNo(mPostData.getRabOrderNo(), mPostData.getOperation(), mPostData.getMaterialType(), this);
         }

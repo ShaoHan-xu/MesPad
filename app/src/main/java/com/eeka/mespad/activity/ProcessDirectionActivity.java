@@ -170,14 +170,14 @@ public class ProcessDirectionActivity extends BaseActivity {
             if (mData == null) {
                 new ImageBrowserDialog(mContext, R.drawable.img_sample).setParams(0.5f, 0.8f).show();
             } else {
-                new ImageBrowserDialog(mContext, getString(R.string.sampleImgUrl, mData.getITEM())).setParams(0.5f, 0.8f).show();
+                new ImageBrowserDialog(mContext, getString(R.string.sampleImgUrl_jpg, mData.getITEM())).setParams(0.5f, 0.8f).show();
             }
         }
     }
 
     private void setupTabView() {
         if (mData != null) {
-            Picasso.with(mContext).load(getString(R.string.sampleImgUrl, mData.getITEM())).into(mIv_sampleImg);
+            Picasso.with(mContext).load(getString(R.string.sampleImgUrl_jpg, mData.getITEM())).into(mIv_sampleImg);
 
             List<ProcessDirectionBo.CUTFLOWTEMPLETEBean> cutFlows = mData.getMaterialCutFlows();
             for (ProcessDirectionBo.CUTFLOWTEMPLETEBean item : cutFlows) {

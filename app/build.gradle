@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 125
+        versionCode 126
 
-        versionName "3.125"
+        versionName "3.126"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -79,6 +79,11 @@ android {
             // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
             resValue "string", "app_name", "赢领智尚_YD"
             resValue "string", "app_channel", "YD"
+            resValue "string", "system_code", "P"
+        }
+        yudu_bulk {
+            resValue "string", "app_name", "赢领智尚_YD"
+            resValue "string", "app_channel", "YD_bulk"
             resValue "string", "system_code", "P"
         }
         longhua {

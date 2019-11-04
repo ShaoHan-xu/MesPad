@@ -135,7 +135,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_back:
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_cutMatInfo:
                 String salesOrder = SpUtil.getSalesOrder();
@@ -202,7 +202,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
         final LoginFragment loginFragment = (LoginFragment) mFragmentManager.findFragmentById(R.id.loginFragment);
         assert loginFragment != null;
-        loginFragment.setTopic(mTopic);
+        loginFragment.setTopic(TopicUtil.TOPIC_CUT);
         loginFragment.setOnClockCallback(this);
 
         mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

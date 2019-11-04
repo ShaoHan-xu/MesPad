@@ -48,6 +48,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
+import cn.finalteam.okhttpfinal.HttpRequest;
+import okhttp3.Headers;
+import okhttp3.Response;
+
 public class BatchLabuDetailActivity extends BaseActivity {
 
     private static final int REQUEST_RECORD_LABU = 0;
@@ -154,17 +159,34 @@ public class BatchLabuDetailActivity extends BaseActivity {
     }
 
     private void setupView() {
-        ImageView iv_sampleImg = findViewById(R.id.iv_labuDetail_sampleImg);
-        mSampleImgUrl = getString(R.string.sampleImgUrl, mItem);
-        if (!isEmpty(mSampleImgUrl)) {
-            Picasso.with(mContext).load(mSampleImgUrl).into(iv_sampleImg);
-            iv_sampleImg.setOnClickListener(this);
-        }
-
         TextView tv_workRequires = findViewById(R.id.tv_labuDetail_workRequires);
         tv_workRequires.setText(mOperation.getOPERATION_INSTRUCTION().replace("\\n", "\n"));
         TextView tv_qualityRequires = findViewById(R.id.tv_labuDetail_qualityRequires);
         tv_qualityRequires.setText(mOperation.getQUALITY_REQUIREMENT().replace("\\n", "\n"));
+
+        ImageView iv_sampleImg = findViewById(R.id.iv_labuDetail_sampleImg);
+        iv_sampleImg.setOnClickListener(this);
+        mSampleImgUrl = getString(R.string.sampleImgUrl_jpg, mItem);
+        setupSampleImg(iv_sampleImg);
+    }
+
+    /**
+     * 因为图片 url 是自己拼接的，有可能是 jpg 和 png 两种情况，所以要先判断
+     */
+    private void setupSampleImg(final ImageView iv_sampleImg) {
+        HttpRequest.post(mSampleImgUrl, new BaseHttpRequestCallback() {
+            @Override
+            public void onResponse(Response httpResponse, String response, Headers headers) {
+                super.onResponse(httpResponse, response, headers);
+                if (httpResponse == null || httpResponse.code() == 404) {
+                    mSampleImgUrl = getString(R.string.sampleImgUrl_png, mItem);
+                    setupSampleImg(iv_sampleImg);
+                } else {
+
+                    Picasso.with(mContext).load(mSampleImgUrl).into(iv_sampleImg);
+                }
+            }
+        });
     }
 
     private class TabMenuCheckedListener implements RadioGroup.OnCheckedChangeListener {
@@ -392,7 +414,8 @@ public class BatchLabuDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.iv_labuDetail_mainMat:
-                new ImageBrowserDialog(mContext, R.drawable.img_mainmat).setParams(0.5f, 0.8f).show();
+                BatchLabuDetailBo data1 = mMap_layoutInfo.get(mMatType);
+                new ImageBrowserDialog(mContext, data1.getMAT_URL()).setParams(0.5f, 0.8f).show();
                 break;
             case R.id.layout_button1:
             case R.id.layout_button2:
@@ -403,10 +426,13 @@ public class BatchLabuDetailActivity extends BaseActivity {
                     startLabuRecordActivity(v, false);
                 } else {
                     BatchCutRecordBo data = new BatchCutRecordBo();
+                    data.setSampleImg(mSampleImgUrl);
                     data.setRabRef(rabBo);
                     data.setRabNo(rabNo);
                     data.setMaterialType(mMatType);
                     data.setIsFinish("DONE".equals(status) ? "true" : "false");
+                    BatchLabuDetailBo data2 = mMap_layoutInfo.get(mMatType);
+                    data.setMatImg(data2.getMAT_URL());
 
                     startActivityForResult(BatchCutWorkingActivity.getIntent(mContext, data, mOperation), REQUEST_RECORD_CUT);
                 }
@@ -433,10 +459,12 @@ public class BatchLabuDetailActivity extends BaseActivity {
         data.setMaterialType(mMatType);
 
         String layoutRef = (String) view.getTag(R.id.tag_layoutRef);
+        String layoutName = (String) view.getTag(R.id.tag_layoutName);
         String layoutImg = (String) view.getTag(R.id.tag_layoutImg);
         String layoutNo = (String) view.getTag(R.id.tag_layoutNo);
         String rabNo = (String) view.getTag(R.id.tag_rabNo);
         data.setLayOutRef(layoutRef);
+        data.setLayOutName(layoutName);
         data.setItem(mItem);
         data.setLayoutImgUrl(layoutImg);
         data.setLayoutNo(layoutNo);
@@ -533,6 +561,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
     private <T> View getTableView(T data, Class<T> clas, boolean isFirst, int position) {
         List<BatchLabuDetailBo.LAYOUTINFOBean.SINGLELAYOUTBean> list;
         String layoutRef = null;
+        String layoutName = null;
         String layoutImg = null;
         String layoutNo = null;
         boolean rabDisplay = false;
@@ -546,6 +575,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
             tv_number.setText(bean.getLAY_NO());
             list = bean.getSINGLE_LAYOUT();
             layoutRef = bean.getZ_LAYOUT_BO();
+            layoutName = bean.getLAYOUT();
             layoutImg = bean.getPICTURE_URL();
             rabDisplay = bean.isLAB_DISPLAY();
 
@@ -618,6 +648,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
             button.setTag(R.id.tag_layoutRef, layoutRef);
             button.setTag(R.id.tag_layoutImg, layoutImg);
             button.setTag(R.id.tag_layoutNo, layoutNo);
+            button.setTag(R.id.tag_layoutName, layoutName);
             switch (i) {
                 case 0:
                     button.setId(R.id.btn_firstLabu);

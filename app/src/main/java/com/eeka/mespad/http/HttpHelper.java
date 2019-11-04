@@ -14,6 +14,7 @@ import com.eeka.mespad.bo.BatchSplitPackageSaveBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.CutRecordQtyBo;
 import com.eeka.mespad.bo.GetLabuDataBo;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.bo.ProcessDirectionBo;
 import com.eeka.mespad.bo.SaveClothSizeBo;
@@ -159,6 +160,8 @@ public class HttpHelper {
     public static final String recordSubPackagePrintInfo = BASE_URL + "bulkOrderCut/recordSubPackagePrintInfo?";
     public static final String getRabHistoryList = BASE_URL + "bulkOrderCut/viewCompleteRabOrderByLayOut?";
     public static final String getRabHistoryByRabNo = BASE_URL + "bulkOrderCut/viewRabInfoByCompleteRabRef?";
+    public static final String removeSizesMarked = BASE_URL + "bulkOrderCut/removeSizesMarked?";
+    public static final String getOrderMatTypesStatus = BASE_URL + "bulkOrderCut/getOrderMaterialTypesStatus??";
 
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
@@ -169,6 +172,28 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 获取面料状态
+     */
+    public static void getOrderMatTypesStatus(String operation, String shopOrderRef, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("operation", operation);
+        params.put("shopOrderRef", shopOrderRef);
+        HttpRequest.post(getOrderMatTypesStatus, params, getResponseHandler(getOrderMatTypesStatus, callback));
+    }
+
+    /**
+     * 批量码数解锁操作
+     */
+    public static void removeSizesMarked(String operation, String rabRef, String shopOrderRef, List<BatchCutRecordBo.CutSizesBean> selectedSize, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("operation", operation);
+        params.put("rabRef", rabRef);
+        params.put("shopOrderRef", shopOrderRef);
+        params.put("bulkCutSizeInfo", JSON.toJSONString(selectedSize));
+        HttpRequest.post(removeSizesMarked, params, getResponseHandler(removeSizesMarked, callback));
     }
 
     /**
@@ -368,6 +393,8 @@ public class HttpHelper {
         params.put("operation", operation);
         params.put("rabNo", rabNo);
         params.put("isFinish", isFinish);
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        params.put("resourceBo", resource.getRESOURCE_BO());
         HttpRequest.post(getBatchCutWorkingInfo, params, getResponseHandler(getBatchCutWorkingInfo, callback));
     }
 
@@ -384,12 +411,15 @@ public class HttpHelper {
     /**
      * 获取拉布单信息
      */
-    public static void getBatchLabuInfo(String operation, String materialType, String shopOrderBo, String layoutRef, HttpCallback callback) {
+    public static void getBatchLabuInfo(String operation, String materialType, String shopOrderBo, String layoutRef, String layout, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("operation", operation);
         params.put("shopOrderRef", shopOrderBo);
         params.put("layOutRef", layoutRef);
+        params.put("layOut", layout);
         params.put("materialType", materialType);
+        PositionInfoBo.RESRINFORBean resource = SpUtil.getResource();
+        params.put("resourceBo", resource.getRESOURCE_BO());
         HttpRequest.post(getBatchLabuInfo, params, getResponseHandler(getBatchLabuInfo, callback));
     }
 
@@ -893,12 +923,13 @@ public class HttpHelper {
     /**
      * 衣架绑定
      */
-    public static void hangerBinding(String partId, String washLabel, String subcontract, HttpCallback callback) {
+    public static void hangerBinding(String partId, String washLabel, String subcontract, String isMaster, HttpCallback callback) {
         JSONObject json = new JSONObject();
         json.put("PART_ID", partId);
         json.put("PAD_IP", PAD_IP);
         json.put("WATER_MARK_NUMBER", washLabel);
         json.put("SUBCONTRACT", subcontract);
+        json.put("IS_MASTER", isMaster);
         RequestParams params = getBaseParams();
         params.put("params", json.toJSONString());
         HttpRequest.post(hangerBinding, params, getResponseHandler(hangerBinding, callback));

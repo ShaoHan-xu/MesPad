@@ -77,6 +77,15 @@ public class BatchCutWorkingActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        List<BatchCutRecordBo.CutSizesBean> selectedSize = getSelectedSize();
+        if (selectedSize != null && selectedSize.size() != 0) {
+            HttpHelper.removeSizesMarked(mOperation.getOPERATION(), mPostData.getRabRef(), mPostData.getShopOrderRef(), selectedSize, this);
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
@@ -85,12 +94,12 @@ public class BatchCutWorkingActivity extends BaseActivity {
                 new ImageBrowserDialog(mContext, layoutImg).setParams(0.8f, 0.8f).show();
                 break;
             case R.id.btn_mainMatImg:
-
+                new ImageBrowserDialog(mContext, mPostData.getMatImg()).setParams(0.5f, 0.8f).show();
                 break;
             case R.id.btn_sampleImg:
-                String item = mPostData.getItem();
-                String sampleImgUrl = getString(R.string.sampleImgUrl, item);
-                new ImageBrowserDialog(mContext, sampleImgUrl).setParams(0.5f, 0.8f).show();
+                String sampleImg = mPostData.getSampleImg();
+                if (!isEmpty(sampleImg))
+                    new ImageBrowserDialog(mContext, sampleImg).setParams(0.5f, 0.8f).show();
                 break;
             case R.id.btn_start:
                 start();

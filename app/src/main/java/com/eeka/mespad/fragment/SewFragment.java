@@ -327,17 +327,17 @@ public class SewFragment extends BaseFragment {
             showErrorDialog("请输入条码获取数据");
             return;
         }
-        if (!jumpSorting && mSewData != null) {
-            List<SewAttr> opeationInfos = mSewData.getCurrentOpeationInfos();
-            if (opeationInfos != null && opeationInfos.size() != 0) {
-                for (SewAttr item : opeationInfos) {
-                    if ("XQTBZ018".equals(item.getName())) {
-                        showSortingDialog();
-                        return;
-                    }
-                }
-            }
-        }
+//        if (!jumpSorting && mSewData != null) {
+//            List<SewAttr> opeationInfos = mSewData.getCurrentOpeationInfos();
+//            if (opeationInfos != null && opeationInfos.size() != 0) {
+//                for (SewAttr item : opeationInfos) {
+//                    if ("XQTBZ018".equals(item.getName())) {
+//                        showSortingDialog();
+//                        return;
+//                    }
+//                }
+//            }
+//        }
         INARequestBo bo = getINARequestParams();
         if (bo == null) {
             return;
@@ -770,9 +770,9 @@ public class SewFragment extends BaseFragment {
         }
 
         //包装主题，去分拣
-        if (TopicUtil.TOPIC_PACKING.equals(mTopic)) {
-            showSortingDialog();
-        }
+//        if (TopicUtil.TOPIC_PACKING.equals(mTopic)) {
+//            showSortingDialog();
+//        }
 
         //拓展数据
         SewDataBo.ExtInfoMap extInfoMap = mSewData.getExtInfoMap();

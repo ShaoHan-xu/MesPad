@@ -104,10 +104,19 @@ public class BatchLabuDetailBo {
         private String ITEM;
         private String SHOP_ORDER_BO;
         private String Z_LAYOUT_BO;
+        private String LAYOUT;
         private String PICTURE_URL;
         private boolean LAB_DISPLAY;
         private List<SINGLELAYOUTBean> SINGLE_LAYOUT;
         private List<RABORDERINFOBean> RAB_ORDER_INFO;
+
+        public String getLAYOUT() {
+            return LAYOUT;
+        }
+
+        public void setLAYOUT(String LAYOUT) {
+            this.LAYOUT = LAYOUT;
+        }
 
         public boolean isLAB_DISPLAY() {
             return LAB_DISPLAY;

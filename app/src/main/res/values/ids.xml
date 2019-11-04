@@ -15,6 +15,7 @@
     
     <item name="tag_item" type="id" />
     <item name="tag_layoutRef" type="id" />
+    <item name="tag_layoutName" type="id" />
     <item name="tag_layoutImg" type="id" />
     <item name="tag_layoutNo" type="id" />
     <item name="tag_rabOrderNum" type="id" />
@@ -22,6 +23,7 @@
     <item name="tag_rabBo" type="id" />
     <item name="tag_rabNo" type="id" />
     <item name="tag_status" type="id" />
+    <item name="tag_matImg" type="id" />
     
     <!-- zxing相关 -->
     <item name="decode" type="id" />

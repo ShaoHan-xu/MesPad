@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bm.library.PhotoView;
 import com.eeka.mespad.R;
@@ -39,6 +40,9 @@ public class ImageBrowserDialog extends BaseDialog {
             Picasso.with(mContext).load(mUrl).into(imageView);
         } else if (mResId != 0) {
             Picasso.with(mContext).load(mResId).into(imageView);
+        } else {
+            Toast.makeText(mContext, "图片地址为空", Toast.LENGTH_SHORT).show();
+            dismiss();
         }
     }
 

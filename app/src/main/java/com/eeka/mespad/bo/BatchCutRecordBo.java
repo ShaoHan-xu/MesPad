@@ -33,7 +33,25 @@ public class BatchCutRecordBo implements Serializable {
     private String item;
     private String layoutNo;
     private String layoutImg;
+    private String sampleImg;
+    private String matImg;
     private List<CutSizesBean> cutSizes;
+
+    public String getMatImg() {
+        return matImg;
+    }
+
+    public void setMatImg(String matImg) {
+        this.matImg = matImg;
+    }
+
+    public String getSampleImg() {
+        return sampleImg;
+    }
+
+    public void setSampleImg(String sampleImg) {
+        this.sampleImg = sampleImg;
+    }
 
     public int getCutNum() {
         return cutNum;
