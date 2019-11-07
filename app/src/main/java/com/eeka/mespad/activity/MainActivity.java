@@ -801,7 +801,6 @@ public class MainActivity extends NFCActivity {
                 break;
             case R.id.btn_manualStart:
                 if (mSewFragment != null) {
-                    mRFID = mEt_orderNum.getText().toString();
                     mSewFragment.manualStart(mRFID);
                 } else {
                     manualStart();
@@ -809,7 +808,6 @@ public class MainActivity extends NFCActivity {
                 break;
             case R.id.btn_manualComplete:
                 if (mSewFragment != null) {
-                    mRFID = mEt_orderNum.getText().toString();
                     mSewFragment.manualComplete(mRFID);
                 } else {
                     manualComplete();
@@ -1021,6 +1019,7 @@ public class MainActivity extends NFCActivity {
 
     private void searchOrder() {
         String cardNum = mEt_orderNum.getText().toString();
+        mRFID = cardNum;
         if (isEmpty(cardNum)) {
             toast("请输入RFID卡号");
         } else {
@@ -1034,14 +1033,19 @@ public class MainActivity extends NFCActivity {
                     break;
                 case TopicUtil.TOPIC_CUT:
                     String searchType = mTv_searchType.getText().toString();
-                    if ("工单号".equals(searchType)) {
-                        mCutFragment.searchOrderByOrderNum("SHOP_ORDER", cardNum);
-                    } else if ("SFC".equals(searchType)) {
-                        mCutFragment.searchOrderByOrderNum("SFC", cardNum);
-                    } else if ("衣架号".equals(searchType)) {
-                        mCutFragment.searchOrderByOrderNum("HANGER_ID", cardNum);
-                    } else {
-                        getCardInfo(cardNum);
+                    switch (searchType) {
+                        case "工单号":
+                            mCutFragment.searchOrderByOrderNum("SHOP_ORDER", cardNum);
+                            break;
+                        case "SFC":
+                            mCutFragment.searchOrderByOrderNum("SFC", cardNum);
+                            break;
+                        case "衣架号":
+                            mCutFragment.searchOrderByOrderNum("HANGER_ID", cardNum);
+                            break;
+                        default:
+                            getCardInfo(cardNum);
+                            break;
                     }
                     break;
                 case TopicUtil.TOPIC_SUSPEND:

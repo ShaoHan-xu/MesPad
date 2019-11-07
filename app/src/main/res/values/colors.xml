@@ -44,5 +44,10 @@
     <color name="orange_dark">#8D5C0A</color>
     <color name="green">#7C8B36</color>
     <color name="green_dark">#445204</color>
+    
+    <color name="status_done">#B2C657</color>
+    <color name="status_working">#F5A623</color>
+    <color name="status_unStart">#9B9B9B</color>
+    <color name="status_queue">#9B9B9B</color>
 
 </resources>

@@ -15,7 +15,7 @@
         android:textSize="@dimen/textSize_title" />
     
     <LinearLayout
-        android:id="@+id/layout_buttonList"
+        android:id="@+id/layout_buttonWrap"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

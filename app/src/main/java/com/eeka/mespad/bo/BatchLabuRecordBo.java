@@ -95,10 +95,18 @@ public class BatchLabuRecordBo {
          */
 
         private int cutNum;
-        private int lays;
+        private int layers;
         private float standLength;
         private float actualLength;
         private List<SizeCodesBean> sizeCodes;
+
+        public int getLayers() {
+            return layers;
+        }
+
+        public void setLayers(int layers) {
+            this.layers = layers;
+        }
 
         public float getActualLength() {
             return actualLength;
@@ -114,14 +122,6 @@ public class BatchLabuRecordBo {
 
         public void setCutNum(int cutNum) {
             this.cutNum = cutNum;
-        }
-
-        public int getLays() {
-            return lays;
-        }
-
-        public void setLays(int lays) {
-            this.lays = lays;
         }
 
         public float getStandLength() {

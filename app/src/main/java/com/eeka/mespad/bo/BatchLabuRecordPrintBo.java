@@ -9,6 +9,15 @@ public class BatchLabuRecordPrintBo {
     private String shopOrder;
     private String rabOrder;
     private String matType;
+    private String layoutNo;
+
+    public String getLayoutNo() {
+        return layoutNo;
+    }
+
+    public void setLayoutNo(String layoutNo) {
+        this.layoutNo = layoutNo;
+    }
 
     public String getMatType() {
         return matType;

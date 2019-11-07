@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
@@ -502,18 +504,19 @@ public class BatchOrderListActivity extends NFCActivity {
             }
 
             setWidgetClickListener(holder, position, R.id.btn_action);
+            setWidgetClickListener(holder, position, R.id.iv_state);
         }
 
         @Override
         public void onClick(View v, int position) {
             super.onClick(v, position);
+            BatchCutOrderListBo batchCutOrder = mList_data.get(position);
             if (v.getId() == R.id.btn_action) {
                 List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
                 if (positionUsers == null || positionUsers.size() == 0) {
                     showErrorDialog("员工未登陆上岗，无法操作");
                     return;
                 }
-                BatchCutOrderListBo batchCutOrder = mList_data.get(position);
                 String operation = mOperation.getOPERATION();
                 if ("QRCP001".equals(operation)) {
                     mActionIndex = position;
@@ -521,9 +524,15 @@ public class BatchOrderListActivity extends NFCActivity {
                 } else {
                     startActivity(BatchLabuDetailActivity.getIntent(mContext, mOperation, batchCutOrder.getSHOP_ORDER(), batchCutOrder.getSHOP_ORDER_REF(), batchCutOrder.getITEM()));
                 }
+            } else if (v.getId() == R.id.iv_state) {
+                mMatStatusPPWAnchor = v;
+                showLoading();
+                HttpHelper.getOrderMatTypesStatus(mOperation.getOPERATION(), batchCutOrder.getSHOP_ORDER_REF(), BatchOrderListActivity.this);
             }
         }
     }
+
+    private View mMatStatusPPWAnchor;
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
@@ -569,8 +578,69 @@ public class BatchOrderListActivity extends NFCActivity {
                     showLoading();
                     HttpHelper.searchBatchRFIDInfo(mOperation.getOPERATION(), ri, orderType, this);
                 }
+            } else if (HttpHelper.getOrderMatTypesStatus.equals(url)) {
+                JSONArray array = resultJSON.getJSONArray("result");
+                if (array == null || array.size() == 0) {
+                    toast("面料状态数据为空");
+                } else {
+                    showMatStatusPPW(array);
+                }
             }
         }
+    }
+
+    private void showMatStatusPPW(JSONArray array) {
+        List<JSONObject> list = JSON.parseArray(array.toString(), JSONObject.class);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.ppw_matstatus, null);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_matStatus);
+        recyclerView.setAdapter(new CommonRecyclerAdapter<JSONObject>(mContext, list, R.layout.item_matstatus_ppw, null) {
+            @Override
+            public void convert(RecyclerViewHolder holder, JSONObject item, int position) {
+                String matType = item.getString("MATERIAL_TYPES");
+                switch (matType) {
+                    case "M":
+                        holder.setText(R.id.tv_matType, "面布");
+                        break;
+                    case "L":
+                        holder.setText(R.id.tv_matType, "里布");
+                        break;
+                    case "N":
+                        holder.setText(R.id.tv_matType, "朴布");
+                        break;
+                }
+
+                View rootView = holder.getView(R.id.rootview);
+                TextView tv_status = holder.getView(R.id.tv_matStatus);
+                String status = item.getString("STATUS");
+                switch (status) {
+                    case "IN_WORK":
+                        tv_status.setText("作业中");
+                        rootView.setBackgroundResource(R.color.status_working);
+                        break;
+                    case "UN_START":
+                        tv_status.setText("未开始");
+                        rootView.setBackgroundResource(R.color.status_unStart);
+                        break;
+                    case "IN_QUEUE":
+                        tv_status.setText("排队中");
+                        rootView.setBackgroundResource(R.color.status_queue);
+                        break;
+                    case "DONE":
+                        tv_status.setText("已完成");
+                        rootView.setBackgroundResource(R.color.status_done);
+                        break;
+                }
+            }
+        });
+
+        PopupWindow ppw = new PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ppw.setContentView(view);
+        ppw.setFocusable(true);
+        ppw.setBackgroundDrawable(new BitmapDrawable());
+        ppw.setOutsideTouchable(true);
+
+        ppw.showAsDropDown(mMatStatusPPWAnchor, -145, -mMatStatusPPWAnchor.getHeight());
+
     }
 
     @Override

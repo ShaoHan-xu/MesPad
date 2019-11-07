@@ -14,10 +14,6 @@
     <item name="btn_completed" type="id" />
     
     <item name="tag_item" type="id" />
-    <item name="tag_layoutRef" type="id" />
-    <item name="tag_layoutName" type="id" />
-    <item name="tag_layoutImg" type="id" />
-    <item name="tag_layoutNo" type="id" />
     <item name="tag_rabOrderNum" type="id" />
     <item name="tag_shopOrderBo" type="id" />
     <item name="tag_rabBo" type="id" />

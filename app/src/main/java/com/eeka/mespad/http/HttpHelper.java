@@ -679,9 +679,9 @@ public class HttpHelper {
      * @param callback 回调
      */
     public static void login(String user, String pwd, HttpCallback callback) {
-        RequestParams params = new RequestParams();
-        params.put("j_username", user);
-        params.put("j_password", pwd);
+        RequestParams params = getBaseParams();
+//        params.put("j_username", user);
+//        params.put("j_password", pwd);
         HttpRequest.post(login_url, params, getResponseHandler(login_url, callback));
     }
 
@@ -1452,6 +1452,8 @@ public class HttpHelper {
         PAD_IP = getPadIp();
         RequestParams params = new RequestParams();
         params.put("PAD_IP", PAD_IP);
+        params.put("j_username", "PAD_USER");
+        params.put("j_password", "mes123456");
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {
             params.put("site", site);
@@ -1483,6 +1485,7 @@ public class HttpHelper {
 //        PAD_IP = "10.7.26.999";//工序确认
 //        PAD_IP = "10.7.26.9";//拉布2
 //        PAD_IP = "10.7.26.1111";//裁剪2
+//        PAD_IP = "10.10.31.173";//于都 P 拉布
         return PAD_IP;
     }
 

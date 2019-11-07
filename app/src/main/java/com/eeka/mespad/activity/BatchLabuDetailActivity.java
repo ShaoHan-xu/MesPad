@@ -75,6 +75,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
 
     private String mMatType;
     private Map<String, BatchLabuDetailBo> mMap_layoutInfo;
+    private BatchLabuDetailBo mCurMatData;
 
     private ProcessSheetsBo mProcessSheetsBo;//工艺单信息
 
@@ -90,7 +91,6 @@ public class BatchLabuDetailActivity extends BaseActivity {
         mShopOrderBo = getIntent().getStringExtra("shopOrderBo");
         mItem = getIntent().getStringExtra("item");
         mOperation = (PositionInfoBo.OPERINFORBean) getIntent().getSerializableExtra("operation");
-        setupView();
 
         initView();
         initData();
@@ -179,10 +179,11 @@ public class BatchLabuDetailActivity extends BaseActivity {
             public void onResponse(Response httpResponse, String response, Headers headers) {
                 super.onResponse(httpResponse, response, headers);
                 if (httpResponse == null || httpResponse.code() == 404) {
-                    mSampleImgUrl = getString(R.string.sampleImgUrl_png, mItem);
-                    setupSampleImg(iv_sampleImg);
+                    if (getString(R.string.sampleImgUrl_jpg, mItem).equals(mSampleImgUrl)) {
+                        mSampleImgUrl = getString(R.string.sampleImgUrl_png, mItem);
+                        setupSampleImg(iv_sampleImg);
+                    }
                 } else {
-
                     Picasso.with(mContext).load(mSampleImgUrl).into(iv_sampleImg);
                 }
             }
@@ -215,19 +216,18 @@ public class BatchLabuDetailActivity extends BaseActivity {
             showLoading();
             HttpHelper.getBatchLayoutInfo(mOperation.getOPERATION(), mShopOrderBo, mMatType, BatchLabuDetailActivity.this);
         } else {
-            BatchLabuDetailBo data = mMap_layoutInfo.get(mMatType);
-            assert data != null;
-            boolean isFirst = data.isDISPLAY();
+            mCurMatData = mMap_layoutInfo.get(mMatType);
+            boolean isFirst = mCurMatData.isDISPLAY();
             ImageView iv_mainMat = findViewById(R.id.iv_labuDetail_mainMat);
             iv_mainMat.setOnClickListener(this);
-            if (data.getMAT_URL() != null) {
-                Picasso.with(mContext).load(data.getMAT_URL()).into(iv_mainMat);
+            if (mCurMatData.getMAT_URL() != null) {
+                Picasso.with(mContext).load(mCurMatData.getMAT_URL()).into(iv_mainMat);
             }
 
-            getTableView(data, BatchLabuDetailBo.class, false, 0);
+            getTableView(mCurMatData, BatchLabuDetailBo.class, false, 0);
 
             mLayout_layoutList.removeAllViews();
-            List<BatchLabuDetailBo.LAYOUTINFOBean> layoutInfo = data.getLAYOUT_INFO();
+            List<BatchLabuDetailBo.LAYOUTINFOBean> layoutInfo = mCurMatData.getLAYOUT_INFO();
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 140));
             params.bottomMargin = UnitUtil.dip2px(mContext, 10);
             for (int i = 0; i < layoutInfo.size(); i++) {
@@ -243,7 +243,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
 //                checkBox.setChecked(true);
 //            }
 //            isInitButton = false;
-            refreshProcessDirection(data.getORDER_STATUS());
+            refreshProcessDirection(mCurMatData.getORDER_STATUS());
         }
     }
 
@@ -444,7 +444,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
                     mLayout_layoutList.getChildAt(mActionIndex).findViewById(R.id.layout_labuTable_labuBtn).setVisibility(View.VISIBLE);
                     labuOrderBtnWrap.setVisibility(View.GONE);
                 } else {
-                    String layoutRef = (String) v.getTag(R.id.tag_layoutRef);
+                    String layoutRef = mCurMatData.getLAYOUT_INFO().get(mActionIndex).getZ_LAYOUT_BO();
                     showLoading();
                     HttpHelper.getRabHistoryList(mShopOrderBo, layoutRef, mMatType, this);
                 }
@@ -458,10 +458,11 @@ public class BatchLabuDetailActivity extends BaseActivity {
         data.setShopOrderRef(mShopOrderBo);
         data.setMaterialType(mMatType);
 
-        String layoutRef = (String) view.getTag(R.id.tag_layoutRef);
-        String layoutName = (String) view.getTag(R.id.tag_layoutName);
-        String layoutImg = (String) view.getTag(R.id.tag_layoutImg);
-        String layoutNo = (String) view.getTag(R.id.tag_layoutNo);
+        BatchLabuDetailBo.LAYOUTINFOBean layoutInfoBean = mCurMatData.getLAYOUT_INFO().get(mActionIndex);
+        String layoutRef = layoutInfoBean.getZ_LAYOUT_BO();
+        String layoutName = layoutInfoBean.getLAYOUT();
+        String layoutImg = layoutInfoBean.getPICTURE_URL();
+        String layoutNo = layoutInfoBean.getLAY_NO();
         String rabNo = (String) view.getTag(R.id.tag_rabNo);
         data.setLayOutRef(layoutRef);
         data.setLayOutName(layoutName);
@@ -560,23 +561,15 @@ public class BatchLabuDetailActivity extends BaseActivity {
 
     private <T> View getTableView(T data, Class<T> clas, boolean isFirst, int position) {
         List<BatchLabuDetailBo.LAYOUTINFOBean.SINGLELAYOUTBean> list;
-        String layoutRef = null;
-        String layoutName = null;
-        String layoutImg = null;
-        String layoutNo = null;
         boolean rabDisplay = false;
         View view;
         if (clas == BatchLabuDetailBo.LAYOUTINFOBean.class) {
             view = LayoutInflater.from(mContext).inflate(R.layout.layout_labu_table, null);
 
             BatchLabuDetailBo.LAYOUTINFOBean bean = (BatchLabuDetailBo.LAYOUTINFOBean) data;
-            layoutNo = bean.getLAY_NO();
             TextView tv_number = view.findViewById(R.id.tv_labuTable_number);
             tv_number.setText(bean.getLAY_NO());
             list = bean.getSINGLE_LAYOUT();
-            layoutRef = bean.getZ_LAYOUT_BO();
-            layoutName = bean.getLAYOUT();
-            layoutImg = bean.getPICTURE_URL();
             rabDisplay = bean.isLAB_DISPLAY();
 
             List<BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean> rabOrderInfo = bean.getRAB_ORDER_INFO();
@@ -638,17 +631,12 @@ public class BatchLabuDetailActivity extends BaseActivity {
         }
 
         Button btn_rabHistory = view.findViewById(R.id.btn_rabHistory);
-        btn_rabHistory.setTag(R.id.tag_layoutRef, layoutRef);
         btn_rabHistory.setTag(R.id.tag_position, position);
         btn_rabHistory.setOnClickListener(this);
 
         LinearLayout layout_actionList = view.findViewById(R.id.layout_labuTable_labuBtn);
         for (int i = isFirst ? 0 : 1; i < 3; i++) {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button_green, null);
-            button.setTag(R.id.tag_layoutRef, layoutRef);
-            button.setTag(R.id.tag_layoutImg, layoutImg);
-            button.setTag(R.id.tag_layoutNo, layoutNo);
-            button.setTag(R.id.tag_layoutName, layoutName);
             switch (i) {
                 case 0:
                     button.setId(R.id.btn_firstLabu);
@@ -675,7 +663,6 @@ public class BatchLabuDetailActivity extends BaseActivity {
 
         CheckBox checkBox = view.findViewById(R.id.ckb_labuTable_toggle);
         checkBox.setTag(position);
-        checkBox.setTag(R.id.tag_layoutRef, layoutRef);
         if (mOnCheckedChangeListener == null) {
             mOnCheckedChangeListener = new CheckedChangeListener();
         }
@@ -734,9 +721,8 @@ public class BatchLabuDetailActivity extends BaseActivity {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            int index = (int) buttonView.getTag();
-            mActionIndex = index;
-            View childAt = mLayout_layoutList.getChildAt(index);
+            mActionIndex = (int) buttonView.getTag();
+            View childAt = mLayout_layoutList.getChildAt(mActionIndex);
             if (isChecked) {
                 childAt.findViewById(R.id.layout_labuTable_detail).setVisibility(View.GONE);
                 childAt.findViewById(R.id.layout_labuTable_btnWrap).setVisibility(View.VISIBLE);
@@ -748,7 +734,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
                 } else {
                     childAt.findViewById(R.id.layout_labuTable_labuOrderBtnWrap).setVisibility(View.VISIBLE);
 
-                    String layoutRef = (String) buttonView.getTag(R.id.tag_layoutRef);
+                    String layoutRef = mCurMatData.getLAYOUT_INFO().get(mActionIndex).getZ_LAYOUT_BO();
                     HttpHelper.getRabInfoList(mOperation.getOPERATION(), mShopOrderBo, mMatType, layoutRef, BatchLabuDetailActivity.this);
                 }
             } else {

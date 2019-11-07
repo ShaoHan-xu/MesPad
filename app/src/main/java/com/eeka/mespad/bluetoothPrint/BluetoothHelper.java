@@ -56,13 +56,12 @@ public class BluetoothHelper {
             layer.append(lays).append(" ");
         }
 
-        String rabOrder = data.getRabOrder().replace(data.getShopOrder(), "");
         zpSDK.pageSetup(576, 180);
         zpSDK.drawText(10, 0, "码数：" + sizeCode.toString(), 3, 0, 0, false, false);
         zpSDK.drawText(10, 35, "层数：" + layer.toString(), 3, 0, 0, false, false);
         zpSDK.drawText(10, 70, "款号：" + data.getItem(), 3, 0, 0, false, false);
         zpSDK.drawText(10, 105, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
-        zpSDK.drawText(10, 140, "拉布单号：" + rabOrder, 3, 0, 0, false, false);
+        zpSDK.drawText(10, 140, "排料图(床次)：" + data.getLayoutNo(), 3, 0, 0, false, false);
 
         BatchLabuRecordPrintBo print = new BatchLabuRecordPrintBo();
         print.setMatType(data.getMatType());
