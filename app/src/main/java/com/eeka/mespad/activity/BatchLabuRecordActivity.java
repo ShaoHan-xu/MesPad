@@ -135,28 +135,29 @@ public class BatchLabuRecordActivity extends BaseActivity {
             mLayout_itemTotal.addView(total, 2 + i, params);
 
             //码数选择部分
-            TextView tv_sizeDuan = new TextView(mContext);
-            tv_sizeDuan.setTextColor(getResources().getColor(R.color.text_black_default));
-            tv_sizeDuan.setTextSize(18);
-            tv_sizeDuan.setGravity(Gravity.CENTER);
-            tv_sizeDuan.setPadding(5, 5, 5, 5);
+            TextView tv_sizeDuan = (TextView) LayoutInflater.from(mContext).inflate(R.layout.textview_common,null);
+            tv_sizeDuan.setPadding(2, 2, 2, 2);
             tv_sizeDuan.setText(item.getCutNum() + "段");
 
             LinearLayout sizeLayout = new LinearLayout(mContext);
-            sizeLayout.setPadding(10, 10, 0, 10);
+            sizeLayout.setPadding(8, 8, 0, 0);
             sizeLayout.setId(R.id.linearLayout);
             sizeLayout.setGravity(Gravity.CENTER);
             sizeLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(UnitUtil.dip2px(mContext, 100), ViewGroup.LayoutParams.MATCH_PARENT);
-            params1.rightMargin = UnitUtil.dip2px(mContext, 10);
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params1.rightMargin = UnitUtil.px2dip(mContext, getResources().getDimension(R.dimen.dp_5));
+            params1.width = (int) getResources().getDimension(R.dimen.dp_40);
+            params1.height = (int) getResources().getDimension(R.dimen.dp_17);
             List<BatchLabuRecordBo.SEGMENTINFOBean.SizeCodesBean> sizeCodes = item.getSizeCodes();
             for (BatchLabuRecordBo.SEGMENTINFOBean.SizeCodesBean sizeCodesBean : sizeCodes) {
-                CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green, null);
+                View view1 = LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green_round, null);
+                CheckBox checkBox = view1.findViewById(R.id.checkbox);
+                checkBox.setLayoutParams(params1);
                 checkBox.setChecked(true);
                 checkBox.setEnabled(editAble);
                 checkBox.setText(sizeCodesBean.getSizeCode());
-                sizeLayout.addView(checkBox, params1);
+                sizeLayout.addView(view1);
             }
 
             LinearLayout duanLayout = new LinearLayout(mContext);

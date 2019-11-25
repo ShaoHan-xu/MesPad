@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
     
     <EditText
         android:id="@+id/et_qty"
@@ -25,7 +24,7 @@
         android:background="@null"
         android:gravity="center"
         android:inputType="number"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
     
     <TextView
         android:id="@+id/tv_printSeq"
@@ -36,7 +35,7 @@
         android:background="@drawable/btn_orange"
         android:enabled="false"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_5"
         android:text="打印顺序" />
 
 </LinearLayout>

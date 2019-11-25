@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="500dp"
+        android:layout_width="@dimen/dp_250"
         android:layout_height="wrap_content"
         android:divider="@drawable/divider_gray"
         android:orientation="horizontal"
@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="@dimen/dp_4" />
 
         <TextView
             android:id="@+id/tv_qcSize_name"
@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="@dimen/dp_4" />
 
         <TextView
             android:id="@+id/tv_qcSize_size"
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="@dimen/dp_4" />
 
         <TextView
             android:id="@+id/tv_qcSize_unit"
@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="@dimen/dp_4" />
     </LinearLayout>
 
 </LinearLayout>

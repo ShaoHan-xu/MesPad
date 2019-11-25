@@ -14,7 +14,7 @@
     
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_gravity="top"
         android:background="#99000000">
         
@@ -23,7 +23,7 @@
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:src="@drawable/ic_back_white" />
         
         <TextView
@@ -32,7 +32,7 @@
             android:layout_centerInParent="true"
             android:text="扫一扫"
             android:textColor="#ffffffff"
-            android:textSize="20sp" />
+            android:textSize="@dimen/sp_10" />
     
     </RelativeLayout>
 

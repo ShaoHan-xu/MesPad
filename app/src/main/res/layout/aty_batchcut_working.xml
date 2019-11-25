@@ -12,7 +12,7 @@
         
         <LinearLayout
             android:id="@+id/buttonList"
-            android:layout_width="250dp"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:gravity="center_horizontal"
@@ -20,19 +20,19 @@
             
             <Button
                 android:id="@+id/btn_layoutImg"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_90"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:background="@drawable/btn_green_round_new"
                 android:text="排料图"
                 android:textColor="@color/white"
-                android:textSize="@dimen/textSize_content" />
+                android:textSize="@dimen/sp_12" />
             
             <Button
                 android:id="@+id/btn_mainMatImg"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:background="@drawable/btn_green_round_new"
                 android:text="主面料图"
                 android:textColor="@color/white"
@@ -41,9 +41,9 @@
             
             <Button
                 android:id="@+id/btn_sampleImg"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:background="@drawable/btn_green_round_new"
                 android:text="样衣图"
                 android:textColor="@color/white"
@@ -56,7 +56,7 @@
             android:id="@+id/layout_batchCutWork_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/dp_10"
             android:layout_toLeftOf="@id/buttonList"
             android:background="@drawable/bg_border_gray_light"
             android:divider="@drawable/divider_gray_light"
@@ -72,28 +72,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/dp_25"
         android:orientation="horizontal"
         android:visibility="gone">
         
         <Button
             android:id="@+id/btn_start"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="@dimen/dp_25"
             android:background="@drawable/btn_green_round"
-            android:text="开始"
             android:enabled="false"
+            android:text="开始"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_content" />
         
         <Button
             android:id="@+id/btn_completed"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_orange_round"
-            android:text="完成"
             android:enabled="false"
+            android:text="完成"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_content" />
     
@@ -104,15 +104,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/dp_25"
         android:orientation="horizontal"
         android:visibility="gone">
         
         <Button
             android:id="@+id/btn_splitPackage_qty"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="@dimen/dp_25"
             android:background="@drawable/btn_orange_round"
             android:text="按件数分包"
             android:textColor="@color/white"
@@ -120,7 +120,7 @@
         
         <Button
             android:id="@+id/btn_splitPackage_orderNum"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_orange_round"
             android:text="按拉布单分包"

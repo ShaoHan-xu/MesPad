@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary">
-
+        
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,65 +17,65 @@
             android:text="质检尺寸"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_title" />
-
+        
         <ImageView
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:src="@drawable/ic_close" />
-
+    
     </RelativeLayout>
-
+    
     <LinearLayout
-        android:layout_width="500dp"
+        android:layout_width="@dimen/dp_250"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/gray_disable"
         android:divider="@drawable/divider_gray"
         android:orientation="horizontal"
         android:showDividers="middle">
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="@dimen/dp_4"
             android:text="部位代码" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="@dimen/dp_4"
             android:text="部位名称" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="@dimen/dp_4"
             android:text="尺寸" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="8dp"
+            android:padding="@dimen/dp_4"
             android:text="单位" />
     </LinearLayout>
-
+    
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/dp_10"
         android:padding="0.5dp">
-
+        
         <LinearLayout
             android:id="@+id/layout_qcSize_items"
             android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
             android:divider="@drawable/divider_gray"
             android:orientation="vertical"
             android:showDividers="middle">
-
+        
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

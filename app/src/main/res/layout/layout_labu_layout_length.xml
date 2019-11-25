@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="5dp"
+        android:padding="@dimen/dp_2"
         android:text="0段" />
     
     <TextView
@@ -23,7 +23,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
     
     <EditText
         android:id="@+id/et_actualLength"
@@ -34,5 +34,5 @@
         android:background="@null"
         android:gravity="center"
         android:inputType="numberDecimal"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
 </LinearLayout>

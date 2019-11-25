@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:enabled="false"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <EditText
         android:id="@+id/et_subcontractReceive_orderNum"
@@ -23,7 +23,7 @@
         android:background="@color/white"
         android:enabled="false"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <EditText
         android:id="@+id/et_subcontractReceive_sfc"
@@ -33,7 +33,7 @@
         android:background="@color/white"
         android:enabled="false"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <EditText
         android:id="@+id/et_subcontractReceive_size"
@@ -43,7 +43,7 @@
         android:background="@color/white"
         android:enabled="false"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_subcontractReceive_del"
@@ -52,7 +52,7 @@
         android:layout_weight="0.5"
         android:background="@color/white"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_5"
         android:text="删除"
         android:textColor="@color/text_red_default" />
 </LinearLayout>

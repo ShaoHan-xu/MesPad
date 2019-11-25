@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_deviceNo"
@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_orderNo"
@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_bedNo"
@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_process"
@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:drawableRight="@drawable/ic_arrow_down"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_matNo"
@@ -62,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_matType"
@@ -70,7 +70,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_recordUser"
@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <TextView
             android:id="@+id/tv_cutRecordQty_processQTY"
@@ -86,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
 
         <EditText
             android:id="@+id/et_cutRecordQty_recordQty"
@@ -96,7 +96,7 @@
             android:background="@null"
             android:gravity="center"
             android:inputType="number"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:singleLine="true" />
 
         <TextView
@@ -105,7 +105,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="删除"
             android:textColor="@color/text_red_default" />
     </LinearLayout>

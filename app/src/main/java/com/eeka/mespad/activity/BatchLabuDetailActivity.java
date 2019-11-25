@@ -228,11 +228,9 @@ public class BatchLabuDetailActivity extends BaseActivity {
 
             mLayout_layoutList.removeAllViews();
             List<BatchLabuDetailBo.LAYOUTINFOBean> layoutInfo = mCurMatData.getLAYOUT_INFO();
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UnitUtil.dip2px(mContext, 140));
-            params.bottomMargin = UnitUtil.dip2px(mContext, 10);
             for (int i = 0; i < layoutInfo.size(); i++) {
                 BatchLabuDetailBo.LAYOUTINFOBean layoutBean = layoutInfo.get(i);
-                mLayout_layoutList.addView(getTableView(layoutBean, BatchLabuDetailBo.LAYOUTINFOBean.class, isFirst, i), params);
+                mLayout_layoutList.addView(getTableView(layoutBean, BatchLabuDetailBo.LAYOUTINFOBean.class, isFirst, i));
             }
 
             //默认显示按钮
@@ -269,7 +267,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
         }
         layout_processIconContainer.removeAllViews();
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, (int) getResources().getDimension(R.dimen.dp_15));
         params.weight = 1;
         for (BatchLabuDetailBo.ORDERSTATUSBean item : list) {
             TextView textView = new TextView(mContext);

@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    
     <RelativeLayout
         android:id="@+id/layout_dlg_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:padding="10dp">
-
+        android:padding="@dimen/dp_5">
+        
         <Button
             android:id="@+id/btn_dlg_close"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_15"
             android:layout_alignParentRight="true"
             android:background="@drawable/ic_close" />
-
+        
         <TextView
             android:id="@+id/tv_title"
             style="@style/textStyle_default"
@@ -27,58 +27,58 @@
             android:textSize="@dimen/textSize_title"
             android:textStyle="bold" />
     </RelativeLayout>
-
+    
     <LinearLayout
         android:id="@+id/layout_dlg_orderNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_dlg_title"
         android:orientation="horizontal"
-        android:padding="10dp">
-
+        android:padding="@dimen/dp_5">
+        
         <TextView
             style="@style/textStyle_default"
             android:text="订单号：" />
-
+        
         <TextView
             android:id="@+id/tv_returnMaterial_orderNum"
             style="@style/textStyle_default"
             android:text="M122334455" />
     </LinearLayout>
-
+    
     <Button
         android:id="@+id/btn_returnMaterial_submit"
         style="@style/btnStyle_primary"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
         android:text="提交" />
-
+    
     <Button
         android:id="@+id/btn_returnMaterial_save"
         style="@style/btnStyle_primary"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
         android:layout_toLeftOf="@id/btn_returnMaterial_submit"
         android:text="保存"
         android:visibility="gone" />
-
+    
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/btn_returnMaterial_save"
         android:layout_below="@id/layout_dlg_orderNum"
-        android:layout_marginBottom="10dp">
-
+        android:layout_marginBottom="@dimen/dp_5">
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+            
             <LinearLayout
                 android:id="@+id/layout_returnMaterial_material"
                 android:layout_width="match_parent"
@@ -86,18 +86,17 @@
                 android:background="@color/white"
                 android:divider="@drawable/divider_gray"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5"
                 android:showDividers="middle" />
-
+            
             <View
                 android:id="@+id/spaceView"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="210dp" />
-
+                android:layout_height="@dimen/dp_105" />
+        
         </LinearLayout>
-
+    
     </ScrollView>
 
 </RelativeLayout>

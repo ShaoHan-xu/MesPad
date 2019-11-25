@@ -73,7 +73,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dp_2"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
@@ -83,7 +83,7 @@
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="@dimen/dp_2">
 
                     <TextView
                         style="@style/textStyle_default"
@@ -98,7 +98,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="@dimen/dp_2"
                     android:layout_weight="1"
                     android:padding="0.5dp"
                     android:background="@drawable/border_black"
@@ -117,7 +117,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp"
+                            android:padding="@dimen/dp_2"
                             android:text="物料号"
                             android:textColor="@color/white" />
 
@@ -126,7 +126,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp"
+                            android:padding="@dimen/dp_2"
                             android:text="物料名称"
                             android:textColor="@color/white" />
 
@@ -135,7 +135,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="0.7"
                             android:gravity="center"
-                            android:padding="5dp"
+                            android:padding="@dimen/dp_2"
                             android:text="用量"
                             android:textColor="@color/white" />
 
@@ -164,10 +164,10 @@
 
     <RelativeLayout
         android:id="@+id/layout_processList"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/dp_125"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="@dimen/dp_2"
         android:orientation="vertical">
 
         <LinearLayout
@@ -183,7 +183,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="@dimen/dp_2">
 
                 <TextView
                     style="@style/textStyle_default"
@@ -230,7 +230,7 @@
         <LinearLayout
             android:id="@+id/layout_curProcess"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="@dimen/dp_60"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:orientation="vertical">
@@ -240,13 +240,13 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/layout_nextProcess"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="@dimen/dp_2">
 
                 <TextView
                     style="@style/textStyle_gray"
-                    android:paddingTop="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="5dp"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingRight="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
                     android:text="当前工序" />
 
                 <TextView
@@ -262,7 +262,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="绑定"
-                android:textSize="30sp" />
+                android:textSize="@dimen/sp_15" />
 
         </LinearLayout>
 
@@ -271,8 +271,8 @@
             android:layout_height="match_parent"
             android:layout_above="@id/layout_curProcess"
             android:layout_below="@id/tag_layout_loginUsers"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="@dimen/dp_2"
+            android:layout_marginBottom="@dimen/dp_2"
             android:orientation="vertical">
 
             <LinearLayout
@@ -286,7 +286,7 @@
                     android:layout_width="match_parent"
                     android:background="@drawable/btn_green_normal"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_2"
                     android:text="当前作业SFC"
                     android:textColor="@color/white" />
 
@@ -296,7 +296,7 @@
                     android:layout_width="match_parent"
                     android:background="@color/white"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_2"
                     android:textSize="@dimen/textSize_itemTitle"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -306,7 +306,7 @@
                 android:layout_width="match_parent"
                 android:background="@drawable/btn_green_normal"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="@dimen/dp_2"
                 android:text="订单信息"
                 android:textColor="@color/white" />
 
@@ -319,7 +319,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="@dimen/dp_2">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -328,7 +328,7 @@
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginRight="@dimen/dp_5"
                             android:text="生产订单号"
                             android:textColor="@color/text_gray_default" />
 
@@ -341,12 +341,12 @@
                         android:id="@+id/layout_suspend_mtmOrder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginRight="@dimen/dp_5"
                             android:text="MTM订单号"
                             android:textColor="@color/text_gray_default" />
 
@@ -358,12 +358,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginRight="@dimen/dp_5"
                             android:text="批次号"
                             android:textColor="@color/text_gray_default" />
 
@@ -380,12 +380,12 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
 
                             <TextView
                                 style="@style/textStyle_default"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:text="批次件数"
                                 android:textColor="@color/text_gray_default" />
 
@@ -397,13 +397,13 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
 
                             <TextView
                                 style="@style/textStyle_default"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:text="实裁数"
                                 android:textColor="@color/text_gray_default" />
 
@@ -421,12 +421,12 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
 
                             <TextView
                                 style="@style/textStyle_default"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:text="订单数量"
                                 android:textColor="@color/text_gray_default" />
 
@@ -438,13 +438,13 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
 
                             <TextView
                                 style="@style/textStyle_default"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:text="已上裁"
                                 android:textColor="@color/text_gray_default" />
 
@@ -462,12 +462,12 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
 
                             <TextView
                                 style="@style/textStyle_default"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:text="款号"
                                 android:textColor="@color/text_gray_default" />
 
@@ -479,13 +479,13 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
 
                             <TextView
                                 style="@style/textStyle_default"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:text="尺码"
                                 android:textColor="@color/text_gray_default" />
 
@@ -498,12 +498,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
 
                         <TextView
                             style="@style/textStyle_default"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginRight="@dimen/dp_5"
                             android:text="物料描述"
                             android:textColor="@color/text_gray_default" />
 

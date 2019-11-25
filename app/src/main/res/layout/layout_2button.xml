@@ -9,8 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_green_round_new"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
         
         <LinearLayout
             android:layout_width="wrap_content"
@@ -18,8 +18,8 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="@dimen/dp_1"
+            android:paddingBottom="@dimen/dp_1">
             
             <TextView
                 android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="000008000044001"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="@dimen/sp_7" />
         </LinearLayout>
     
     </RelativeLayout>
@@ -43,10 +43,10 @@
         android:id="@+id/layout_button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
         android:background="@drawable/btn_green_round_new"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
         
         <LinearLayout
             android:layout_width="wrap_content"
@@ -56,8 +56,8 @@
             android:layout_marginTop="0dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:paddingTop="@dimen/dp_1"
+            android:paddingBottom="@dimen/dp_1">
             
             <TextView
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:text="123446457574"
                 android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:textSize="@dimen/sp_7" />
         </LinearLayout>
     
     </RelativeLayout>

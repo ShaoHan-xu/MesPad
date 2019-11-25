@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary">
-
+        
         <ImageView
             android:id="@+id/btn_back"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/dp_25"
             android:layout_height="match_parent"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
+            android:paddingTop="@dimen/dp_7"
+            android:paddingBottom="@dimen/dp_7"
             android:src="@drawable/ic_back_white" />
-
+        
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -25,31 +24,31 @@
             android:layout_centerInParent="true"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_title" />
-
+        
         <EditText
             android:id="@+id/et_searchKey"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_75"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/dp_5"
             android:background="@drawable/border_black"
             android:gravity="center_vertical"
             android:hint="搜索内容"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="@dimen/dp_2"
+            android:paddingRight="@dimen/dp_2"
             android:singleLine="true"
             android:textSize="@dimen/textSize_content"
             android:visibility="gone" />
-
+    
     </RelativeLayout>
-
+    
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:lineSpacingExtra="2dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_5"
         android:scrollbars="vertical"
         android:textColor="@color/text_black_default"
         android:textSize="@dimen/textSize_describe" />

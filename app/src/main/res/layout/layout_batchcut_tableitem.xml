@@ -13,7 +13,7 @@
         android:id="@+id/tv_cutNum"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_3"
         android:text="段数" />
     
     <TextView
@@ -21,36 +21,36 @@
         style="@style/textStyle_default"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_3"
         android:text="码数" />
     
     <TextView
         android:id="@+id/tv_completed"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_3"
         android:text="已裁数" />
     
     <TextView
         android:id="@+id/tv_waiting"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_3"
         android:text="待裁数" />
     
     <TextView
         android:id="@+id/tv_action"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_3"
         android:text="操作选择" />
     
     <CheckBox
         android:id="@+id/ckb_sizeSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_marginBottom="@dimen/dp_3"
         android:button="@drawable/checkbox_green"
         android:clickable="false"
         android:gravity="center"

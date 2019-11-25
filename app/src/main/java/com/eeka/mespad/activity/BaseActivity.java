@@ -202,7 +202,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
 
         final LoginFragment loginFragment = (LoginFragment) mFragmentManager.findFragmentById(R.id.loginFragment);
         assert loginFragment != null;
-        loginFragment.setTopic(TopicUtil.TOPIC_CUT);
+        loginFragment.setTopic(mTopic);
         loginFragment.setOnClockCallback(this);
 
         mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

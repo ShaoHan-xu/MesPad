@@ -14,7 +14,7 @@
         android:layout_weight="1"
         android:background="@null"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
     
     <EditText
         android:id="@+id/et_length"
@@ -24,7 +24,7 @@
         android:background="@null"
         android:gravity="center"
         android:inputType="number"
-        android:padding="5dp"
+        android:padding="@dimen/dp_2"
         android:singleLine="true" />
     
     <EditText
@@ -35,7 +35,7 @@
         android:background="@null"
         android:gravity="center"
         android:inputType="numberDecimal"
-        android:padding="5dp"
+        android:padding="@dimen/dp_2"
         android:singleLine="true" />
     
     <TextView
@@ -45,7 +45,7 @@
         android:layout_weight="1"
         android:background="@null"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
     
     <TextView
         android:id="@+id/tv_del"
@@ -53,7 +53,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="5dp"
+        android:padding="@dimen/dp_2"
         android:text="删除"
         android:textColor="@color/text_red_default" />
 

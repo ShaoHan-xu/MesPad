@@ -473,7 +473,12 @@ public class SuspendFragment extends BaseFragment {
                 setupMatInfo(componentInfoBo.getMaterialInfo());
             } else if (HttpHelper.hangerBinding.equals(url)) {
                 toast("衣架绑定成功");
-//                hangerBindMes();
+
+                //目前在龙华测试
+                String channelName = getString(R.string.app_channel);
+                if (!"YD".equals(channelName)) {
+                    hangerBindMes();
+                }
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }

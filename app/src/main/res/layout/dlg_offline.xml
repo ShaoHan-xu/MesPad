@@ -2,164 +2,164 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:text="衣架解绑下线"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_title" />
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/white"
         android:divider="@drawable/divider_gray"
         android:orientation="vertical"
         android:showDividers="beginning|middle|end">
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="beginning|middle|end">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工票号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="衣架号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="订单号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工序" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工序描述" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="洗水唛号" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="beginning|middle|end">
-
+            
             <TextView
                 android:id="@+id/tv_offline_sfc"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_offline_hangerId"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_offline_orderNum"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_offline_operation"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_offline_operationDesc"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_offline_washLabel"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+        
         </LinearLayout>
-
+    
     </LinearLayout>
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/dp_10"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_offline_offline"
             style="@style/btnStyle_primary"
             android:layout_width="120dp"
             android:text="解绑下线" />
-
+        
         <Button
             android:id="@+id/btn_offline_cancel"
             style="@style/btnStyle_primary"
-            android:layout_width="120dp"
-            android:layout_marginLeft="10dp"
+            android:layout_width="@dimen/dp_60"
+            android:layout_marginLeft="@dimen/dp_5"
             android:text="取消" />
-
+    
     </LinearLayout>
 
 

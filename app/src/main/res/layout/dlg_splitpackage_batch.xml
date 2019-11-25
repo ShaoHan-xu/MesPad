@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/layout_buttonWrap"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         
@@ -39,7 +39,7 @@
         android:background="@color/green"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/dp_5">
         
         <LinearLayout
             android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:orientation="horizontal">
             
             <TextView
@@ -137,7 +137,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/layout_buttonWrap"
         android:layout_below="@id/title"
-        android:layout_margin="10dp"
+        android:layout_margin="@dimen/dp_5"
         android:background="@drawable/bg_border_gray_light"
         android:divider="@drawable/divider_gray_light"
         android:orientation="vertical"
@@ -150,7 +150,7 @@
             android:layout_height="wrap_content"
             android:background="@color/gray_disable"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="按件数分包"
             android:textColor="@color/text_black_default"
             android:textSize="@dimen/textSize_title" />
@@ -169,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="序列号" />
             
             <TextView
@@ -178,7 +178,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="件数" />
             
             <TextView
@@ -187,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="打印" />
         
         </LinearLayout>
@@ -206,10 +206,10 @@
                 
                 <Button
                     android:id="@+id/btn_add"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/dp_75"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp"
+                    android:layout_margin="@dimen/dp_5"
                     android:background="@drawable/btn_green_round_new"
                     android:text="新增分包"
                     android:textColor="@color/white" />

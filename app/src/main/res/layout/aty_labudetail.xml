@@ -11,20 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="@dimen/dp_5">
         
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/dp_5"
             android:layout_weight="1.5"
             android:orientation="vertical">
             
             <RadioGroup
                 android:id="@+id/tag_menu"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="@dimen/dp_25"
+                android:layout_marginBottom="@dimen/dp_5"
                 android:background="@drawable/bg_border_gray_light"
                 android:divider="@drawable/divider_gray_light"
                 android:orientation="horizontal"
@@ -80,7 +80,7 @@
                 android:id="@+id/layout_labuDetail_table1"
                 layout="@layout/layout_labu_table"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="@dimen/dp_70"
                 android:layout_below="@id/tag_menu"
                 android:visibility="gone" />
             
@@ -89,9 +89,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dp_3"
                 android:orientation="horizontal"
-                android:paddingRight="20dp">
+                android:paddingRight="@dimen/dp_10">
             
             </LinearLayout>
             
@@ -103,7 +103,7 @@
                 android:background="@drawable/bg_process_direction"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingRight="20dp">
+                android:paddingRight="@dimen/dp_10">
             
             </LinearLayout>
             
@@ -112,8 +112,8 @@
                 android:layout_height="match_parent"
                 android:layout_above="@id/layout_labuDetail_processIconContainer"
                 android:layout_below="@id/layout_labuDetail_table1"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginBottom="@dimen/dp_5">
                 
                 <LinearLayout
                     android:id="@+id/layout_labuDetail_layoutList"
@@ -133,25 +133,25 @@
             
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="@dimen/dp_125"
                 android:orientation="horizontal">
                 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="@dimen/dp_5"
                     android:layout_weight="1"
                     android:background="@drawable/bg_border_radius_gray"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="@dimen/dp_5">
                     
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="样衣效果"
-                        android:textSize="20sp"
+                        android:textSize="@dimen/sp_10"
                         android:textStyle="bold" />
                     
                     <ImageView
@@ -168,14 +168,14 @@
                     android:background="@drawable/bg_border_radius_gray"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="@dimen/dp_5">
                     
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="主面料"
-                        android:textSize="20sp"
+                        android:textSize="@dimen/sp_10"
                         android:textStyle="bold" />
                     
                     <ImageView
@@ -188,18 +188,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_weight="1.5"
                 android:background="@drawable/bg_border_radius_gray"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="@dimen/dp_5">
                 
                 <TextView
                     style="@style/textStyle_default"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="作业要求"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/sp_10"
                     android:textStyle="bold" />
                 
                 <TextView
@@ -214,18 +214,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_5"
                 android:layout_weight="2"
                 android:background="@drawable/bg_border_radius_gray"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:padding="@dimen/dp_5">
                 
                 <TextView
                     style="@style/textStyle_default"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="品质要求"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/sp_10"
                     android:textStyle="bold" />
                 
                 <TextView
@@ -239,8 +239,8 @@
             
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_height="@dimen/dp_23"
+                android:layout_marginTop="@dimen/dp_5"
                 android:scrollbars="none">
                 
                 <LinearLayout

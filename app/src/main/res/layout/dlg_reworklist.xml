@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -18,10 +18,10 @@
 
         <ImageView
             android:id="@+id/btn_close"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/dp_25"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:src="@drawable/ic_close" />
     </RelativeLayout>
 
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp">
+        android:layout_marginTop="@dimen/dp_35">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
             android:showDividers="middle">
 
             <LinearLayout
-                android:layout_width="600dp"
+                android:layout_width="@dimen/dp_300"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/divider_gray"
                 android:orientation="horizontal"
@@ -51,7 +51,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="工序代码" />
 
                 <TextView
@@ -59,7 +59,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1.5"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="工序描述" />
 
                 <TextView
@@ -67,7 +67,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="员工工号" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="员工姓名" />
             </LinearLayout>
 

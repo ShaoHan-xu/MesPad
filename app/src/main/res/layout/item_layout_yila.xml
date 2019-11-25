@@ -12,35 +12,35 @@
         android:id="@+id/tv_cutNum"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="2dp" />
+        android:padding="@dimen/dp_1" />
     
     <TextView
         android:id="@+id/tv_size"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="2dp" />
+        android:padding="@dimen/dp_1" />
     
     <TextView
         android:id="@+id/tv_rate"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="2dp" />
+        android:padding="@dimen/dp_1" />
     
     <TextView
         android:id="@+id/tv_need"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="2dp" />
+        android:padding="@dimen/dp_1" />
     
     <TextView
         android:id="@+id/tv_yiLa"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="2dp" />
+        android:padding="@dimen/dp_1" />
     
     <TextView
         android:id="@+id/tv_unLa"
         style="@style/textStyle_default"
         android:gravity="center"
-        android:padding="2dp" />
+        android:padding="@dimen/dp_1" />
 </LinearLayout>

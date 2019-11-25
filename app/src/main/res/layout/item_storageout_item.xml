@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_weight="1.2"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_workCenter"
@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_item"
@@ -30,7 +30,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_size"
@@ -38,7 +38,7 @@
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_rfid"
@@ -46,7 +46,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_area"
@@ -54,7 +54,7 @@
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_location"
@@ -62,7 +62,7 @@
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_inQTY"
@@ -70,7 +70,7 @@
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_outQTY"
@@ -78,7 +78,7 @@
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_storageOut_lessQTY"
@@ -86,7 +86,7 @@
         android:layout_width="0dp"
         android:layout_weight="0.6"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <Button
         android:id="@+id/btn_storageOut_out"
@@ -95,7 +95,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:minHeight="50dp"
-        android:padding="10dp"
+        android:minHeight="@dimen/dp_25"
+        android:padding="@dimen/dp_5"
         android:text="出库" />
 </LinearLayout>

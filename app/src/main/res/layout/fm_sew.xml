@@ -6,7 +6,7 @@
     
     <LinearLayout
         android:id="@+id/layout_sewOrderInfo"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/dp_125"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -25,28 +25,28 @@
                 android:layout_width="match_parent"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="@dimen/dp_2"
                 android:text="工单号" />
             
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dp_2"
                 android:layout_weight="0.8"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:padding="@dimen/dp_2">
                 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="@dimen/dp_2">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:paddingRight="10dp"
+                        android:paddingRight="@dimen/dp_5"
                         android:text="@string/efficiency" />
                     
                     <TextView
@@ -54,7 +54,7 @@
                         style="@style/textStyle_default"
                         android:gravity="center"
                         android:textColor="@color/text_green_default"
-                        android:textSize="30sp" />
+                        android:textSize="@dimen/sp_15" />
                 </LinearLayout>
                 
                 <LinearLayout
@@ -62,11 +62,11 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="@dimen/dp_2">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:paddingRight="10dp"
+                        android:paddingRight="@dimen/dp_5"
                         android:text="日产量" />
                     
                     <TextView
@@ -78,23 +78,23 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
                     android:background="@color/divider_gray" />
                 
                 <LinearLayout
                     android:id="@+id/layout_sew_curProcess"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/dp_5"
                     android:layout_weight="1"
                     android:orientation="horizontal">
                     
                     <TextView
                         style="@style/textStyle_gray"
-                        android:paddingTop="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="8dp"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingRight="@dimen/dp_4"
+                        android:paddingBottom="@dimen/dp_4"
                         android:text="当前工序" />
                     
                     <ListView
@@ -105,8 +105,8 @@
                 
                 <View
                     style="@style/line"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:layout_marginBottom="@dimen/dp_2" />
                 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,9 +116,9 @@
                     
                     <TextView
                         style="@style/textStyle_gray"
-                        android:paddingTop="8dp"
-                        android:paddingRight="8dp"
-                        android:paddingBottom="8dp"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingRight="@dimen/dp_4"
+                        android:paddingBottom="@dimen/dp_4"
                         android:text="下一工序" />
                     
                     <ListView
@@ -129,8 +129,8 @@
                 
                 <View
                     style="@style/line"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:layout_marginBottom="@dimen/dp_2" />
                 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                     
                     <TextView
                         style="@style/textStyle_gray"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginRight="@dimen/dp_2"
                         android:text="上一站位" />
                     
                     <TextView
@@ -151,10 +151,10 @@
                     android:id="@+id/tv_sew_ncDetail"
                     style="@style/textStyle_default"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:background="@color/text_red_default"
                     android:gravity="center"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="查看不合格点"
                     android:textColor="@color/white"
                     android:visibility="gone" />
@@ -164,7 +164,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="0.8"
             android:background="@color/white">
             
@@ -173,17 +173,17 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:padding="@dimen/dp_2">
                 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:orientation="horizontal">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:text="生产订单号"
                         android:textColor="@color/text_gray_default" />
                     
@@ -196,13 +196,13 @@
                     android:id="@+id/layout_sew_salesOrder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:orientation="horizontal"
                     android:visibility="gone">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:text="MTM订单号"
                         android:textColor="@color/text_gray_default" />
                     
@@ -214,7 +214,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:orientation="horizontal"
                     android:visibility="gone">
                     
@@ -230,12 +230,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:orientation="horizontal">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:text="款号"
                         android:textColor="@color/text_gray_default" />
                     
@@ -247,12 +247,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:orientation="horizontal">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:text="尺码"
                         android:textColor="@color/text_gray_default" />
                     
@@ -264,12 +264,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:orientation="horizontal">
                     
                     <TextView
                         style="@style/textStyle_default"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:text="物料描述"
                         android:textColor="@color/text_gray_default" />
                     
@@ -284,7 +284,7 @@
     
     <LinearLayout
         android:id="@+id/layout_sewDescInfo"
-        android:layout_width="250dp"
+        android:layout_width="@dimen/dp_125"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
@@ -295,11 +295,11 @@
             android:id="@+id/layout_sew_craftDesc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="1"
             android:background="@color/white"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="@dimen/dp_2">
             
             <TextView
                 style="@style/textStyle_default"
@@ -315,11 +315,11 @@
             android:id="@+id/layout_sew_qualityReq"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="0.7"
             android:background="@color/white"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="@dimen/dp_2">
             
             <TextView
                 style="@style/textStyle_default"
@@ -336,11 +336,11 @@
             android:id="@+id/layout_sew_special"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="0.5"
             android:background="@color/white"
             android:orientation="vertical"
-            android:padding="5dp">
+            android:padding="@dimen/dp_2">
             
             <TextView
                 style="@style/textStyle_default"
@@ -359,8 +359,8 @@
             android:layout_marginTop="3dp"
             android:background="#F51D68"
             android:gravity="center"
-            android:padding="5dp"
-            android:text="二等品"
+            android:padding="@dimen/dp_2"
+            android:text="缺面料"
             android:textColor="@color/white"
             android:visibility="gone" />
         
@@ -371,11 +371,11 @@
             android:layout_marginTop="3dp"
             android:background="@color/text_red_default"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="@dimen/dp_2">
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/dp_5"
                 android:text="不良描述"
                 android:textColor="@color/white" />
             
@@ -389,8 +389,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="@dimen/dp_2"
+        android:layout_marginRight="@dimen/dp_2"
         android:layout_toLeftOf="@id/layout_sewDescInfo"
         android:layout_toRightOf="@id/layout_sewOrderInfo"
         android:orientation="vertical">
@@ -427,7 +427,7 @@
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="0.8"
             android:background="@color/white">
             

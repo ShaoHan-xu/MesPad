@@ -3,30 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimaryDark">
-
+        
         <TextView
             style="@style/textStyle_default"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="10dp"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
             android:text="工位线色显示"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_title" />
-
+        
         <ImageView
             android:id="@+id/btn_close"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/dp_25"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:src="@drawable/ic_close" />
     </RelativeLayout>
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,52 +35,52 @@
         android:divider="@drawable/divider_gray"
         android:orientation="horizontal"
         android:showDividers="middle">
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="编号" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="规格颜色描述" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="部位" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="是否为外观线迹" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="120dp"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="图片" />
     </LinearLayout>
-
+    
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@drawable/divider_gray" />
-
+    
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_lineColor"
         android:layout_width="match_parent"

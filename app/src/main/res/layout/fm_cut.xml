@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="@dimen/dp_2"
         android:layout_weight="4"
         android:orientation="vertical">
         
@@ -22,7 +22,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="@dimen/dp_2"
                 android:layout_weight="3"
                 android:orientation="vertical">
                 
@@ -58,7 +58,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:layout_weight="1.5"
                     android:background="@color/white"
                     android:orientation="vertical">
@@ -110,7 +110,7 @@
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:orientation="vertical"
-                    android:padding="5dp">
+                    android:padding="@dimen/dp_2">
                     
                     <TextView
                         style="@style/textStyle_default"
@@ -126,7 +126,7 @@
                     android:id="@+id/scrollView_planSize"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dp_2"
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:visibility="gone">
@@ -145,7 +145,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/text_green_default"
                             android:orientation="horizontal"
-                            android:padding="5dp">
+                            android:padding="@dimen/dp_2">
                             
                             <TextView
                                 style="@style/textStyle_default"
@@ -176,14 +176,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="1.2"
             android:orientation="horizontal">
             
             <HorizontalScrollView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="@dimen/dp_2"
                 android:layout_weight="1"
                 android:background="@color/white">
                 
@@ -193,7 +193,7 @@
                     android:layout_height="match_parent"
                     android:divider="@drawable/divider_white_5dp"
                     android:orientation="horizontal"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_2"
                     android:showDividers="middle" />
             </HorizontalScrollView>
             
@@ -209,7 +209,7 @@
                     android:layout_height="match_parent"
                     android:divider="@drawable/divider_white_5dp"
                     android:orientation="horizontal"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_2"
                     android:showDividers="middle" />
             </HorizontalScrollView>
         </LinearLayout>
@@ -236,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:padding="@dimen/dp_2">
                 
                 <TextView
                     style="@style/textStyle_default"
@@ -289,9 +289,9 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dp_2"
                 android:background="@color/white"
-                android:padding="5dp">
+                android:padding="@dimen/dp_2">
                 
                 <LinearLayout
                     android:id="@+id/layout_orderInfo"
@@ -303,12 +303,12 @@
                         android:id="@+id/layout_cut_sfc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="SFC:" />
                         
                         <TextView
@@ -320,12 +320,12 @@
                         android:id="@+id/layout_cut_workCenter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="工作中心:" />
                         
                         <TextView
@@ -336,12 +336,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="生产订单号" />
                         
                         <TextView
@@ -353,12 +353,12 @@
                         android:id="@+id/layout_cut_mtmOrderNum"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="MTM订单号" />
                         
                         <TextView
@@ -370,7 +370,7 @@
                         android:id="@+id/layout_cut_TP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="vertical"
                         android:visibility="gone">
                         
@@ -382,12 +382,12 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="@dimen/dp_2"
                             android:orientation="horizontal">
                             
                             <TextView
                                 style="@style/textStyle_gray"
-                                android:layout_marginRight="8dp"
+                                android:layout_marginRight="@dimen/dp_4"
                                 android:text="套排单号"
                                 android:textColor="@color/text_red_default" />
                             
@@ -401,13 +401,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal"
                         android:visibility="gone">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="批次号" />
                         
                         <TextView
@@ -418,12 +418,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="款号" />
                         
                         <TextView
@@ -434,12 +434,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="尺码" />
                         
                         <TextView
@@ -450,12 +450,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="批次号" />
                         
                         <TextView
@@ -466,12 +466,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="物料描述" />
                         
                         <TextView
@@ -483,13 +483,13 @@
                         android:id="@+id/layout_cut_ncData"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal"
                         android:visibility="visible">
                         
                         <TextView
                             style="@style/textStyle_gray"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="@dimen/dp_4"
                             android:text="不良描述"
                             android:textColor="@color/text_red_default" />
                         
@@ -502,7 +502,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="@dimen/dp_2">
                         
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -512,7 +512,7 @@
                             
                             <TextView
                                 style="@style/textStyle_gray"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginRight="@dimen/dp_2"
                                 android:text="数量" />
                             
                             <TextView
@@ -530,7 +530,7 @@
                             
                             <TextView
                                 style="@style/textStyle_gray"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginRight="@dimen/dp_2"
                                 android:text="层数" />
                             
                             <TextView
@@ -555,7 +555,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/text_green_default"
                             android:orientation="horizontal"
-                            android:padding="5dp">
+                            android:padding="@dimen/dp_2">
                             
                             <TextView
                                 style="@style/textStyle_default"
@@ -581,7 +581,7 @@
                         android:id="@+id/layout_special"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="@dimen/dp_5"
                         android:orientation="vertical">
                         
                         <TextView
@@ -602,7 +602,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:layout_weight="1"
             android:background="@color/white">
             
@@ -610,7 +610,7 @@
                 android:id="@+id/btn_done"
                 style="@style/btnStyle_green"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="@dimen/dp_25"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:text="完成"
@@ -624,14 +624,14 @@
                 <LinearLayout
                     android:id="@+id/layout_nextProcess"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="@dimen/dp_25"
                     android:layout_alignParentBottom="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     
                     <TextView
                         style="@style/textStyle_gray"
-                        android:padding="8dp"
+                        android:padding="@dimen/dp_4"
                         android:text="下一工序" />
                     
                     <ScrollView
@@ -642,8 +642,8 @@
                             android:id="@+id/tv_nextProcess"
                             style="@style/textStyle_default"
                             android:layout_width="match_parent"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp" />
+                            android:paddingTop="@dimen/dp_4"
+                            android:paddingBottom="@dimen/dp_4" />
                     </ScrollView>
                 </LinearLayout>
                 
@@ -655,7 +655,7 @@
                     
                     <TextView
                         style="@style/textStyle_gray"
-                        android:padding="8dp"
+                        android:padding="@dimen/dp_4"
                         android:text="当前工序" />
                     
                     <ListView
@@ -665,7 +665,6 @@
                         android:background="@color/white"
                         android:choiceMode="singleChoice" />
                 </LinearLayout>
-            
             
             </RelativeLayout>
         </RelativeLayout>

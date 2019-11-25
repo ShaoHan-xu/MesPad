@@ -3,7 +3,7 @@
     android:id="@+id/itemView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="@dimen/dp_3"
     android:background="@drawable/bg_border_radius_gray"
     android:elevation="5dp"
     android:orientation="vertical">
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="@dimen/dp_3">
         
         <LinearLayout
             android:layout_width="0dp"
@@ -39,7 +39,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_3"
                 android:orientation="horizontal">
                 
                 <TextView
@@ -54,7 +54,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_3"
                 android:orientation="horizontal">
                 
                 <TextView
@@ -98,7 +98,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_3"
                 android:orientation="horizontal">
                 
                 <TextView
@@ -114,7 +114,7 @@
                 android:id="@+id/layout_completedQty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/dp_3"
                 android:orientation="horizontal">
                 
                 <TextView
@@ -134,16 +134,15 @@
         
         <Button
             android:id="@+id/btn_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_25"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="20dp"
-            android:width="150dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginRight="@dimen/dp_10"
             android:background="@drawable/btn_green_round_new"
             android:text="拉布"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="@dimen/sp_12" />
     </LinearLayout>
     
     <LinearLayout
@@ -151,9 +150,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tag1"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp">
+        android:paddingLeft="@dimen/dp_3"
+        android:paddingRight="@dimen/dp_3"
+        android:paddingBottom="@dimen/dp_3">
         
         <TextView
             style="@style/textStyle_default"
@@ -166,8 +165,8 @@
     
     <ImageView
         android:id="@+id/iv_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_30"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_state_cut_working" />
 

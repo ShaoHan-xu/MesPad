@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/dp_20"
     android:descendantFocusability="blocksDescendants"
-    android:padding="5dp">
-
+    android:padding="@dimen/dp_2">
+    
     <TextView
         android:id="@+id/tv_item_process_code"
         style="@style/textStyle_default"
         android:layout_centerInParent="true"
         android:text="20170615010" />
-
+    
     <Button
         android:id="@+id/btn_item_process_finish"
         style="@style/btnStyle_primary"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_20"
         android:layout_alignParentRight="true"
+        android:padding="@dimen/dp_2"
         android:text="完工"
-        android:visibility="invisible" />
+        android:textSize="@dimen/sp_8"
+        android:visibility="visible" />
 
 </RelativeLayout>

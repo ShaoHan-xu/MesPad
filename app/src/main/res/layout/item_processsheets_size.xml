@@ -12,28 +12,28 @@
         style="@style/textStyle_default"
         android:layout_width="@dimen/processSheets_componentWidth"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
 
     <TextView
         android:id="@+id/tv_processSheets_measureMethod"
         style="@style/textStyle_default"
         android:layout_width="@dimen/processSheets_dufaWidth"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
 
     <TextView
         android:id="@+id/tv_processSheets_tolerance"
         style="@style/textStyle_default"
         android:layout_width="@dimen/processSheets_sizeWidth"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
 
     <TextView
         android:id="@+id/tv_processSheets_patternLooseness"
         style="@style/textStyle_default"
         android:layout_width="@dimen/processSheets_sizeWidth"
         android:gravity="center"
-        android:padding="5dp" />
+        android:padding="@dimen/dp_2" />
 
     <LinearLayout
         android:id="@+id/layout_processSheets_sizeValue"

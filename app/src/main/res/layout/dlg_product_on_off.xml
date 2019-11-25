@@ -2,99 +2,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary">
-
+        
         <TextView
             android:id="@+id/tv_productOnOff_title"
             style="@style/textStyle_default"
             android:layout_centerInParent="true"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_title" />
-
+        
         <ImageView
             android:id="@+id/btn_close"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_25"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:src="@drawable/ic_close" />
-
+    
     </RelativeLayout>
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="衣架号：" />
-
+            
             <EditText
                 android:id="@+id/et_productOnOff_hangerId"
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:background="@drawable/border_black" />
+                android:layout_width="@dimen/dp_75"
+                android:background="@drawable/border_black"
+                android:padding="@dimen/dp_2"
+                android:singleLine="true" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:id="@+id/layout_productOnOff_sfc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dp_5"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="SFC：" />
-
+            
             <TextView
                 android:id="@+id/tv_productOnOff_sfc"
                 style="@style/textStyle_default" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:id="@+id/layout_productOnOff_washLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dp_5"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="洗水唛：" />
-
+            
             <EditText
                 android:id="@+id/et_productOnOff_washLabel"
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:background="@drawable/border_black" />
+                android:layout_width="@dimen/dp_75"
+                android:background="@drawable/border_black"
+                android:padding="@dimen/dp_2"
+                android:singleLine="true" />
         </LinearLayout>
-
+    
     </LinearLayout>
-
-
+    
+    
     <Button
         android:id="@+id/btn_productOnOff_ok"
         style="@style/btnStyle_primary"
-        android:layout_width="150dp"
+        android:layout_width="@dimen/dp_75"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/dp_10"
         android:text="确定" />
 
 </RelativeLayout>

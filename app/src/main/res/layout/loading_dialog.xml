@@ -5,22 +5,22 @@
     android:layout_height="fill_parent"
     android:background="@null"
     android:gravity="center"
-    android:minHeight="60dp"
-    android:minWidth="180dp"
+    android:minHeight="@dimen/dp_30"
+    android:minWidth="@dimen/dp_90"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="@dimen/dp_5">
 
     <ImageView
         android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
         android:src="@drawable/loading" />
 
     <TextView
         android:id="@+id/tipTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/dp_5"
         android:text="数据提交中……请稍候" />
 </LinearLayout>  

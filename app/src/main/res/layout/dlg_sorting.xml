@@ -2,22 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:text="分拣衣架绑定"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_title" />
-
+    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_cancel"
             style="@style/btnStyle_primary"
@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="取消" />
-
+        
         <Button
             android:id="@+id/btn_ok"
             style="@style/btnStyle_primary"
@@ -34,7 +34,7 @@
             android:layout_marginLeft="1dp"
             android:layout_weight="1"
             android:text="确定" />
-
+        
         <Button
             android:id="@+id/btn_jump"
             style="@style/btnStyle_primary"
@@ -43,56 +43,56 @@
             android:layout_weight="1"
             android:text="跳过"
             android:visibility="gone" />
-
+    
     </LinearLayout>
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/dp_5"
             android:background="@drawable/border_black"
             android:orientation="horizontal"
-            android:padding="5dp">
-
+            android:padding="@dimen/dp_2">
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="分拣衣架号：" />
-
+            
             <EditText
                 android:id="@+id/et_sorting_code"
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="请刷卡或者手动输入衣架号"
-                android:padding="5dp"
+                android:padding="@dimen/dp_2"
                 android:singleLine="true" />
-
+        
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/border_black"
             android:orientation="horizontal"
-            android:padding="5dp">
-
+            android:padding="@dimen/dp_2">
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="衣服吊牌号：" />
-
+            
             <EditText
                 android:id="@+id/et_sorting_tag"
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="请扫码或者手动输入吊牌号"
-                android:padding="5dp"
+                android:padding="@dimen/dp_2"
                 android:singleLine="true" />
         </LinearLayout>
     </LinearLayout>

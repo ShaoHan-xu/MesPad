@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_subcontractComplete_qty"
@@ -19,7 +19,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp" />
+        android:padding="@dimen/dp_5" />
 
     <TextView
         android:id="@+id/tv_subcontractComplete_detail"
@@ -27,7 +27,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_5"
         android:text="详情"
         android:textColor="@color/colorPrimary" />
 </LinearLayout>

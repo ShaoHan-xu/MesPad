@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_gravity="center"
-        android:padding="12dp" />
+        android:padding="@dimen/dp_6" />
 
 </LinearLayout>

@@ -2,66 +2,66 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <include layout="@layout/layout_title_dlg" />
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="吊牌号：" />
-
+            
             <EditText
                 android:id="@+id/et_sortForTag_tag"
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_black"
                 android:hint="请在此输入吊牌号"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:singleLine="true" />
-
+        
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
             android:gravity="center"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="衣架号：" />
-
+            
             <EditText
                 android:id="@+id/et_sortForTag_hangerId"
-                android:layout_width="250dp"
+                android:layout_width="@dimen/dp_125"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_black"
                 android:hint="请在此输入衣架号"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:singleLine="true" />
-
+        
         </LinearLayout>
-
+        
         <Button
             android:id="@+id/btn_done"
             style="@style/btnStyle_primary"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_75"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:text="确定" />
-
+    
     </LinearLayout>
 
 </RelativeLayout>

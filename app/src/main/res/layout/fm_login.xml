@@ -10,21 +10,21 @@
         android:background="#EEEEEE"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="100dp"
-        android:paddingTop="50dp"
-        android:paddingRight="100dp"
-        android:paddingBottom="50dp">
+        android:paddingLeft="@dimen/dp_50"
+        android:paddingTop="@dimen/dp_25"
+        android:paddingRight="@dimen/dp_50"
+        android:paddingBottom="@dimen/dp_25">
         
         <TextView
             android:id="@+id/tv_login_alert"
             style="@style/textStyle_default"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="@dimen/dp_10"
             android:text="请输入工号上岗"
             android:textStyle="bold" />
         
         <LinearLayout
-            android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="@dimen/dp_25"
             android:gravity="center_vertical"
             android:orientation="horizontal">
             
@@ -47,8 +47,8 @@
         </LinearLayout>
         
         <LinearLayout
-            android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="@dimen/dp_25"
             android:gravity="center_vertical"
             android:orientation="horizontal">
             
@@ -72,15 +72,15 @@
                 android:id="@+id/iv_login_scan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
+                android:padding="@dimen/dp_4"
                 android:src="@drawable/ic_scan" />
         
         </LinearLayout>
         
         <LinearLayout
             android:id="@+id/layout_login_pwd"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="@dimen/dp_25"
             android:gravity="center_vertical"
             android:orientation="horizontal">
             
@@ -100,8 +100,8 @@
         </LinearLayout>
         
         <RelativeLayout
-            android:layout_width="250dp"
-            android:layout_height="50dp">
+            android:layout_width="@dimen/dp_125"
+            android:layout_height="@dimen/dp_25">
             
             <TextView
                 android:id="@+id/tag_position"
@@ -113,10 +113,10 @@
             
             <ImageView
                 android:id="@+id/iv_login_morePosition"
-                android:layout_width="50dp"
+                android:layout_width="@dimen/dp_25"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:src="@drawable/ic_down"
                 android:visibility="gone" />
             
@@ -137,9 +137,9 @@
             android:id="@+id/btn_login"
             style="@style/btnStyle_primary"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/dp_25"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dp_5"
             android:text="上岗" />
     
     </LinearLayout>

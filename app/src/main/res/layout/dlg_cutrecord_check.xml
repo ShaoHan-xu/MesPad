@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="#B2C657"
         android:gravity="center"
         android:text="请复核裁剪数量"
@@ -17,7 +17,7 @@
     <LinearLayout
         android:id="@+id/layout_buttonWrap"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         
@@ -62,8 +62,8 @@
             style="@style/textStyle_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
             android:text="1111111111111"
             android:textColor="@color/text_red_default"
             android:textSize="@dimen/textSize_title" />

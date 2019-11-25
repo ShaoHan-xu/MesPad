@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="10dp">
-
+    
     <LinearLayout
-        android:layout_width="400dp"
+        android:layout_width="@dimen/dp_200"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
@@ -13,80 +13,80 @@
         android:divider="@drawable/divider_gray"
         android:orientation="vertical"
         android:showDividers="middle">
-
+        
         <TextView
             android:id="@+id/tv_setLoginUser"
             style="@style/textStyle_default"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:padding="20dp"
-            android:visibility="gone"
-            android:text="设置系统用户" />
-
+            android:padding="@dimen/dp_10"
+            android:text="设置系统用户"
+            android:visibility="gone" />
+        
         <TextView
             android:id="@+id/tv_checkUpdate"
             style="@style/textStyle_default"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:padding="20dp"
+            android:padding="@dimen/dp_10"
             android:text="检查新版本" />
-
+        
         <RelativeLayout
             android:id="@+id/layout_setSystem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:padding="20dp"
                 android:text="系统环境切换" />
-
+            
             <ImageView
                 android:id="@+id/tag_arrow"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/dp_5"
                 android:src="@drawable/ic_arrow_right" />
-
+            
             <TextView
                 android:id="@+id/tv_setting_system"
                 style="@style/textStyle_gray"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/tag_arrow" />
-
+        
         </RelativeLayout>
-
+        
         <RelativeLayout
             android:id="@+id/layout_debugSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
-
+            
             <TextView
                 style="@style/textStyle_default"
-                android:padding="20dp"
+                android:padding="@dimen/dp_10"
                 android:text="开启debug" />
-
+            
             <Switch
                 android:id="@+id/switch_debug"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp" />
-
+                android:layout_marginRight="@dimen/dp_10" />
+        
         </RelativeLayout>
-
+    
     </LinearLayout>
-
+    
     <TextView
         android:id="@+id/tv_version"
         style="@style/textStyle_default"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:padding="20dp"
+        android:padding="@dimen/dp_10"
         android:text="版本" />
 </RelativeLayout>

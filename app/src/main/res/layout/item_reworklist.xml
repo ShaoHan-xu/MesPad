@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="600dp"
+        android:layout_width="@dimen/dp_300"
         android:layout_height="wrap_content"
         android:divider="@drawable/divider_gray"
         android:orientation="horizontal"
@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_reworkList_operationDesc"
@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_weight="1.5"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_reworkList_userID"
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_reworkList_userName"
@@ -40,6 +40,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
     </LinearLayout>
 </RelativeLayout>

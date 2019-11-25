@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="@dimen/dp_5">
 
     <Button
         android:id="@+id/btn_close"
         style="@style/btnStyle_primary"
-        android:layout_width="150dp"
+        android:layout_width="@dimen/dp_75"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
         android:text="关闭" />
 
     <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="RFID卡号" />
 
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工单号" />
 
             <TextView
@@ -50,7 +50,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="SFC编号" />
 
             <TextView
@@ -58,7 +58,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="尺码" />
         </LinearLayout>
 

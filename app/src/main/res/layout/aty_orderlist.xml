@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary">
-
+        
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -17,27 +17,27 @@
             android:text="作业订单"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_title" />
-
+        
         <ImageView
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingBottom="10dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="10dp"
+            android:paddingLeft="@dimen/dp_7"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_7"
+            android:paddingBottom="@dimen/dp_5"
             android:src="@drawable/ic_back_white" />
     </RelativeLayout>
-
+    
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_20"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
         android:background="@drawable/border_black"
         android:orientation="horizontal"
         android:padding="0.5dp">
-
+        
         <Button
             android:id="@+id/btn_orderList_undo"
             android:layout_width="0dp"
@@ -45,12 +45,12 @@
             android:layout_weight="1"
             android:background="@color/text_gray_default"
             android:text="待作业订单" />
-
+        
         <View
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/black" />
-
+        
         <Button
             android:id="@+id/btn_orderList_done"
             android:layout_width="0dp"
@@ -58,24 +58,24 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:text="已作业订单" />
-
+    
     </LinearLayout>
-
+    
     <RelativeLayout
-        android:layout_width="400dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/dp_200"
+        android:layout_height="@dimen/dp_20"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
         android:background="@drawable/border_black"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_orderList_search"
             style="@style/btnStyle_primary"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:text="搜索" />
-
+        
         <EditText
             android:id="@+id/et_orderList_search"
             style="@style/textStyle_default"
@@ -85,52 +85,52 @@
             android:background="@null"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp" />
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5" />
     </RelativeLayout>
-
+    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_5"
         android:background="#CCCCCC"
         android:gravity="center_vertical">
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:gravity="center"
             android:text="订单号" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:gravity="center"
             android:text="款号" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:gravity="center"
             android:text="生产开始时间" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="4"
             android:gravity="center"
             android:text="生产结束时间" />
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="数量" />
-
+        
         <TextView
             android:id="@+id/tv_orderList_status"
             style="@style/textStyle_default"
@@ -138,14 +138,14 @@
             android:layout_weight="2"
             android:gravity="center"
             android:text="状态" />
-
+        
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2" />
-
+    
     </LinearLayout>
-
+    
     <ListView
         android:id="@+id/lv_sfcList"
         android:layout_width="match_parent"

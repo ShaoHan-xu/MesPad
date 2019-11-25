@@ -7,7 +7,7 @@
     
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/titleBackground">
         
         <LinearLayout
@@ -16,27 +16,26 @@
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingRight="10dp">
+            android:paddingRight="@dimen/dp_3">
             
             <ImageView
                 android:id="@+id/iv_batchCut_login"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
+                android:padding="@dimen/dp_3"
                 android:src="@drawable/ic_user" />
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/dp_3"
                 android:text="当前登录用户："
-                android:textSize="18sp"
+                android:textSize="@dimen/sp_10"
                 android:textStyle="bold" />
-            
             
             <TextView
                 android:id="@+id/tv_batchCut_loginUser"
                 style="@style/textStyle_default"
-                android:textSize="18sp"
+                android:textSize="@dimen/sp_10"
                 android:textStyle="bold" />
         
         </LinearLayout>
@@ -45,7 +44,7 @@
             android:id="@+id/tv_title"
             style="@style/textStyle_default"
             android:layout_centerInParent="true"
-            android:textSize="@dimen/textSize_title"
+            android:textSize="@dimen/sp_13"
             android:textStyle="bold" />
     </RelativeLayout>
     
@@ -54,37 +53,38 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/dp_3">
         
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_30"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/dp_3"
             android:background="@drawable/bg_border_radius_gray"
             android:elevation="5dp"
             android:gravity="center"
-            android:padding="10dp">
+            android:padding="@dimen/dp_3">
             
             <TextView
                 style="@style/textStyle_default"
                 android:text="工作中心："
-                android:textSize="18sp"
+                android:textSize="@dimen/sp_10"
                 android:textStyle="bold" />
             
             <RelativeLayout
                 android:id="@+id/layout_batchCut_workCenter"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/dp_100"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_gray"
                 android:gravity="center_vertical"
-                android:padding="10dp">
+                android:padding="@dimen/dp_3">
                 
                 <ImageView
                     android:id="@+id/layout_buttonWrap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/ic_arrow_down" />
                 
                 <TextView
@@ -94,61 +94,61 @@
                     android:layout_toLeftOf="@id/layout_buttonWrap"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/sp_10" />
             
             </RelativeLayout>
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="@dimen/dp_10"
                 android:text="工单号："
-                android:textSize="18sp"
+                android:textSize="@dimen/sp_10"
                 android:textStyle="bold" />
             
             <EditText
                 android:id="@+id/et_batchCut_shopOrder"
                 style="@style/textStyle_default"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/dp_100"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_gray"
-                android:padding="10dp"
+                android:padding="@dimen/dp_3"
                 android:singleLine="true" />
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="@dimen/dp_10"
                 android:text="款号："
-                android:textSize="18sp"
+                android:textSize="@dimen/sp_10"
                 android:textStyle="bold" />
             
             <EditText
                 android:id="@+id/et_batchCut_item"
                 style="@style/textStyle_default"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/dp_80"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_radius_gray"
-                android:padding="10dp"
+                android:padding="@dimen/dp_3"
                 android:singleLine="true" />
             
             <Button
                 android:id="@+id/btn_batchCut_search"
-                android:layout_width="130dp"
+                android:layout_width="@dimen/dp_50"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="@dimen/dp_10"
                 android:background="@drawable/btn_orange_round"
                 android:text="搜索"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/sp_10" />
             
             <Button
                 android:id="@+id/btn_batchCut_scan"
-                android:layout_width="130dp"
+                android:layout_width="@dimen/dp_60"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="@dimen/dp_10"
                 android:background="@drawable/btn_orange_round"
                 android:text="扫码作业"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="@dimen/sp_10" />
         
         </LinearLayout>
         

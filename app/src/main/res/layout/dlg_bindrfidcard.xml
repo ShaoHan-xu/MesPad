@@ -7,7 +7,7 @@
     <TextView
         style="@style/textStyle_default"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/green"
         android:gravity="center"
         android:text="替换卡号"
@@ -20,7 +20,7 @@
         android:orientation="vertical">
         
         <LinearLayout
-            android:layout_width="250dp"
+            android:layout_width="@dimen/dp_125"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
@@ -29,7 +29,7 @@
                 style="@style/textStyle_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/dp_5"
                 android:text="旧卡号" />
             
             <TextView
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="10dp" />
+                android:padding="@dimen/dp_5" />
         </LinearLayout>
         
         <LinearLayout
@@ -52,7 +52,7 @@
                 style="@style/textStyle_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/dp_5"
                 android:text="新卡号" />
             
             <EditText
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_black"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:singleLine="true" />
         
         </LinearLayout>
@@ -70,7 +70,7 @@
     <LinearLayout
         android:id="@+id/tag"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         

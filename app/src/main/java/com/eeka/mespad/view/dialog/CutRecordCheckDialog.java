@@ -43,11 +43,13 @@ public class CutRecordCheckDialog extends BaseDialog {
         tv_orderNum.setText(mOrderNum);
 
         StringBuilder sb = new StringBuilder();
-        for (BatchCutRecordBo.CutSizesBean item : mSizes) {
-            sb.append(item.getSizeCode()).append("码").append(item.getSizeLeft()).append("件 ");
+        if (mSizes != null) {
+            for (BatchCutRecordBo.CutSizesBean item : mSizes) {
+                sb.append(item.getSizeCode()).append("码").append(item.getSizeLeft()).append("件 ");
+            }
+            TextView tv_selectedSize = mView.findViewById(R.id.tv_selectedSize);
+            tv_selectedSize.setText(sb.subSequence(0, sb.length() - 1));
         }
-        TextView tv_selectedSize = mView.findViewById(R.id.tv_selectedSize);
-        tv_selectedSize.setText(sb.subSequence(0, sb.length() - 1));
 
         mView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
             @Override

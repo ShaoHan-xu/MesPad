@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_suspendAlert_item2"
@@ -25,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_suspendAlert_item3"
@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_suspendAlert_item4"
@@ -41,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_suspendAlert_item5"
@@ -49,16 +49,16 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_suspendAlert_sureBtn"
             style="@style/textStyle_default"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dp_50"
             android:layout_height="match_parent"
             android:background="@drawable/btn_primary"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="确认"
             android:textColor="@color/white" />
 

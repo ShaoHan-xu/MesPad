@@ -5,7 +5,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:text="绑定洗水唛"
@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true">
 
         <Button
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/dp_10"
         android:background="@drawable/border_black"
         android:divider="@drawable/divider_gray"
         android:orientation="vertical"
@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="@dimen/dp_4"
                 android:text="SFC" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.8"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="@dimen/dp_4"
                 android:text="部件" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="@dimen/dp_4"
                 android:text="洗水唛编号" />
         </LinearLayout>
 
@@ -93,7 +93,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="8dp" />
+                android:padding="@dimen/dp_4" />
 
             <TextView
                 android:id="@+id/tv_washLabel_part"
@@ -101,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.8"
                 android:gravity="center"
-                android:padding="8dp" />
+                android:padding="@dimen/dp_4" />
 
             <EditText
                 android:id="@+id/et_washLabel_washLabel"
@@ -111,7 +111,7 @@
                 android:background="@null"
                 android:gravity="center"
                 android:hint="扫码输入洗水唛编号"
-                android:padding="8dp"
+                android:padding="@dimen/dp_4"
                 android:singleLine="true" />
         </LinearLayout>
 

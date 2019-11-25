@@ -49,18 +49,29 @@ public class ErrorDialog {
         showAlert(context, msg, false);
     }
 
+    /**
+     * 错误提示弹框
+     */
+    public static void showAlert(Context context, String msg, DialogInterface.OnDismissListener listener) {
+        showAlert(context, msg, TYPE.ERROR, null, false, listener);
+    }
+
     public static void showAlert(Context context, String msg, boolean autoDismiss) {
-        showAlert(context, msg, TYPE.ERROR, null, autoDismiss);
+        showAlert(context, msg, TYPE.ERROR, null, autoDismiss, null);
     }
 
     /**
      * 确认提示弹框
      */
     public static void showConfirmAlert(Context context, String msg, View.OnClickListener listener) {
-        showAlert(context, msg, TYPE.ALERT, listener, false);
+        showAlert(context, msg, TYPE.ALERT, listener, false, null);
     }
 
     public static void showAlert(Context context, String msg, TYPE type, final View.OnClickListener positiveListener, boolean autoDismiss) {
+        showAlert(context, msg, type, positiveListener, autoDismiss, null);
+    }
+
+    public static void showAlert(Context context, String msg, TYPE type, final View.OnClickListener positiveListener, boolean autoDismiss, final DialogInterface.OnDismissListener listener) {
         if (context == null) {
             return;
         }
@@ -109,9 +120,13 @@ public class ErrorDialog {
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                PushJson push = new PushJson();
-                push.setType(PushJson.TYPE_ErrDialogDismiss);
-                EventBus.getDefault().post(push);
+                if (listener != null) {
+                    listener.onDismiss(dialog);
+                } else {
+                    PushJson push = new PushJson();
+                    push.setType(PushJson.TYPE_ErrDialogDismiss);
+                    EventBus.getDefault().post(push);
+                }
             }
         });
         builder.setView(v);

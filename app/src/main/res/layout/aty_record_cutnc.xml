@@ -2,62 +2,62 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <LinearLayout
         android:id="@+id/tag_recordBad_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
-        android:padding="10dp">
-
+        android:padding="@dimen/dp_5">
+        
         <TextView
             style="@style/textStyle_default"
             android:text="订单号/批次号："
             android:textColor="@color/white" />
-
+        
         <TextView
             android:id="@+id/tv_recordBad_orderNum"
             style="@style/textStyle_default"
             android:textColor="@color/white" />
     </LinearLayout>
-
+    
     <LinearLayout
         android:id="@+id/tag_recordBad_operation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_recordBad_save"
             style="@style/btnStyle_primary"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/dp_5"
             android:text="保存" />
-
+        
         <Button
             android:id="@+id/btn_recordBad_cancel"
             style="@style/btnStyle_primary"
             android:text="取消" />
-
+    
     </LinearLayout>
-
+    
     <View
         android:id="@+id/line"
         style="@style/line"
         android:layout_above="@id/tag_recordBad_operation" />
-
+    
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gv_recordBad"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/line"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/tag_recordBad_title"
-        android:padding="5dp" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:padding="@dimen/dp_2" />
 
 </RelativeLayout>

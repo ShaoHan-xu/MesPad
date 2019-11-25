@@ -1,6 +1,7 @@
 package com.eeka.mespad.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +18,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.R;
 import com.eeka.mespad.bo.ProcessDirectionBo;
 import com.eeka.mespad.bo.UserInfoBo;
-import com.eeka.mespad.callback.IntegerCallback;
 import com.eeka.mespad.callback.StringCallback;
 import com.eeka.mespad.http.HttpHelper;
-import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.AllCutDialog;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.ImageBrowserDialog;
 import com.squareup.picasso.Picasso;
 
@@ -329,7 +329,7 @@ public class ProcessDirectionActivity extends BaseActivity {
 
     @Override
     public void onSuccess(String url, JSONObject resultJSON) {
-        super.onSuccess(url, resultJSON);
+        dismissLoading();
         if (HttpHelper.isSuccess(resultJSON)) {
             if (HttpHelper.getProcessDirection.equals(url)) {
                 mData = JSON.parseObject(HttpHelper.getResultStr(resultJSON), ProcessDirectionBo.class);
@@ -343,6 +343,16 @@ public class ProcessDirectionActivity extends BaseActivity {
                 toast(resultJSON.getString("result"));
                 setResult(RESULT_OK);
                 finish();
+            }
+        } else {
+            if (HttpHelper.getProcessDirection.equals(url)) {
+                ErrorDialog.showAlert(mContext, resultJSON.getString("message"), new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                    }
+                });
             }
         }
     }

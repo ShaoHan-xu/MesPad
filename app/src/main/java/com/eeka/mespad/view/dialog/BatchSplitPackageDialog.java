@@ -137,12 +137,12 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 break;
             case R.id.tv_printSeq:
                 mPrintingIndex = (int) v.getTag();
-                BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
-                if (printBo.isPrinted() || !"M".equals(mData.getMaterialType())) {
-                    recordPrintState(v, null);
-                } else {
-                    showBindRfidDialog(v, printBo.getRfid());
-                }
+//                BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
+//                if (printBo.isPrinted() || !"M".equals(mData.getMaterialType())) {
+                recordPrintState(v, null);
+//                } else {
+//                    showBindRfidDialog(v, printBo.getRfid());
+//                }
                 break;
         }
     }
@@ -185,7 +185,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         if (!printBo.isPrinted()) {
             LoadingDialog.show(mContext);
             HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq(), printBo.getRfid(), newRfid, printBo.getProcessLotRef(), this);
-            if (mPrintingIndex == 0){
+            if (mPrintingIndex == 0) {
                 completed();
             }
         } else {
@@ -405,7 +405,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 refreshItemView();
             } else if (HttpHelper.recordSubPackagePrintInfo.equals(url)) {
                 BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
-                printBo.setRfid(mNewRfid);
+//                printBo.setRfid(mNewRfid);
                 print();
             } else if (HttpHelper.completedSplitPrint.equals(url)) {
                 cancelAble = true;

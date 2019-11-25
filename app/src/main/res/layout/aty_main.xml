@@ -2,39 +2,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <RelativeLayout
         android:id="@+id/layout_bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottomBarHeight"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:padding="5dp">
-
+        android:padding="@dimen/dp_2">
+        
         <LinearLayout
             android:id="@+id/layout_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="@drawable/border_black"
             android:orientation="horizontal"
             android:padding="0.5dp">
-
+            
             <TextView
                 android:id="@+id/tv_main_searchType"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/dp_50"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn_green"
                 android:drawableRight="@drawable/ic_arrow_down_white"
                 android:gravity="center"
-                android:paddingRight="10dp"
+                android:paddingRight="@dimen/dp_5"
                 android:text="卡号"
                 android:textColor="@color/white"
                 android:textSize="@dimen/textSize_content"
                 android:visibility="gone" />
-
+            
             <EditText
                 android:id="@+id/et_orderNum"
                 style="@style/textStyle_default"
@@ -44,60 +44,60 @@
                 android:gravity="center"
                 android:hint="输入RFID卡号搜索"
                 android:nextClusterForward="@id/et_orderNum"
-                android:nextFocusDown="@id/et_orderNum"
-                android:nextFocusForward="@id/et_orderNum"
                 android:nextFocusLeft="@id/et_orderNum"
                 android:nextFocusRight="@id/et_orderNum"
                 android:nextFocusUp="@id/et_orderNum"
+                android:nextFocusDown="@id/et_orderNum"
+                android:nextFocusForward="@id/et_orderNum"
                 android:padding="5dp"
                 android:singleLine="true" />
-
+            
             <Button
                 android:id="@+id/btn_searchOrder"
                 style="@style/btnStyle_green"
                 android:layout_height="match_parent"
                 android:text="搜索" />
-
+        
         </LinearLayout>
-
+        
         <LinearLayout
             android:id="@+id/layout_searchPosition"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/dp_5"
             android:layout_toRightOf="@id/layout_search"
             android:background="@drawable/border_black"
             android:padding="0.5dp"
             android:visibility="gone">
-
+            
             <EditText
                 android:id="@+id/et_position"
                 style="@style/textStyle_default"
-                android:layout_width="130dp"
+                android:layout_width="@dimen/dp_65"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:gravity="center"
                 android:hint="輸入站位IP切換站位"
                 android:padding="5dp"
                 android:singleLine="true" />
-
+            
             <Button
                 android:id="@+id/btn_searchPosition"
                 style="@style/btnStyle_green"
                 android:layout_height="match_parent"
                 android:text="搜索" />
-
+        
         </LinearLayout>
-
+        
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:layout_marginRight="@dimen/dp_2"
             android:layout_toRightOf="@id/layout_searchPosition">
-
+            
             <LinearLayout
                 android:id="@+id/layout_controlPanel"
                 android:layout_width="wrap_content"
@@ -108,24 +108,24 @@
                 android:showDividers="middle" />
         </HorizontalScrollView>
     </RelativeLayout>
-
+    
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_bottomBar"
         android:orientation="vertical">
-
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+            
             <FrameLayout
                 android:id="@+id/layout_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="5dp" />
-
+                android:padding="@dimen/dp_2" />
+            
             <TextView
                 android:id="@+id/tv_startWorkAlert"
                 style="@style/textStyle_default"
@@ -137,68 +137,68 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
         </RelativeLayout>
-
+        
         <RelativeLayout
             android:id="@+id/layout_slide"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_75"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@color/colorPrimary"
             android:padding="10dp">
-
+            
             <TextView
                 android:id="@+id/tv_setting"
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
                 android:layout_alignParentBottom="true"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="设置"
                 android:textColor="@color/white" />
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:visibility="gone">
-
+                
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="@dimen/dp_40"
+                    android:layout_height="@dimen/dp_40"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/ic_launcher" />
-
+                
                 <TextView
                     style="@style/textStyle_default"
                     android:text="韩信"
                     android:textColor="@color/white" />
-
+                
                 <TextView
                     android:id="@+id/tv_caijian"
                     style="@style/textStyle_default"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="裁剪作业界面"
                     android:textColor="@color/white" />
-
+                
                 <TextView
                     android:id="@+id/tv_diaogua"
                     style="@style/textStyle_default"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="吊挂作业界面"
                     android:textColor="@color/white" />
-
+                
                 <TextView
                     android:id="@+id/tv_sew"
                     style="@style/textStyle_default"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="缝制作业界面"
                     android:textColor="@color/white" />
-
+                
                 <TextView
                     android:id="@+id/tv_sewQC"
                     style="@style/textStyle_default"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_5"
                     android:text="缝制质检作业界面"
                     android:textColor="@color/white" />
             </LinearLayout>

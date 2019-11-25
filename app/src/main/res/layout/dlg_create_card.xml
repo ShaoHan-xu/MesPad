@@ -3,199 +3,199 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
+    
     <TextView
         style="@style/textStyle_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:padding="15dp"
+        android:padding="@dimen/dp_7"
         android:text="制卡/解绑"
         android:textColor="@color/white"
-        android:textSize="20sp" />
-
+        android:textSize="@dimen/sp_10" />
+    
     <TextView
         android:id="@+id/tv_createCard_site"
         style="@style/textStyle_default"
         android:layout_gravity="center_horizontal"
-        android:padding="15dp"
+        android:padding="@dimen/dp_7"
         android:text="站点："
         android:textStyle="bold" />
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="工票号：" />
-
+            
             <EditText
                 android:id="@+id/et_createCard_sfc"
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:background="@drawable/border_black"
                 android:imeOptions="actionDone"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:singleLine="true" />
-
+            
             <TextView
                 style="@style/textStyle_default"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="@dimen/dp_25"
                 android:text="衣架号：" />
-
+            
             <EditText
                 android:id="@+id/et_createCard_hangerId"
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:background="@drawable/border_black"
                 android:imeOptions="actionDone"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:singleLine="true" />
-
+        
         </LinearLayout>
-
+        
         <TextView
             style="@style/textStyle_default"
             android:text="注：输入任意一个条件即可进行搜索" />
     </LinearLayout>
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="horizontal"
-        android:padding="10dp">
-
+        android:padding="@dimen/dp_5">
+        
         <Button
             android:id="@+id/btn_createCard_search"
             style="@style/btnStyle_green_round"
-            android:width="150dp"
+            android:width="@dimen/dp_75"
             android:text="查询" />
-
+    
     </LinearLayout>
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/white"
         android:divider="@drawable/divider_gray"
         android:orientation="vertical"
         android:showDividers="beginning|middle|end">
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="beginning|middle|end">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工票号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="衣架号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="订单号" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工序" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="工序描述" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="RFID号" />
         </LinearLayout>
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="beginning|middle|end">
-
+            
             <TextView
                 android:id="@+id/tv_createCard_sfc"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_createCard_hangerId"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_createCard_orderNum"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_createCard_operation"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <TextView
                 android:id="@+id/tv_createCard_operationDesc"
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="10dp" />
-
+                android:padding="@dimen/dp_5" />
+            
             <EditText
                 android:id="@+id/et_createCard_rfidNum"
                 style="@style/textStyle_default"
@@ -203,41 +203,41 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@null"
-                android:hint="点击输入"
                 android:gravity="center"
+                android:hint="点击输入"
                 android:imeOptions="actionDone"
                 android:singleLine="true" />
         </LinearLayout>
     </LinearLayout>
-
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/dp_10"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_createCard_createCard"
             style="@style/btnStyle_green_round"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dp_50"
             android:layout_gravity="center_horizontal"
             android:text="制卡" />
-
+        
         <Button
             android:id="@+id/btn_createCard_unbind"
             style="@style/btnStyle_green_round"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dp_50"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/dp_5"
             android:text="解绑" />
-
+        
         <Button
             android:id="@+id/btn_cancel"
             style="@style/btnStyle_green_round"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/dp_50"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="@dimen/dp_10"
             android:text="取消" />
     </LinearLayout>
 </LinearLayout>

@@ -478,15 +478,17 @@ public class HttpHelper {
     /**
      * 获取大货裁剪订单列表
      *
+     * @param type          品类
      * @param fz_workCenter 缝制工作中心
      * @param cj_workCenter 裁剪工作中心
      */
-    public static void getBatchCutOrderList(String shopOrder, String item, String operation, List<String> fz_workCenter, List<String> cj_workCenter, HttpCallback callback) {
+    public static void getBatchCutOrderList(String shopOrder, String item, String operation, List<String> type, List<String> fz_workCenter, List<String> cj_workCenter, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("shopOrder", shopOrder);
         json.put("item", item);
         json.put("operation", operation);
+        json.put("cateGory", type);
         json.put("fz_workCenter", fz_workCenter);
         json.put("cj_workCenter", cj_workCenter);
         params.put("params", json.toString());
@@ -1474,17 +1476,8 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.7.26.111";//拉布
-//        PAD_IP = "10.7.26.222";//吊纱
-//        PAD_IP = "10.7.26.333";//裁剪
-//        PAD_IP = "10.7.26.444";//验片
-//        PAD_IP = "10.7.26.555";//粘朴
-//        PAD_IP = "10.7.26.666";//二度
-//        PAD_IP = "10.7.26.777";//点位
-//        PAD_IP = "10.7.26.888";//分包
-//        PAD_IP = "10.7.26.999";//工序确认
-//        PAD_IP = "10.7.26.9";//拉布2
-//        PAD_IP = "10.7.26.1111";//裁剪2
+//        PAD_IP = "10.10.28.9";//D拉布
+//        PAD_IP = "10.10.28.0";// D 工序确认
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
         return PAD_IP;
     }

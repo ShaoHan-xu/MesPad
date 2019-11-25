@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/dp_5"
         android:orientation="horizontal">
         
         <LinearLayout
@@ -24,52 +24,52 @@
             
             <Button
                 android:id="@+id/btn_start"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_75"
+                android:layout_height="@dimen/dp_25"
                 android:background="@drawable/btn_green_round"
                 android:text="开始"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/sp_10" />
             
             <Button
                 android:id="@+id/btn_add"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_width="@dimen/dp_75"
+                android:layout_height="@dimen/dp_25"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/btn_green_round_new"
                 android:text="新增"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/sp_10" />
             
             <Button
                 android:id="@+id/btn_completed"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
+                android:layout_width="@dimen/dp_75"
+                android:layout_height="@dimen/dp_25"
+                android:layout_marginRight="@dimen/dp_10"
                 android:background="@drawable/btn_orange_round"
                 android:text="完成"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/sp_10" />
             
             <Button
                 android:id="@+id/btn_layoutImg"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_75"
+                android:layout_height="@dimen/dp_25"
                 android:background="@drawable/btn_green_round"
                 android:text="排料图"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/sp_10" />
         </LinearLayout>
         
         <Button
             android:id="@+id/btn_print"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_25"
             android:background="@drawable/btn_green_round_new"
             android:text="打印拉布单"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="@dimen/sp_10"
             android:visibility="gone" />
     
     </LinearLayout>
@@ -80,7 +80,7 @@
         android:layout_above="@id/layout_buttonWrap"
         android:layout_below="@id/layout_title"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="@dimen/dp_5">
         
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,11 +89,11 @@
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="120dp"
+                android:layout_width="@dimen/dp_60"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_layoutimg"
                 android:gravity="center_vertical"
-                android:padding="10dp"
+                android:padding="@dimen/dp_5"
                 android:text="排料图实际长度录入："
                 android:textStyle="bold" />
             
@@ -120,7 +120,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="5dp"
+                        android:padding="@dimen/dp_2"
                         android:text="排料图" />
                     
                     <TextView
@@ -128,7 +128,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="5dp"
+                        android:padding="@dimen/dp_2"
                         android:text="排料图(米)" />
                     
                     <TextView
@@ -136,7 +136,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="5dp"
+                        android:padding="@dimen/dp_2"
                         android:text="实际长度(米)" />
                 </LinearLayout>
                 
@@ -155,7 +155,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dp_5"
                 android:layout_weight="1.2"
                 android:background="@drawable/bg_border_gray_light"
                 android:divider="@drawable/divider_gray_light"
@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:background="#D8D8D8"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/dp_1"
                     android:text="排料图已拉层数汇总表" />
                 
                 <LinearLayout
@@ -190,41 +190,41 @@
                         
                         <TextView
                             style="@style/textStyle_default"
-                            android:padding="2dp"
+                            android:padding="@dimen/dp_1"
                             android:text="段数" />
                         
                         <TextView
                             style="@style/textStyle_default"
-                            android:padding="2dp"
+                            android:padding="@dimen/dp_1"
                             android:text="码数" />
                         
                         <TextView
                             style="@style/textStyle_default"
-                            android:padding="2dp"
+                            android:padding="@dimen/dp_1"
                             android:text="比例" />
                         
                         <TextView
                             style="@style/textStyle_default"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="2dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="2dp"
+                            android:paddingLeft="@dimen/dp_2"
+                            android:paddingTop="@dimen/dp_1"
+                            android:paddingRight="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_1"
                             android:text="需拉层数" />
                         
                         <TextView
                             style="@style/textStyle_default"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="2dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="2dp"
+                            android:paddingLeft="@dimen/dp_2"
+                            android:paddingTop="@dimen/dp_1"
+                            android:paddingRight="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_1"
                             android:text="已拉层数" />
                         
                         <TextView
                             style="@style/textStyle_default"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="2dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="2dp"
+                            android:paddingLeft="@dimen/dp_2"
+                            android:paddingTop="@dimen/dp_1"
+                            android:paddingRight="@dimen/dp_2"
+                            android:paddingBottom="@dimen/dp_1"
                             android:text="待拉层数" />
                     </LinearLayout>
                 
@@ -236,26 +236,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
             android:gravity="center_vertical"
             android:orientation="horizontal">
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="120dp"
+                android:layout_width="@dimen/dp_60"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_layoutimg"
                 android:gravity="center_vertical"
-                android:minHeight="80dp"
-                android:padding="10dp"
+                android:minHeight="@dimen/dp_40"
+                android:padding="@dimen/dp_5"
                 android:text="尺码选择："
                 android:textStyle="bold" />
             
             <LinearLayout
                 android:id="@+id/layout_sizeList"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="@dimen/dp_40"
                 android:background="@drawable/bg_border_gray_light"
                 android:divider="@drawable/divider_gray_light"
                 android:gravity="center_vertical"
@@ -289,7 +289,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_1"
                     android:text="卷号" />
                 
                 <TextView
@@ -297,7 +297,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_1"
                     android:text="面料长度" />
                 
                 <TextView
@@ -305,7 +305,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_1"
                     android:text="余料" />
                 
                 <TextView
@@ -313,7 +313,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_1"
                     android:text="短码数" />
                 
                 <TextView
@@ -321,7 +321,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:padding="@dimen/dp_1"
                     android:text="操作" />
             
             </LinearLayout>
@@ -351,7 +351,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp"
+                            android:padding="@dimen/dp_2"
                             android:text="合计" />
                         
                         <TextView
@@ -359,28 +359,28 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp" />
+                            android:padding="@dimen/dp_2" />
                         
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp" />
+                            android:padding="@dimen/dp_2" />
                         
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp" />
+                            android:padding="@dimen/dp_2" />
                         
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="5dp" />
+                            android:padding="@dimen/dp_2" />
                     
                     </LinearLayout>
                 </LinearLayout>

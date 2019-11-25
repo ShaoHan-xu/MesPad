@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/dp_40"
         android:divider="@drawable/divider_gray"
         android:orientation="horizontal"
         android:showDividers="middle">
@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="编号" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="规格颜色描述" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="部位" />
 
         <TextView
@@ -48,13 +48,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="是否为外观线迹" />
 
         <ImageView
             android:id="@+id/iv_lineColor_img"
-            android:layout_width="120dp"
-            android:layout_height="80dp" />
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_40" />
     </LinearLayout>
 
     <View

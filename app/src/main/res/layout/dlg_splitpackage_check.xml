@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="#B2C657"
         android:gravity="center"
         android:text="分包点检表"
@@ -17,7 +17,7 @@
     <LinearLayout
         android:id="@+id/layout_buttonWrap"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         
@@ -52,28 +52,28 @@
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="核对实物与码数"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="裁片块数是否正确"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="是否区分 A/B 件"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="检查裁片是否同边"
             android:textSize="@dimen/textSize_title" />
     

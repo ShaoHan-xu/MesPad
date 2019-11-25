@@ -2,30 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <LinearLayout
         android:id="@+id/layout_componentInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
-
+            android:padding="@dimen/dp_5">
+            
             <TextView
                 style="@style/textStyle_default"
                 android:text="工票号：" />
-
+            
             <TextView
                 android:id="@+id/tv_recordSewNC_workNum"
                 style="@style/textStyle_default" />
         </LinearLayout>
-
+        
         <View style="@style/line" />
-
+        
         <LinearLayout
             android:id="@+id/layout_recordSewNC_productComponent"
             android:layout_width="match_parent"
@@ -34,9 +34,9 @@
             android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="middle|end" />
-
+        
         <View style="@style/line" />
-
+        
         <LinearLayout
             android:id="@+id/layout_recordSewNC_designComponent"
             android:layout_width="match_parent"
@@ -45,10 +45,10 @@
             android:divider="@drawable/divider_gray"
             android:orientation="horizontal"
             android:showDividers="middle|end" />
-
+        
         <View style="@style/line" />
     </LinearLayout>
-
+    
     <LinearLayout
         android:id="@+id/layout_controlPanel"
         android:layout_width="wrap_content"
@@ -56,71 +56,71 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_5"
         android:orientation="horizontal">
-
+        
         <Button
             android:id="@+id/btn_recordSewNC_done"
             style="@style/btnStyle_primary"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_75"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/dp_5"
             android:text="保存" />
-
+        
         <Button
             android:id="@+id/btn_cancel"
             style="@style/btnStyle_primary"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/dp_75"
             android:layout_height="match_parent"
             android:text="取消" />
-
+    
     </LinearLayout>
-
+    
     <View
         style="@style/line"
         android:layout_above="@id/layout_controlPanel"
         android:layout_alignParentBottom="true" />
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_controlPanel"
         android:layout_below="@id/layout_componentInfo"
         android:layout_marginBottom="1dp">
-
+        
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_recordSewNC_selected"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
-            android:padding="1dp"
-            android:background="@drawable/border_black" />
-
+            android:layout_marginLeft="@dimen/dp_5"
+            android:background="@drawable/border_black"
+            android:padding="1dp" />
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/recyclerView_recordSewNC_selected">
-
+            
             <HorizontalScrollView
                 android:id="@+id/hsv_recordSewNC_NcProcess"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="@dimen/dp_60"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dp_2"
                 android:background="@drawable/border_black"
                 android:visibility="gone">
-
+                
                 <LinearLayout
                     android:id="@+id/layout_recordSewNC_NcProcess"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal" />
             </HorizontalScrollView>
-
+            
             <View style="@style/line" />
-
+            
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView_NCType"
                 android:layout_width="match_parent"
@@ -128,7 +128,7 @@
                 android:layout_above="@id/hsv_recordSewNC_NcProcess"
                 android:background="@drawable/border_black"
                 android:padding="0.5dp" />
-
+        
         </RelativeLayout>
     </RelativeLayout>
 

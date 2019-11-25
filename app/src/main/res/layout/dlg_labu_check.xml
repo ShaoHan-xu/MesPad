@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="#B2C657"
         android:gravity="center"
         android:text="拉布复核点检表"
@@ -17,7 +17,7 @@
     <LinearLayout
         android:id="@+id/layout_buttonWrap"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
         
@@ -52,35 +52,35 @@
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="核对实物与码数"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="核对面料倒顺花向"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="核对面料正反面"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="核对唛架款号、码数、错放"
             android:textSize="@dimen/textSize_title" />
         
         <CheckBox
             style="@style/textStyle_default"
             android:button="@drawable/checkbox_green"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:text="在唛架纸上记录流水号"
             android:textSize="@dimen/textSize_title" />
     

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_border_gray_light"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="@dimen/dp_5">
         
         <TextView
             style="@style/textStyle_default"
@@ -22,7 +22,6 @@
         <TextView
             android:id="@+id/tv_processDirection_shopOrder"
             style="@style/textStyle_default"
-            android:text="12245362354675"
             android:textColor="@color/orange"
             android:textStyle="bold" />
         
@@ -35,7 +34,6 @@
         <TextView
             android:id="@+id/tv_processDirection_item"
             style="@style/textStyle_default"
-            android:text="VK02237"
             android:textColor="@color/orange"
             android:textStyle="bold" />
     </LinearLayout>
@@ -43,14 +41,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="@dimen/dp_5">
         
         <LinearLayout
             android:id="@+id/layout_buttonWrap"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="@dimen/dp_30"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dp_5"
             android:background="@color/white"
             android:gravity="right"
             android:orientation="vertical">
@@ -62,10 +60,11 @@
             
             <Button
                 android:id="@+id/btn_processDirection_submit"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/dp_70"
                 android:layout_height="match_parent"
                 android:background="@drawable/btn_orange"
                 android:enabled="false"
+                android:textSize="@dimen/sp_10"
                 android:text="提交工序流"
                 android:textColor="@color/white" />
         
@@ -80,7 +79,7 @@
             
             <LinearLayout
                 android:id="@+id/layout_MLP"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_70"
                 android:layout_height="match_parent"
                 android:divider="@drawable/divider_white"
                 android:orientation="vertical"
@@ -108,8 +107,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
                         android:src="@drawable/ic_processdirection_readed" />
                 
                 </RelativeLayout>
@@ -137,8 +136,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
                         android:src="@drawable/ic_processdirection_readed"
                         android:visibility="gone" />
                 
@@ -167,8 +166,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:layout_marginBottom="@dimen/dp_5"
                         android:src="@drawable/ic_processdirection_readed"
                         android:visibility="gone" />
                 
@@ -192,13 +191,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginRight="210dp"
+                        android:layout_marginRight="@dimen/dp_100"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_SP"
@@ -217,7 +216,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
@@ -225,13 +224,13 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:layout_marginRight="@dimen/dp_10"
                             android:src="@drawable/arrow_direction_right" />
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_DS"
@@ -250,7 +249,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
@@ -263,8 +262,8 @@
                             android:src="@drawable/arrow_direction_right" />
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_CA"
@@ -283,7 +282,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
@@ -291,26 +290,26 @@
                     </LinearLayout>
                     
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_240"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="260dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_120"
+                        android:layout_marginBottom="@dimen/dp_5"
                         android:src="@drawable/arrow_direction_main" />
                     
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginRight="210dp"
+                        android:layout_marginRight="@dimen/dp_100"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp"
-                            android:layout_marginRight="30dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23"
+                            android:layout_marginRight="@dimen/dp_10">
                             
                             <CheckBox
                                 android:id="@+id/ckb_DB"
@@ -329,15 +328,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp"
-                            android:layout_marginRight="30dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23"
+                            android:layout_marginRight="@dimen/dp_10">
                             
                             <CheckBox
                                 android:id="@+id/ckb_FI"
@@ -356,15 +355,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp"
-                            android:layout_marginRight="30dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23"
+                            android:layout_marginRight="@dimen/dp_10">
                             
                             <CheckBox
                                 android:id="@+id/ckb_CP"
@@ -383,14 +382,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_CK"
@@ -409,7 +408,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
@@ -420,9 +419,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="260dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_120"
+                        android:layout_marginBottom="@dimen/dp_5"
                         android:src="@drawable/arrow_direction_down" />
                     
                     <LinearLayout
@@ -433,8 +432,8 @@
                         android:orientation="horizontal">
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_FB"
@@ -453,7 +452,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
@@ -461,13 +460,13 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginRight="@dimen/dp_5"
                             android:src="@drawable/arrow_direction_right" />
                         
                         <RelativeLayout
-                            android:layout_width="120dp"
-                            android:layout_height="45dp">
+                            android:layout_width="@dimen/dp_60"
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_RK"
@@ -486,7 +485,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="@dimen/dp_5"
                                 android:src="@drawable/ic_lock_processdirection" />
                         
                         </RelativeLayout>
@@ -496,13 +495,12 @@
             
             <ImageView
                 android:id="@+id/iv_processDirection_img"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="@dimen/dp_5"
                 android:background="@drawable/bg_border_gray_light"
-                android:padding="10dp"
-                android:src="@drawable/img_sample" />
+                android:padding="@dimen/dp_5" />
         
         </LinearLayout>
     

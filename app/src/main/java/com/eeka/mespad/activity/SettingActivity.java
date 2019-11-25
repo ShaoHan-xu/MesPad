@@ -58,7 +58,7 @@ public class SettingActivity extends BaseActivity {
         StringBuilder sb = new StringBuilder("版本：");
         sb.append(SystemUtils.getAppVersionName(mContext));
         sb.append("(").append(SystemUtils.getAppVersionCode(mContext)).append(")");
-        sb.append("_").append(SystemUtils.getChannelName(this));
+        sb.append("_").append(getString(R.string.app_channel));
         if (SystemUtils.isApkInDebug(mContext)) {
             sb.append("_debug");
         }

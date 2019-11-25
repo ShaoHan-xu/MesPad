@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:gravity="center"
-        android:padding="8dp"
+        android:padding="@dimen/dp_4"
         android:text="出库提示"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_title" />
@@ -40,12 +40,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:orientation="horizontal">
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:gravity="right"
                 android:text="款号：" />
             
@@ -58,12 +58,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:orientation="horizontal">
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:gravity="right"
                 android:text="码数：" />
             
@@ -76,12 +76,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:orientation="horizontal">
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:gravity="right"
                 android:text="入库数量：" />
             
@@ -94,24 +94,24 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dp_2"
             android:orientation="horizontal"
             android:visibility="gone">
             
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:gravity="right"
                 android:text="出库数量：" />
             
             <EditText
                 android:id="@+id/et_qty"
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:background="@drawable/border_black"
                 android:gravity="center"
                 android:inputType="number"
-                android:padding="8dp" />
+                android:padding="@dimen/dp_4" />
         </LinearLayout>
     </LinearLayout>
     

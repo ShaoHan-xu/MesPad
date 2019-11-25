@@ -391,7 +391,7 @@ public class MainActivity extends NFCActivity {
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             switch (item.getBUTTON_ID()) {
                 case "SECOND_CLASS":
-                    button.setText("二等品");
+                    button.setText("缺面料");
                     button.setId(R.id.btn_secondClass);
                     break;
                 case "YILING_MESSAGE":
@@ -1211,14 +1211,18 @@ public class MainActivity extends NFCActivity {
                 }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
                     mTv_searchType.setVisibility(View.VISIBLE);
-                    String workType = mPositionInfo.getWORK_TYPE();
-                    if ("P".equals(workType)) {
-                        if (mPositionInfo.getBUTTON_INFOR() != null) {
-                            SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
+                    String channelName = getString(R.string.app_channel);
+                    //目前只有于都大货裁剪使用新主题
+                    if ("base".equals(channelName) || "YD_bulk".equals(channelName)) {
+                        String workType = mPositionInfo.getWORK_TYPE();
+                        if ("P".equals(workType)) {
+                            if (mPositionInfo.getBUTTON_INFOR() != null) {
+                                SpUtil.save(SpUtil.KEY_BUTTON, JSON.toJSONString(mPositionInfo.getBUTTON_INFOR()));
+                            }
+                            startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
+                            finish();
+                            return;
                         }
-                        startActivity(BatchOrderListActivity.getIntent(mContext, mPositionInfo.getOPER_INFOR().get(0)));
-                        finish();
-                        return;
                     }
                 } else {
                     mTv_searchType.setVisibility(View.GONE);

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:padding="10dp"
+        android:padding="@dimen/dp_5"
         android:text="缝制段退补料申请"
         android:textColor="@color/white"
         android:textSize="@dimen/textSize_title" />
@@ -21,12 +21,12 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:padding="@dimen/dp_10">
 
         <Button
             android:id="@+id/btn_done"
             style="@style/btnStyle_primary"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/dp_10"
             android:text="保存" />
 
         <Button
@@ -42,7 +42,7 @@
         android:layout_below="@id/tv_title"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="@dimen/dp_10">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="@dimen/dp_10"
                 android:orientation="horizontal">
 
                 <TextView
@@ -62,10 +62,10 @@
                 <TextView
                     android:id="@+id/tv_returnSew_type"
                     style="@style/textStyle_default"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/dp_40"
                     android:background="@drawable/border_black"
                     android:gravity="center"
-                    android:padding="8dp"
+                    android:padding="@dimen/dp_4"
                     android:text="退料" />
             </LinearLayout>
 
@@ -81,10 +81,10 @@
                 <TextView
                     android:id="@+id/tv_returnSew_code"
                     style="@style/textStyle_default"
-                    android:layout_width="200dp"
+                    android:layout_width="@dimen/dp_100"
                     android:background="@drawable/border_black"
                     android:gravity="center"
-                    android:padding="8dp" />
+                    android:padding="@dimen/dp_4" />
             </LinearLayout>
 
         </LinearLayout>
@@ -92,7 +92,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:orientation="horizontal">
 
             <TextView
@@ -102,22 +102,22 @@
             <EditText
                 android:id="@+id/et_returnSew_sfc"
                 style="@style/textStyle_default"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dp_75"
                 android:background="@drawable/border_black"
                 android:gravity="center"
-                android:padding="8dp" />
+                android:padding="@dimen/dp_4" />
 
             <Button
                 android:id="@+id/btn_returnSew_search"
                 style="@style/btnStyle_primary"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="@dimen/dp_5"
                 android:text="搜索" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/border_black"
             android:divider="@drawable/divider_gray"
             android:orientation="vertical"
@@ -135,7 +135,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
+                    android:padding="@dimen/dp_4"
                     android:text="物料编码" />
 
                 <TextView
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
+                    android:padding="@dimen/dp_4"
                     android:text="物料描述" />
 
                 <TextView
@@ -151,7 +151,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
+                    android:padding="@dimen/dp_4"
                     android:text="申请数量" />
 
                 <TextView
@@ -159,7 +159,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
+                    android:padding="@dimen/dp_4"
                     android:text="单位" />
             </LinearLayout>
 

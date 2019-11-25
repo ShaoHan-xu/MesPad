@@ -19,7 +19,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:inputType="textVisiblePassword"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <EditText
             android:id="@+id/et_recordLabu_matLength"
@@ -29,7 +29,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:inputType="numberDecimal"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <EditText
             android:id="@+id/et_recordLabu_layers"
@@ -39,7 +39,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:inputType="numberDecimal"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <EditText
             android:id="@+id/et_recordLabu_leftQty"
@@ -49,7 +49,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:inputType="number"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <TextView
             android:id="@+id/tv_recordLabu_dm"
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="@dimen/dp_5" />
 
         <ImageView
             android:id="@+id/iv_recordLabu_del"

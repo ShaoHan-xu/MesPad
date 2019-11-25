@@ -2,62 +2,62 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:background="@color/colorPrimary">
-
+        
         <ImageView
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:src="@drawable/ic_close" />
     </RelativeLayout>
-
+    
     <LinearLayout
-        android:layout_width="500dp"
+        android:layout_width="@dimen/dp_250"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/border_black"
         android:orientation="vertical"
         android:padding="0.5dp">
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gray_disable"
             android:orientation="horizontal">
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="@dimen/dp_2"
                 android:text="工序" />
-
+            
             <View style="@style/line_vertical" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="@dimen/dp_2"
                 android:text="不合格点" />
-
+        
         </LinearLayout>
-
+        
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
+            
             <LinearLayout
                 android:id="@+id/layout_ncDetail"
                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                 android:divider="@color/divider_gray"
                 android:orientation="vertical"
                 android:showDividers="middle" />
-
+        
         </ScrollView>
     </LinearLayout>
 

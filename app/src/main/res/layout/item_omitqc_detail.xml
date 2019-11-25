@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
         
         <TextView
             android:id="@+id/tv_omitqc_recordUser"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:gravity="center"
-            android:padding="5dp" />
+            android:padding="@dimen/dp_2" />
         
         <TextView
             android:id="@+id/tv_omitqc_item"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="漏检款号" />
         
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="漏检衣架号" />
         
         <TextView
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="漏检SFC" />
         
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="漏检人" />
         
         <TextView
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="漏检工序" />
         
         <TextView
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
+            android:padding="@dimen/dp_2"
             android:text="不良描述"
             android:textColor="@color/text_blue_default" />
     

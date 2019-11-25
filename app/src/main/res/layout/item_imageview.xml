@@ -16,7 +16,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/trans_50"
         android:gravity="center"
-        android:padding="10dp"
+        android:padding="@dimen/dp_5"
         android:textColor="@color/white"
         android:visibility="gone" />
 

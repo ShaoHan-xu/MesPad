@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -37,6 +39,7 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.UnitUtil;
+import com.eeka.mespad.view.widget.MyPopWindow;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +56,7 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private static final int REQUEST_DETAIL = 0;
 
+    private RelativeLayout mLayout_workCenter;
     private TextView mTv_loginUser;
     private TextView mTv_workCenter;
     private EditText mEt_shopOrder;
@@ -60,8 +64,10 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private ItemAdapter mItemAdapter;
     private List<BatchCutOrderListBo> mList_data;
+    private List<DictionaryDataBo> mList_type;
     private List<DictionaryDataBo> mList_fzWorkCenter;
     private List<DictionaryDataBo> mList_cjWorkCenter;
+    private List<DictionaryDataBo> mList_type_checked;
     private List<DictionaryDataBo> mList_fzWorkCenter_checked;
     private List<DictionaryDataBo> mList_cjWorkCenter_checked;
     private DictionaryDataBo mWorkCenter_fzAll;
@@ -69,6 +75,7 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private RecyclerView.LayoutParams mItemParams;
 
+    private List<String> mTypeCondition;
     private List<String> mFZWorkCenterCondition;
     private List<String> mCJWorkCenterCondition;
 
@@ -117,10 +124,12 @@ public class BatchOrderListActivity extends NFCActivity {
         mEt_shopOrder = findViewById(R.id.et_batchCut_shopOrder);
         mEt_item = findViewById(R.id.et_batchCut_item);
 
+        mLayout_workCenter = findViewById(R.id.layout_batchCut_workCenter);
+
         mTv_loginUser = findViewById(R.id.tv_batchCut_loginUser);
         mTv_loginUser.setOnClickListener(this);
         findViewById(R.id.iv_batchCut_login).setOnClickListener(this);
-        findViewById(R.id.layout_batchCut_workCenter).setOnClickListener(this);
+        mLayout_workCenter.setOnClickListener(this);
         findViewById(R.id.btn_batchCut_search).setOnClickListener(this);
         findViewById(R.id.btn_batchCut_scan).setOnClickListener(this);
 
@@ -130,19 +139,18 @@ public class BatchOrderListActivity extends NFCActivity {
     @Override
     protected void initData() {
         super.initData();
+        mList_type_checked = new ArrayList<>();
         mList_fzWorkCenter_checked = new ArrayList<>();
         mList_cjWorkCenter_checked = new ArrayList<>();
         mWorkCenter_fzAll = new DictionaryDataBo("所有缝制中心", "*");
         mWorkCenter_cjAll = new DictionaryDataBo("所有裁剪中心", "*");
-        mFZWorkCenterCondition = new ArrayList<>();
-        mCJWorkCenterCondition = new ArrayList<>();
     }
 
     private void search() {
         showLoading();
         String shopOrder = mEt_shopOrder.getText().toString();
         String item = mEt_item.getText().toString();
-        HttpHelper.getBatchCutOrderList(shopOrder, item, mOperation.getOPERATION(), mFZWorkCenterCondition, mCJWorkCenterCondition, this);
+        HttpHelper.getBatchCutOrderList(shopOrder, item, mOperation.getOPERATION(), mTypeCondition, mFZWorkCenterCondition, mCJWorkCenterCondition, this);
     }
 
     private long mLastMillis;
@@ -205,15 +213,6 @@ public class BatchOrderListActivity extends NFCActivity {
                 break;
             case R.id.btn_batchCut_search:
                 search();
-//                long millis = System.currentTimeMillis();
-//                BatchSplitPackagePrintBo printBo = new BatchSplitPackagePrintBo();
-//                printBo.setSubPackageSeq(2);
-//                printBo.setShopOrder("00060005862");
-//                printBo.setItem("KVP00601");
-//                printBo.setSizeCode("36");
-//                printBo.setSubPackageQty(50);
-//                printBo.setRfid("" + millis);
-//                BluetoothHelper.printSubPackageInfo(this, printBo);
                 break;
             case R.id.btn_batchCut_scan:
                 startScan(true);
@@ -232,6 +231,15 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private void getWorkCenterCondition() {
         StringBuilder stringBuilder = new StringBuilder();
+
+        mTypeCondition = new ArrayList<>();
+        int typeSize = mList_type_checked.size();
+        for (int i = 0; i < typeSize; i++) {
+            DictionaryDataBo item = mList_type_checked.get(i);
+            stringBuilder.append(item.getLABEL()).append("、");
+            mTypeCondition.add(item.getVALUE());
+        }
+
         mFZWorkCenterCondition = new ArrayList<>();
         int fzSize = mList_fzWorkCenter_checked.size();
         for (int i = 0; i < fzSize; i++) {
@@ -255,9 +263,10 @@ public class BatchOrderListActivity extends NFCActivity {
         mTv_workCenter.setText(s);
     }
 
-    private PopupWindow mPPW_workCenter;
+    private MyPopWindow mPPW_workCenter;
     private LinearLayout mLayout_fz;
     private LinearLayout mLayout_cj;
+    private OnCheckboxListener mCheckboxListener_type;
     private OnCheckboxListener mCheckboxListener_fz;
     private OnCheckboxListener mCheckboxListener_cj;
     private CheckBox mCkb_fzAll;
@@ -265,9 +274,15 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private void showWorkCenterSelector() {
         if (mPPW_workCenter == null) {
-            mCheckboxListener_fz = new OnCheckboxListener(true);
-            mCheckboxListener_cj = new OnCheckboxListener(false);
+            mCheckboxListener_type = new OnCheckboxListener(CheckboxListenerType.TYPE);
+            mCheckboxListener_fz = new OnCheckboxListener(CheckboxListenerType.FZ);
+            mCheckboxListener_cj = new OnCheckboxListener(CheckboxListenerType.CJ);
             View view = LayoutInflater.from(mContext).inflate(R.layout.ppw_workcenter_selector, null);
+
+            RecyclerView mRecycler_type = view.findViewById(R.id.recyclerView_workCenterSelector_type);
+            TypeAdapter mTypeAdapter = new TypeAdapter(mContext, mList_type, R.layout.layout_checkbox_orange, null);
+            mRecycler_type.setAdapter(mTypeAdapter);
+
             mCkb_fzAll = view.findViewById(R.id.checkbox_allFZ);
             mCkb_fzAll.setTag(mWorkCenter_fzAll);
             mCkb_cjAll = view.findViewById(R.id.checkbox_allCJ);
@@ -277,8 +292,8 @@ public class BatchOrderListActivity extends NFCActivity {
             mCkb_cjAll.setOnCheckedChangeListener(mCheckboxListener_cj);
 
             mLayout_fz = view.findViewById(R.id.layout_workCenterSelector_fz);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(UnitUtil.dip2px(mContext, 150), ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.topMargin = UnitUtil.dip2px(mContext, 10);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.topMargin = UnitUtil.px2dip(mContext, getResources().getDimension(R.dimen.dp_5));
             for (DictionaryDataBo item : mList_fzWorkCenter) {
                 mLayout_fz.addView(getCheckBox(item, true), params);
             }
@@ -289,12 +304,25 @@ public class BatchOrderListActivity extends NFCActivity {
 
             view.findViewById(R.id.btn_workCenterSelector_ok).setOnClickListener(this);
 
-            mPPW_workCenter = new PopupWindow(800, LinearLayout.LayoutParams.WRAP_CONTENT);
-            mPPW_workCenter.setContentView(view);
+            mPPW_workCenter = new MyPopWindow(view, (int) getResources().getDimension(R.dimen.dp_200), LinearLayout.LayoutParams.WRAP_CONTENT);
             mPPW_workCenter.setOutsideTouchable(true);
             mPPW_workCenter.setFocusable(true);
         }
-        mPPW_workCenter.showAsDropDown(findViewById(R.id.layout_batchCut_workCenter), 0, 0);
+        mPPW_workCenter.showAsDropDown(mLayout_workCenter, 0, 0, Gravity.RIGHT);
+    }
+
+    private class TypeAdapter extends CommonRecyclerAdapter<DictionaryDataBo> {
+        TypeAdapter(Context context, List<DictionaryDataBo> list, int layoutId, RecyclerView.LayoutManager layoutManager) {
+            super(context, list, layoutId, layoutManager);
+        }
+
+        @Override
+        public void convert(RecyclerViewHolder holder, DictionaryDataBo item, int position) {
+            CheckBox checkBox = holder.getView(R.id.checkbox);
+            checkBox.setText(item.getLABEL());
+            checkBox.setTag(item);
+            checkBox.setOnCheckedChangeListener(mCheckboxListener_type);
+        }
     }
 
     /**
@@ -303,7 +331,8 @@ public class BatchOrderListActivity extends NFCActivity {
      * @param isFZ 是否缝制中心
      */
     private View getCheckBox(DictionaryDataBo item, boolean isFZ) {
-        CheckBox checkBox = (CheckBox) LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_checkbtn_green_round, null);
+        CheckBox checkBox = view.findViewById(R.id.checkbox);
         if (isFZ) {
             checkBox.setOnCheckedChangeListener(mCheckboxListener_fz);
         } else {
@@ -311,51 +340,63 @@ public class BatchOrderListActivity extends NFCActivity {
         }
         checkBox.setTag(item);
         checkBox.setText(item.getLABEL());
-        return checkBox;
+        return view;
     }
+
+    private enum CheckboxListenerType {TYPE, FZ, CJ}
 
     private class OnCheckboxListener implements CompoundButton.OnCheckedChangeListener {
 
-        private boolean isFZ;
+        private CheckboxListenerType mType;
 
-        OnCheckboxListener(boolean isFZ) {
-            this.isFZ = isFZ;
+        OnCheckboxListener(CheckboxListenerType type) {
+            this.mType = type;
         }
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView.getId() == R.id.checkbox_allFZ || buttonView.getId() == R.id.checkbox_allCJ) {
-                workCenterSelectAll(isFZ, isChecked);
+                workCenterSelectAll(mType == CheckboxListenerType.FZ, isChecked);
             } else {
                 DictionaryDataBo item = (DictionaryDataBo) buttonView.getTag();
-                if (isFZ) {
-                    if (isChecked) {
-                        mList_fzWorkCenter_checked.add(item);
-                    } else {
-                        if (mCkb_fzAll.isChecked()) {
-                            //先清除监听，否则会执行全选与取消全选的操作
-                            mCkb_fzAll.setOnCheckedChangeListener(null);
-                            mCkb_fzAll.setChecked(false);
-                            mList_fzWorkCenter_checked.addAll(mList_fzWorkCenter);
-                            mList_fzWorkCenter_checked.remove(mWorkCenter_fzAll);
+                switch (mType) {
+                    case TYPE:
+                        if (isChecked) {
+                            mList_type_checked.add(item);
+                        } else {
+                            mList_type_checked.remove(item);
                         }
-                        mList_fzWorkCenter_checked.remove(item);
-                        mCkb_fzAll.setOnCheckedChangeListener(mCheckboxListener_fz);
-                    }
-                } else {
-                    if (isChecked) {
-                        mList_cjWorkCenter_checked.add(item);
-                    } else {
-                        if (mCkb_cjAll.isChecked()) {
-                            //先清除监听，否则会执行全选与取消全选的操作
-                            mCkb_cjAll.setOnCheckedChangeListener(null);
-                            mCkb_cjAll.setChecked(false);
-                            mList_cjWorkCenter_checked.addAll(mList_cjWorkCenter);
-                            mList_cjWorkCenter_checked.remove(mWorkCenter_cjAll);
+                        break;
+                    case FZ:
+                        if (isChecked) {
+                            mList_fzWorkCenter_checked.add(item);
+                        } else {
+                            if (mCkb_fzAll.isChecked()) {
+                                //先清除监听，否则会执行全选与取消全选的操作
+                                mCkb_fzAll.setOnCheckedChangeListener(null);
+                                mCkb_fzAll.setChecked(false);
+                                mList_fzWorkCenter_checked.addAll(mList_fzWorkCenter);
+                                mList_fzWorkCenter_checked.remove(mWorkCenter_fzAll);
+                            }
+                            mList_fzWorkCenter_checked.remove(item);
+                            mCkb_fzAll.setOnCheckedChangeListener(mCheckboxListener_fz);
                         }
-                        mList_cjWorkCenter_checked.remove(item);
-                        mCkb_cjAll.setOnCheckedChangeListener(mCheckboxListener_cj);
-                    }
+                        break;
+                    case CJ:
+                        if (isChecked) {
+                            mList_cjWorkCenter_checked.add(item);
+                        } else {
+                            if (mCkb_cjAll.isChecked()) {
+                                //先清除监听，否则会执行全选与取消全选的操作
+                                mCkb_cjAll.setOnCheckedChangeListener(null);
+                                mCkb_cjAll.setChecked(false);
+                                mList_cjWorkCenter_checked.addAll(mList_cjWorkCenter);
+                                mList_cjWorkCenter_checked.remove(mWorkCenter_cjAll);
+                            }
+                            mList_cjWorkCenter_checked.remove(item);
+                            mCkb_cjAll.setOnCheckedChangeListener(mCheckboxListener_cj);
+                        }
+                        break;
                 }
             }
         }
@@ -546,6 +587,10 @@ public class BatchOrderListActivity extends NFCActivity {
                 }
             } else if (HttpHelper.getLabuWorkCenter.equals(url)) {
                 JSONObject jsonObject = resultJSON.getJSONObject("result");
+                JSONArray cateGoryOptions = jsonObject.getJSONArray("cateGoryOptions");
+                if (cateGoryOptions != null) {
+                    mList_type = JSON.parseArray(cateGoryOptions.toString(), DictionaryDataBo.class);
+                }
                 mList_fzWorkCenter = JSON.parseArray(jsonObject.getJSONArray("fzWorkCenterOptions").toString(), DictionaryDataBo.class);
                 mList_cjWorkCenter = JSON.parseArray(jsonObject.getJSONArray("cjWorkCenterOptions").toString(), DictionaryDataBo.class);
                 showWorkCenterSelector();
@@ -639,8 +684,8 @@ public class BatchOrderListActivity extends NFCActivity {
         ppw.setBackgroundDrawable(new BitmapDrawable());
         ppw.setOutsideTouchable(true);
 
-        ppw.showAsDropDown(mMatStatusPPWAnchor, -145, -mMatStatusPPWAnchor.getHeight());
-
+        float dimension = getResources().getDimension(R.dimen.dp_50);
+        ppw.showAsDropDown(mMatStatusPPWAnchor, (int) (0 - dimension), -mMatStatusPPWAnchor.getHeight());
     }
 
     @Override

@@ -38,7 +38,6 @@ import com.eeka.mespad.http.WebServiceUtils;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
-import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LineColorDialog;

@@ -5,34 +5,34 @@
     android:divider="@drawable/divider_gray"
     android:orientation="vertical"
     android:showDividers="middle">
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/dp_25"
         android:background="@color/colorPrimary">
-
+        
         <TextView
             style="@style/textStyle_default"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="@dimen/dp_10"
             android:text="纸样图案"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_title" />
-
+        
         <ImageView
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:padding="10dp"
+            android:padding="@dimen/dp_5"
             android:src="@drawable/ic_close" />
-
+    
     </RelativeLayout>
-
+    
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
+        
         <LinearLayout
             android:id="@+id/layout_pattern_process"
             android:layout_width="wrap_content"
@@ -41,13 +41,13 @@
             android:orientation="horizontal"
             android:showDividers="middle|end" />
     </HorizontalScrollView>
-
+    
     <TextView
         style="@style/textStyle_default"
         android:layout_gravity="center_horizontal"
-        android:padding="15dp"
+        android:padding="@dimen/dp_7"
         android:text="纸样图案" />
-
+    
     <com.bm.library.PhotoView
         android:id="@+id/iv_pattern_img"
         android:layout_width="match_parent"
