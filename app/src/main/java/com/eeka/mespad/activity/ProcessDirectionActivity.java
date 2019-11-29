@@ -95,7 +95,6 @@ public class ProcessDirectionActivity extends BaseActivity {
         CheckBox ckb_DB = findViewById(R.id.ckb_DB);
         CheckBox ckb_FI = findViewById(R.id.ckb_FI);
         CheckBox ckb_CP = findViewById(R.id.ckb_CP);
-        CheckBox ckb_CK = findViewById(R.id.ckb_CK);
         CheckBox ckb_FB = findViewById(R.id.ckb_FB);
         CheckBox ckb_RK = findViewById(R.id.ckb_RK);
         mMap_processCheckBox = new HashMap<>();
@@ -105,7 +104,6 @@ public class ProcessDirectionActivity extends BaseActivity {
         mMap_processCheckBox.put("DB", ckb_DB);
         mMap_processCheckBox.put("FI", ckb_FI);
         mMap_processCheckBox.put("CP", ckb_CP);
-        mMap_processCheckBox.put("CK", ckb_CK);
         mMap_processCheckBox.put("FB", ckb_FB);
         mMap_processCheckBox.put("RK", ckb_RK);
 
@@ -115,7 +113,6 @@ public class ProcessDirectionActivity extends BaseActivity {
         ImageView iv_DB = findViewById(R.id.iv_lock_DB);
         ImageView iv_FI = findViewById(R.id.iv_lock_FI);
         ImageView iv_CP = findViewById(R.id.iv_lock_CP);
-        ImageView iv_CK = findViewById(R.id.iv_lock_CK);
         ImageView iv_FB = findViewById(R.id.iv_lock_FB);
         ImageView iv_RK = findViewById(R.id.iv_lock_RK);
         mMap_processLock = new HashMap<>();
@@ -125,7 +122,6 @@ public class ProcessDirectionActivity extends BaseActivity {
         mMap_processLock.put("DB", iv_DB);
         mMap_processLock.put("FI", iv_FI);
         mMap_processLock.put("CP", iv_CP);
-        mMap_processLock.put("CK", iv_CK);
         mMap_processLock.put("FB", iv_FB);
         mMap_processLock.put("RK", iv_RK);
     }
@@ -270,9 +266,6 @@ public class ProcessDirectionActivity extends BaseActivity {
                     break;
                 case R.id.ckb_CP:
                     operation = "CP";
-                    break;
-                case R.id.ckb_CK:
-                    operation = "CK";
                     break;
                 case R.id.ckb_FB:
                     operation = "FB";

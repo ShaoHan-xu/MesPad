@@ -3,272 +3,279 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
+    
     <include layout="@layout/layout_title_dlg" />
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_5"
         android:background="@drawable/border_black"
         android:orientation="vertical"
-        android:padding="0.3dp">
-
+        android:padding="0.5dp">
+        
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_90"
             android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_2"
-                android:background="@drawable/border_black"
-                android:padding="0.5dp">
-
-                <ImageView
-                    android:id="@+id/iv_processSheets_img"
-                    android:layout_width="@dimen/processSheets_imgWidth"
-                    android:layout_height="@dimen/processSheets_imgWidth"
-                    android:layout_gravity="center" />
-            </RelativeLayout>
-
+            
+            <ImageView
+                android:id="@+id/iv_processSheets_img"
+                android:layout_width="@dimen/dp_90"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+            
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:divider="@drawable/divider_gray"
                 android:orientation="vertical"
-                android:showDividers="middle|end">
-
+                android:showDividers="middle">
+                
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:divider="@drawable/divider_gray"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:showDividers="beginning|middle">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="款号" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_style"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="工艺师" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_craftsman"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                
                 </LinearLayout>
-
+                
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:divider="@drawable/divider_gray"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:showDividers="beginning|middle">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="款名" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_styleName"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="年份" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_year"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                
                 </LinearLayout>
-
+                
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:divider="@drawable/divider_gray"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:showDividers="beginning|middle">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="纸样号" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_patternNumber"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="季节" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_season"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                
                 </LinearLayout>
-
+                
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:divider="@drawable/divider_gray"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:showDividers="beginning|middle">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="设计师" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_designer"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="波段" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_band"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                
                 </LinearLayout>
-
+                
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:divider="@drawable/divider_gray"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:showDividers="beginning|middle">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="纸样师" />
-
+                    
                     <TextView
                         android:id="@+id/tv_processSheets_planner"
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="3dp" />
-
+                        android:padding="@dimen/dp_1" />
+                
                 </LinearLayout>
-
+            
             </LinearLayout>
-
+        
         </LinearLayout>
-
+        
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.3dp"
-            android:layout_marginTop="3dp"
+            android:layout_height="0.5dp"
             android:background="@drawable/divider_gray" />
-
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="@dimen/dp_2"
+            android:background="@drawable/divider_gray" />
+        
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/gray_disable"
             android:gravity="center"
-            android:padding="3dp"
+            android:padding="@dimen/dp_1"
             android:text="尺寸表（单位：CM）"
             android:textColor="@color/black"
             android:textSize="@dimen/textSize_itemTitle"
             android:textStyle="bold" />
-
+        
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.3dp"
+            android:layout_height="0.5dp"
             android:background="@drawable/divider_gray" />
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -277,35 +284,35 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:showDividers="middle|end">
-
+            
             <TextView
                 style="@style/textStyle_default"
-                android:layout_width="@dimen/processSheets_componentWidth"
+                android:layout_width="@dimen/dp_50"
                 android:gravity="center"
-                android:padding="3dp"
+                android:padding="@dimen/dp_1"
                 android:text="部件" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="@dimen/processSheets_dufaWidth"
                 android:gravity="center"
-                android:padding="3dp"
+                android:padding="@dimen/dp_1"
                 android:text="度法" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="@dimen/processSheets_sizeWidth"
                 android:gravity="center"
-                android:padding="3dp"
+                android:padding="@dimen/dp_1"
                 android:text="公差" />
-
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="@dimen/processSheets_sizeWidth"
                 android:gravity="center"
-                android:padding="3dp"
+                android:padding="@dimen/dp_1"
                 android:text="纸样松量" />
-
+            
             <LinearLayout
                 android:id="@+id/layout_processSheets_sizeCode"
                 android:layout_width="wrap_content"
@@ -314,21 +321,21 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:showDividers="middle" />
-
+        
         </LinearLayout>
-
+        
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/divider_gray"
                 android:orientation="vertical"
                 android:showDividers="middle">
-
+                
                 <LinearLayout
                     android:id="@+id/layout_processSheets_pattern"
                     android:layout_width="match_parent"
@@ -336,18 +343,18 @@
                     android:divider="@drawable/divider_gray"
                     android:orientation="vertical"
                     android:showDividers="beginning|middle|end" />
-
+                
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/gray_disable"
                     android:gravity="center"
-                    android:padding="3dp"
+                    android:padding="@dimen/dp_1"
                     android:text="工艺说明"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSize_itemTitle"
                     android:textStyle="bold" />
-
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -355,22 +362,22 @@
                     android:divider="@drawable/divider_gray"
                     android:orientation="horizontal"
                     android:showDividers="middle">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="@dimen/processSheets_componentWidth"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="部位" />
-
+                    
                     <TextView
                         style="@style/textStyle_default"
                         android:layout_width="match_parent"
                         android:gravity="center"
-                        android:padding="3dp"
+                        android:padding="@dimen/dp_1"
                         android:text="工艺描述" />
                 </LinearLayout>
-
+                
                 <LinearLayout
                     android:id="@+id/layout_processSheets_technology"
                     android:layout_width="match_parent"
@@ -378,7 +385,7 @@
                     android:divider="@drawable/divider_gray"
                     android:orientation="vertical"
                     android:showDividers="middle" />
-
+            
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

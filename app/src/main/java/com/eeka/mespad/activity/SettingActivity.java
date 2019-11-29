@@ -45,14 +45,16 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void initView() {
         super.initView();
-        findViewById(R.id.tv_setLoginUser).setOnClickListener(this);
         findViewById(R.id.tv_checkUpdate).setOnClickListener(this);
+        TextView tv_setIP = findViewById(R.id.tv_setLoginUser);
+        tv_setIP.setOnClickListener(this);
 
         mLayout_setSystem = findViewById(R.id.layout_setSystem);
         mLayout_setSystem.setOnClickListener(this);
 
         TextView tv_version = findViewById(R.id.tv_version);
         if (SystemUtils.isApkInDebug(mContext)) {
+            tv_setIP.setVisibility(View.VISIBLE);
             tv_version.setOnClickListener(this);
         }
         StringBuilder sb = new StringBuilder("版本：");

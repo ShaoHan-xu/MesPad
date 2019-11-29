@@ -64,9 +64,9 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/btn_orange"
                 android:enabled="false"
-                android:textSize="@dimen/sp_10"
                 android:text="提交工序流"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10" />
         
         </LinearLayout>
         
@@ -293,9 +293,7 @@
                         android:layout_width="@dimen/dp_240"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginTop="@dimen/dp_5"
                         android:layout_marginRight="@dimen/dp_120"
-                        android:layout_marginBottom="@dimen/dp_5"
                         android:src="@drawable/arrow_direction_main" />
                     
                     <LinearLayout
@@ -309,7 +307,7 @@
                         <RelativeLayout
                             android:layout_width="@dimen/dp_60"
                             android:layout_height="@dimen/dp_23"
-                            android:layout_marginRight="@dimen/dp_10">
+                            android:layout_marginRight="@dimen/dp_45">
                             
                             <CheckBox
                                 android:id="@+id/ckb_DB"
@@ -318,7 +316,7 @@
                                 android:background="@drawable/ckb_gray_green_radio"
                                 android:button="@null"
                                 android:gravity="center"
-                                android:text="点位编号"
+                                android:text="点位验片"
                                 android:textColor="@drawable/text_gray2white"
                                 android:textSize="@dimen/textSize_content" />
                             
@@ -336,7 +334,7 @@
                         <RelativeLayout
                             android:layout_width="@dimen/dp_60"
                             android:layout_height="@dimen/dp_23"
-                            android:layout_marginRight="@dimen/dp_10">
+                            android:layout_marginRight="@dimen/dp_50">
                             
                             <CheckBox
                                 android:id="@+id/ckb_FI"
@@ -362,8 +360,7 @@
                         
                         <RelativeLayout
                             android:layout_width="@dimen/dp_60"
-                            android:layout_height="@dimen/dp_23"
-                            android:layout_marginRight="@dimen/dp_10">
+                            android:layout_height="@dimen/dp_23">
                             
                             <CheckBox
                                 android:id="@+id/ckb_CP"
@@ -378,32 +375,6 @@
                             
                             <ImageView
                                 android:id="@+id/iv_lock_CP"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:src="@drawable/ic_lock_processdirection" />
-                        
-                        </RelativeLayout>
-                        
-                        <RelativeLayout
-                            android:layout_width="@dimen/dp_60"
-                            android:layout_height="@dimen/dp_23">
-                            
-                            <CheckBox
-                                android:id="@+id/ckb_CK"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/ckb_gray_green_radio"
-                                android:button="@null"
-                                android:gravity="center"
-                                android:text="验片"
-                                android:textColor="@drawable/text_gray2white"
-                                android:textSize="@dimen/textSize_content" />
-                            
-                            <ImageView
-                                android:id="@+id/iv_lock_CK"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"

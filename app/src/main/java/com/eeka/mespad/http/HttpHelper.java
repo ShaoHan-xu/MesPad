@@ -26,6 +26,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.NetUtil;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.SplitCardDialog;
 
 import java.io.File;
@@ -161,7 +162,8 @@ public class HttpHelper {
     public static final String getRabHistoryList = BASE_URL + "bulkOrderCut/viewCompleteRabOrderByLayOut?";
     public static final String getRabHistoryByRabNo = BASE_URL + "bulkOrderCut/viewRabInfoByCompleteRabRef?";
     public static final String removeSizesMarked = BASE_URL + "bulkOrderCut/removeSizesMarked?";
-    public static final String getOrderMatTypesStatus = BASE_URL + "bulkOrderCut/getOrderMaterialTypesStatus??";
+    public static final String getOrderMatTypesStatus = BASE_URL + "bulkOrderCut/getOrderMaterialTypesStatus?";
+    public static final String getSubPackageInfoByRfid = BASE_URL + "bulkOrderCut/getSubPackageInfoByRfid?";
 
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
@@ -172,6 +174,15 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 通过 RFID 卡号获取分包卡信息
+     */
+    public static void getSubPackageInfoByRfid(String rfid, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("rfid", rfid);
+        HttpRequest.post(getSubPackageInfoByRfid, params, getResponseHandler(getSubPackageInfoByRfid, callback));
     }
 
     /**
@@ -1476,9 +1487,17 @@ public class HttpHelper {
 
     public static String getPadIp() {
         PAD_IP = NetUtil.getHostIP();
-//        PAD_IP = "10.10.28.9";//D拉布
-//        PAD_IP = "10.10.28.0";// D 工序确认
+        if (SystemUtils.isApkInDebug(mContext)) {
+            String ip = SpUtil.get(SpUtil.KEY_IP, null);
+            if (!TextUtils.isEmpty(ip)) {
+                PAD_IP = ip;
+            }
+        }
+//        PAD_IP = "10.10.1.1";//D拉布
+//        PAD_IP = "10.10.28.31";// D 工序确认
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
+//        PAD_IP = "10.10.31.246";//于都 P 分包
+//        PAD_IP = "10.10.28.94";
         return PAD_IP;
     }
 

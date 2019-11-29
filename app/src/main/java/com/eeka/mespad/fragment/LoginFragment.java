@@ -106,6 +106,7 @@ public class LoginFragment extends BaseFragment {
         Button btn_done = mView.findViewById(R.id.btn_login);
         btn_done.setOnClickListener(this);
         if (mType == TYPE_LOGIN) {
+            mView.findViewById(R.id.iv_login_scan).setVisibility(View.GONE);
             TextView tv_alert = mView.findViewById(R.id.tv_login_alert);
             TextView tv_user = mView.findViewById(R.id.tv_login_user_tag);
             tv_alert.setText("请设置系统登录账户");
@@ -218,7 +219,7 @@ public class LoginFragment extends BaseFragment {
                 String pwd = mEt_pwd.getText().toString();
                 userInfo.setPassword(pwd);
                 SpUtil.saveLoginUser(userInfo);
-                NetUtil.setHostIp(mET_IP.getText().toString());
+                SpUtil.save(SpUtil.KEY_IP,mET_IP.getText().toString());
                 if (mLoginCallback != null)
                     mLoginCallback.onLogin(true);
             } else if (HttpHelper.positionLogin_url.equals(url)) {

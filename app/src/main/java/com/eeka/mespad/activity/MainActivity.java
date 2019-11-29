@@ -231,7 +231,10 @@ public class MainActivity extends NFCActivity {
     public void onPushMsgReceive(PushJson push) {
         String type = push.getType();
         if (PushJson.TYPE_SCAN.equals(type)) {
-            Logger.d("扫码");
+            mEt_orderNum.setText(push.getContent());
+            isSearchOrder = true;
+            if (checkResource())
+                searchOrder();
         } else if (PushJson.TYPE_ALERT.equals(type)) {
             showAlert(push.getMessage());
         } else if (PushJson.TYPE_Maintenance.equals(type)) {
@@ -328,6 +331,7 @@ public class MainActivity extends NFCActivity {
         findViewById(R.id.tv_sewQC).setOnClickListener(this);
         findViewById(R.id.tv_setting).setOnClickListener(this);
 
+        findViewById(R.id.btn_scan).setOnClickListener(this);
         findViewById(R.id.btn_searchOrder).setOnClickListener(this);
         findViewById(R.id.btn_searchPosition).setOnClickListener(this);
 
@@ -693,6 +697,9 @@ public class MainActivity extends NFCActivity {
         super.onClick(v);
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
+            case R.id.btn_scan:
+                startScan(true);
+                return;
             case R.id.btn_searchOrder:
                 isSearchOrder = true;
                 if (checkResource())

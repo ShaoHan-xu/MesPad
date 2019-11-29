@@ -30,6 +30,7 @@ public class SpUtil {
     public static final String KEY_SHOPORDER = "key_shopOrder";
     public static final String KEY_NCIMG_INFO = "key_ncImgServer";
     public static final String KEY_BUTTON = "key_button";
+    public static final String KEY_IP = "key_IP";
 
     static {
         new SpUtil();
@@ -50,6 +51,12 @@ public class SpUtil {
 //        }
 //        return mInstance;
 //    }
+
+    public static void remove(String key) {
+        SharedPreferences.Editor editor = mSP.edit();
+        editor.remove(key);
+        editor.apply();
+    }
 
     public static void save(String key, String value) {
         SharedPreferences.Editor editor = mSP.edit();

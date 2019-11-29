@@ -228,7 +228,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             public void onClick(View v) {
                 save();
             }
-        }).setParams(0.5f, 0.5f).show();
+        }).setParams(0.5f, 0.55f).show();
     }
 
     private void save() {

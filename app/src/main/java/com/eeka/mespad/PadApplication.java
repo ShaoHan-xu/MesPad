@@ -61,6 +61,9 @@ public class PadApplication extends Application {
             if (!TextUtils.isEmpty(systemCodeTemp)) {
                 systemCode = systemCodeTemp;
             }
+        } else {
+            SpUtil.remove(SpUtil.KEY_SYSTEMCODE);
+            SpUtil.remove(SpUtil.KEY_IP);
         }
         //根据不同的系统环境，配置不同的服务器地址
         if (!TextUtils.isEmpty(systemCode)) {

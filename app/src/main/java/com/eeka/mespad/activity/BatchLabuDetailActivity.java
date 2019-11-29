@@ -39,6 +39,7 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.ImageBrowserDialog;
+import com.eeka.mespad.view.dialog.ManualPrintSubPackageDialog;
 import com.eeka.mespad.view.dialog.PatternDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.squareup.picasso.Picasso;
@@ -53,7 +54,7 @@ import cn.finalteam.okhttpfinal.HttpRequest;
 import okhttp3.Headers;
 import okhttp3.Response;
 
-public class BatchLabuDetailActivity extends BaseActivity {
+public class BatchLabuDetailActivity extends NFCActivity {
 
     private static final int REQUEST_RECORD_LABU = 0;
     private static final int REQUEST_RECORD_CUT = 1;
@@ -83,7 +84,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
     private String mSampleImgUrl;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_labudetail);
 
@@ -160,9 +161,15 @@ public class BatchLabuDetailActivity extends BaseActivity {
 
     private void setupView() {
         TextView tv_workRequires = findViewById(R.id.tv_labuDetail_workRequires);
-        tv_workRequires.setText(mOperation.getOPERATION_INSTRUCTION().replace("\\n", "\n"));
+        String instruction = mOperation.getOPERATION_INSTRUCTION();
+        if (!isEmpty(instruction)) {
+            tv_workRequires.setText(instruction.replace("\\n", "\n"));
+        }
         TextView tv_qualityRequires = findViewById(R.id.tv_labuDetail_qualityRequires);
-        tv_qualityRequires.setText(mOperation.getQUALITY_REQUIREMENT().replace("\\n", "\n"));
+        String requirement = mOperation.getQUALITY_REQUIREMENT();
+        if (!isEmpty(requirement)) {
+            tv_qualityRequires.setText(requirement.replace("\\n", "\n"));
+        }
 
         ImageView iv_sampleImg = findViewById(R.id.iv_labuDetail_sampleImg);
         iv_sampleImg.setOnClickListener(this);
@@ -343,6 +350,10 @@ public class BatchLabuDetailActivity extends BaseActivity {
                         button.setText("显示纸样");
                         button.setId(R.id.btn_pattern);
                         break;
+                    case "QR_CODE":
+                        button.setText("二维码");
+                        button.setId(R.id.btn_qrCode);
+                        break;
                 }
                 if (isEmpty(button.getText().toString())) {
                     continue;
@@ -446,6 +457,9 @@ public class BatchLabuDetailActivity extends BaseActivity {
                     showLoading();
                     HttpHelper.getRabHistoryList(mShopOrderBo, layoutRef, mMatType, this);
                 }
+                break;
+            case R.id.btn_qrCode:
+                new ManualPrintSubPackageDialog(mContext).setParams(0.4f, 0.4f).show();
                 break;
         }
     }
@@ -769,6 +783,7 @@ public class BatchLabuDetailActivity extends BaseActivity {
                     if (data == null) {
                         showErrorDialog("返回数据为空");
                     } else {
+                        SpUtil.save(SpUtil.KEY_SHOPORDER, data.getSHOP_ORDER());
                         mMap_layoutInfo.put(mMatType, data);
                         refreshMatView();
                     }

@@ -135,7 +135,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
             mLayout_itemTotal.addView(total, 2 + i, params);
 
             //码数选择部分
-            TextView tv_sizeDuan = (TextView) LayoutInflater.from(mContext).inflate(R.layout.textview_common,null);
+            TextView tv_sizeDuan = (TextView) LayoutInflater.from(mContext).inflate(R.layout.textview_common, null);
             tv_sizeDuan.setPadding(2, 2, 2, 2);
             tv_sizeDuan.setText(item.getCutNum() + "段");
 
@@ -377,7 +377,8 @@ public class BatchLabuRecordActivity extends BaseActivity {
             View child = mLayout_sizeList.getChildAt(i);
             LinearLayout layout = child.findViewById(R.id.linearLayout);
             for (int j = 0; j < layout.getChildCount(); j++) {
-                CheckBox checkBox = (CheckBox) layout.getChildAt(j);
+                View childAt = layout.getChildAt(j);
+                CheckBox checkBox = childAt.findViewById(R.id.checkbox);
                 String size = checkBox.getText().toString();
                 if (checkBox.isChecked()) {
                     PostBatchRecordLabuBo.CutSizeBean bean = new PostBatchRecordLabuBo.CutSizeBean();
@@ -645,7 +646,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
         BatchLabuRecordPrintBo printBo = new BatchLabuRecordPrintBo();
         printBo.setShopOrder(mData.getSHOP_ORDER());
         printBo.setRabOrder(mData.getORDER_NO());
-        printBo.setLayoutNo(mData.getLAYOUT_NO());
+        printBo.setLayoutNo(mPostData.getLayoutNo());
         printBo.setItem(mPostData.getItem());
         printBo.setMatType(mPostData.getMaterialType());
 
@@ -679,7 +680,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
 
         printBo.setSizeList(sizes);
 
-        BaseDialog dialog = new BatchLabuRecordPrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f);
+        BaseDialog dialog = new BatchLabuRecordPrintContentDialog(mContext, printBo).setParams(0.5f, 0.5f);
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {

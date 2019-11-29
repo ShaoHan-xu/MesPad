@@ -107,10 +107,6 @@ public class NetUtil {
 
     private static String mHostIp = null;
 
-    public static void setHostIp(String ip) {
-        mHostIp = ip;
-    }
-
     /**
      * 获取ip地址
      */
@@ -120,7 +116,7 @@ public class NetUtil {
         }
         try {
             Enumeration nis = NetworkInterface.getNetworkInterfaces();
-            InetAddress ia = null;
+            InetAddress ia;
             while (nis.hasMoreElements()) {
                 NetworkInterface ni = (NetworkInterface) nis.nextElement();
                 Enumeration<InetAddress> ias = ni.getInetAddresses();

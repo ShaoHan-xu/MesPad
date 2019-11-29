@@ -96,13 +96,12 @@ public class BatchOrderListActivity extends NFCActivity {
         initData();
         search();
 
-        EventBus.getDefault().register(this);
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
+        super.onStop();
         EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     @Override
@@ -690,6 +689,7 @@ public class BatchOrderListActivity extends NFCActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        EventBus.getDefault().register(this);
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_DETAIL) {

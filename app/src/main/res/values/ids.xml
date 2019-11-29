@@ -77,4 +77,5 @@
     <item name="btn_processSheets" type="id" />
     <item name="btn_yiLing" type="id" />
     <item name="btn_secondClass" type="id" />
+    <item name="btn_qrCode" type="id" />
 </resources>
