@@ -38,6 +38,7 @@ import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
+import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.widget.MyPopWindow;
 
@@ -138,6 +139,7 @@ public class BatchOrderListActivity extends NFCActivity {
     @Override
     protected void initData() {
         super.initData();
+        mTopic = TopicUtil.TOPIC_CUT;
         mList_type_checked = new ArrayList<>();
         mList_fzWorkCenter_checked = new ArrayList<>();
         mList_cjWorkCenter_checked = new ArrayList<>();

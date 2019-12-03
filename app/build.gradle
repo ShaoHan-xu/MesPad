@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 130
+        versionCode 133
 
-        versionName "3.130"
+        versionName "3.133"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -90,6 +90,11 @@ android {
             resValue "string", "app_name", "赢领智尚_LH"
             resValue "string", "app_channel", "LH"
             resValue "string", "system_code", "Q"
+        }
+        LH_BULK {
+            resValue "string", "app_name", "赢领智尚_LH"
+            resValue "string", "app_channel", "LH_BULK"
+            resValue "string", "system_code", "LH_P"
         }
         LH_P {
             resValue "string", "app_name", "赢领智尚_LH"

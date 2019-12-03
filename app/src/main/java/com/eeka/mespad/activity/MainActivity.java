@@ -1220,7 +1220,7 @@ public class MainActivity extends NFCActivity {
                     mTv_searchType.setVisibility(View.VISIBLE);
                     String channelName = getString(R.string.app_channel);
                     //目前只有于都大货裁剪使用新主题
-                    if ("base".equals(channelName) || "YD_bulk".equals(channelName)) {
+                    if ("base".equals(channelName) || "YD_bulk".equals(channelName)|| "LH_BULK".equals(channelName)) {
                         String workType = mPositionInfo.getWORK_TYPE();
                         if ("P".equals(workType)) {
                             if (mPositionInfo.getBUTTON_INFOR() != null) {
