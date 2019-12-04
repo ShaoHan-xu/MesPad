@@ -232,13 +232,12 @@ public class HttpHelper {
     /**
      * 记录打印状态
      */
-    public static void recordSubPackagePrintInfo(String shopOrderBo, String sizeCode, int subSeq, String oldRfid, String newRfid, String processLotRef, HttpCallback callback) {
+    public static void recordSubPackagePrintInfo(String shopOrderBo, String sizeCode, int subSeq, String oldRfid, String processLotRef, HttpCallback callback) {
         RequestParams params = getBaseParams();
         JSONObject json = new JSONObject();
         json.put("shopOrderRef", shopOrderBo);
         json.put("sizeCode", sizeCode);
         json.put("subSeq", subSeq + "");
-        json.put("newRfid", newRfid);
         json.put("oldRfid", oldRfid);
         json.put("processLotRef", processLotRef);
         params.put("params", json.toJSONString());

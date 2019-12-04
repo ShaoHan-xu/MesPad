@@ -49,34 +49,29 @@ public class SettingActivity extends BaseActivity {
         TextView tv_setIP = findViewById(R.id.tv_setLoginUser);
         tv_setIP.setOnClickListener(this);
 
-        mLayout_setSystem = findViewById(R.id.layout_setSystem);
-        mLayout_setSystem.setOnClickListener(this);
-
         TextView tv_version = findViewById(R.id.tv_version);
         if (SystemUtils.isApkInDebug(mContext)) {
             tv_setIP.setVisibility(View.VISIBLE);
             tv_version.setOnClickListener(this);
         }
         StringBuilder sb = new StringBuilder("版本：");
+        sb.append(getString(R.string.app_channel)).append("_");
         sb.append(SystemUtils.getAppVersionName(mContext));
-        sb.append("(").append(SystemUtils.getAppVersionCode(mContext)).append(")");
-        sb.append("_").append(getString(R.string.app_channel));
         if (SystemUtils.isApkInDebug(mContext)) {
             sb.append("_debug");
         }
         tv_version.setText(sb.toString());
 
-        mTv_systemCode = findViewById(R.id.tv_setting_system);
-        String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
-        if (!TextUtils.isEmpty(systemCode)) {
-            if ("D".equals(systemCode)) {
-                mTv_systemCode.setText("D系统");
-            } else if ("Q".equals(systemCode)) {
-                mTv_systemCode.setText("Q系统");
-            } else if ("P".equals(systemCode)) {
-                mTv_systemCode.setText("P系统");
-            } else if ("LH_P".equals(systemCode)) {
-                mTv_systemCode.setText("龙华P系统");
+        if (SystemUtils.isApkInDebug(mContext)) {
+            mLayout_setSystem = findViewById(R.id.layout_setSystem);
+            mLayout_setSystem.setOnClickListener(this);
+
+            mTv_systemCode = findViewById(R.id.tv_setting_system);
+            String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
+            if (!TextUtils.isEmpty(systemCode)) {
+                mTv_systemCode.setText(systemCode);
+            } else {
+                mTv_systemCode.setText(getString(R.string.system_code));
             }
         }
 
@@ -98,8 +93,6 @@ public class SettingActivity extends BaseActivity {
                 startActivity(new Intent(mContext, LoginActivity.class));
                 break;
             case R.id.tv_checkUpdate:
-//                showLoading();
-//                HttpHelper.getAPKUrl(this);
                 Beta.checkUpgrade();
                 break;
             case R.id.tv_version:
@@ -143,14 +136,19 @@ public class SettingActivity extends BaseActivity {
         int checked = -1;
         String s = mTv_systemCode.getText().toString();
         if (!isEmpty(s)) {
-            if (s.contains("D")) {
-                checked = 0;
-            } else if (s.contains("Q")) {
-                checked = 1;
-            } else if (s.contains("龙华P")) {
-                checked = 3;
-            } else if (s.contains("P")) {
-                checked = 2;
+            switch (s) {
+                case "D":
+                    checked = 0;
+                    break;
+                case "Q":
+                    checked = 1;
+                    break;
+                case "P":
+                    checked = 2;
+                    break;
+                case "LH_P":
+                    checked = 3;
+                    break;
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

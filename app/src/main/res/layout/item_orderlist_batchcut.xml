@@ -142,7 +142,7 @@
             android:background="@drawable/btn_green_round_new"
             android:text="拉布"
             android:textColor="@color/white"
-            android:textSize="@dimen/sp_12" />
+            android:textSize="@dimen/sp_11" />
     </LinearLayout>
     
     <LinearLayout

@@ -1,13 +1,16 @@
 package com.eeka.mespad.activity;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
@@ -40,7 +44,9 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.widget.MyPopWindow;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,6 +92,9 @@ public class BatchOrderListActivity extends NFCActivity {
 
     private String mRFID;
 
+    private RelativeLayout mLayout_setSystem;
+    private TextView mTv_systemCode;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +121,30 @@ public class BatchOrderListActivity extends NFCActivity {
         TextView tv_title = findViewById(R.id.tv_title);
         tv_title.setText(mOperation.getDESCRIPTION());
 
+        TextView tv_version = findViewById(R.id.tv_version);
+        if (SystemUtils.isApkInDebug(mContext)) {
+            tv_version.setOnClickListener(this);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(getString(R.string.app_channel)).append("_");
+        sb.append(SystemUtils.getAppVersionName(mContext));
+        if (SystemUtils.isApkInDebug(mContext)) {
+            sb.append("_debug");
+        }
+        tv_version.setText(sb.toString());
+
+        if (SystemUtils.isApkInDebug(mContext)) {
+            mLayout_setSystem = findViewById(R.id.layout_setSystem);
+            mLayout_setSystem.setOnClickListener(this);
+            mTv_systemCode = findViewById(R.id.tv_systemCode);
+            String systemCode = SpUtil.get(SpUtil.KEY_SYSTEMCODE, null);
+            if (!TextUtils.isEmpty(systemCode)) {
+                mTv_systemCode.setText(systemCode);
+            } else {
+                mTv_systemCode.setText(getString(R.string.system_code));
+            }
+        }
+
         mItemParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mItemParams.bottomMargin = 12;
 
@@ -132,6 +165,7 @@ public class BatchOrderListActivity extends NFCActivity {
         mLayout_workCenter.setOnClickListener(this);
         findViewById(R.id.btn_batchCut_search).setOnClickListener(this);
         findViewById(R.id.btn_batchCut_scan).setOnClickListener(this);
+        findViewById(R.id.tv_checkUpdate).setOnClickListener(this);
 
         refreshLoginUser();
     }
@@ -218,6 +252,96 @@ public class BatchOrderListActivity extends NFCActivity {
             case R.id.btn_batchCut_scan:
                 startScan(true);
                 break;
+            case R.id.tv_checkUpdate:
+                Beta.checkUpgrade();
+                break;
+            case R.id.tv_version:
+                openSystemEnvironment();
+                break;
+            case R.id.layout_setSystem:
+                setSystemCode();
+                break;
+        }
+    }
+
+    /**
+     * 设置系统环境
+     */
+    private void setSystemCode() {
+        int checked = -1;
+        String s = mTv_systemCode.getText().toString();
+        if (!isEmpty(s)) {
+            switch (s) {
+                case "D":
+                    checked = 0;
+                    break;
+                case "Q":
+                    checked = 1;
+                    break;
+                case "P":
+                    checked = 2;
+                    break;
+                case "LH_P":
+                    checked = 3;
+                    break;
+            }
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("请选择系统环境");
+        final int finalChecked = checked;
+        builder.setSingleChoiceItems(R.array.systemCode, checked, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which != finalChecked) {
+                    dialog.dismiss();
+                    if (which == 0) {
+                        SpUtil.save(SpUtil.KEY_SYSTEMCODE, "D");
+                        PadApplication.BASE_URL = PadApplication.HOST_D + "/eeka-mes/";
+                    } else if (which == 1) {
+                        SpUtil.save(SpUtil.KEY_SYSTEMCODE, "Q");
+                        PadApplication.BASE_URL = PadApplication.HOST_Q + "/eeka-mes/";
+                    } else if (which == 2) {
+                        SpUtil.save(SpUtil.KEY_SYSTEMCODE, "P");
+                        PadApplication.BASE_URL = PadApplication.HOST_P + "/eeka-mes/";
+                    } else if (which == 3) {
+                        SpUtil.save(SpUtil.KEY_SYSTEMCODE, "LH_P");
+                        PadApplication.BASE_URL = PadApplication.HOST_P_LH + "/eeka-mes/";
+                    }
+                    ErrorDialog.showConfirmAlert(mContext, "系统切换成功，重启应用后生效。", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                            System.exit(0);
+                        }
+                    });
+                }
+            }
+        });
+
+        builder.show();
+    }
+
+    private int mClickCount;
+
+    /**
+     * 显示系统环境设置的布局
+     */
+    private void openSystemEnvironment() {
+        long curMillis = System.currentTimeMillis();
+        if (mLastMillis == 0) {
+            mLastMillis = curMillis;
+            mClickCount++;
+            return;
+        }
+        if (curMillis - mLastMillis < 1000) {
+            mLastMillis = curMillis;
+            mClickCount++;
+        } else {
+            mLastMillis = curMillis;
+            mClickCount = 1;
+        }
+        if (mClickCount == 5) {
+            mLayout_setSystem.setVisibility(View.VISIBLE);
         }
     }
 

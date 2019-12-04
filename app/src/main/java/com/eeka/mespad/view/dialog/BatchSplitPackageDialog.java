@@ -1,5 +1,6 @@
 package com.eeka.mespad.view.dialog;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -139,7 +140,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 mPrintingIndex = (int) v.getTag();
 //                BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
 //                if (printBo.isPrinted() || !"M".equals(mData.getMaterialType())) {
-                recordPrintState(v, null);
+                recordPrintState(v);
 //                } else {
 //                    showBindRfidDialog(v, printBo.getRfid());
 //                }
@@ -148,20 +149,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
     }
 
     private int mPrintingIndex;
-    private String mNewRfid;
-
-    private void showBindRfidDialog(final View v, String oldRfid) {
-        new BindRfidCardDialog(mContext, oldRfid, new StringCallback() {
-            @Override
-            public void callback(String value) {
-                mNewRfid = value;
-                recordPrintState(v, mNewRfid);
-                if (mPrintingIndex == 0) {
-                    completed();
-                }
-            }
-        }).setParams(0.4f, 0.5f).show();
-    }
 
     private void completed() {
         String userId = SpUtil.getLoginUserId();
@@ -177,14 +164,12 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         HttpHelper.completedSplitPrint(userId, mData, this);
     }
 
-    private void recordPrintState(View v, String newRfid) {
-        v.setEnabled(false);
+    private void recordPrintState(View v) {
         BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
         printBo.setSizeCode(mSizeCode);
-
         if (!printBo.isPrinted()) {
             LoadingDialog.show(mContext);
-            HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq(), printBo.getRfid(), newRfid, printBo.getProcessLotRef(), this);
+            HttpHelper.recordSubPackagePrintInfo(mData.getShopOrderRef(), mSizeCode, printBo.getSubPackageSeq(), printBo.getRfid(), printBo.getProcessLotRef(), this);
             if (mPrintingIndex == 0) {
                 completed();
             }
@@ -194,16 +179,21 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
     }
 
     private void print() {
+        LoadingDialog.show(mContext);
         BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
         printBo.setMatType(mData.getMaterialType());
-        BluetoothHelper.printSubPackageInfo(getOwnerActivity(), printBo);
-        new BatchSplitPackagePrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f).show();
-
-        if (!isOnlyPrint) {
-            if (mPrintingIndex > 0) {
-                setPrintEnable(mPrintingIndex - 1);
+        boolean success = BluetoothHelper.printSubPackageInfo((Activity) mContext, printBo);
+        if (success) {
+            View childAt = mLayout_items.getChildAt(mPrintingIndex);
+            childAt.findViewById(R.id.tv_printSeq).setEnabled(false);
+            new BatchSplitPackagePrintContentDialog(mContext, printBo).setParams(0.45f, 0.5f).show();
+            if (!isOnlyPrint) {
+                if (mPrintingIndex > 0) {
+                    setPrintEnable(mPrintingIndex - 1);
+                }
             }
         }
+        LoadingDialog.dismiss();
     }
 
     private void check() {
@@ -404,8 +394,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 }
                 refreshItemView();
             } else if (HttpHelper.recordSubPackagePrintInfo.equals(url)) {
-                BatchSplitPackagePrintBo printBo = mList_printData.get(mPrintingIndex);
-//                printBo.setRfid(mNewRfid);
                 print();
             } else if (HttpHelper.completedSplitPrint.equals(url)) {
                 cancelAble = true;

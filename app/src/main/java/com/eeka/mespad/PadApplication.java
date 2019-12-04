@@ -22,6 +22,13 @@ public class PadApplication extends Application {
 
     public static Context mContext;
 
+    public static final String CHANNEL_YD = "YD";
+    public static final String CHANNEL_YD_BULK = "YD_BULK";
+    public static final String CHANNEL_LH = "LH";
+    public static final String CHANNEL_LH_BULK = "LH_BULK";
+    public static final String CHANNEL_LH_P = "LH_P";
+    public static final String CHANNEL_BASE = "BASE";
+
     public static final String HOST_D = "http://10.7.121.54:50000";
     public static final String HOST_Q = "http://10.7.121.60:50000";
     public static final String HOST_P = "http://10.10.200.16:8000";

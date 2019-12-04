@@ -92,9 +92,11 @@ public class ManualPrintSubPackageDialog extends BaseDialog implements HttpCallb
             JSONArray result = resultJSON.getJSONArray("result");
             BatchSplitPackagePrintBo printBo = JSONObject.parseObject(result.get(0).toString(), BatchSplitPackagePrintBo.class);
             printBo.setMatType("M");
-            BluetoothHelper.printSubPackageInfo((Activity) mContext, printBo);
+            boolean b = BluetoothHelper.printSubPackageInfo((Activity) mContext, printBo);
             LoadingDialog.dismiss();
-            dismiss();
+            if (b) {
+                dismiss();
+            }
         } else {
             LoadingDialog.dismiss();
             ErrorDialog.showAlert(mContext, HttpHelper.getMessage(resultJSON));

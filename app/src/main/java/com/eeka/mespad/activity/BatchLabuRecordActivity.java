@@ -628,6 +628,7 @@ public class BatchLabuRecordActivity extends BaseActivity {
                 }
             } else if (HttpHelper.saveBatchLabuData.equals(url)) {
                 toast("操作成功");
+                findViewById(R.id.btn_completed).setEnabled(false);
 
                 print();
             } else if (HttpHelper.operationProduce.equals(url)) {

@@ -297,6 +297,9 @@ public class ProcessDirectionActivity extends BaseActivity {
                 List<ProcessDirectionBo.CUTFLOWTEMPLETEBean.CutFlowListBean> cutFlowList = item.getCutFlowList();
                 for (ProcessDirectionBo.CUTFLOWTEMPLETEBean.CutFlowListBean bean : cutFlowList) {
                     String operation = bean.getOperation();
+                    if ("CK".equals(operation)) {
+                        bean.setIsUsed("false");
+                    }
                     CheckBox checkBox = mMap_processCheckBox.get(operation);
                     ImageView iv_lock = mMap_processLock.get(operation);
                     if (checkBox != null) {

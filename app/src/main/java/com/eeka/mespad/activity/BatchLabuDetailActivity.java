@@ -657,6 +657,7 @@ public class BatchLabuDetailActivity extends NFCActivity {
                 case 1:
                     if (!rabDisplay) {
                         button.setBackgroundResource(R.drawable.btn_disable_round);
+                        button.setEnabled(false);
                     }
                     button.setId(R.id.btn_batchLabu);
                     button.setText("大货拉布单");
@@ -664,6 +665,7 @@ public class BatchLabuDetailActivity extends NFCActivity {
                 case 2:
                     if (!rabDisplay) {
                         button.setBackgroundResource(R.drawable.btn_disable_round);
+                        button.setEnabled(false);
                     }
                     button.setId(R.id.btn_addLabu);
                     button.setText("补料拉布单");

@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 133
+        versionCode 135
 
-        versionName "3.133"
+        versionName "3.135"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -74,19 +74,19 @@ android {
     }
 
     productFlavors {
-        yudu {
+        YD {
             // 动态添加 string.xml 字段；
             // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
             resValue "string", "app_name", "赢领智尚_YD"
             resValue "string", "app_channel", "YD"
             resValue "string", "system_code", "P"
         }
-        yudu_bulk {
+        YD_BULK {
             resValue "string", "app_name", "赢领智尚_YD"
-            resValue "string", "app_channel", "YD_bulk"
+            resValue "string", "app_channel", "YD_BULK"
             resValue "string", "system_code", "P"
         }
-        longhua {
+        LH {
             resValue "string", "app_name", "赢领智尚_LH"
             resValue "string", "app_channel", "LH"
             resValue "string", "system_code", "Q"
@@ -101,9 +101,9 @@ android {
             resValue "string", "app_channel", "LH_P"
             resValue "string", "system_code", "LH_P"
         }
-        base {
+        BASE {
             resValue "string", "app_name", "赢领智尚"
-            resValue "string", "app_channel", "base"
+            resValue "string", "app_channel", "BASE"
             resValue "string", "system_code", "D"
         }
     }
@@ -116,7 +116,7 @@ android {
     //指定打包后应用名称
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "MesPad_${variant.versionName}_${variant.productFlavors[0].name}.apk"
+            outputFileName = "MesPad_${variant.productFlavors[0].name}_${variant.versionName}.apk"
         }
     }
 

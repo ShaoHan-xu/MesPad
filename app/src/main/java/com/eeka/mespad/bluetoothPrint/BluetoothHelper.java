@@ -26,6 +26,9 @@ public class BluetoothHelper {
     private static final int DEVICE_TYPE_KEYBOARD = 1344;//蓝牙外输设备
     private static final int DEVICE_TYPE_PRINTER = 1664;//蓝牙打印机
 
+    /**
+     * 打印大货拉布单信息
+     */
     public static void printLabuInfo(Activity activity, BatchLabuRecordPrintBo data) {
         if (data == null) {
             ErrorDialog.showAlert(activity, "打印内容不能为空");
@@ -78,21 +81,24 @@ public class BluetoothHelper {
         zpSDK.disconnect();
     }
 
-    public static void printSubPackageInfo(Activity activity, BatchSplitPackagePrintBo data) {
+    /**
+     * 大货分包打印
+     */
+    public static boolean printSubPackageInfo(Activity activity, BatchSplitPackagePrintBo data) {
         if (data == null) {
             ErrorDialog.showAlert(activity, "打印内容不能为空");
-            return;
+            return false;
         }
         BluetoothDevice device = getBluetoothDevice(activity);
         if (device == null) {
-            return;
+            return false;
         }
         zpBluetoothPrinter zpSDK = new zpBluetoothPrinter(activity);
 
         if (!zpSDK.connect(device.getAddress())) {
             if (!zpSDK.connect(device.getAddress())) {
                 ToastUtil.showToast(activity, "蓝牙打印机连接失败!", Toast.LENGTH_LONG);
-                return;
+                return false;
             }
         }
 
@@ -121,10 +127,15 @@ public class BluetoothHelper {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return false;
         }
         zpSDK.disconnect();
+        return true;
     }
 
+    /**
+     * 分包打印
+     */
     public static void printSubCardInfo(Activity activity, SplitCardDialog.SplitCardDataBo data) {
         if (data == null || data.getLotInfos() == null) {
             ErrorDialog.showAlert(activity, "打印内容不能为空");
@@ -145,15 +156,6 @@ public class BluetoothHelper {
                     return;
                 }
             }
-
-//            zpSDK.pageSetup(576, 400);
-//            SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);
-//            zpSDK.drawText(80, 350, "工单号：" + data.getShopOrder(), 3, 1, 0, false, false);
-//            zpSDK.drawText(160, 350, "款号：" + data.getItem(), 3, 1, 0, false, false);
-//            zpSDK.drawText(240, 350, "码数：" + data.getSize(), 3, 1, 0, false, false);
-//            zpSDK.drawText(320, 350, "分包号：" + cardItemBo.getNumber(), 3, 1, 0, false, false);
-//            zpSDK.drawText(400, 350, "子卡号：" + cardItemBo.getCardId(), 3, 1, 0, false, false);
-//            zpSDK.drawText(480, 350, "子卡件数：" + cardItemBo.getSubqty(), 3, 1, 0, false, false);
 
             zpSDK.pageSetup(576, 180);
             SplitCardDialog.SplitCardItemBo cardItemBo = lotInfos.get(i);

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
@@ -476,7 +477,7 @@ public class SuspendFragment extends BaseFragment {
 
                 //目前在龙华测试
                 String channelName = getString(R.string.app_channel);
-                if (!"YD".equals(channelName)) {
+                if (!PadApplication.CHANNEL_YD.equals(channelName)) {
                     hangerBindMes();
                 }
             } else if (HttpHelper.hangerUnbind.equals(url)) {
