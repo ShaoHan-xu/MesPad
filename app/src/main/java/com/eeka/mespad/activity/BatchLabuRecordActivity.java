@@ -565,11 +565,11 @@ public class BatchLabuRecordActivity extends BaseActivity {
             for (int i = 0; i < mLayout_cutNum.getChildCount(); i++) {
                 LinearLayout childAt = (LinearLayout) mLayout_cutNum.getChildAt(i);
                 String realLengthText = ((TextView) childAt.findViewById(R.id.et_actualLength)).getText().toString();
-                if (isEmpty(realLengthText) || "0".equals(realLengthText)) {
+                float realLength = FormatUtil.strToFloat(realLengthText);
+                if (realLength == 0) {
                     showErrorDialog("请输入排料图实际长度");
                     return;
                 }
-                float realLength = FormatUtil.strToFloat(realLengthText);
                 String layerText = ((TextView) parent.getChildAt(2 + i)).getText().toString();
                 if (isEmpty(layerText)) {
                     return;
@@ -652,29 +652,16 @@ public class BatchLabuRecordActivity extends BaseActivity {
         printBo.setMatType(mPostData.getMaterialType());
 
         List<BatchLabuRecordBo.SEGMENTINFOBean> segmentInfo = mData.getSEGMENT_INFO();
-        List<PostBatchRecordLabuBo.CutSizeBean> sizes;
-        if (editAble) {
-            sizes = mPostData.getCutSizes();
-            for (int i = 0; i < segmentInfo.size(); i++) {
-                BatchLabuRecordBo.SEGMENTINFOBean bean1 = segmentInfo.get(i);
-                for (int j = 0; j < sizes.size(); j++) {
-                    PostBatchRecordLabuBo.CutSizeBean bean = sizes.get(j);
-                    if (bean.getCutNum() == bean1.getCutNum()) {
-                        TextView totalText = (TextView) mLayout_itemTotal.getChildAt(i + 2);
-                        String totalStr = totalText.getText().toString();
-                        bean.setLayers(FormatUtil.strToInt(totalStr));
-                    }
-                }
-            }
-        } else {
-            sizes = new ArrayList<>();
-            for (BatchLabuRecordBo.SEGMENTINFOBean item : segmentInfo) {
-                for (BatchLabuRecordBo.SEGMENTINFOBean.SizeCodesBean sizeCodesBean : item.getSizeCodes()) {
-                    PostBatchRecordLabuBo.CutSizeBean sizeBean = new PostBatchRecordLabuBo.CutSizeBean();
-                    sizeBean.setCutNum(item.getCutNum());
-                    sizeBean.setLayers(item.getLayers());
-                    sizeBean.setSizeCode(sizeCodesBean.getSizeCode());
-                    sizes.add(sizeBean);
+        List<PostBatchRecordLabuBo.CutSizeBean> sizes = getSelectedSize();
+        for (int i = 0; i < segmentInfo.size(); i++) {
+            BatchLabuRecordBo.SEGMENTINFOBean bean1 = segmentInfo.get(i);
+            for (int j = 0; j < sizes.size(); j++) {
+                PostBatchRecordLabuBo.CutSizeBean bean = sizes.get(j);
+                if (bean.getCutNum() == bean1.getCutNum()) {
+                    TextView totalText = (TextView) mLayout_itemTotal.getChildAt(i + 2);
+                    String totalStr = totalText.getText().toString();
+                    int strToInt = FormatUtil.strToInt(totalStr);
+                    bean.setLayers(strToInt);
                 }
             }
         }

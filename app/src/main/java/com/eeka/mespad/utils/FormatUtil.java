@@ -1,6 +1,5 @@
 package com.eeka.mespad.utils;
 
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.eeka.mespad.manager.Logger;
@@ -38,7 +37,8 @@ public class FormatUtil {
             return 0;
         }
         try {
-            return Integer.valueOf(str);
+            float aFloat = Float.parseFloat(str);
+            return (int) aFloat;
         } catch (NumberFormatException e) {
             Logger.w(e.toString());
         }

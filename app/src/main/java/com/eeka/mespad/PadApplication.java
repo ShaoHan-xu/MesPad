@@ -81,6 +81,7 @@ public class PadApplication extends Application {
                 MTM_URL = URL_MTM_D;
                 XMII_URL = HOST_D + "/XMII/Runner?";
                 INA_URL = HOST_D_INA;
+                SpUtil.saveSite("8081");
             } else if ("Q".equals(systemCode)) {
                 BASE_URL = HOST_Q + "/eeka-mes/";
                 WEB_URL = HOST_Q + "/eeka-ws/";
@@ -88,6 +89,7 @@ public class PadApplication extends Application {
                 MTM_URL = URL_MTM_Q;
                 XMII_URL = HOST_Q + "/XMII/Runner?";
                 INA_URL = HOST_Q_INA;
+                SpUtil.saveSite("8082");
             } else if ("P".equals(systemCode)) {
                 BASE_URL = HOST_P + "/eeka-mes/";
                 WEB_URL = HOST_P + "/eeka-ws/";
@@ -95,6 +97,7 @@ public class PadApplication extends Application {
                 MTM_URL = URL_MTM_P;
                 XMII_URL = HOST_P + "/XMII/Runner?";
                 INA_URL = HOST_P_INA;
+                SpUtil.saveSite("8081");
             } else if ("LH_P".equals(systemCode)) {
                 BASE_URL = HOST_P_LH + "/eeka-mes/";
                 WEB_URL = HOST_P_LH + "/eeka-ws/";
@@ -102,15 +105,8 @@ public class PadApplication extends Application {
                 MTM_URL = URL_MTM_P;
                 XMII_URL = HOST_P_LH + "/XMII/Runner?";
                 INA_URL = HOST_LH_P_INA;
+                SpUtil.saveSite("8082");
             }
-        }
-
-        //根据渠道设置工厂站点
-        String channel = getString(R.string.app_channel);
-        if ("LH".equals(channel) || "LH_P".equals(channel)) {
-            SpUtil.saveSite("8082");
-        } else {
-            SpUtil.saveSite("8081");
         }
 
         //配置初始用户
