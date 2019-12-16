@@ -195,6 +195,9 @@
                         
                         <TextView
                             style="@style/textStyle_default"
+                            android:layout_width="match_parent"
+                            android:background="@color/bg_gray"
+                            android:gravity="center"
                             android:padding="@dimen/dp_1"
                             android:text="码数" />
                         
@@ -205,6 +208,9 @@
                         
                         <TextView
                             style="@style/textStyle_default"
+                            android:layout_width="match_parent"
+                            android:background="@color/bg_gray"
+                            android:gravity="center"
                             android:paddingLeft="@dimen/dp_2"
                             android:paddingTop="@dimen/dp_1"
                             android:paddingRight="@dimen/dp_2"
@@ -221,6 +227,9 @@
                         
                         <TextView
                             style="@style/textStyle_default"
+                            android:layout_width="match_parent"
+                            android:background="@color/bg_gray"
+                            android:gravity="center"
                             android:paddingLeft="@dimen/dp_2"
                             android:paddingTop="@dimen/dp_1"
                             android:paddingRight="@dimen/dp_2"

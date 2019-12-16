@@ -44,6 +44,8 @@ public class BatchCutWorkingActivity extends BaseActivity {
 
     private Button mBtn_start;
 
+    private boolean isStarted;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,11 +80,24 @@ public class BatchCutWorkingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        if (isStarted) {
+            ErrorDialog.showAlert(mContext, "该工单已开始操作，是否确定退出？", ErrorDialog.TYPE.ALERT, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    exit();
+                }
+            }, false);
+        } else {
+            exit();
+        }
+    }
+
+    private void exit() {
         List<BatchCutRecordBo.CutSizesBean> selectedSize = getSelectedSize();
         if (selectedSize != null && selectedSize.size() != 0) {
             HttpHelper.removeSizesMarked(mOperation.getOPERATION(), mPostData.getRabRef(), mPostData.getShopOrderRef(), selectedSize, this);
         }
-        super.onBackPressed();
+        finish();
     }
 
     @Override
@@ -370,6 +385,7 @@ public class BatchCutWorkingActivity extends BaseActivity {
                     start();
                 }
             } else if (HttpHelper.saveBatchCutData.equals(url)) {
+                isStarted = false;
                 if (isFinish) {
                     setResult(RESULT_OK);
                     finish();
@@ -377,6 +393,7 @@ public class BatchCutWorkingActivity extends BaseActivity {
                     initData();
                 }
             } else if (HttpHelper.operationProduce.equals(url)) {
+                isStarted = true;
                 if ("BEGIN".equals(mOperationFlag) || "RESTART".equals(mOperationFlag)) {
                     mOperationFlag = "PAUSE";
                     mBtn_start.setText("暂停");

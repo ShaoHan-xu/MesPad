@@ -13,7 +13,7 @@
         
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_90"
+            android:layout_height="@dimen/dp_80"
             android:layout_weight="1"
             android:background="@drawable/border_black"
             android:divider="@drawable/divider_gray"
@@ -113,7 +113,7 @@
         
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_90"
+            android:layout_height="@dimen/dp_80"
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_5"
             android:layout_weight="1"
@@ -130,7 +130,8 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:text="工单号：" />
+                    android:layout_width="@dimen/dp_40"
+                    android:text="工单号" />
                 
                 <EditText
                     android:id="@+id/et_shopOrder"
@@ -152,7 +153,8 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:text="款     号：" />
+                    android:layout_width="@dimen/dp_40"
+                    android:text="款     号" />
                 
                 <EditText
                     android:id="@+id/et_item"
@@ -167,7 +169,9 @@
                 android:id="@+id/btn_search"
                 style="@style/btnStyle_primary"
                 android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_25"
                 android:layout_marginTop="@dimen/dp_5"
+                android:textSize="@dimen/sp_12"
                 android:text="查询" />
         </LinearLayout>
         
@@ -181,7 +185,7 @@
             
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_25"
+                android:layout_height="@dimen/dp_20"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:text="在岗员工"

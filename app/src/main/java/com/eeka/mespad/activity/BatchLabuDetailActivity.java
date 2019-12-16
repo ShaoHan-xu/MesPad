@@ -219,6 +219,7 @@ public class BatchLabuDetailActivity extends NFCActivity {
     }
 
     private void refreshMatView() {
+        mLayoutItem = null;
         if (!mMap_layoutInfo.containsKey(mMatType)) {
             showLoading();
             HttpHelper.getBatchLayoutInfo(mOperation.getOPERATION(), mShopOrderBo, mMatType, BatchLabuDetailActivity.this);
@@ -571,6 +572,8 @@ public class BatchLabuDetailActivity extends NFCActivity {
 //        }
     }
 
+    private String mLayoutItem;
+
     private <T> View getTableView(T data, Class<T> clas, boolean isFirst, int position) {
         List<BatchLabuDetailBo.LAYOUTINFOBean.SINGLELAYOUTBean> list;
         boolean rabDisplay = false;
@@ -584,6 +587,19 @@ public class BatchLabuDetailActivity extends NFCActivity {
             list = bean.getSINGLE_LAYOUT();
             rabDisplay = bean.isLAB_DISPLAY();
 
+            CheckBox checkBox = view.findViewById(R.id.ckb_labuTable_toggle);
+            if (isEmpty(mLayoutItem)){
+                mLayoutItem = bean.getITEM();
+            }else if (!mLayoutItem.equals(bean.getITEM())){
+                checkBox.setBackgroundResource(R.drawable.bg_layoutimg2);
+            }
+            checkBox.setText(bean.getITEM());
+            checkBox.setTag(position);
+            if (mOnCheckedChangeListener == null) {
+                mOnCheckedChangeListener = new CheckedChangeListener();
+            }
+            checkBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
+
             List<BatchLabuDetailBo.LAYOUTINFOBean.RABORDERINFOBean> rabOrderInfo = bean.getRAB_ORDER_INFO();
             refreshButton(view, rabOrderInfo, position);
         } else {
@@ -592,9 +608,11 @@ public class BatchLabuDetailActivity extends NFCActivity {
             view.findViewById(R.id.layout_labuTable_toggle).setVisibility(View.GONE);
             view.findViewById(R.id.layout_labuTable_shopOrder).setVisibility(View.VISIBLE);
             TextView tv_shopOrder = view.findViewById(R.id.tv_labuTable_shopOrder);
+            TextView tv_item = view.findViewById(R.id.tv_labuTable_item);
 
             BatchLabuDetailBo detailBo = mMap_layoutInfo.get(mMatType);
             tv_shopOrder.setText(detailBo.getSHOP_ORDER());
+            tv_item.setText(mItem);
 
             BatchLabuDetailBo bean = (BatchLabuDetailBo) data;
             list = bean.getORDER_INFO();
@@ -674,13 +692,6 @@ public class BatchLabuDetailActivity extends NFCActivity {
             button.setOnClickListener(this);
             layout_actionList.addView(button, mLayoutParams_right10);
         }
-
-        CheckBox checkBox = view.findViewById(R.id.ckb_labuTable_toggle);
-        checkBox.setTag(position);
-        if (mOnCheckedChangeListener == null) {
-            mOnCheckedChangeListener = new CheckedChangeListener();
-        }
-        checkBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
         return view;
     }
 

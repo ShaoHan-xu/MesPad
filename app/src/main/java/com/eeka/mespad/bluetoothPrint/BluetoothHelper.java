@@ -110,16 +110,16 @@ public class BluetoothHelper {
         }
 
         zpSDK.pageSetup(576, 180);
-        zpSDK.drawText(20, 0, "包号：" + data.getSubPackageSeq(), 3, 0, 0, false, false);
-        zpSDK.drawText(160, 0, "码数：" + data.getSizeCode(), 4, 0, 0, false, false);
-        zpSDK.drawText(20, 35, "件数：" + data.getSubPackageQty(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 70, rfid, 3, 0, 0, false, false);
-        zpSDK.drawText(20, 105, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
-        zpSDK.drawText(20, 140, "款号：" + data.getItem(), 3, 0, 0, false, false);
+        zpSDK.drawText(25, 0, "包号：" + data.getSubPackageSeq(), 3, 0, 0, false, false);
+        zpSDK.drawText(165, 0, "码数：" + data.getSizeCode(), 4, 0, 0, false, false);
+        zpSDK.drawText(25, 35, "件数：" + data.getSubPackageQty(), 3, 0, 0, false, false);
+        zpSDK.drawText(25, 70, rfid, 3, 0, 0, false, false);
+        zpSDK.drawText(25, 105, "订单号：" + data.getShopOrder(), 3, 0, 0, false, false);
+        zpSDK.drawText(25, 140, "款号：" + data.getItem(), 3, 0, 0, false, false);
 
         if ("M".equals(data.getMatType())) {
             String qrCodeText = data.getRfid();
-            zpSDK.drawQrCode(370, 10, qrCodeText, 0, 6, 0);
+            zpSDK.drawQrCode(375, 10, qrCodeText, 0, 6, 0);
         }
 
         zpSDK.print(0, 1);

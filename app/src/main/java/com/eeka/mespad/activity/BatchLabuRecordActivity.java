@@ -34,6 +34,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.BaseDialog;
 import com.eeka.mespad.view.dialog.BatchLabuRecordPrintContentDialog;
+import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.ImageBrowserDialog;
 import com.eeka.mespad.view.dialog.LabuCheckDialog;
 
@@ -55,6 +56,8 @@ public class BatchLabuRecordActivity extends BaseActivity {
     private Button mBtn_start;
 
     private boolean editAble;
+
+    private boolean isStarted;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,7 +125,9 @@ public class BatchLabuRecordActivity extends BaseActivity {
             }
             EditText editText = view.findViewById(R.id.et_actualLength);
             editText.setEnabled(editAble);
-            editText.setText(getString(R.string.float_2, actualLength));
+            if (actualLength != 0) {
+                editText.setText(getString(R.string.float_2, actualLength));
+            }
             editText.setFilters(new InputFilter[]{new MyInputFilter()});
 
             mLayout_cutNum.addView(view, params);
@@ -272,6 +277,20 @@ public class BatchLabuRecordActivity extends BaseActivity {
             case R.id.btn_print:
                 print();
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isStarted) {
+            ErrorDialog.showAlert(mContext, "该工单已开始操作，是否确定退出？", ErrorDialog.TYPE.ALERT, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            }, false);
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -627,11 +646,13 @@ public class BatchLabuRecordActivity extends BaseActivity {
                     setupView();
                 }
             } else if (HttpHelper.saveBatchLabuData.equals(url)) {
+                isStarted = false;
                 toast("操作成功");
                 findViewById(R.id.btn_completed).setEnabled(false);
 
                 print();
             } else if (HttpHelper.operationProduce.equals(url)) {
+                isStarted = true;
                 if ("BEGIN".equals(mOperationFlag) || "RESTART".equals(mOperationFlag)) {
                     mOperationFlag = "PAUSE";
                     mBtn_start.setText("暂停");

@@ -1547,6 +1547,9 @@ public class HttpHelper {
                     cookieOutReLogin(callback);
                 } else if (callback != null) {
                     //无网络或者后台出错
+                    if (!TextUtils.isEmpty(msg) && msg.equals("http exception")){
+                        msg = "网络异常，请检查";
+                    }
                     callback.onFailure(url, errorCode, msg);
                 }
             }

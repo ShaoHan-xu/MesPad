@@ -105,7 +105,14 @@ public class BatchOrderListActivity extends NFCActivity {
         initView();
         initData();
         search();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -597,7 +604,9 @@ public class BatchOrderListActivity extends NFCActivity {
                 UserInfoBo user = loginUsers.get(i);
                 if (user.getEMPLOYEE_NUMBER().equals(mLogoutUserId)) {
                     loginUsers.remove(user);
-                    mLogoutAdapter.removeData(i);
+                    if (mLogoutAdapter != null) {
+                        mLogoutAdapter.removeData(i);
+                    }
                     break;
                 }
             }

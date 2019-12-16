@@ -17,6 +17,8 @@
     <TextView
         android:id="@+id/tv_size"
         style="@style/textStyle_default"
+        android:layout_width="match_parent"
+        android:background="@color/bg_gray"
         android:gravity="center"
         android:padding="@dimen/dp_1" />
     
@@ -29,6 +31,8 @@
     <TextView
         android:id="@+id/tv_need"
         style="@style/textStyle_default"
+        android:layout_width="match_parent"
+        android:background="@color/bg_gray"
         android:gravity="center"
         android:padding="@dimen/dp_1" />
     
@@ -41,6 +45,8 @@
     <TextView
         android:id="@+id/tv_unLa"
         style="@style/textStyle_default"
+        android:layout_width="match_parent"
+        android:background="@color/bg_gray"
         android:gravity="center"
         android:padding="@dimen/dp_1" />
 </LinearLayout>
