@@ -107,6 +107,12 @@ public class BatchLabuRecordActivity extends BaseActivity {
         TextView tv_title = findViewById(R.id.tv_title);
         tv_title.setText("拉布单：" + mData.getORDER_NO());
 
+        findViewById(R.id.btn_start).setEnabled(true);
+        findViewById(R.id.btn_add).setEnabled(true);
+        findViewById(R.id.btn_completed).setEnabled(true);
+        findViewById(R.id.btn_layoutImg).setEnabled(true);
+        findViewById(R.id.btn_print).setEnabled(true);
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
         List<BatchLabuRecordBo.SEGMENTINFOBean> segmentInfo = mData.getSEGMENT_INFO();

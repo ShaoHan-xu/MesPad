@@ -222,6 +222,9 @@ public class BatchCutWorkingActivity extends BaseActivity {
     private List<BatchCutRecordBo.CutSizesBean> getSelectedSize() {
         isFinish = true;
         List<BatchCutRecordBo.CutSizesBean> list = new ArrayList<>();
+        if (mData == null) {
+            return list;
+        }
         List<BatchCutWorkingBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
         for (int i = 0; i < rabInfo.size(); i++) {
             View view = mLayout_items.getChildAt(i + 1);

@@ -2,6 +2,7 @@ package com.eeka.mespad.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -353,10 +354,17 @@ public class SystemUtils {
                         if (cache) {
                             context.startActivity(VideoPlayerActivity.getIntent(context, finalVideoPath));
                         } else {
-                            //系统自带视频播放，无缓存
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.parse(finalVideoPath), "video/mp4");
-                            context.startActivity(intent);
+                            try {
+                                //系统自带视频播放，无缓存
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.parse(finalVideoPath), "video/mp4");
+                                context.startActivity(intent);
+                            } catch (ActivityNotFoundException e) {
+                                //偶尔出现无法播放的异常
+                                e.printStackTrace();
+                                context.startActivity(VideoPlayerActivity.getIntent(context, finalVideoPath));
+                            }
+
                         }
                     }
                 }
@@ -372,9 +380,11 @@ public class SystemUtils {
     public static void startSystemRingtoneAlert(Context context) {
         Uri uri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
         if (uri != null) {
-            MediaPlayer mMediaPlayer = MediaPlayer.create(context.getApplicationContext(), uri);
-            mMediaPlayer.setLooping(false);
-            mMediaPlayer.start();
+            MediaPlayer mediaPlayer = MediaPlayer.create(context.getApplicationContext(), uri);
+            if (mediaPlayer != null) {
+                mediaPlayer.setLooping(false);
+                mediaPlayer.start();
+            }
         }
     }
 

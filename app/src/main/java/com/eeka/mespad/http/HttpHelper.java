@@ -1493,7 +1493,7 @@ public class HttpHelper {
             }
         }
 //        PAD_IP = "10.7.20.120";//D拉布
-//        PAD_IP = "10.7.20.48";// D 工序确认
+//        PAD_IP = "10.7.20.43";
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
 //        PAD_IP = "10.10.31.246";//于都 P 分包
 //        PAD_IP = "10.10.28.94";
@@ -1547,7 +1547,7 @@ public class HttpHelper {
                     cookieOutReLogin(callback);
                 } else if (callback != null) {
                     //无网络或者后台出错
-                    if (!TextUtils.isEmpty(msg) && msg.equals("http exception")){
+                    if (!TextUtils.isEmpty(msg) && msg.equals("http exception")) {
                         msg = "网络异常，请检查";
                     }
                     callback.onFailure(url, errorCode, msg);
@@ -1577,9 +1577,11 @@ public class HttpHelper {
                             if (mCookieOutRequest != null) {
                                 RequestParams params = getBaseParams();
                                 RequestParams lastParams = mCookieOutRequest.getParams();
-                                List<Part> formParams = lastParams.getFormParams();
-                                for (Part p : formParams) {
-                                    params.put(p.getKey(), p.getValue());
+                                if (lastParams != null) {
+                                    List<Part> formParams = lastParams.getFormParams();
+                                    for (Part p : formParams) {
+                                        params.put(p.getKey(), p.getValue());
+                                    }
                                 }
                                 HttpRequest.post(mCookieOutRequest.getUrl(), params, mCookieOutRequest.getCallback());
                             }

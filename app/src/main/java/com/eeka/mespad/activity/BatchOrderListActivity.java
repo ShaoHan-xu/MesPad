@@ -604,14 +604,21 @@ public class BatchOrderListActivity extends NFCActivity {
                 UserInfoBo user = loginUsers.get(i);
                 if (user.getEMPLOYEE_NUMBER().equals(mLogoutUserId)) {
                     loginUsers.remove(user);
-                    if (mLogoutAdapter != null) {
-                        mLogoutAdapter.removeData(i);
-                    }
                     break;
                 }
             }
             SpUtil.savePositionUsers(loginUsers);
-            if (loginUsers.size() == 0) {
+        }
+        if (mLogoutAdapter != null) {
+            List<UserInfoBo> data = mLogoutAdapter.getData();
+            for (int i = 0; i < data.size(); i++) {
+                UserInfoBo user = data.get(i);
+                if (user.getEMPLOYEE_NUMBER().equals(mLogoutUserId)) {
+                    mLogoutAdapter.removeData(i);
+                    break;
+                }
+            }
+            if (data.size() == 0) {
                 if (mLogoutDialog != null) {
                     mLogoutDialog.dismiss();
                 }

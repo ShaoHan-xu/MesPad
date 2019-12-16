@@ -87,15 +87,14 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Recy
             mLayoutManager.scrollToPosition(mList.size() - 1);
     }
 
+    public List<T> getData() {
+        return mList;
+    }
+
     /**
      * 移除数据
-     *
-     * @param position
      */
     public void removeData(int position) {
-        if (position < 0 || position >= mList.size()) {
-            throw new IndexOutOfBoundsException("===============adapter removeData IndexOutOfBoundsException==================");
-        }
         mList.remove(position);
         notifyItemRemoved(position);
         if (position != mList.size())

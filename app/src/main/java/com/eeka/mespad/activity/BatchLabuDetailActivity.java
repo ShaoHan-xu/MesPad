@@ -442,7 +442,8 @@ public class BatchLabuDetailActivity extends NFCActivity {
                     data.setMaterialType(mMatType);
                     data.setIsFinish("DONE".equals(status) ? "true" : "false");
                     BatchLabuDetailBo data2 = mMap_layoutInfo.get(mMatType);
-                    data.setMatImg(data2.getMAT_URL());
+                    if (data2 != null)
+                        data.setMatImg(data2.getMAT_URL());
 
                     startActivityForResult(BatchCutWorkingActivity.getIntent(mContext, data, mOperation), REQUEST_RECORD_CUT);
                 }
@@ -588,9 +589,9 @@ public class BatchLabuDetailActivity extends NFCActivity {
             rabDisplay = bean.isLAB_DISPLAY();
 
             CheckBox checkBox = view.findViewById(R.id.ckb_labuTable_toggle);
-            if (isEmpty(mLayoutItem)){
+            if (isEmpty(mLayoutItem)) {
                 mLayoutItem = bean.getITEM();
-            }else if (!mLayoutItem.equals(bean.getITEM())){
+            } else if (!mLayoutItem.equals(bean.getITEM())) {
                 checkBox.setBackgroundResource(R.drawable.bg_layoutimg2);
             }
             checkBox.setText(bean.getITEM());

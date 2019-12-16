@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.eeka.mespad.R;
 import com.eeka.mespad.callback.IntegerCallback;
+import com.eeka.mespad.utils.FormatUtil;
 import com.eeka.mespad.utils.SystemUtils;
 
 public class StorageOutQTYDialog extends BaseDialog {
@@ -25,7 +26,7 @@ public class StorageOutQTYDialog extends BaseDialog {
         mShopOrder = shopOrder;
         mItem = item;
         mSize = size;
-        mLesQTY = Integer.valueOf(lessQTY);
+        mLesQTY = FormatUtil.strToInt(lessQTY);
         mCallback = callback;
         init();
     }

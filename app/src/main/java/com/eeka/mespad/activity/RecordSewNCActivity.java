@@ -293,11 +293,11 @@ public class RecordSewNCActivity extends BaseActivity {
         public void onClick(View v, int position) {
             super.onClick(v, position);
             if (v.getId() == R.id.layout_recordNc_type) {
+                showLoading();
                 RecordNCBo item = mList_NcCode.get(position);
                 mNcCodePosition = position;
                 SewQCDataBo.DesignComponentBean productComponent = mList_component.get(mProductPosition);
                 SewQCDataBo.DesignComponentBean.DesgComponentsBean desgComponentsBean = productComponent.getDesgComponents().get(mDesignPosition);
-                showLoading();
                 HttpHelper.getProcessWithNcCode(productComponent.getName(), desgComponentsBean.getName(), mSFCBo, item.getNC_CODE_BO(), RecordSewNCActivity.this);
             }
         }
@@ -313,6 +313,10 @@ public class RecordSewNCActivity extends BaseActivity {
                 mNcAdapter.notifyDataSetChanged();
             } else if (HttpHelper.getProcessWithNcCode.equals(url)) {
                 if (!this.isFinishing()) {//避免在网络请求成功前用户关闭了界面导致弹框闪退
+                    if (mNcCodePosition == -1) {
+                        //偶尔会出现值为-1 的情况，导致从集合获取数据时应用闪退，直接拦截，让员工重新选择不良录入
+                        return;
+                    }
                     mList_NcProcess = resultJSON.getJSONArray("result");
                     mCurRecordNCBo = mList_NcCode.get(mNcCodePosition);
                     new RepairSelectorDialog(mContext, mCurRecordNCBo.getDESCRIPTION(), mList_NcProcess, new AdapterView.OnItemClickListener() {
