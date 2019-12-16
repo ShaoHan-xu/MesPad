@@ -94,7 +94,7 @@ android {
         LH_BULK {
             resValue "string", "app_name", "赢领智尚_LH"
             resValue "string", "app_channel", "LH_BULK"
-            resValue "string", "system_code", "D"
+            resValue "string", "system_code", "LH_P"
         }
         LH_P {
             resValue "string", "app_name", "赢领智尚_LH"
