@@ -1217,6 +1217,7 @@ public class MainActivity extends NFCActivity {
                     findViewById(R.id.layout_search).setVisibility(View.VISIBLE);
                 }
                 if (TopicUtil.TOPIC_CUT.equals(mTopic)) {
+                    findViewById(R.id.btn_scan).setVisibility(View.VISIBLE);
                     mTv_searchType.setVisibility(View.VISIBLE);
                     String channelName = getString(R.string.app_channel);
                     //目前只有大货裁剪使用新主题

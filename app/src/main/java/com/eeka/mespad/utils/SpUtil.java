@@ -31,6 +31,7 @@ public class SpUtil {
     public static final String KEY_NCIMG_INFO = "key_ncImgServer";
     public static final String KEY_BUTTON = "key_button";
     public static final String KEY_IP = "key_IP";
+    public static final String KEY_curComponentId = "key_curComponentId";
 
     static {
         new SpUtil();

@@ -831,7 +831,9 @@ public class BatchOrderListActivity extends NFCActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_DETAIL) {

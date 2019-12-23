@@ -58,6 +58,7 @@
                 android:id="@+id/btn_scan"
                 style="@style/btnStyle_green"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:text="扫码" />
             
             <Button

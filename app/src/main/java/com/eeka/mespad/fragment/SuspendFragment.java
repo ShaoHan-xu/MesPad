@@ -270,6 +270,7 @@ public class SuspendFragment extends BaseFragment {
                 return;
             }
         }
+        SpUtil.save(SpUtil.KEY_curComponentId, mCurComponent.getComponentId());
         mBtn_binding.setEnabled(false);
         showLoading();
         HttpHelper.hangerBinding(mCurComponent.getComponentId(), mWashLabel, mCurComponent.getIsNeedSubContract(), mCurComponent.getIsMaster(), SuspendFragment.this);
@@ -502,13 +503,10 @@ public class SuspendFragment extends BaseFragment {
         json.put("LineID", contextInfo.getLINE_CATEGORY());
         json.put("StationID", contextInfo.getPOSITION());
         json.put("Tag", mComponent.getSFC());
-//        if (isLastPart) {
         json.put("ProductTag", mComponent.getSFC());
-//        } else {
-//            json.put("ProductTag", mComponent.getSFC() + "_" + mCurComponent.getComponentId());
-//        }
-        json.put("PartID", mCurComponent.getComponentId());
+        json.put("PartID", SpUtil.get(SpUtil.KEY_curComponentId, null));
         HttpHelper.hangerBindMes(json, this);
+        SpUtil.remove(SpUtil.KEY_curComponentId);
     }
 
     private void setupMatInfo(List<ComponentInfoBo.MaterialInfoBean> matInfo) {
