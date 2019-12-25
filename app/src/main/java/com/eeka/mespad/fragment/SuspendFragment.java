@@ -29,6 +29,7 @@ import com.eeka.mespad.bo.ComponentInfoBo;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.SuspendComponentBo;
 import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
@@ -140,7 +141,7 @@ public class SuspendFragment extends BaseFragment {
         mBtn_binding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding();
+                binding(mCurComponent.getComponentId(), mHangerId, mCurSFC);
             }
         });
     }
@@ -159,7 +160,7 @@ public class SuspendFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPushMsgReceive(String washLabel) {
         mWashLabel = washLabel;
-        binding();
+        binding(mCurComponent.getComponentId(), mHangerId, mCurSFC);
     }
 
     /**
@@ -252,7 +253,7 @@ public class SuspendFragment extends BaseFragment {
     /**
      * 绑定
      */
-    public void binding() {
+    public void binding(final String componentId, final String hangerId, final String sfc) {
         if (mCurComponent == null) {
             showErrorDialog("请点击选择要绑定的部件");
             return;
@@ -265,15 +266,45 @@ public class SuspendFragment extends BaseFragment {
         //绑定洗水唛，目前只有于都产线需要
         if ("YD".equals(getString(R.string.app_channel))) {
             if ("true".equals(mCurComponent.getIsUnderCarry()) && "true".equals(mCurComponent.getIsMaster()) && isEmpty(mWashLabel)) {
-                mWashLabelDialog = new WashLabelDialog(mContext, mComponent.getSFC(), mCurComponent.getComponentName());
+                mWashLabelDialog = new WashLabelDialog(mContext, mCurSFC, mCurComponent.getComponentName());
                 mWashLabelDialog.show();
                 return;
             }
         }
-        SpUtil.save(SpUtil.KEY_curComponentId, mCurComponent.getComponentId());
         mBtn_binding.setEnabled(false);
         showLoading();
-        HttpHelper.hangerBinding(mCurComponent.getComponentId(), mWashLabel, mCurComponent.getIsNeedSubContract(), mCurComponent.getIsMaster(), SuspendFragment.this);
+        HttpHelper.hangerBinding(componentId, mWashLabel, mCurComponent.getIsNeedSubContract(), mCurComponent.getIsMaster(), new HttpCallback() {
+            @Override
+            public void onSuccess(String url, JSONObject resultJSON) {
+                dismissLoading();
+                if (HttpHelper.isSuccess(resultJSON)) {
+                    toast("衣架绑定成功");
+
+                    //目前在龙华测试
+                    String channelName = getString(R.string.app_channel);
+                    if (!PadApplication.CHANNEL_YD.equals(channelName)) {
+                        ContextInfoBo contextInfo = SpUtil.getContextInfo();
+                        JSONObject json = new JSONObject();
+                        json.put("HangerID", hangerId);
+                        json.put("Site", SpUtil.getSite());
+                        json.put("LineID", contextInfo.getLINE_CATEGORY());
+                        json.put("StationID", contextInfo.getPOSITION());
+                        json.put("Tag", sfc);
+                        json.put("ProductTag", sfc);
+                        json.put("PartID", componentId);
+                        HttpHelper.hangerBindMes(json, SuspendFragment.this);
+                    }
+                } else {
+                    showErrorDialog(HttpHelper.getMessage(resultJSON));
+                }
+            }
+
+            @Override
+            public void onFailure(String url, int code, String message) {
+                dismissLoading();
+                showErrorDialog(message);
+            }
+        });
     }
 
     /**
@@ -473,14 +504,6 @@ public class SuspendFragment extends BaseFragment {
                     mHSV_imgBar.setVisibility(View.GONE);
                 }
                 setupMatInfo(componentInfoBo.getMaterialInfo());
-            } else if (HttpHelper.hangerBinding.equals(url)) {
-                toast("衣架绑定成功");
-
-                //目前在龙华测试
-                String channelName = getString(R.string.app_channel);
-                if (!PadApplication.CHANNEL_YD.equals(channelName)) {
-                    hangerBindMes();
-                }
             } else if (HttpHelper.hangerUnbind.equals(url)) {
                 toast("衣架解绑成功");
             }
@@ -495,18 +518,8 @@ public class SuspendFragment extends BaseFragment {
         mHangerId = hangerId;
     }
 
-    private void hangerBindMes() {
-        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-        JSONObject json = new JSONObject();
-        json.put("HangerID", mHangerId);
-        json.put("Site", SpUtil.getSite());
-        json.put("LineID", contextInfo.getLINE_CATEGORY());
-        json.put("StationID", contextInfo.getPOSITION());
-        json.put("Tag", mComponent.getSFC());
-        json.put("ProductTag", mComponent.getSFC());
-        json.put("PartID", SpUtil.get(SpUtil.KEY_curComponentId, null));
-        HttpHelper.hangerBindMes(json, this);
-        SpUtil.remove(SpUtil.KEY_curComponentId);
+    private void hangerBindMes(String componentId) {
+
     }
 
     private void setupMatInfo(List<ComponentInfoBo.MaterialInfoBean> matInfo) {

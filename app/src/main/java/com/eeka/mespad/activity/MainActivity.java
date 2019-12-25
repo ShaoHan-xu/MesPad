@@ -927,11 +927,6 @@ public class MainActivity extends NFCActivity {
                         break;
                 }
                 break;
-            case R.id.btn_binding:
-                if (mSuspendFragment != null) {
-                    mSuspendFragment.binding();
-                }
-                break;
             case R.id.btn_unbind:
                 if (TopicUtil.TOPIC_SUSPEND.equals(mTopic)) {
                     if (mSuspendFragment != null) {
