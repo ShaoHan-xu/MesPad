@@ -101,6 +101,10 @@ public class BatchOrderListActivity extends NFCActivity {
         setContentView(R.layout.aty_batchcut);
 
         mOperation = (PositionInfoBo.OPERINFORBean) getIntent().getSerializableExtra("operation");
+        if (mOperation == null){
+            showErrorDialog("数据异常，请重启应用");
+            return;
+        }
 
         initView();
         initData();

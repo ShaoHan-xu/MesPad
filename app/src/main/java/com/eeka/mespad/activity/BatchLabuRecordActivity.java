@@ -454,7 +454,9 @@ public class BatchLabuRecordActivity extends BaseActivity {
             EditText editText = (EditText) LayoutInflater.from(mContext).inflate(R.layout.edittext_common, null);
             if (!editAble) {
                 editText.setEnabled(false);
-                editText.setText(rabSegments.get(i).getLayers() + "");
+                if (rabSegments != null && rabSegments.size() != 0) {
+                    editText.setText(rabSegments.get(i).getLayers() + "");
+                }
             }
             editText.setPadding(0, 0, 0, 0);
             editText.setBackgroundResource(0);

@@ -31,6 +31,7 @@ import com.eeka.mespad.fragment.LoginFragment;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
+import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.ToastUtil;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
@@ -68,6 +69,13 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         mContext = this;
         mFragmentManager = getSupportFragmentManager();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        dismissLoading();
+        ErrorDialog.dismiss();
+        super.onDestroy();
     }
 
     protected void initView() {
@@ -208,6 +216,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         mLoginDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                SystemUtils.showSoftInputFromWindow(mContext);
                 mFragmentManager.beginTransaction().remove(loginFragment).commit();
             }
         });

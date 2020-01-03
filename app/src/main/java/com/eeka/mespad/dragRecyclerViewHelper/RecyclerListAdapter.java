@@ -18,11 +18,11 @@ import java.util.List;
 
 /**
  * @author Paul Burke (ipaulpro)
- *         ★ RecyclerListAdapter要实现ItemTouchHelperAdapter
- *         重写onItemDismiss（删除条目）和onItemMove（移动条目）
- *         <p>
- *         ★ RecyclerView.ViewHolder实现ItemTouchHelperViewHolder
- *         重写onItemSelected（条目被选中时）和onItemClear（条目被拖拽之后）
+ * ★ RecyclerListAdapter要实现ItemTouchHelperAdapter
+ * 重写onItemDismiss（删除条目）和onItemMove（移动条目）
+ * <p>
+ * ★ RecyclerView.ViewHolder实现ItemTouchHelperViewHolder
+ * 重写onItemSelected（条目被选中时）和onItemClear（条目被拖拽之后）
  */
 public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
         implements ItemTouchHelperAdapter {
@@ -46,16 +46,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, int position) {
         holder.tv_code.setText(mItems.get(position).getDESCRIPTION());
         holder.tv_process.setText(mItems.get(position).getOperationDesc());
 
-        holder.tv_del.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeItem(position);
-            }
-        });
+        holder.tv_del.setOnClickListener(new DelClickListener(position));
 
         holder.layout_dragView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -66,6 +61,20 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 return false;
             }
         });
+    }
+
+    private class DelClickListener implements View.OnClickListener {
+
+        private int mPosition;
+
+        DelClickListener(int mPosition) {
+            this.mPosition = mPosition;
+        }
+
+        @Override
+        public void onClick(View v) {
+            removeItem(mPosition);
+        }
     }
 
     public void addItem(UpdateSewNcBo.NcCodeOperationListBean item) {

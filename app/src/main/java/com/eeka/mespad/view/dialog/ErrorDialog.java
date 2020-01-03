@@ -120,6 +120,7 @@ public class ErrorDialog {
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                mHandler.removeCallbacksAndMessages(null);
                 if (listener != null) {
                     listener.onDismiss(dialog);
                 } else {

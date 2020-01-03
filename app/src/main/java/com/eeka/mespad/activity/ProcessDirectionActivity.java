@@ -238,6 +238,11 @@ public class ProcessDirectionActivity extends BaseActivity {
                 }
             }
 
+            if (mData == null){
+                showErrorDialog("是否长时间未操作平板，数据已更新，请退出界面重新获取数据。");
+                return;
+            }
+
             List<ProcessDirectionBo.CUTFLOWTEMPLETEBean> cutFlows = mData.getMaterialCutFlows();
             ProcessDirectionBo.CUTFLOWTEMPLETEBean bean = null;
             for (ProcessDirectionBo.CUTFLOWTEMPLETEBean item : cutFlows) {
@@ -291,6 +296,10 @@ public class ProcessDirectionActivity extends BaseActivity {
 
     private void setupProcessView(@NonNull String type) {
         mMatType = type;
+        if (mData == null){
+            showErrorDialog("是否长时间未操作平板，数据已更新，请退出界面重新获取数据。");
+            return;
+        }
         List<ProcessDirectionBo.CUTFLOWTEMPLETEBean> cutFlows = mData.getMaterialCutFlows();
         for (ProcessDirectionBo.CUTFLOWTEMPLETEBean item : cutFlows) {
             if (type.equals(item.getMaterialType())) {

@@ -141,6 +141,10 @@ public class SuspendFragment extends BaseFragment {
         mBtn_binding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCurComponent == null) {
+                    showErrorDialog("请点击选择要绑定的部件");
+                    return;
+                }
                 binding(mCurComponent.getComponentId(), mHangerId, mCurSFC);
             }
         });
@@ -254,10 +258,6 @@ public class SuspendFragment extends BaseFragment {
      * 绑定
      */
     public void binding(final String componentId, final String hangerId, final String sfc) {
-        if (mCurComponent == null) {
-            showErrorDialog("请点击选择要绑定的部件");
-            return;
-        }
         List<UserInfoBo> positionUsers = SpUtil.getPositionUsers();
         if (positionUsers == null || positionUsers.size() == 0) {
             showErrorDialog("请员工刷卡登录");

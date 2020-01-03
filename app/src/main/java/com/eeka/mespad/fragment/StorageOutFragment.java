@@ -2,6 +2,7 @@ package com.eeka.mespad.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -242,6 +243,7 @@ public class StorageOutFragment extends BaseFragment {
     private StorageOutQTYDialog mStorageOutQTYDialog;
 
     private void showInputDialog() {
+        mHandler.removeMessages(WHAT_INITDATA);
         final StorageOutBo outBo = mList_item.get(mOutPosition);
         mStorageOutQTYDialog = new StorageOutQTYDialog(mContext, outBo.getSHOP_ORDER(), outBo.getITEM(), outBo.getSIZE(), outBo.getSURPLUS_QUANTITY(), new IntegerCallback() {
             @Override
@@ -256,6 +258,12 @@ public class StorageOutFragment extends BaseFragment {
                 outBo.setQUANTITY(mOutQTY + "");
                 showLoading();
                 HttpHelper.storageOut(outBo, StorageOutFragment.this);
+            }
+        });
+        mStorageOutQTYDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mHandler.sendEmptyMessageDelayed(WHAT_INITDATA, 60 * 1000);
             }
         });
         mStorageOutQTYDialog.show();
