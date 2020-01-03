@@ -692,8 +692,8 @@ public class HttpHelper {
      */
     public static void login(String user, String pwd, HttpCallback callback) {
         RequestParams params = getBaseParams();
-//        params.put("j_username", user);
-//        params.put("j_password", pwd);
+        params.put("j_username", user);
+        params.put("j_password", pwd);
         HttpRequest.post(login_url, params, getResponseHandler(login_url, callback));
     }
 
@@ -1464,8 +1464,6 @@ public class HttpHelper {
         PAD_IP = getPadIp();
         RequestParams params = new RequestParams();
         params.put("PAD_IP", PAD_IP);
-        params.put("j_username", "PAD_USER");
-        params.put("j_password", "mes123456");
         String site = SpUtil.getSite();
         if (!TextUtils.isEmpty(site)) {
             params.put("site", site);
@@ -1492,7 +1490,7 @@ public class HttpHelper {
                 PAD_IP = ip;
             }
         }
-//        PAD_IP = "10.7.20.120";//D拉布
+//        PAD_IP = "10.7.20.123";
 //        PAD_IP = "10.7.20.43";
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
 //        PAD_IP = "10.10.31.246";//于都 P 分包
@@ -1575,15 +1573,15 @@ public class HttpHelper {
                             IS_COOKIE_OUT = false;
                             //cookie过期后重新登录成功，继续执行之前的请求
                             if (mCookieOutRequest != null) {
-                                RequestParams params = getBaseParams();
                                 RequestParams lastParams = mCookieOutRequest.getParams();
                                 if (lastParams != null) {
-                                    List<Part> formParams = lastParams.getFormParams();
-                                    for (Part p : formParams) {
-                                        params.put(p.getKey(), p.getValue());
+                                    lastParams.removeHeader("Cookie");
+                                    String cookie = SpUtil.getCookie();
+                                    if (!TextUtils.isEmpty(cookie)) {
+                                        lastParams.addHeader("Cookie", cookie);
                                     }
                                 }
-                                HttpRequest.post(mCookieOutRequest.getUrl(), params, mCookieOutRequest.getCallback());
+                                HttpRequest.post(mCookieOutRequest.getUrl(), lastParams, mCookieOutRequest.getCallback());
                             }
                             return;
                         }

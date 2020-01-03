@@ -244,6 +244,10 @@ public class RequestParams {
         addHeader(key, String.valueOf(value));
     }
 
+    public void removeHeader(String key){
+        headers.removeAll(key);
+    }
+
     /**
      * URL编码，只对GET,DELETE,HEAD有效
      */

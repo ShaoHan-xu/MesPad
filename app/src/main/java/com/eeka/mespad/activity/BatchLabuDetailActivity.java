@@ -123,7 +123,6 @@ public class BatchLabuDetailActivity extends NFCActivity {
 
         findViewById(R.id.btn_back).setOnClickListener(this);
 
-        setupView();
     }
 
     @Override
@@ -791,6 +790,7 @@ public class BatchLabuDetailActivity extends NFCActivity {
                     if (array != null && array.size() != 0) {
                         mList_tab = JSON.parseArray(array.toString(), DictionaryDataBo.class);
                         initTabView();
+                        setupView();
                     }
                 } else if (HttpHelper.getBatchLayoutInfo.equals(url)) {
                     BatchLabuDetailBo data = JSON.parseObject(HttpHelper.getResultStr(resultJSON), BatchLabuDetailBo.class);
