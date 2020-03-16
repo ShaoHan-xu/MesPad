@@ -24,6 +24,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.LoadingDialog;
 
 import java.util.List;
 
@@ -137,6 +138,13 @@ public class BaseFragment extends Fragment implements View.OnClickListener, Http
 
     protected void toast(String msg, int duration) {
         Toast.makeText(mContext, msg, duration).show();
+    }
+
+    @Override
+    public void onDestroy() {
+        LoadingDialog.dismiss();
+        ErrorDialog.dismiss();
+        super.onDestroy();
     }
 
     @Override

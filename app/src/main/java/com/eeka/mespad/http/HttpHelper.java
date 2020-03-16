@@ -692,8 +692,8 @@ public class HttpHelper {
      */
     public static void login(String user, String pwd, HttpCallback callback) {
         RequestParams params = getBaseParams();
-        params.put("j_username", user);
-        params.put("j_password", pwd);
+        params.put("j_username", "PAD_USER");
+        params.put("j_password", "mes123456");
         HttpRequest.post(login_url, params, getResponseHandler(login_url, callback));
     }
 

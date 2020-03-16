@@ -1,18 +1,40 @@
 package com.eeka.mespad;
 
-public class MyJavaTest {
+import com.eeka.mespad.bo.UserInfoBo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public  class MyJavaTest<T> {
 
     public static void main(String[] args) {
 //        StringBuilder s = new StringBuilder("1234567890");
 //        System.out.println(s.substring(1, s.length()));
+
         MyJavaTest test = new MyJavaTest();
-        String mStr = "123";
-        Bean mBean = test.new Bean();
-        mBean.str = "000";
-        test.func(mStr, mBean);
-        mStr = "abc";
-        mBean.str = "111";
-        mBean = null;
+
+        //测试值传递与引用传递
+//        String mStr = "123";
+//        Bean mBean = test.new Bean();
+//        mBean.str = "000";
+//        test.func(mStr, mBean);
+//        mStr = "abc";
+//        mBean.str = "111";
+//        mBean = null;
+
+        //测试泛型转换
+        List data = test.getData();
+        for (int i = 0; i < data.size(); i++) {
+            UserInfoBo user = (UserInfoBo) data.get(i);
+            System.out.println(user.getUSER());
+        }
+    }
+
+    private List<T> getData(){
+        List<T> userInfoBos = new ArrayList<>();
+        UserInfoBo infoBo = new UserInfoBo("hh","ll");
+        userInfoBos.add((T) infoBo);
+        return userInfoBos;
     }
 
     /**

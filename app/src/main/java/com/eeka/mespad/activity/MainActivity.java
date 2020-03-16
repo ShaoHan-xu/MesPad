@@ -236,7 +236,13 @@ public class MainActivity extends NFCActivity {
             if (checkResource())
                 searchOrder();
         } else if (PushJson.TYPE_ALERT.equals(type)) {
-            showAlert(push.getMessage());
+            if ((mLoginDialog == null || !mLoginDialog.isShowing()) && (mLogoutDialog == null || !mLogoutDialog.isShowing())) {
+                showAlert(push.getMessage());
+            }
+        } else if (PushJson.TYPE_ALERT_AUTOCANCEL.equals(type)) {
+            if ((mLoginDialog == null || !mLoginDialog.isShowing()) && (mLogoutDialog == null || !mLogoutDialog.isShowing())) {
+                ErrorDialog.showAlert(mContext, push.getMessage(), true);
+            }
         } else if (PushJson.TYPE_Maintenance.equals(type)) {
             Logger.d(push.getMessage());
             if ("true".equals(push.getMessage())) {
@@ -1362,9 +1368,9 @@ public class MainActivity extends NFCActivity {
             SpUtil.savePositionUsers(loginUsers);
         }
         if (mLogoutAdapter != null) {
-            List<UserInfoBo> data = mLogoutAdapter.getData();
+            List data = mLogoutAdapter.getData();
             for (int i = 0; i < data.size(); i++) {
-                UserInfoBo user = data.get(i);
+                UserInfoBo user = (UserInfoBo) data.get(i);
                 if (user.getEMPLOYEE_NUMBER().equals(mLogoutUserId)) {
                     mLogoutAdapter.removeData(i);
                     break;

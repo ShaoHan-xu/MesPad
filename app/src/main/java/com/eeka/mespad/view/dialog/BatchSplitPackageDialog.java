@@ -19,7 +19,6 @@ import com.eeka.mespad.bo.BatchSplitPackagePrintBo;
 import com.eeka.mespad.bo.BatchSplitPackageSaveBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.UserInfoBo;
-import com.eeka.mespad.callback.StringCallback;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.FormatUtil;
@@ -41,8 +40,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
 
     private List<BatchSplitPackagePrintBo> mList_printData;
 
-    private boolean cancelAble;//弹框是否允许消掉
-
     private boolean isOnlyPrint;
 
     public BatchSplitPackageDialog(@NonNull Context context, boolean editable, BatchCutRecordBo data, String sizeCode, int sizeTotal, boolean onlyPrint) {
@@ -52,7 +49,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         mSizeCode = sizeCode;
         mSizeTotal = sizeTotal;
         isOnlyPrint = onlyPrint;
-        cancelAble = true;
         init();
     }
 
@@ -83,6 +79,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
         mLayout_items = mView.findViewById(R.id.layout_itemList);
 
         mView.findViewById(R.id.btn_add).setOnClickListener(this);
+        mView.findViewById(R.id.btn_del).setOnClickListener(this);
         mView.findViewById(R.id.btn_cancel).setOnClickListener(this);
         mView.findViewById(R.id.btn_ok).setOnClickListener(this);
 
@@ -104,14 +101,10 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 if (isOnlyPrint) {
                     dismiss();
                 } else {
-                    if (cancelAble) {
-                        if (findViewById(R.id.btn_ok).getVisibility() == View.VISIBLE) {
-                            dismiss();
-                        } else {
-                            cancel();
-                        }
+                    if (findViewById(R.id.layout_button).getVisibility() == View.VISIBLE) {
+                        dismiss();
                     } else {
-                        ErrorDialog.showAlert(mContext, "请打印完所有分包数据");
+                        cancel();
                     }
                 }
                 break;
@@ -124,14 +117,15 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                     int value = FormatUtil.strToInt(valueStr);
                     qty += value;
                 }
-                if (qty >= mSizeTotal) {
-                    ErrorDialog.showAlert(mContext, "数量已分完，请减少其他分包数量后再增加新包");
-                    return;
-                }
                 BatchSplitPackageItemBo item = new BatchSplitPackageItemBo();
                 item.setSubPackageQty(mSizeTotal - qty);
                 mLayout_items.addView(getItemView(item, mLayout_items.getChildCount() - 1), mLayout_items.getChildCount() - 1);
                 refreshPrintSeq();
+                break;
+            case R.id.btn_del:
+                if (mLayout_items.getChildCount() > 1) {
+                    mLayout_items.removeViewAt(mLayout_items.getChildCount() - 2);
+                }
                 break;
             case R.id.btn_ok:
                 check();
@@ -210,15 +204,25 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             qtyAll += qty;
         }
         if (qtyAll != mSizeTotal) {
-            ErrorDialog.showAlert(mContext, "当前拉布单分包数量与总数不符，请检查");
-            return;
+            ErrorDialog.showAlert(mContext, "当前拉布单分包数量:" + qtyAll + " 与总数:" + mSizeTotal + " 不符,是否确定保存？", ErrorDialog.TYPE.ALERT, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SplitPackageCheckDialog(mContext, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            save();
+                        }
+                    }).setParams(0.5f, 0.55f).show();
+                }
+            }, false);
+        } else {
+            new SplitPackageCheckDialog(mContext, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    save();
+                }
+            }).setParams(0.5f, 0.55f).show();
         }
-        new SplitPackageCheckDialog(mContext, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-            }
-        }).setParams(0.5f, 0.55f).show();
     }
 
     private void save() {
@@ -299,8 +303,6 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
 
         if (!isOnlyPrint) {
             setPrintEnable(index);
-        } else {
-            cancelAble = true;
         }
     }
 
@@ -373,11 +375,10 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                     mLayout_items.addView(getItemView(itemBo, i), mLayout_items.getChildCount() - 1);
                 }
                 if (!isEditable) {
-                    findViewById(R.id.btn_add).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.layout_button).setVisibility(View.INVISIBLE);
                 }
             } else if (HttpHelper.saveBatchSplitPackageData.equals(url)) {
                 mList_printData = JSON.parseArray(resultJSON.getJSONArray("result").toString(), BatchSplitPackagePrintBo.class);
-                cancelAble = false;
                 refreshItemView();
                 if (mOnSaveListener != null) {
                     mOnSaveListener.onClick(null);
@@ -396,7 +397,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             } else if (HttpHelper.recordSubPackagePrintInfo.equals(url)) {
                 print();
             } else if (HttpHelper.completedSplitPrint.equals(url)) {
-                cancelAble = true;
+
             }
         } else {
             ErrorDialog.showAlert(mContext, resultJSON.getString("message"));

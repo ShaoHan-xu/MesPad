@@ -165,11 +165,10 @@ public class MQTTService extends Service {
             } else {
                 //ME系统推送
                 PushJson pushJson = JSON.parseObject(str1, PushJson.class);
-                if ("0".equals(pushJson.getCode())) {
-                    EventBus.getDefault().post(pushJson);
-                } else {
-                    ErrorDialog.showAlert(mContext, pushJson.getMessage(), true);
+                if (!"0".equals(pushJson.getCode())) {
+                    pushJson.setType(PushJson.TYPE_ALERT_AUTOCANCEL);
                 }
+                EventBus.getDefault().post(pushJson);
             }
         }
 
@@ -242,7 +241,11 @@ public class MQTTService extends Service {
 
         @Override
         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-            Logger.e("连接失败,exception:" + exception.getMessage());
+            String message = null;
+            if (exception != null) {
+                message = exception.getMessage();
+            }
+            Logger.e("连接失败,exception:" + message);
             startReconnect();
         }
     };

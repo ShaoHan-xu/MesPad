@@ -140,6 +140,7 @@ public class ErrorDialog {
     public static void dismiss() {
         if (mDialog != null) {
             mDialog.dismiss();
+            mDialog = null;
         }
     }
 }

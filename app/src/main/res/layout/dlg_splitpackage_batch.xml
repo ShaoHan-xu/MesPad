@@ -204,16 +204,31 @@
                 android:orientation="vertical"
                 android:showDividers="middle">
                 
-                <Button
-                    android:id="@+id/btn_add"
-                    android:layout_width="@dimen/dp_75"
+                <LinearLayout
+                    android:id="@+id/layout_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/dp_5"
-                    android:background="@drawable/btn_green_round_new"
-                    android:text="新增分包"
-                    android:textColor="@color/white" />
-            
+                    android:orientation="horizontal">
+                    
+                    <Button
+                        android:id="@+id/btn_add"
+                        android:layout_width="@dimen/dp_75"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dp_5"
+                        android:background="@drawable/btn_green_round_new"
+                        android:text="新增分包"
+                        android:textColor="@color/white" />
+                    
+                    <Button
+                        android:id="@+id/btn_del"
+                        android:layout_width="@dimen/dp_75"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/dp_5"
+                        android:background="@drawable/btn_red_round"
+                        android:text="删除分包"
+                        android:textColor="@color/white" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

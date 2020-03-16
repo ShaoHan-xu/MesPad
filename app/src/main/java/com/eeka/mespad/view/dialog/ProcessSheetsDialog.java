@@ -91,13 +91,15 @@ public class ProcessSheetsDialog extends BaseDialog {
     private void initTechnology() {
         LinearLayout layout_technology = mView.findViewById(R.id.layout_processSheets_technology);
         List<ProcessSheetsBo.TechnologyListBean> technologyList = mData.getTechnologyList();
-        for (ProcessSheetsBo.TechnologyListBean item : technologyList) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.item_processsheets_techology, null);
-            TextView tv_patternName = view.findViewById(R.id.tv_processSheets_patternName);
-            tv_patternName.setText(item.getName());
-            TextView tv_desc = view.findViewById(R.id.tv_processSheets_technologyDesc);
-            tv_desc.setText(item.getTechnologyRemark());
-            layout_technology.addView(view);
+        if (technologyList != null) {
+            for (ProcessSheetsBo.TechnologyListBean item : technologyList) {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.item_processsheets_techology, null);
+                TextView tv_patternName = view.findViewById(R.id.tv_processSheets_patternName);
+                tv_patternName.setText(item.getName());
+                TextView tv_desc = view.findViewById(R.id.tv_processSheets_technologyDesc);
+                tv_desc.setText(item.getTechnologyRemark());
+                layout_technology.addView(view);
+            }
         }
     }
 
