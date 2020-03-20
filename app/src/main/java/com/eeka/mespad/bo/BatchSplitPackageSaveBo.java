@@ -114,6 +114,24 @@ public class BatchSplitPackageSaveBo {
 
         private String subPackageSeq;
         private String subPackageQty;
+        private int cutNum;
+        private String sizeCode;
+
+        public int getCutNum() {
+            return cutNum;
+        }
+
+        public void setCutNum(int cutNum) {
+            this.cutNum = cutNum;
+        }
+
+        public String getSizeCode() {
+            return sizeCode;
+        }
+
+        public void setSizeCode(String sizeCode) {
+            this.sizeCode = sizeCode;
+        }
 
         public String getSubPackageSeq() {
             return subPackageSeq;

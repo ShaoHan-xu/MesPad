@@ -101,7 +101,8 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
                 if (isOnlyPrint) {
                     dismiss();
                 } else {
-                    if (findViewById(R.id.layout_button).getVisibility() == View.VISIBLE) {
+                    View viewById = findViewById(R.id.layout_button);
+                    if (viewById != null && viewById.getVisibility() == View.VISIBLE) {
                         dismiss();
                     } else {
                         cancel();
@@ -204,7 +205,7 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             qtyAll += qty;
         }
         if (qtyAll != mSizeTotal) {
-            ErrorDialog.showAlert(mContext, "当前拉布单分包数量:" + qtyAll + " 与总数:" + mSizeTotal + " 不符,是否确定保存？", ErrorDialog.TYPE.ALERT, new View.OnClickListener() {
+            ErrorDialog.showAlert(mContext, "当前拉布单分包数量:" + qtyAll + " 与总数:" + mSizeTotal + " 不符,请确定是否减裁？", ErrorDialog.TYPE.ALERT, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new SplitPackageCheckDialog(mContext, new View.OnClickListener() {
@@ -235,6 +236,8 @@ public class BatchSplitPackageDialog extends BaseDialog implements HttpCallback,
             BatchSplitPackageSaveBo.SubPackagesBean item = new BatchSplitPackageSaveBo.SubPackagesBean();
             item.setSubPackageSeq(tv_packageNum.getText().toString());
             item.setSubPackageQty(editText.getText().toString());
+            item.setCutNum(mData.getCutNum());
+            item.setSizeCode(mSizeCode);
 
             list.add(item);
         }

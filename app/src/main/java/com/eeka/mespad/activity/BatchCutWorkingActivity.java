@@ -149,10 +149,13 @@ public class BatchCutWorkingActivity extends BaseActivity {
                 String size = tv_size.getText().toString();
                 mSelectCheckBox = view.findViewById(R.id.ckb_sizeSelect);
                 if (mSelectCheckBox.isEnabled()) {
-                    showLoading();
-                    String flag = mSelectCheckBox.isChecked() ? "UNSELECT" : "SELECT";
-                    BatchCutWorkingBo.RABINFOBean bean = mData.getRAB_INFO().get(index - 1);
-                    HttpHelper.markSelectedSize(mOperation.getOPERATION(), mPostData.getRabRef(), mPostData.getShopOrderRef(), bean.getCUT_NUM(), size, flag, this);
+                    mSelectCheckBox.setChecked(!mSelectCheckBox.isChecked());
+
+                    //码数锁定
+//                    showLoading();
+//                    String flag = mSelectCheckBox.isChecked() ? "UNSELECT" : "SELECT";
+//                    BatchCutWorkingBo.RABINFOBean bean = mData.getRAB_INFO().get(index - 1);
+//                    HttpHelper.markSelectedSize(mOperation.getOPERATION(), mPostData.getRabRef(), mPostData.getShopOrderRef(), bean.getCUT_NUM(), size, flag, this);
                 } else {
                     if ("FB".equals(mOperation.getOPERATION())) {
                         List<BatchCutWorkingBo.RABINFOBean> rabInfo = mData.getRAB_INFO();
@@ -195,6 +198,8 @@ public class BatchCutWorkingActivity extends BaseActivity {
                 if (isFinish) {
                     setResult(RESULT_OK);
                     finish();
+                } else {
+                    initData();
                 }
             }
         });
@@ -339,7 +344,7 @@ public class BatchCutWorkingActivity extends BaseActivity {
                 completedTotal += bean.getSIZE_FEN();
                 waitingTotal += bean.getSIZE_LEFT();
 
-                if ("DONE".equals(bean.getSTATUS())) {
+                if (bean.getSIZE_FEN() != 0) {
                     checkBox.setEnabled(false);
                 }
 
