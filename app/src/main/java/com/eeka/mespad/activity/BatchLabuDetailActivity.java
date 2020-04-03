@@ -32,6 +32,7 @@ import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.PostBatchRecordLabuBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.RecordNCBo;
+import com.eeka.mespad.bo.SubPackageInfoBo;
 import com.eeka.mespad.bo.TailorInfoBo;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
@@ -462,6 +463,11 @@ public class BatchLabuDetailActivity extends NFCActivity {
             case R.id.btn_qrCode:
                 new ManualPrintSubPackageDialog(mContext).setParams(0.4f, 0.4f).show();
                 break;
+            case R.id.btn_itemDetail:
+                String shopOrderBO = mCurMatData.getSHOP_ORDER_BO();
+                showLoading();
+                HttpHelper.getSubpackageInfoByShopOrderRef(shopOrderBO, mOperation.getOPERATION(), mMatType, this);
+                break;
         }
     }
 
@@ -616,6 +622,13 @@ public class BatchLabuDetailActivity extends NFCActivity {
 
             BatchLabuDetailBo bean = (BatchLabuDetailBo) data;
             list = bean.getORDER_INFO();
+
+            if ("FB".equals(mOperation.getOPERATION())) {
+                TextView btn_itemDetail = view.findViewById(R.id.btn_itemDetail);
+                btn_itemDetail.setVisibility(View.VISIBLE);
+                btn_itemDetail.setOnClickListener(this);
+            }
+
         }
 
         LinearLayout layout_table = view.findViewById(R.id.layout_labuTable_detail);
@@ -815,6 +828,9 @@ public class BatchLabuDetailActivity extends NFCActivity {
                     mLayout_layoutList.getChildAt(mActionIndex).findViewById(R.id.layout_labuTable_labuOrderBtnWrap).setVisibility(View.VISIBLE);
                     refreshButton(null, rabListInfo, mActionIndex);
 //                    new RabNoListDialog(mContext, rabListInfo).setParams(0.6f, 0.6f).show();
+                }else if (HttpHelper.getSubpackageInfoByShopOrderRef.equals(url)){
+                    SubPackageInfoBo data = JSON.parseObject(HttpHelper.getResultStr(resultJSON),SubPackageInfoBo.class);
+                    startActivity(SubPackageDetailActivity.getIntent(mContext,data,mCurMatData.getSHOP_ORDER(),mItem));
                 }
             }
         }

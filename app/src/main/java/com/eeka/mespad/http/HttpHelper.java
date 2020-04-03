@@ -164,6 +164,7 @@ public class HttpHelper {
     public static final String removeSizesMarked = BASE_URL + "bulkOrderCut/removeSizesMarked?";
     public static final String getOrderMatTypesStatus = BASE_URL + "bulkOrderCut/getOrderMaterialTypesStatus?";
     public static final String getSubPackageInfoByRfid = BASE_URL + "bulkOrderCut/getSubPackageInfoByRfid?";
+    public static final String getSubpackageInfoByShopOrderRef = BASE_URL + "bulkOrderCut/getSubpackageInfoByShopOrderRef?";
 
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
@@ -174,6 +175,17 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 获取分包单信息
+     */
+    public static void getSubpackageInfoByShopOrderRef(String shopOrderRef,String operation,String materialType, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("shopOrderRef", shopOrderRef);
+        params.put("operation", operation);
+        params.put("materialType", materialType);
+        HttpRequest.post(getSubpackageInfoByShopOrderRef, params, getResponseHandler(getSubpackageInfoByShopOrderRef, callback));
     }
 
     /**
@@ -1491,7 +1503,7 @@ public class HttpHelper {
             }
         }
 //        PAD_IP = "10.10.34.49";
-//        PAD_IP = "10.7.20.253";// D 分包
+//        PAD_IP = "4";// D 分包
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
 //        PAD_IP = "10.10.31.246";//于都 P 分包
 //        PAD_IP = "10.10.28.94";

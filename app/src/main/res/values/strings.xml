@@ -2,6 +2,10 @@
     <string name="buglyAPPID">6af52b66e6</string>
     <string name="user">PAD_USER</string>
     <string name="password">mes123456</string>
+    
+    <string name="workCenter">工作中心：%s</string>
+    <string name="shopOrder">订单号：%s</string>
+    <string name="item">款号：%s</string>
 
     <string name="loading">加载中...</string>
     <string name="efficiency">当前效率</string>

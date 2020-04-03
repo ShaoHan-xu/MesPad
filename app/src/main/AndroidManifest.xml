@@ -143,7 +143,8 @@
             android:name=".zxing.android.CaptureActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
-        
+        <activity android:name=".activity.SubPackageDetailActivity" />
+    
         <meta-data
             android:name="CHANNEL"
             android:value="${CHANNEL_VALUE}" />

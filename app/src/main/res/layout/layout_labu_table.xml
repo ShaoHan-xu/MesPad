@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone">
                 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -32,41 +32,56 @@
                     android:orientation="vertical">
                     
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/btn_itemDetail"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="工单号"
-                        android:textColor="@color/text_black_default"
-                        android:textSize="@dimen/sp_9" />
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="#DEF37F"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_5"
+                        android:text="分包明细"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/textSize_describe"
+                        android:visibility="gone" />
                     
-                    <TextView
-                        android:id="@+id/tv_labuTable_shopOrder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_black_default"
-                        android:textSize="@dimen/sp_10" />
-                    
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="款号"
-                        android:layout_marginTop="@dimen/dp_2"
-                        android:textColor="@color/text_black_default"
-                        android:textSize="@dimen/sp_9" />
-                    
-                    <TextView
-                        android:id="@+id/tv_labuTable_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_black_default"
-                        android:textSize="@dimen/sp_10" />
-                </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_above="@id/btn_itemDetail">
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            
+                            <TextView
+                                android:id="@+id/tv_labuTable_shopOrder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_black_default"
+                                android:textSize="@dimen/sp_10" />
+                            
+                            <TextView
+                                android:id="@+id/tv_labuTable_item"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_labuTable_shopOrder"
+                                android:layout_marginTop="@dimen/dp_5"
+                                android:textColor="@color/text_black_default"
+                                android:textSize="@dimen/sp_10" />
+                        </LinearLayout>
+                    </RelativeLayout>
+                </RelativeLayout>
             </RelativeLayout>
             
             <RelativeLayout
                 android:id="@+id/layout_labuTable_toggle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="visible">
                 
                 <CheckBox
                     android:id="@+id/ckb_labuTable_toggle"
