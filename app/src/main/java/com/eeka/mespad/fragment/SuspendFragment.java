@@ -280,20 +280,16 @@ public class SuspendFragment extends BaseFragment {
                 if (HttpHelper.isSuccess(resultJSON)) {
                     toast("衣架绑定成功");
 
-                    //目前在龙华测试
-                    String channelName = getString(R.string.app_channel);
-                    if (!PadApplication.CHANNEL_YD.equals(channelName)) {
-                        ContextInfoBo contextInfo = SpUtil.getContextInfo();
-                        JSONObject json = new JSONObject();
-                        json.put("HangerID", hangerId);
-                        json.put("Site", SpUtil.getSite());
-                        json.put("LineID", contextInfo.getLINE_CATEGORY());
-                        json.put("StationID", contextInfo.getPOSITION());
-                        json.put("Tag", sfc);
-                        json.put("ProductTag", sfc);
-                        json.put("PartID", componentId);
-                        HttpHelper.hangerBindMes(json, SuspendFragment.this);
-                    }
+                    ContextInfoBo contextInfo = SpUtil.getContextInfo();
+                    JSONObject json = new JSONObject();
+                    json.put("HangerID", hangerId);
+                    json.put("Site", SpUtil.getSite());
+                    json.put("LineID", contextInfo.getLINE_CATEGORY());
+                    json.put("StationID", contextInfo.getPOSITION());
+                    json.put("Tag", sfc);
+                    json.put("ProductTag", sfc);
+                    json.put("PartID", componentId);
+                    HttpHelper.hangerBindMes(json, SuspendFragment.this);
                 } else {
                     showErrorDialog(HttpHelper.getMessage(resultJSON));
                 }

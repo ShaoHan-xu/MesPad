@@ -89,16 +89,16 @@ public class SubPackageDetailActivity extends BaseActivity {
                     tv_item4.setText(item4All + "");
                 } else {
                     SubPackageInfoBo.SUBORDERBean suborderBean = subOrder.get(i - 1);
-                    int sizeAmount = suborderBean.getSIZE_AMOUNT();
+                    int sizeTotal = suborderBean.getSIZE_TOTAL();
                     int sizeFen = suborderBean.getSIZE_FEN();
                     int sizeLeft = suborderBean.getSIZE_LEFT();
 
-                    item2All += sizeAmount;
+                    item2All += sizeTotal;
                     item3All += sizeFen;
                     item4All += sizeLeft;
 
                     tv_item1.setText(suborderBean.getSIZE_CODE());
-                    tv_item2.setText(sizeAmount + "");
+                    tv_item2.setText(sizeTotal + "");
                     tv_item3.setText(sizeFen + "");
                     tv_item4.setText(sizeLeft + "");
                 }

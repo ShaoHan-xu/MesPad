@@ -38,7 +38,6 @@ import java.util.List;
 import cn.finalteam.okhttpfinal.BaseHttpRequestCallback;
 import cn.finalteam.okhttpfinal.HttpRequest;
 import cn.finalteam.okhttpfinal.LogUtil;
-import cn.finalteam.okhttpfinal.Part;
 import cn.finalteam.okhttpfinal.RequestParams;
 import okhttp3.Headers;
 import okhttp3.RequestBody;

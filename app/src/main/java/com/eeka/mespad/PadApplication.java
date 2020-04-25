@@ -36,7 +36,7 @@ public class PadApplication extends Application {
 
     public static final String HOST_D_INA = "http://10.7.123.131";
     public static final String HOST_Q_INA = "http://10.7.123.131";
-    public static final String HOST_P_INA = "http://10.7.123.131";
+    public static final String HOST_P_INA = "http://10.10.200.65";
     public static final String HOST_LH_P_INA = "http://10.7.123.131";
 
     public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
