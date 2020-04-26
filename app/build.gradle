@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 147
+        versionCode 148
 
-        versionName "3.147"
+        versionName "3.148"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -82,7 +82,7 @@ android {
             resValue "string", "system_code", "P"
         }
         YD_BULK {
-            resValue "string", "app_name", "赢领智尚_YD"
+            resValue "string", "app_name", "赢领智尚_YD_BULK"
             resValue "string", "app_channel", "YD_BULK"
             resValue "string", "system_code", "P"
         }
@@ -92,12 +92,12 @@ android {
             resValue "string", "system_code", "Q"
         }
         LH_BULK {
-            resValue "string", "app_name", "赢领智尚_LH"
+            resValue "string", "app_name", "赢领智尚_LH_BULK"
             resValue "string", "app_channel", "LH_BULK"
             resValue "string", "system_code", "LH_P"
         }
         LH_P {
-            resValue "string", "app_name", "赢领智尚_LH"
+            resValue "string", "app_name", "赢领智尚_LH_P"
             resValue "string", "app_channel", "LH_P"
             resValue "string", "system_code", "LH_P"
         }

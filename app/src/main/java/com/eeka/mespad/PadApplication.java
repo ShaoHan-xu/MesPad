@@ -109,6 +109,9 @@ public class PadApplication extends Application {
             }
         }
 
+        //直接在连接拼账号密码，避免登录过期
+        XMII_URL += "j_username=PAD_USER&j_password=mes123456&";
+
         //配置初始用户
         UserInfoBo loginUser = SpUtil.getLoginUser();
         if (loginUser == null) {
