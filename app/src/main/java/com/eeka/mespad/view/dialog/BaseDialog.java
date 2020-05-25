@@ -24,6 +24,11 @@ public class BaseDialog extends Dialog {
         mContext = context;
     }
 
+    public BaseDialog(@NonNull Context context,int theme) {
+        super(context,theme);
+        mContext = context;
+    }
+
     protected void init() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setCanceledOnTouchOutside(false);

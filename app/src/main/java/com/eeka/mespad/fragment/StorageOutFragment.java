@@ -46,7 +46,7 @@ public class StorageOutFragment extends BaseFragment {
     private TextView mTv_type;
     private TextView mTv_workCenter;
     private TextView mTv_storageArea;
-    private EditText mEt_shopOrder, mEt_item;
+    private EditText mEt_shopOrder, mEt_item, mEt_rfid;
     private TextView mTv_autoRefresh;
 
     private ItemAdapter mItemAdapter;
@@ -84,6 +84,7 @@ public class StorageOutFragment extends BaseFragment {
         mTv_storageArea = mView.findViewById(R.id.tv_storageOut_setArea);
         mEt_shopOrder = mView.findViewById(R.id.et_shopOrder);
         mEt_item = mView.findViewById(R.id.et_item);
+        mEt_rfid = mView.findViewById(R.id.et_rfid);
         mTv_autoRefresh = mView.findViewById(R.id.tv_autoRefresh);
 
         ListView mLv_items = mView.findViewById(R.id.lv_storageOut_item);
@@ -194,7 +195,8 @@ public class StorageOutFragment extends BaseFragment {
     private void search() {
         String shopOrder = mEt_shopOrder.getText().toString();
         String item = mEt_item.getText().toString();
-        HttpHelper.getWareHouseInfo(mWorkCenter.getVALUE(), mClothType.getVALUE(), mArea.getVALUE(), shopOrder, item, StorageOutFragment.this);
+        String rfid = mEt_rfid.getText().toString();
+        HttpHelper.getWareHouseInfo(mWorkCenter.getVALUE(), mClothType.getVALUE(), mArea.getVALUE(), shopOrder, item, rfid,StorageOutFragment.this);
     }
 
     private class ItemAdapter extends CommonAdapter<StorageOutBo> {

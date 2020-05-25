@@ -9,6 +9,28 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/windowBackground</item>
     </style>
+    
+    <style name="transparentDialog" parent="@android:style/Theme.Holo.Dialog">
+        <!-- 是否有边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!--是否在悬浮Activity之上  -->
+        <item name="android:windowIsFloating">true</item>
+        <!--标题  -->
+        <item name="android:windowNoTitle">true</item>
+        <!--阴影  -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--透明背景-->
+        <item name="android:background">@android:color/transparent</item>
+        <!--窗口背景透明-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--弹窗背景是否变暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+    
+    <style name="topInOut" parent="@android:style/Animation.Toast">
+        <item name="android:windowEnterAnimation">@anim/anim_bottom_in</item>
+<!--        <item name="android:windowExitAnimation">@anim/anim_top_out</item>-->
+    </style>
 
     <style name="textStyle_gray" parent="textStyle_default">
         <item name="android:textColor">@color/text_gray_default</item>

@@ -64,6 +64,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
+import com.eeka.mespad.view.dialog.ErrToastDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MaintenanceDialog;
 import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
@@ -103,6 +104,8 @@ public class MainActivity extends NFCActivity {
     private EditText mEt_position;
     private CardInfoBo mCardInfo;
     private boolean isSearchOrder;
+
+    private ErrToastDialog mToastDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -236,12 +239,30 @@ public class MainActivity extends NFCActivity {
             if (checkResource())
                 searchOrder();
         } else if (PushJson.TYPE_ALERT.equals(type)) {
+            //这些判断是防止用户登录登出时被错误弹框挡住
             if ((mLoginDialog == null || !mLoginDialog.isShowing()) && (mLogoutDialog == null || !mLogoutDialog.isShowing())) {
-                showAlert(push.getMessage());
+//                showAlert(push.getMessage());
+                SystemUtils.startSystemRingtoneAlert(mContext);
+                if (mToastDialog == null) {
+                    mToastDialog = new ErrToastDialog(mContext, R.style.transparentDialog);
+                }
+                if (!mToastDialog.isShowing())
+                    mToastDialog.show();
+
+                mToastDialog.addMsg(push.getMessage());
             }
         } else if (PushJson.TYPE_ALERT_AUTOCANCEL.equals(type)) {
+            //这些判断是防止用户登录登出时被错误弹框挡住
             if ((mLoginDialog == null || !mLoginDialog.isShowing()) && (mLogoutDialog == null || !mLogoutDialog.isShowing())) {
-                ErrorDialog.showAlert(mContext, push.getMessage(), true);
+//                ErrorDialog.showAlert(mContext, push.getMessage(), true);
+                SystemUtils.startSystemRingtoneAlert(mContext);
+                if (mToastDialog == null) {
+                    mToastDialog = new ErrToastDialog(mContext, R.style.transparentDialog);
+                }
+                if (!mToastDialog.isShowing())
+                    mToastDialog.show();
+
+                mToastDialog.addMsg(push.getMessage());
             }
         } else if (PushJson.TYPE_Maintenance.equals(type)) {
             Logger.d(push.getMessage());

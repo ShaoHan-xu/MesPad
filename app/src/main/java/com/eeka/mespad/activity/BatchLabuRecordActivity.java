@@ -621,6 +621,11 @@ public class BatchLabuRecordActivity extends BaseActivity {
             float shortNum = layerLength + left - length;
             TextView tv_shortNum = parent.findViewById(R.id.tv_shortNum);
             tv_shortNum.setText(getString(R.string.float_2, shortNum));
+            if (shortNum < 0){
+                tv_shortNum.setTextColor(getResources().getColor(R.color.text_red_default));
+            }else{
+                tv_shortNum.setTextColor(getResources().getColor(R.color.text_black_default));
+            }
 
             //短码合计
             TextView tv_shortNumAll = (TextView) mLayout_itemTotal.getChildAt(mLayout_itemTotal.getChildCount() - 2);
@@ -636,6 +641,11 @@ public class BatchLabuRecordActivity extends BaseActivity {
                 shortNumTotal += value;
             }
             tv_shortNumAll.setText(getString(R.string.float_2, shortNumTotal));
+            if (shortNumTotal < 0){
+                tv_shortNumAll.setTextColor(getResources().getColor(R.color.text_red_default));
+            }else{
+                tv_shortNumAll.setTextColor(getResources().getColor(R.color.text_black_default));
+            }
         }
     }
 

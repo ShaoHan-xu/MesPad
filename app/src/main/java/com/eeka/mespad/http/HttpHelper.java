@@ -179,7 +179,7 @@ public class HttpHelper {
     /**
      * 获取分包单信息
      */
-    public static void getSubpackageInfoByShopOrderRef(String shopOrderRef,String operation,String materialType, HttpCallback callback) {
+    public static void getSubpackageInfoByShopOrderRef(String shopOrderRef, String operation, String materialType, HttpCallback callback) {
         RequestParams params = getBaseParams();
         params.put("shopOrderRef", shopOrderRef);
         params.put("operation", operation);
@@ -590,7 +590,7 @@ public class HttpHelper {
     /**
      * 获取库区内物料数据
      */
-    public static void getWareHouseInfo(String workCenter, String type, String area, String shopOrder, String item, HttpCallback callback) {
+    public static void getWareHouseInfo(String workCenter, String type, String area, String shopOrder, String item, String rfid, HttpCallback callback) {
         if (TextUtils.isEmpty(shopOrder)) shopOrder = "*";
         if (TextUtils.isEmpty(item)) item = "*";
         RequestParams params = getBaseParams();
@@ -600,6 +600,7 @@ public class HttpHelper {
         json.put("STOR_AREA", area);
         json.put("SHOP_ORDER", shopOrder);
         json.put("ITEM", item);
+        json.put("RFID", rfid);
         params.put("params", json.toString());
         HttpRequest.post(getWareHouseInfo, params, getResponseHandler(getWareHouseInfo, callback));
     }

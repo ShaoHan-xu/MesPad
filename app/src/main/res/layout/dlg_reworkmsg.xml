@@ -1,104 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <Button
-        android:id="@+id/btn_ok"
-        style="@style/btnStyle_green"
-        android:layout_width="@dimen/dp_60"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:text="已查看" />
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
     
     <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dp_20"
+        android:orientation="vertical">
+        
+        <ImageView
+            android:id="@+id/iv_animPerson"
+            android:layout_width="wrap_content"
+            android:src="@drawable/walk_anim"
+            android:layout_height="wrap_content" />
+        
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/btn_ok"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/dp_25"
-        android:background="@drawable/border_black"
-        android:orientation="vertical"
-        android:padding="0.5dp">
+        android:layout_height="match_parent">
+    
+        <Button
+            android:id="@+id/btn_ok"
+            style="@style/btnStyle_green"
+            android:layout_width="@dimen/dp_80"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:text="我知道了" />
         
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_disable"
-            android:divider="@drawable/divider_gray"
-            android:orientation="horizontal"
-            android:showDividers="middle">
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="线别" />
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="SFC" />
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="衣架号" />
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="不良工序描述" />
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="不良代码描述" />
-            
-            <TextView
-                style="@style/textStyle_default"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="员工姓名" />
-        
-        </LinearLayout>
-        
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_above="@id/btn_ok"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/dp_10"
+            android:background="@drawable/border_black"
+            android:orientation="vertical"
+            android:padding="0.5dp">
             
             <LinearLayout
-                android:id="@+id/layout_reworkMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/gray_disable"
                 android:divider="@drawable/divider_gray"
-                android:orientation="vertical"
-                android:showDividers="middle|end" />
-        
-        </ScrollView>
-    </LinearLayout>
+                android:orientation="horizontal"
+                android:showDividers="middle">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_2"
+                    android:text="线别" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_2"
+                    android:text="SFC" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_2"
+                    android:text="衣架号" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_2"
+                    android:text="不良工序描述" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_2"
+                    android:text="不良代码描述" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_2"
+                    android:text="员工姓名" />
+            
+            </LinearLayout>
+            
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                
+                <LinearLayout
+                    android:id="@+id/layout_reworkMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider_gray"
+                    android:orientation="vertical"
+                    android:showDividers="middle|end" />
+            
+            </ScrollView>
+        </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+
+</LinearLayout>

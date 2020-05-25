@@ -113,7 +113,7 @@
         
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_80"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_5"
             android:layout_marginRight="@dimen/dp_5"
             android:layout_weight="1"
@@ -122,9 +122,8 @@
             
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/dp_20"
                 android:layout_margin="@dimen/dp_5"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="horizontal">
                 
@@ -144,8 +143,7 @@
             
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="@dimen/dp_20"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dp_5"
@@ -165,14 +163,37 @@
             
             </LinearLayout>
             
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dp_5"
+                android:paddingRight="@dimen/dp_5">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_width="@dimen/dp_40"
+                    android:text="R F I D" />
+                
+                <EditText
+                    android:id="@+id/et_rfid"
+                    style="@style/textStyle_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_black" />
+            
+            </LinearLayout>
+            
             <Button
                 android:id="@+id/btn_search"
                 style="@style/btnStyle_primary"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_25"
                 android:layout_marginTop="@dimen/dp_5"
-                android:textSize="@dimen/sp_12"
-                android:text="查询" />
+                android:text="查询"
+                android:textSize="@dimen/sp_12" />
         </LinearLayout>
         
         <LinearLayout
