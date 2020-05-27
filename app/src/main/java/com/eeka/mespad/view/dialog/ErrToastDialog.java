@@ -2,6 +2,8 @@ package com.eeka.mespad.view.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.eeka.mespad.R;
 import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
+import com.eeka.mespad.utils.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,19 +66,38 @@ public class ErrToastDialog extends BaseDialog {
         setOnDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
+                mHandler.removeMessages(0);
                 mList_msg.clear();
             }
         });
     }
 
     public void addMsg(String msg) {
+        //只要有新消息来，自动关闭就重新计时
+        mHandler.removeMessages(0);
+        mHandler.sendEmptyMessageDelayed(0,8 * 1000);
+
+        for (int i = 0; i < mList_msg.size(); i++) {
+            //消息不为空，且已存在显示的数据列表内，则不做处理
+            if (!isEmpty(msg) && msg.equals(mList_msg.get(i))) {
+                return;
+            }
+        }
         if (mList_msg.size() >= 3) {
             mAdapter.removeData(2);
         }
         mAdapter.addData(0, msg);
     }
 
-    private class ItemAdapter extends CommonRecyclerAdapter<String> {
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            dismiss();
+        }
+    };
+
+    private static class ItemAdapter extends CommonRecyclerAdapter<String> {
 
         ItemAdapter(Context context, List<String> list, int layoutId, RecyclerView.LayoutManager layoutManager) {
             super(context, list, layoutId, layoutManager);
@@ -87,5 +109,11 @@ public class ErrToastDialog extends BaseDialog {
             textView.setTextColor(mContext.getResources().getColor(R.color.text_red_default));
             textView.setText(item);
         }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.5), SystemUtils.getScreenHeight(mContext));
     }
 }

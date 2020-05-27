@@ -16,6 +16,7 @@ public class PushJson {
     public static final String TYPE_ErrDialogDismiss = "ErrDialogDismiss";//错误弹框消失
     public static final String TYPE_HANGERID = "hangerId";//衣架号
     public static final String TYPE_Maintenance = "Maintenance";//保养视频
+    public static final String TYPE_Efficiency = "efficiency";//效率
     public static final String TYPE_ALERT = "ALERT";//提示
     public static final String TYPE_ALERT_AUTOCANCEL = "ALERT_AUTOCANCEL";//提示,自动消失
     public static final String TYPE_SCAN = "SCAN";//扫描

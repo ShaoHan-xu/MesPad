@@ -13,12 +13,13 @@ import org.greenrobot.eventbus.EventBus;
 public class AlarmReceiver extends BroadcastReceiver {
 
     public static final String BROADCAST_Maintenance = "android.alarm.maintenance.action";
+    public static final String BROADCAST_Efficiency = "android.alarm.efficiency.action";
     public static final String BROADCAST_BOOT_COMPLETED = "android.intent.action.BOOT_COMPLETED";
 
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
+        Logger.d("收到广播了。。。。" + action);
         if (BROADCAST_BOOT_COMPLETED.equals(action)) {
-            Logger.d("收到开机广播了。。。。");
 //            Intent i = new Intent(context, MainActivity.class);
 //            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            context.startActivity(i);
@@ -27,6 +28,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             boolean isWeek = intent.getBooleanExtra("isWeek", false);
             pushJson.setType(PushJson.TYPE_Maintenance);
             pushJson.setMessage(isWeek + "");
+            EventBus.getDefault().post(pushJson);
+        } else if (BROADCAST_Efficiency.equals(action)) {
+            PushJson pushJson = new PushJson();
+            pushJson.setType(PushJson.TYPE_Efficiency);
             EventBus.getDefault().post(pushJson);
         }
     }

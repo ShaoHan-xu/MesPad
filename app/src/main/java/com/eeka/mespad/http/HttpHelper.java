@@ -167,6 +167,7 @@ public class HttpHelper {
 
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
+    public static final String XMII_URL_Illuminator = PadApplication.XMII_URL_Illuminator;
 
     private static Context mContext;
 
@@ -615,6 +616,26 @@ public class HttpHelper {
         json.put("SORT_RFID", hangerId);
         params.put("params", json.toString());
         HttpRequest.post(sortForClothTag, params, getResponseHandler(sortForClothTag, callback));
+    }
+
+    /**
+     * 获取日产量
+     */
+    public static void padShowOpertion(String userId, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("Transaction", "EEKA_EXT/DASH_BOARD/PAD_SHOW_EFFIC/TRANS/padShowOpertion");
+        params.put("userId", userId);
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
+    }
+
+    /**
+     * 获取每日效率
+     */
+    public static void padShowEffic(String userId, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("Transaction", "EEKA_EXT/DASH_BOARD/PAD_SHOW_EFFIC/TRANS/padShowEffic");
+        params.put("userId", userId);
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
     /**

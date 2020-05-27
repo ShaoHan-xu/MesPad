@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_20"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="vertical"
+        android:showDividers="middle">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="员工姓名" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="昨日操作效率" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="月度平均操作效率" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="效率排名" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="月度登卡效率" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="昨日计件" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/dp_5"
+                android:text="当月平均计件" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+            
+            <TextView
+                android:id="@+id/tv_userName"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+            
+            <TextView
+                android:id="@+id/tv_prodEffic"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+            
+            <TextView
+                android:id="@+id/tv_monthProdEffic"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+            
+            <TextView
+                android:id="@+id/tv_efficiencyRank"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+            
+            <TextView
+                android:id="@+id/tv_loginEfficiency"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+            
+            <TextView
+                android:id="@+id/tv_qty"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+            
+            <TextView
+                android:id="@+id/tv_monthQty"
+                style="@style/textStyle_default"
+                android:layout_width="@dimen/dp_60"
+                android:gravity="center"
+                android:padding="@dimen/dp_5" />
+        
+        </LinearLayout>
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/btn_close"
+        style="@style/btnStyle_green"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:text="我知道了" />
+
+
+</LinearLayout>

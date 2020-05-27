@@ -57,6 +57,13 @@ public class BaseDialog extends Dialog {
         return this;
     }
 
+    /**
+     * 不自定义宽高
+     */
+    void showOri(){
+        super.show();
+    }
+
     @Override
     public void show() {
         super.show();

@@ -48,6 +48,7 @@ public class PadApplication extends Application {
     public static String MQTT_P = "10.10.200.40"; //MQ地址
     public static String BASE_URL;
     public static String XMII_URL;
+    public static String XMII_URL_Illuminator;
     public static String WEB_URL;
     public static String MTM_URL;
     public static String INA_URL;
@@ -80,6 +81,7 @@ public class PadApplication extends Application {
                 MQTT_BROKER = MQTT_D;
                 MTM_URL = URL_MTM_D;
                 XMII_URL = HOST_D + "/XMII/Runner?";
+                XMII_URL_Illuminator = HOST_D + "/XMII/Illuminator?";
                 INA_URL = HOST_D_INA;
                 SpUtil.saveSite("8081");
             } else if ("Q".equals(systemCode)) {
@@ -88,6 +90,7 @@ public class PadApplication extends Application {
                 MQTT_BROKER = MQTT_Q;
                 MTM_URL = URL_MTM_Q;
                 XMII_URL = HOST_Q + "/XMII/Runner?";
+                XMII_URL_Illuminator = HOST_Q + "/XMII/Illuminator?";
                 INA_URL = HOST_Q_INA;
                 SpUtil.saveSite("8082");
             } else if ("P".equals(systemCode)) {
@@ -96,6 +99,7 @@ public class PadApplication extends Application {
                 MQTT_BROKER = MQTT_P;
                 MTM_URL = URL_MTM_P;
                 XMII_URL = HOST_P + "/XMII/Runner?";
+                XMII_URL_Illuminator = HOST_P + "/XMII/Illuminator?";
                 INA_URL = HOST_P_INA;
                 SpUtil.saveSite("8081");
             } else if ("LH_P".equals(systemCode)) {
@@ -104,6 +108,7 @@ public class PadApplication extends Application {
                 MQTT_BROKER = MQTT_Q;
                 MTM_URL = URL_MTM_P;
                 XMII_URL = HOST_P_LH + "/XMII/Runner?";
+                XMII_URL_Illuminator = HOST_P_LH + "/XMII/Illuminator?";
                 INA_URL = HOST_LH_P_INA;
                 SpUtil.saveSite("8082");
             }
@@ -111,6 +116,7 @@ public class PadApplication extends Application {
 
         //直接在连接拼账号密码，避免登录过期
         XMII_URL += "j_username=PAD_USER&j_password=mes123456&";
+        XMII_URL_Illuminator += "j_username=PAD_USER&j_password=mes123456&";
 
         //配置初始用户
         UserInfoBo loginUser = SpUtil.getLoginUser();

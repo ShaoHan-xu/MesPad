@@ -64,6 +64,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TopicUtil;
 import com.eeka.mespad.utils.UnitUtil;
+import com.eeka.mespad.view.dialog.EfficiencyDialog;
 import com.eeka.mespad.view.dialog.ErrToastDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MaintenanceDialog;
@@ -133,6 +134,29 @@ public class MainActivity extends NFCActivity {
         }
 
         setAlarm();
+        setEfficiencyAlarm();
+    }
+
+    /**
+     * 设置效率弹框闹钟
+     */
+    private void setEfficiencyAlarm() {
+        String mAlertTime = "8:00:00";
+        String curDate = DateUtil.getCurDate();
+        String[] split = curDate.split(" ");
+        String date = split[0];
+        String alertTime = date + " " + mAlertTime;
+        long alertMillis = DateUtil.dateToMillis(alertTime, "yyyy-MM-dd HH:mm:ss");
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(AlarmReceiver.BROADCAST_Efficiency);
+        PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        long curMillis = System.currentTimeMillis();
+        if (curMillis < alertMillis) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alertMillis, pi);
+        } else if (curMillis > alertMillis && curMillis < alertMillis + 30 * 60 * 1000) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, curMillis + 5 * 1000, pi);
+        }
     }
 
     /**
@@ -265,11 +289,15 @@ public class MainActivity extends NFCActivity {
                 mToastDialog.addMsg(push.getMessage());
             }
         } else if (PushJson.TYPE_Maintenance.equals(type)) {
-            Logger.d(push.getMessage());
             if ("true".equals(push.getMessage())) {
                 new MaintenanceDialog(mContext, true).show();
             } else {
                 new MaintenanceDialog(mContext, false).show();
+            }
+        } else if (PushJson.TYPE_Efficiency.equals(type)) {
+            String userId = SpUtil.getLoginUserId();
+            if (!isEmpty(userId)) {
+                new EfficiencyDialog(mContext).show();
             }
         } else if (PushJson.TYPE_LOGIN.equals(type) || PushJson.TYPE_LOGOUT.equals(type)) {
             if (PushJson.TYPE_LOGIN.equals(type)) {

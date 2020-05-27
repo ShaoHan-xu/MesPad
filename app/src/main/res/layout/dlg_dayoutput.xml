@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_gray"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:showDividers="middle|end">
+    
+    <include layout="@layout/layout_title_dlg" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/divider_gray"
+        android:divider="@drawable/divider_gray"
+        android:showDividers="middle">
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_5"
+            android:text="工序描述" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="@dimen/dp_60"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="完成件数" />
+    
+    </LinearLayout>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:id="@+id/layout_dayOutput_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="vertical"
+            android:showDividers="middle">
+        
+        </LinearLayout>
+    
+    </ScrollView>
+
+</LinearLayout>

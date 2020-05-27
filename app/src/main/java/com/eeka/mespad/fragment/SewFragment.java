@@ -39,6 +39,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.DayOutputDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LineColorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
@@ -157,6 +158,7 @@ public class SewFragment extends BaseFragment {
         mView.findViewById(R.id.layout_sew_craftDesc).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_special).setOnClickListener(this);
+        mView.findViewById(R.id.layout_dayOutput).setOnClickListener(this);
 
         mLayout_ncData = mView.findViewById(R.id.layout_sew_ncData);
         mTv_ncData = mView.findViewById(R.id.tv_sew_ncData);
@@ -182,6 +184,14 @@ public class SewFragment extends BaseFragment {
             case R.id.tv_sew_MTMOrderNum:
                 String url = PadApplication.MTM_URL + mSewData.getSalesOrder();
                 startActivity(WebActivity.getIntent(mContext, url));
+                break;
+            case R.id.layout_dayOutput:
+                String userId = SpUtil.getLoginUserId();
+                if (!isEmpty(userId)) {
+                    new DayOutputDialog(mContext).show();
+                } else {
+                    ErrorDialog.showAlert(mContext, "需要员工登录才可以查看日产量明细");
+                }
                 break;
         }
         if (!isEmpty(content))
