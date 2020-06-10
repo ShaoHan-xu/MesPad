@@ -144,6 +144,7 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity android:name=".activity.SubPackageDetailActivity" />
+        <activity android:name=".activity.PilotProductionActivity" />
     
         <meta-data
             android:name="CHANNEL"

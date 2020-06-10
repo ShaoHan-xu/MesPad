@@ -635,6 +635,7 @@ public class HttpHelper {
         RequestParams params = getXMIIParams();
         params.put("Transaction", "EEKA_EXT/DASH_BOARD/PAD_SHOW_EFFIC/TRANS/padShowEffic");
         params.put("userId", userId);
+        params.put("site", SpUtil.getSite());
         HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 

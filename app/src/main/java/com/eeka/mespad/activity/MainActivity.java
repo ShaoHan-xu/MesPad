@@ -134,7 +134,7 @@ public class MainActivity extends NFCActivity {
         }
 
         setAlarm();
-        setEfficiencyAlarm();
+//        setEfficiencyAlarm();
     }
 
     /**

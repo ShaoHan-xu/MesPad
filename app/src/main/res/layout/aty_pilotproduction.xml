@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/colorPrimary">
+        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="试产工序确认"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:orientation="horizontal">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="当前登录用户："
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14" />
+            
+            <TextView
+                android:id="@+id/tv_pilotProd_loginUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_14" />
+        
+        </LinearLayout>
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_10">
+        
+        <Button
+            android:id="@+id/btn_pilotProd_feedback"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/border_black"
+            android:text="试产反馈" />
+        
+        <Button
+            android:id="@+id/btn_pilotProd_complete"
+            style="@style/btnStyle_primary"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_30"
+            android:layout_centerInParent="true"
+            android:text="完成当前工序" />
+    
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_bottom"
+        android:layout_below="@id/layout_title"
+        android:orientation="vertical">
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_10">
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="当前作业款号：" />
+                
+                <TextView
+                    android:id="@+id/tv_pilotProd_curItem"
+                    style="@style/textStyle_default"
+                    android:text="MV0010"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:text="当前作业步骤：" />
+                
+                <TextView
+                    android:id="@+id/tv_pilotProd_curStep"
+                    style="@style/textStyle_default"
+                    android:text="70、80"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+                
+                <TextView
+                    style="@style/textStyle_default"
+                    android:text="款号：" />
+                
+                <EditText
+                    android:id="@+id/et_pilotProd_item"
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="@dimen/dp_25"
+                    android:background="@drawable/border_left"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10" />
+                
+                <Button
+                    android:id="@+id/btn_pilotProd_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_25"
+                    android:background="@drawable/border_right"
+                    android:text="搜索"
+                    android:textColor="@color/white" />
+            
+            </LinearLayout>
+        
+        </RelativeLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@drawable/bg_border_gray_light"
+            android:divider="@drawable/divider_gray_light"
+            android:orientation="horizontal"
+            android:padding="1dp"
+            android:showDividers="middle">
+            
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/gray_disable"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="@dimen/dp_40"
+                        android:padding="@dimen/dp_5"
+                        android:text="工序步骤" />
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="@dimen/dp_100"
+                        android:padding="@dimen/dp_5"
+                        android:text="工序代码" />
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:padding="@dimen/dp_5"
+                        android:text="工序描述" />
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="@dimen/dp_100"
+                        android:padding="@dimen/dp_5"
+                        android:text="制作设备描述" />
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="@dimen/dp_50"
+                        android:padding="@dimen/dp_5"
+                        android:text="GST标准工时(秒)" />
+                
+                </LinearLayout>
+                
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_operation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+            
+            
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                
+                <TextView
+                    android:id="@+id/tv_pilotProd_operationDesc"
+                    style="@style/textStyle_default"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:background="#EEE"
+                    android:padding="@dimen/dp_5"
+                    android:text="哈哈哈哈" />
+                
+                <ImageView
+                    android:id="@+id/iv_pilotProd_operationImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/tv_pilotProd_operationDesc"
+                    android:src="@drawable/walk_1" />
+            
+            
+            </RelativeLayout>
+        
+        </LinearLayout>
+    
+    
+    </LinearLayout>
+
+</RelativeLayout>
