@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
+        android:layout_height="@dimen/dp_40"
         android:background="@color/colorPrimary">
         
         <TextView
@@ -23,15 +23,23 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:gravity="center"
             android:layout_marginRight="@dimen/dp_10"
             android:orientation="horizontal">
-            
+    
+            <ImageView
+                android:id="@+id/iv_pilotProd_login"
+                android:layout_width="@dimen/dp_22"
+                android:layout_height="@dimen/dp_22"
+                android:padding="@dimen/dp_3"
+                android:src="@drawable/ic_user" />
+    
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="当前登录用户："
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_12" />
             
             <TextView
                 android:id="@+id/tv_pilotProd_loginUsers"
@@ -39,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="测试"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sp_14" />
+                android:textSize="@dimen/sp_12" />
         
         </LinearLayout>
     </RelativeLayout>

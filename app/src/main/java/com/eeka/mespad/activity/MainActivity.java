@@ -748,7 +748,9 @@ public class MainActivity extends NFCActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        mToastDialog.dismiss();
+        if(mToastDialog != null && mToastDialog.isShowing()) {
+            mToastDialog.dismiss();
+        }
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
             case R.id.btn_scan:
