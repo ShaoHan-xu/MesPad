@@ -53,7 +53,13 @@ public class DayOutputDialog extends BaseDialog {
                 JSONObject resultRes = resultJSON.getJSONObject("result_response");
                 String status = resultRes.getString("status");
                 if ("Y".equals(status)) {
-                    JSONArray result = resultRes.getJSONObject("result").getJSONObject("Rowset").getJSONArray("Row");
+                    JSONArray result = new JSONArray();
+                    Object row = resultRes.getJSONObject("result").getJSONObject("Rowset").get("Row");
+                    if (row instanceof JSONObject) {
+                        result.add(row);
+                    } else {
+                        result = (JSONArray) row;
+                    }
                     for (int i = 0; i < result.size() + 1; i++) {
                         JSONObject item;
                         if (i == result.size()) {
@@ -72,8 +78,8 @@ public class DayOutputDialog extends BaseDialog {
 
                         mLayout_list.addView(view);
                     }
-                }else{
-                    ErrorDialog.showAlert(mContext,resultRes.getString("result"));
+                } else {
+                    ErrorDialog.showAlert(mContext, resultRes.getString("result"));
                 }
 
             }

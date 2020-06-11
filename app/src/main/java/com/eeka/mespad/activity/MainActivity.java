@@ -266,7 +266,6 @@ public class MainActivity extends NFCActivity {
             //这些判断是防止用户登录登出时被错误弹框挡住
             if ((mLoginDialog == null || !mLoginDialog.isShowing()) && (mLogoutDialog == null || !mLogoutDialog.isShowing())) {
 //                showAlert(push.getMessage());
-                SystemUtils.startSystemRingtoneAlert(mContext);
                 if (mToastDialog == null) {
                     mToastDialog = new ErrToastDialog(mContext, R.style.transparentDialog);
                 }
@@ -279,7 +278,6 @@ public class MainActivity extends NFCActivity {
             //这些判断是防止用户登录登出时被错误弹框挡住
             if ((mLoginDialog == null || !mLoginDialog.isShowing()) && (mLogoutDialog == null || !mLogoutDialog.isShowing())) {
 //                ErrorDialog.showAlert(mContext, push.getMessage(), true);
-                SystemUtils.startSystemRingtoneAlert(mContext);
                 if (mToastDialog == null) {
                     mToastDialog = new ErrToastDialog(mContext, R.style.transparentDialog);
                 }
@@ -750,6 +748,7 @@ public class MainActivity extends NFCActivity {
     @Override
     public void onClick(View v) {
         super.onClick(v);
+        mToastDialog.dismiss();
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
             case R.id.btn_scan:

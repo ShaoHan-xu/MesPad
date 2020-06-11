@@ -67,7 +67,7 @@ public class ErrToastDialog extends BaseDialog {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 mHandler.removeMessages(0);
-                mList_msg.clear();
+                mAdapter.clearData();
             }
         });
     }
@@ -114,6 +114,6 @@ public class ErrToastDialog extends BaseDialog {
     @Override
     public void show() {
         super.show();
-        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.5), SystemUtils.getScreenHeight(mContext));
+        getWindow().setLayout((int) (SystemUtils.getScreenWidth(mContext) * 0.5), (int) (SystemUtils.getScreenHeight(mContext) * 0.7));
     }
 }

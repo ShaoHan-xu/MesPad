@@ -102,6 +102,14 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Recy
     }
 
     /**
+     * 移除数据
+     */
+    public void clearData() {
+        mList.clear();
+        notifyDataSetChanged();
+    }
+
+    /**
      * 此处统一绑定item内各个单击事件。(调用setWidgetClickListener)<br>
      * 复写onWidgetClick方法、并在其内处理点击事件
      *
