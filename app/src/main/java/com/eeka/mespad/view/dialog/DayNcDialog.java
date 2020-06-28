@@ -46,7 +46,7 @@ public class DayNcDialog extends BaseDialog {
     private void getData() {
         LoadingDialog.show(mContext);
         String userId = SpUtil.getLoginUserId();
-        HttpHelper.padShowOpertion(userId, new HttpCallback() {
+        HttpHelper.padShowOpeartionNc(userId, new HttpCallback() {
             @Override
             public void onSuccess(String url, JSONObject resultJSON) {
                 LoadingDialog.dismiss();
