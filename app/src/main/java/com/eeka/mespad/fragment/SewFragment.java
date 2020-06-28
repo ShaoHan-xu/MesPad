@@ -39,6 +39,7 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.TabViewUtil;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.DayNcDialog;
 import com.eeka.mespad.view.dialog.DayOutputDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LineColorDialog;
@@ -159,6 +160,7 @@ public class SewFragment extends BaseFragment {
         mView.findViewById(R.id.layout_sew_qualityReq).setOnClickListener(this);
         mView.findViewById(R.id.layout_sew_special).setOnClickListener(this);
         mView.findViewById(R.id.layout_dayOutput).setOnClickListener(this);
+        mView.findViewById(R.id.layout_dayNc).setOnClickListener(this);
 
         mLayout_ncData = mView.findViewById(R.id.layout_sew_ncData);
         mTv_ncData = mView.findViewById(R.id.tv_sew_ncData);
@@ -192,6 +194,9 @@ public class SewFragment extends BaseFragment {
                 } else {
                     ErrorDialog.showAlert(mContext, "需要员工登录才可以查看日产量明细");
                 }
+                break;
+            case R.id.layout_dayNc:
+                new DayNcDialog(mContext).show();
                 break;
         }
         if (!isEmpty(content))

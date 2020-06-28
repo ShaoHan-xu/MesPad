@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/divider_gray"
+        android:showDividers="middle">
+        
+        <TextView
+            android:id="@+id/tv_sfc"
+            style="@style/textStyle_default"
+            android:layout_width="@dimen/dp_100"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="SFC号" />
+        
+        <TextView
+            android:id="@+id/tv_operationDesc"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_5"
+            android:text="工序描述" />
+        
+        <TextView
+            android:id="@+id/tv_ncDesc"
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_5"
+            android:text="工序不良原因" />
+        
+        <TextView
+            android:id="@+id/tv_user"
+            style="@style/textStyle_default"
+            android:layout_width="@dimen/dp_60"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="制作人" />
+    </LinearLayout>
+
+</LinearLayout>

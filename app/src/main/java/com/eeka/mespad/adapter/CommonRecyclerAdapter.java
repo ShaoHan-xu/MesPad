@@ -39,7 +39,6 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Recy
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         convert(holder, mList.get(position), position);
-        bindingClickListener(holder, position);
     }
 
     @Override
@@ -55,6 +54,18 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Recy
     public void notifyDataSetChanged(List<T> datas) {
         mList = datas;
         notifyDataSetChanged();
+    }
+
+    public void scrollToPosition(int position) {
+        if (mLayoutManager != null) {
+            if (position < 0) {
+                position = 0;
+            }
+            if (position >= mList.size()) {
+                position = mList.size() - 1;
+            }
+            mLayoutManager.scrollToPosition(position);
+        }
     }
 
     /**
@@ -107,16 +118,6 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter<Recy
     public void clearData() {
         mList.clear();
         notifyDataSetChanged();
-    }
-
-    /**
-     * 此处统一绑定item内各个单击事件。(调用setWidgetClickListener)<br>
-     * 复写onWidgetClick方法、并在其内处理点击事件
-     *
-     * @param holder
-     */
-    public void bindingClickListener(RecyclerViewHolder holder, int position) {
-
     }
 
     public void onClick(View v, int position) {

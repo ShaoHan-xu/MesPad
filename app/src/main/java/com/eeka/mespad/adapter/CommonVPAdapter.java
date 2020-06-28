@@ -1,6 +1,7 @@
 package com.eeka.mespad.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,16 @@ public abstract class CommonVPAdapter<T> extends PagerAdapter {
         convertView(view, mData.get(position), position);
         container.addView(view);
         return view;
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
+    public void notifyDataSetChanged(List<T> data) {
+        mData = data;
+        super.notifyDataSetChanged();
     }
 
     public abstract void convertView(View view, T item, int position);

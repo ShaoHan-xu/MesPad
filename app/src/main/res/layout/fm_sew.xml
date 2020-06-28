@@ -76,6 +76,25 @@
                         android:gravity="center" />
                 </LinearLayout>
                 
+                <LinearLayout
+                    android:id="@+id/layout_dayNc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dp_2">
+                    
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:paddingRight="@dimen/dp_5"
+                        android:text="日返修" />
+                    
+                    <TextView
+                        android:id="@+id/tv_sew_dayNc"
+                        style="@style/textStyle_default"
+                        android:gravity="center" />
+                </LinearLayout>
+                
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"

@@ -143,8 +143,12 @@
             android:name=".zxing.android.CaptureActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
-        <activity android:name=".activity.SubPackageDetailActivity" />
-        <activity android:name=".activity.PilotProductionActivity" />
+        <activity android:name=".activity.SubPackageDetailActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+<!--        <activity android:name=".activity.PilotProductionActivity"-->
+<!--            android:screenOrientation="landscape"-->
+<!--            android:windowSoftInputMode="stateHidden|adjustPan"/>-->
     
         <meta-data
             android:name="CHANNEL"

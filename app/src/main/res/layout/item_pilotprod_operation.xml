@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
     
     <LinearLayout
@@ -14,15 +14,18 @@
         <TextView
             android:id="@+id/tv_step"
             style="@style/textStyle_default"
-            android:layout_width="@dimen/dp_40"
-            android:padding="@dimen/dp_5"
-            android:text="工序步骤" />
+            android:layout_width="@dimen/dp_30"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5" />
         
         <TextView
             android:id="@+id/tv_code"
             style="@style/textStyle_default"
-            android:layout_width="@dimen/dp_100"
-            android:padding="@dimen/dp_5"
+            android:layout_width="@dimen/dp_80"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
             android:text="工序代码" />
         
         <TextView
@@ -30,23 +33,28 @@
             style="@style/textStyle_default"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/dp_5"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
             android:text="工序描述" />
         
         <TextView
             android:id="@+id/tv_resDesc"
             style="@style/textStyle_default"
             android:layout_width="@dimen/dp_100"
-            android:padding="@dimen/dp_5"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
             android:text="制作设备描述" />
         
         <TextView
             android:id="@+id/tv_standTime"
             style="@style/textStyle_default"
-            android:layout_width="@dimen/dp_50"
-            android:padding="@dimen/dp_5"
-            android:text="GST标准工时(秒)" />
+            android:layout_width="@dimen/dp_60"
+            android:gravity="center"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5" />
     
     </LinearLayout>
-
+    
 </LinearLayout>

@@ -165,6 +165,14 @@ public class HttpHelper {
     public static final String getSubPackageInfoByRfid = BASE_URL + "bulkOrderCut/getSubPackageInfoByRfid?";
     public static final String getSubpackageInfoByShopOrderRef = BASE_URL + "bulkOrderCut/getSubpackageInfoByShopOrderRef?";
 
+    /**
+     * 试产APP
+     */
+    public static final String getTrialRouterInfo = BASE_URL + "trialProduce/getTrialRouterInfo?";
+    public static final String trialOperationWork = BASE_URL + "trialProduce/trialOperationWork?";
+    public static final String trialFeedBack = BASE_URL + "trialProduce/trialFeedBack?";
+    public static final String selectOperation = BASE_URL + "trialProduce/selectOperation?";
+
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
     public static final String XMII_URL_Illuminator = PadApplication.XMII_URL_Illuminator;
@@ -175,6 +183,51 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 试产 APP 选择工序
+     */
+    public static void selectOperation(String router,String operation, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("router",router);
+        json.put("operation",operation);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(selectOperation, params, getResponseHandler(selectOperation, callback));
+    }
+
+    /**
+     * 试产反馈
+     */
+    public static void trialFeedBack(JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(trialFeedBack, params, getResponseHandler(trialFeedBack, callback));
+    }
+
+    /**
+     * 试产 APP，完成当前工序
+     *
+     * @param json { "site": "8081", "item": "123", "router": "000008002436", "lineCateGory": "1101", "position": "8", "userId": "001448", "trialRouterOperations": [ { "operation": "SFRTN109", "operationDesc": "恭喜发财", "operationTime": 1259.222, "stepId": "90" }] }
+     */
+    public static void trialOperationWork(JSONObject json, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        params.put("params", json.toJSONString());
+        HttpRequest.post(trialOperationWork, params, getResponseHandler(trialOperationWork, callback));
+    }
+
+    /**
+     * 获取试产 APP 工序信息
+     */
+    public static void getTrialRouterInfo(String content,String orderType, String userId, HttpCallback callback) {
+        RequestParams params = getBaseParams();
+        JSONObject json = new JSONObject();
+        json.put("content", content);
+        json.put("orderType", orderType);
+        json.put("userId", userId);
+        params.put("params", json.toJSONString());
+        HttpRequest.post(getTrialRouterInfo, params, getResponseHandler(getTrialRouterInfo, callback));
     }
 
     /**
@@ -619,6 +672,16 @@ public class HttpHelper {
     }
 
     /**
+     * 获取日返修
+     */
+    public static void padShowOpeartionNc(String userId, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("Transaction", "EEKA_EXT/DASH_BOARD/PAD_SHOW_EFFIC/TRANS/padShowOpeartionNc");
+        params.put("userId", userId);
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
+    }
+
+    /**
      * 获取日产量
      */
     public static void padShowOpertion(String userId, HttpCallback callback) {
@@ -636,6 +699,16 @@ public class HttpHelper {
         params.put("Transaction", "EEKA_EXT/DASH_BOARD/PAD_SHOW_EFFIC/TRANS/padShowEffic");
         params.put("userId", userId);
         params.put("site", SpUtil.getSite());
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
+    }
+
+    /**
+     * 通过款号获取工艺单
+     */
+    public static void getProcessSheetsByItem(String item, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("Transaction", "EEKA_EXT/TRANS/ProcessSheet/TRANSACTION/processSheet");
+        params.put("styleCode", item);
         HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
