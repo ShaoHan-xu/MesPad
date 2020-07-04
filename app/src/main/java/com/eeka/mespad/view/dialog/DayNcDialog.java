@@ -81,10 +81,7 @@ public class DayNcDialog extends BaseDialog {
 
                         mLayout_list.addView(view);
                     }
-                } else {
-                    ErrorDialog.showAlert(mContext, resultRes.getString("result"));
                 }
-
             }
 
             @Override
