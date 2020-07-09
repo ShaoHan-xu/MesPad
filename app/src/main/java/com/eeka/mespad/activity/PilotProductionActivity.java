@@ -48,7 +48,6 @@ public class PilotProductionActivity extends BaseActivity {
     private EditText mEt_item;
     private TextView mTv_item;
     private TextView mTv_curStep;
-    private TextView mTv_operaDesc;
     private Button mBtn_searchType;
 
     private List<JSONObject> mList_data;
@@ -82,7 +81,6 @@ public class PilotProductionActivity extends BaseActivity {
         mTv_item = findViewById(R.id.tv_pilotProd_curItem);
         mTv_curStep = findViewById(R.id.tv_pilotProd_curStep);
         mBtn_searchType = findViewById(R.id.btn_pilotProd_searchType);
-        mTv_operaDesc = findViewById(R.id.tv_pilotProd_operationDesc);
         mBtn_searchType.setOnClickListener(this);
 
         mRecyclerView = findViewById(R.id.recyclerView_operation);
@@ -95,7 +93,7 @@ public class PilotProductionActivity extends BaseActivity {
 
         ViewPager vp_sopImg = findViewById(R.id.vp_sopImg);
         mList_CurOperations = new ArrayList<>();
-        mImgAdapter = new ImgAdapter(mContext, mList_CurOperations, R.layout.item_imageview);
+        mImgAdapter = new ImgAdapter(mContext, mList_CurOperations, R.layout.item_pilot_image);
         vp_sopImg.setAdapter(mImgAdapter);
 
         findViewById(R.id.iv_pilotProd_login).setOnClickListener(this);
@@ -173,7 +171,7 @@ public class PilotProductionActivity extends BaseActivity {
             }
         }
     }
-    
+
     private int mCurClickPosition;
 
     private void selectOperation(String operation) {
@@ -221,10 +219,11 @@ public class PilotProductionActivity extends BaseActivity {
             ErrorDialog.showAlert(mContext, "请先搜索数据");
             return;
         }
-        if ("P".equals(mData.getString("orderType"))) {
+        String item = mEt_item.getText().toString();
+        if (item.length() < 14) {
             showLoading();
             HttpHelper.getProcessSheetsByItem(mData.getString("item"), this);
-        } else if ("S".equals(mData.getString("orderType"))) {
+        } else {
             String url = PadApplication.MTM_URL + mData.getString("orderNo");
             startActivity(WebActivity.getIntent(mContext, url));
         }
@@ -288,7 +287,6 @@ public class PilotProductionActivity extends BaseActivity {
     }
 
     private void search() {
-        showLoading();
         String loginUserId = SpUtil.getLoginUserId();
         if (isEmpty(loginUserId)) {
             toast("请登录员工后操作");
@@ -296,16 +294,16 @@ public class PilotProductionActivity extends BaseActivity {
         }
         String item = mEt_item.getText().toString();
         if (isEmpty(item)) {
-            toast("请输入款号搜索");
+            toast("请输入款号/工单号搜索");
             return;
         }
         String type = "";
-        String typeStr = mBtn_searchType.getText().toString();
-        if (typeStr.equals("款号")) {
+        if (item.length() < 14) {
             type = "P";
-        } else if (typeStr.equals("工单号")) {
+        } else {
             type = "S";
         }
+        showLoading();
         HttpHelper.getTrialRouterInfo(item, type, loginUserId, this);
     }
 
@@ -358,7 +356,7 @@ public class PilotProductionActivity extends BaseActivity {
                 }
                 mAdapter.notifyDataSetChanged(mList_data);
                 if (curPosition != -1) {
-                    mLayoutManager.smoothScrollToPosition(mRecyclerView,null,curPosition);
+                    mLayoutManager.smoothScrollToPosition(mRecyclerView, null, curPosition);
                 }
                 mImgAdapter.notifyDataSetChanged(mList_CurOperations);
                 setupCurStep();
@@ -366,7 +364,7 @@ public class PilotProductionActivity extends BaseActivity {
                 mList_CurOperations = resultJSON.getJSONArray("result").toJavaList(JSONObject.class);
                 mAdapter.notifyDataSetChanged(mList_data);
                 mImgAdapter.notifyDataSetChanged(mList_CurOperations);
-                mLayoutManager.smoothScrollToPosition(mRecyclerView,null,mCurClickPosition);
+                mLayoutManager.smoothScrollToPosition(mRecyclerView, null, mCurClickPosition);
                 setupCurStep();
             } else if (HttpHelper.trialOperationWork.equals(url)) {
                 List<JSONObject> nextOperations = resultJSON.getJSONArray("result").toJavaList(JSONObject.class);
@@ -394,7 +392,7 @@ public class PilotProductionActivity extends BaseActivity {
                 mAdapter.notifyDataSetChanged(mList_data);
                 mList_CurOperations = nextOperations;
                 if (curPosition != -1)
-                    mLayoutManager.smoothScrollToPosition(mRecyclerView,null,curPosition);
+                    mLayoutManager.smoothScrollToPosition(mRecyclerView, null, curPosition);
                 mImgAdapter.notifyDataSetChanged(mList_CurOperations);
                 setupCurStep();
             } else if (HttpHelper.positionLogin_url.equals(url)) {
@@ -457,7 +455,8 @@ public class PilotProductionActivity extends BaseActivity {
             ImageView imageView = view.findViewById(R.id.imageView);
             String sop_url = item.getString("sopUrl");
             String desc = item.getString("operationInstruction");
-            mTv_operaDesc.setText(desc);
+            TextView textView = view.findViewById(R.id.textView);
+            textView.setText(desc);
             if (!isEmpty(sop_url)) {
                 Picasso.with(mContext).load(sop_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(imageView);
                 imageView.setOnClickListener(new View.OnClickListener() {

@@ -159,14 +159,16 @@
                     android:background="@color/white"
                     android:drawableRight="@drawable/ic_arrow_down_gray"
                     android:paddingRight="@dimen/dp_5"
-                    android:text="款号" />
+                    android:text="款号"
+                    android:visibility="gone" />
                 
                 <EditText
                     android:id="@+id/et_pilotProd_item"
-                    android:layout_width="@dimen/dp_80"
+                    android:layout_width="@dimen/dp_150"
                     android:layout_height="@dimen/dp_20"
                     android:background="@color/white"
                     android:gravity="center"
+                    android:hint="输入款号/工单号查询"
                     android:paddingLeft="@dimen/dp_10"
                     android:paddingRight="@dimen/dp_10" />
                 
@@ -247,36 +249,11 @@
                     android:layout_height="match_parent" />
             </LinearLayout>
             
-            <LinearLayout
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_sopImg"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:divider="@drawable/divider_gray_light"
-                android:orientation="vertical"
-                android:showDividers="middle">
-                
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/vp_sopImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2" />
-                
-                <ScrollView
-                    android:id="@+id/tag"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="@color/bg_gray"
-                    android:padding="5dp">
-                    
-                    <TextView
-                        android:id="@+id/tv_pilotProd_operationDesc"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_gray_default" />
-                </ScrollView>
-            
-            </LinearLayout>
+                android:layout_weight="1" />
         
         </LinearLayout>
     
