@@ -35,7 +35,6 @@ import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.utils.UriUtil;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.LoadingDialog;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -161,7 +160,7 @@ public class FeedBackActivity extends BaseActivity {
         @Override
         public void convert(RecyclerViewHolder holder, ImgObj item, int position) {
             ImageView imageView = holder.getView(R.id.imageView);
-            Picasso.with(mContext).load(item.path).into(imageView);
+            imageView.setImageURI(Uri.fromFile(new File(item.path)));
 
             setWidgetClickListener(holder, position, R.id.btn_del);
         }
