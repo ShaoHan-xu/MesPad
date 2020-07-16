@@ -78,4 +78,5 @@
     <item name="btn_yiLing" type="id" />
     <item name="btn_secondClass" type="id" />
     <item name="btn_qrCode" type="id" />
+    <item name="btn_hangerSwipe" type="id" />
 </resources>

@@ -1600,7 +1600,7 @@ public class HttpHelper {
 //        PAD_IP = "10.10.34.49";
 //        PAD_IP = "4";// D 分包
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
-//        PAD_IP = "10.10.31.246";//于都 P 分包
+//        PAD_IP = "10.8.42.10";
         return PAD_IP;
     }
 

@@ -37,12 +37,14 @@ public class WebServiceUtils {
     private static String WEB_IN_OUT_URL = PadApplication.WEB_URL + "ExtStepPassServiceWSService";
     private static String WEB_DOING_URL = PadApplication.WEB_URL + "HangerDoServiceWSService";
     private static String WEB_SENDPRODUCTMSG = PadApplication.WEB_URL + "ProductMessageServiceWSService";
+    private static String WEB_HANGER_SWIPE = PadApplication.WEB_URL + "HangerBindServiceWSService";
     private static String NAMESPACE = "http://integration.ina.ws.eeka.com/";
     //方法名
     public static final String INA_IN = "inaCommonWipIn";
     public static final String INA_OUT = "inaCommonWipOut";
     public static final String INA_DOING = "sendTecFileListByRfid";
     public static final String sendProductMessage = "sendProductMessage";
+    public static final String hangerBind = "hangerBind";
 
     private static final int WHAT_SUCCESS = 0;
     private static final int WHAT_FAIL = 1;
@@ -170,6 +172,21 @@ public class WebServiceUtils {
 
         void onFail(String errMsg);
 
+    }
+
+    /**
+     * 上裁刷卡
+     */
+    public static void hangerBind(JSONObject json, HttpCallBack callback) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        SoapObject object = new SoapObject();
+        object.addProperty("site", json.getString("site"));
+        object.addProperty("hangerId", json.getString("hangerId"));
+        object.addProperty("lineId", json.getString("lineId"));
+        object.addProperty("stationId", json.getString("stationId"));
+        object.addProperty("tag", json.getString("tag"));
+        map.put("HangerBindDataRequest", object);
+        callWebService(WEB_HANGER_SWIPE, hangerBind, map, callback);
     }
 
     /**

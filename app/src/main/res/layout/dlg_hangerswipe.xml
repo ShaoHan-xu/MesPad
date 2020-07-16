@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+    
+    <include layout="@layout/layout_title_dlg" />
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/dp_10">
+        
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:text="site：" />
+            
+            <EditText
+                android:id="@+id/et_site"
+                android:layout_width="@dimen/dp_100"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:text="hangerId：" />
+            
+            <EditText
+                android:id="@+id/et_hangerId"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="wrap_content" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:text="lineId：" />
+            
+            <EditText
+                android:id="@+id/et_lineId"
+                android:layout_width="@dimen/dp_100"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:text="stationId：" />
+            
+            <EditText
+                android:id="@+id/et_stationId"
+                android:layout_width="@dimen/dp_100"
+                android:inputType="number"
+                android:layout_height="wrap_content" />
+        
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:text="tag：" />
+            
+            <EditText
+                android:id="@+id/et_tag"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="wrap_content" />
+        
+        </LinearLayout>
+        
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/btn_ok"
+        style="@style/btnStyle_primary"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:text="确定" />
+
+</LinearLayout>

@@ -67,6 +67,7 @@ import com.eeka.mespad.utils.UnitUtil;
 import com.eeka.mespad.view.dialog.EfficiencyDialog;
 import com.eeka.mespad.view.dialog.ErrToastDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
+import com.eeka.mespad.view.dialog.HangerSwipeDialog;
 import com.eeka.mespad.view.dialog.MaintenanceDialog;
 import com.eeka.mespad.view.dialog.OmitQCDetailDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
@@ -447,6 +448,10 @@ public class MainActivity extends NFCActivity {
             }
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             switch (item.getBUTTON_ID()) {
+                case "HANGER_SWIPE":
+                    button.setText("模拟上裁刷卡");
+                    button.setId(R.id.btn_hangerSwipe);
+                    break;
                 case "SECOND_CLASS":
                     button.setText("缺面料");
                     button.setId(R.id.btn_secondClass);
@@ -753,6 +758,9 @@ public class MainActivity extends NFCActivity {
         }
         SystemUtils.hideKeyboard(mContext, v);
         switch (v.getId()) {
+            case R.id.btn_hangerSwipe:
+                new HangerSwipeDialog(mContext).show();
+                return;
             case R.id.btn_scan:
                 startScan(true);
                 return;

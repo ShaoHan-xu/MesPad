@@ -27,6 +27,7 @@ import com.eeka.mespad.adapter.CommonRecyclerAdapter;
 import com.eeka.mespad.adapter.CommonVPAdapter;
 import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
+import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.UserInfoBo;
 import com.eeka.mespad.http.HttpHelper;
@@ -35,13 +36,16 @@ import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.CommListDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
-import com.eeka.mespad.view.dialog.FeedbackDialog;
+import com.eeka.mespad.view.dialog.HangerSwipeDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 试产
+ */
 public class PilotProductionActivity extends BaseActivity {
 
     private TextView mTv_loginUser;
@@ -196,7 +200,16 @@ public class PilotProductionActivity extends BaseActivity {
                 complete();
                 break;
             case R.id.btn_pilotProd_feedback:
-                feedback();
+                String loginUserId = SpUtil.getLoginUserId();
+                if (isEmpty(loginUserId)){
+                    toast("请登录");
+                    return;
+                }
+                if ((mData == null)) {
+                    toast("请先搜索数据");
+                    return;
+                }
+                startActivity(FeedBackActivity.getIntent(mContext, mData.toJSONString()));
                 break;
             case R.id.btn_pilotProd_processSheets:
                 showProcessSheets();
@@ -252,14 +265,6 @@ public class PilotProductionActivity extends BaseActivity {
             }
         });
         ppw.show();
-    }
-
-    private void feedback() {
-        if (mData == null) {
-            ErrorDialog.showAlert(mContext, "请先搜索数据");
-            return;
-        }
-        new FeedbackDialog(mContext, mData).show();
     }
 
     private void complete() {
@@ -319,6 +324,13 @@ public class PilotProductionActivity extends BaseActivity {
                 List<UserInfoBo> positionUsers = contextInfoBo.getLOGIN_USER_LIST();
                 SpUtil.savePositionUsers(positionUsers);
                 refreshLoginUser();
+
+                HttpHelper.findProcessWithPadId(this);
+            } else if (HttpHelper.findProcessWithPadId_url.equals(url)) {
+                PositionInfoBo positionInfo = JSON.parseObject(HttpHelper.getResultStr(resultJSON), PositionInfoBo.class);
+                assert positionInfo != null;
+                SpUtil.save(SpUtil.KEY_RESOURCE, JSON.toJSONString(positionInfo.getRESR_INFOR()));
+                SpUtil.save(SpUtil.KEY_NCIMG_INFO, JSON.toJSONString(positionInfo.getNcImgInfo()));
             } else if (url.equals(HttpHelper.getTrialRouterInfo)) {
                 mData = resultJSON.getJSONObject("result");
                 if ("P".equals(mData.getString("orderType"))) {
