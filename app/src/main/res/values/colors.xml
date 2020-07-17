@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1F9BE1</color>
-    <color name="colorPrimaryDark">#0080C0</color>
+    <color name="colorPrimary">#AEC840</color>
+    <color name="colorPrimaryDark">#7C8B36</color>
+    <color name="colorPrimaryPress">#807C8B36</color>
     <color name="colorAccent">#00C073</color>
     <color name="windowBackground">#F6F6F6</color>
 
@@ -42,8 +43,8 @@
     <color name="titleBackground">#B2C657</color>
     <color name="orange">#D38403</color>
     <color name="orange_dark">#8D5C0A</color>
-    <color name="green">#7C8B36</color>
-    <color name="green_dark">#445204</color>
+    <color name="green">#AEC840</color>
+    <color name="green_dark">#7C8B36</color>
     
     <color name="status_done">#B2C657</color>
     <color name="status_working">#F5A623</color>

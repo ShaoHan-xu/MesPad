@@ -161,7 +161,7 @@ public class FeedBackActivity extends BaseActivity {
         @Override
         public void convert(RecyclerViewHolder holder, ImgObj item, int position) {
             ImageView imageView = holder.getView(R.id.imageView);
-            Picasso.with(mContext).load(item.path).into(imageView);
+            imageView.setImageURI(Uri.fromFile(new File(item.path)));
 
             setWidgetClickListener(holder, position, R.id.btn_del);
         }

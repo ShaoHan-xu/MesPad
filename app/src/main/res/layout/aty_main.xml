@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_25"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@color/colorPrimary"
         android:padding="@dimen/dp_2">
         
         <LinearLayout
@@ -28,14 +28,14 @@
                 android:id="@+id/tv_main_searchType"
                 android:layout_width="@dimen/dp_50"
                 android:layout_height="match_parent"
-                android:background="@drawable/btn_green"
+                android:background="@drawable/btn_primary"
                 android:drawableRight="@drawable/ic_arrow_down_white"
                 android:gravity="center"
                 android:paddingRight="@dimen/dp_5"
                 android:text="卡号"
+                android:visibility="gone"
                 android:textColor="@color/white"
-                android:textSize="@dimen/textSize_content"
-                android:visibility="gone" />
+                android:textSize="@dimen/textSize_content" />
             
             <EditText
                 android:id="@+id/et_orderNum"
@@ -63,7 +63,7 @@
             
             <Button
                 android:id="@+id/btn_searchOrder"
-                style="@style/btnStyle_green"
+                style="@style/btnStyle_primary"
                 android:layout_height="match_parent"
                 android:text="搜索" />
         
