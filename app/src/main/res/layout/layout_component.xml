@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <RelativeLayout
-        android:layout_width="0dp"
+    android:layout_height="match_parent">
+    
+    <Button
+        android:id="@+id/btn_componentName"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <Button
-            android:id="@+id/btn_componentName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/btn_green"
-            android:text="前幅"
-            android:textColor="@color/white" />
-
-        <ImageView
-            android:id="@+id/iv_part_finished"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/ic_part_finish"
-            android:visibility="gone" />
-    </RelativeLayout>
-
+        android:background="@drawable/btn_primary"
+        android:text="前幅"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_20" />
+    
     <TextView
         android:id="@+id/tv_helpDesc"
-        style="@style/textStyle_default"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="外协状况" />
-</LinearLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/orange"
+        android:padding="@dimen/dp_5"
+        android:text="不需要外协"
+        android:textColor="@color/white" />
+    
+    <ImageView
+        android:id="@+id/iv_part_finished"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/ic_part_finish"
+        android:visibility="gone" />
+</RelativeLayout>
+

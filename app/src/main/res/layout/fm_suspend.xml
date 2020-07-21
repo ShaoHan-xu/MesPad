@@ -4,19 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-
+    
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"
         android:orientation="vertical">
-
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="vertical">
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -26,12 +26,12 @@
                 android:orientation="horizontal"
                 android:padding="0.5dp"
                 android:showDividers="middle">
-
+                
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1">
-
+                    
                     <HorizontalScrollView
                         android:id="@+id/hsv_suspend_img"
                         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                         android:background="@drawable/border_black"
                         android:padding="0.5dp"
                         android:visibility="gone">
-
+                        
                         <LinearLayout
                             android:id="@+id/layout_suspend_img"
                             android:layout_width="wrap_content"
@@ -48,35 +48,52 @@
                             android:divider="@drawable/divider_gray"
                             android:orientation="horizontal"
                             android:showDividers="middle|end" />
-
+                    
                     </HorizontalScrollView>
-
+                    
                     <android.support.v4.view.ViewPager
                         android:id="@+id/vp_suspend_componentImg"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_above="@id/hsv_suspend_img" />
-
+                
                 </RelativeLayout>
-
+                
                 <LinearLayout
-                    android:id="@+id/layout_component"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:divider="@drawable/divider_gray"
-                    android:orientation="vertical"
-                    android:showDividers="middle" />
-
+                    android:orientation="vertical">
+                    
+                    <LinearLayout
+                        android:id="@+id/layout_component"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:divider="@drawable/divider_gray"
+                        android:orientation="horizontal"
+                        android:showDividers="middle" />
+                    
+                    <Button
+                        android:id="@+id/btn_suspend_binding"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/btn_orange"
+                        android:text="绑定"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_20" />
+                </LinearLayout>
+            
             </LinearLayout>
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/dp_2"
                 android:layout_weight="1"
                 android:orientation="horizontal">
-
+                
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -84,34 +101,37 @@
                     android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="@dimen/dp_2">
-
+                    
                     <TextView
                         style="@style/textStyle_default"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/border_bottom_dash"
+                        android:paddingLeft="@dimen/dp_8"
                         android:text="工艺说明"
                         android:textStyle="bold" />
-
+                    
                     <TextView
                         android:id="@+id/tv_suspend_craftDesc"
                         style="@style/textStyle_default" />
                 </LinearLayout>
-
+                
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/dp_2"
                     android:layout_weight="1"
-                    android:padding="0.5dp"
                     android:background="@drawable/border_black"
-                    android:orientation="vertical">
-
+                    android:orientation="vertical"
+                    android:padding="0.5dp">
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/text_green_default"
+                        android:background="@color/gray_disable"
                         android:divider="@drawable/divider_gray"
                         android:orientation="horizontal"
                         android:showDividers="middle">
-
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_width="0dp"
@@ -120,7 +140,7 @@
                             android:padding="@dimen/dp_2"
                             android:text="物料号"
                             android:textColor="@color/white" />
-
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_width="0dp"
@@ -129,7 +149,7 @@
                             android:padding="@dimen/dp_2"
                             android:text="物料名称"
                             android:textColor="@color/white" />
-
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_width="0dp"
@@ -138,13 +158,13 @@
                             android:padding="@dimen/dp_2"
                             android:text="用量"
                             android:textColor="@color/white" />
-
+                    
                     </LinearLayout>
-
+                    
                     <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
+                        
                         <LinearLayout
                             android:id="@+id/layout_suspend_matInfo"
                             android:layout_width="match_parent"
@@ -153,369 +173,308 @@
                             android:orientation="vertical"
                             android:showDividers="beginning|middle|end" />
                     </ScrollView>
-
+                
                 </LinearLayout>
-
+            
             </LinearLayout>
-
+        
         </LinearLayout>
-
+    
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_processList"
+    
+    <LinearLayout
         android:layout_width="@dimen/dp_125"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
         android:layout_marginLeft="@dimen/dp_2"
-        android:orientation="vertical">
-
+        android:background="@drawable/border_black"
+        android:orientation="vertical"
+        android:padding="0.5dp">
+        
+        <include layout="@layout/layout_loginusers" />
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/divider_gray" />
+        
         <LinearLayout
-            android:id="@+id/tag_layout_loginUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_black"
+            android:layout_marginTop="@dimen/dp_3"
+            android:gravity="center"
             android:orientation="vertical"
-            android:padding="0.5dp">
-
-            <LinearLayout
+            android:padding="@dimen/dp_2">
+            
+            <TextView
+                style="@style/textStyle_default"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom_dash"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
+                android:text="当前作业SFC" />
+            
+            <TextView
+                android:id="@+id/tv_suspend_curSFC"
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
                 android:background="@color/white"
-                android:orientation="horizontal"
-                android:padding="@dimen/dp_2">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="用户" />
-
-                <View
-                    android:layout_width="0.5dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/text_gray_default" />
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="工号" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@drawable/divider_gray" />
-
-            <ScrollView
-                android:id="@+id/scrollView_loginUsers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/layout_loginUsers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@drawable/divider_gray"
-                    android:orientation="vertical"
-                    android:showDividers="middle" />
-
-            </ScrollView>
+                android:gravity="center"
+                android:padding="@dimen/dp_2"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/textSize_itemTitle"
+                android:textStyle="bold" />
         </LinearLayout>
-
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/divider_gray" />
+        
         <LinearLayout
             android:id="@+id/layout_curProcess"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_60"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical">
-
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/layout_nextProcess"
                 android:orientation="horizontal"
                 android:padding="@dimen/dp_2">
-
+                
+                <View
+                    android:layout_width="@dimen/dp_5"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/dp_3"
+                    android:background="@color/colorPrimaryDark" />
+                
                 <TextView
                     style="@style/textStyle_gray"
                     android:paddingTop="@dimen/dp_2"
                     android:paddingRight="@dimen/dp_2"
                     android:paddingBottom="@dimen/dp_2"
                     android:text="当前工序" />
-
+                
                 <TextView
                     android:id="@+id/tv_suspend_curProcess"
                     style="@style/textStyle_default"
-                    android:text="上裁绑定" />
-
+                    android:text="上裁绑定"
+                    android:textColor="@color/orange" />
+            
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_suspend_binding"
-                style="@style/btnStyle_green"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="绑定"
-                android:textSize="@dimen/sp_15" />
-
+        
         </LinearLayout>
-
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/divider_gray" />
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/layout_curProcess"
-            android:layout_below="@id/tag_layout_loginUsers"
             android:layout_marginTop="@dimen/dp_2"
             android:layout_marginBottom="@dimen/dp_2"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/btn_green_normal"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_2"
-                    android:text="当前作业SFC"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/tv_suspend_curSFC"
-                    style="@style/textStyle_default"
-                    android:layout_width="match_parent"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_2"
-                    android:textSize="@dimen/textSize_itemTitle"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
+            android:orientation="vertical"
+            android:padding="@dimen/dp_2">
+            
             <TextView
                 style="@style/textStyle_default"
                 android:layout_width="match_parent"
-                android:background="@drawable/btn_green_normal"
-                android:gravity="center"
-                android:padding="@dimen/dp_2"
-                android:text="订单信息"
-                android:textColor="@color/white" />
-
+                android:background="@drawable/border_bottom_dash"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
+                android:text="订单信息" />
+            
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white">
-
+                
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/dp_2">
-
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_marginRight="@dimen/dp_5"
                             android:text="生产订单号"
                             android:textColor="@color/text_gray_default" />
-
+                        
                         <TextView
                             android:id="@+id/tv_suspend_orderNum"
                             style="@style/textStyle_default" />
                     </LinearLayout>
-
+                    
                     <LinearLayout
                         android:id="@+id/layout_suspend_mtmOrder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
-
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_marginRight="@dimen/dp_5"
                             android:text="MTM订单号"
                             android:textColor="@color/text_gray_default" />
-
+                        
                         <TextView
                             android:id="@+id/tv_suspend_MTMOrderNum"
                             style="@style/textStyle_default" />
                     </LinearLayout>
-
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
-
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_marginRight="@dimen/dp_5"
                             android:text="批次号"
                             android:textColor="@color/text_gray_default" />
-
+                        
                         <TextView
                             android:id="@+id/tv_suspend_processLot"
                             style="@style/textStyle_default" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_2"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:text="批次件数"
-                                android:textColor="@color/text_gray_default" />
-
-                            <TextView
-                                android:id="@+id/tv_suspend_processLotQTY"
-                                style="@style/textStyle_default" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_2"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:text="实裁数"
-                                android:textColor="@color/text_gray_default" />
-
-                            <TextView
-                                android:id="@+id/tv_suspend_realCutQty"
-                                style="@style/textStyle_default" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_2"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:text="订单数量"
-                                android:textColor="@color/text_gray_default" />
-
-                            <TextView
-                                android:id="@+id/tv_suspend_orderQty"
-                                style="@style/textStyle_default" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_2"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:text="已上裁"
-                                android:textColor="@color/text_gray_default" />
-
-                            <TextView
-                                android:id="@+id/tv_suspend_finishQty"
-                                style="@style/textStyle_default" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_2"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:text="款号"
-                                android:textColor="@color/text_gray_default" />
-
-                            <TextView
-                                android:id="@+id/tv_suspend_itemCode"
-                                style="@style/textStyle_default" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_marginTop="@dimen/dp_2"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/textStyle_default"
-                                android:layout_marginRight="@dimen/dp_5"
-                                android:text="尺码"
-                                android:textColor="@color/text_gray_default" />
-
-                            <TextView
-                                android:id="@+id/tv_suspend_size"
-                                style="@style/textStyle_default" />
-                        </LinearLayout>
-                    </LinearLayout>
-
+                    
+                    
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_2"
                         android:orientation="horizontal">
-
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="批次件数"
+                            android:textColor="@color/text_gray_default" />
+                        
+                        <TextView
+                            android:id="@+id/tv_suspend_processLotQTY"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="订单数量"
+                            android:textColor="@color/text_gray_default" />
+                        
+                        <TextView
+                            android:id="@+id/tv_suspend_orderQty"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="实裁数"
+                            android:textColor="@color/text_gray_default" />
+                        
+                        <TextView
+                            android:id="@+id/tv_suspend_realCutQty"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="已上裁"
+                            android:textColor="@color/text_gray_default" />
+                        
+                        <TextView
+                            android:id="@+id/tv_suspend_finishQty"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="款号"
+                            android:textColor="@color/text_gray_default" />
+                        
+                        <TextView
+                            android:id="@+id/tv_suspend_itemCode"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+                        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="尺码"
+                            android:textColor="@color/text_gray_default" />
+                        
+                        <TextView
+                            android:id="@+id/tv_suspend_size"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+                        
                         <TextView
                             style="@style/textStyle_default"
                             android:layout_marginRight="@dimen/dp_5"
                             android:text="物料描述"
                             android:textColor="@color/text_gray_default" />
-
+                        
                         <TextView
                             android:id="@+id/tv_suspend_matDesc"
                             style="@style/textStyle_default" />
                     </LinearLayout>
-
+                
                 </LinearLayout>
             </ScrollView>
-
+        
         </LinearLayout>
-
-    </RelativeLayout>
+    
+    </LinearLayout>
 </LinearLayout>

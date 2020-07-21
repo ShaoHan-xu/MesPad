@@ -108,7 +108,7 @@ android {
         }
         SHI_CHANG {
             resValue "string", "app_name", "试产应用"
-            resValue "string", "app_channel", "LH_P"
+            resValue "string", "app_channel", "SHI_CHANG"
             resValue "string", "system_code", "LH_P"
         }
     }
