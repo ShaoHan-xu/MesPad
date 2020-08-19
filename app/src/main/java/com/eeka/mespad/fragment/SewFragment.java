@@ -895,7 +895,7 @@ public class SewFragment extends BaseFragment {
         if (!isEmpty(qualityDesc))
             mTv_qualityReq.setText(qualityDesc.replace("#line#", "\n"));
 
-        TabViewUtil.refreshTabView(mLayout_processTab, position);
+        TabViewUtil.refreshTabView(mContext,mLayout_processTab, position);
     }
 
     @Override

@@ -89,14 +89,14 @@ public class EmbroiderActivity extends BaseActivity {
                 mLayout_process.addView(TabViewUtil.getTabView(mContext, item, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        TabViewUtil.refreshTabView(mLayout_process, finalI);
+                        TabViewUtil.refreshTabView(mContext, mLayout_process, finalI);
                         setupView(item);
                     }
                 }));
             }
             if (mList_data != null && mList_data.size() != 0) {
                 setupView(mList_data.get(0));
-                TabViewUtil.refreshTabView(mLayout_process, 0);
+                TabViewUtil.refreshTabView(mContext, mLayout_process, 0);
             }
         }
     }

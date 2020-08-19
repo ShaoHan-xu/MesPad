@@ -1,6 +1,7 @@
 package com.eeka.mespad.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,13 +68,18 @@ public class TabViewUtil {
     /**
      * 刷新标签视图
      */
-    public static void refreshTabView(ViewGroup parent, int position) {
+    public static void refreshTabView(Context context,ViewGroup parent, int position) {
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = parent.getChildAt(i);
             childAt.setBackgroundResource(R.color.white);
+            TextView tv_tabName = childAt.findViewById(R.id.textView);
+            tv_tabName.setTextColor(context.getResources().getColor(R.color.text_black_default));
         }
-        parent.getChildAt(position).setBackgroundResource(R.color.divider_gray);
+        View childAt = parent.getChildAt(position);
+        childAt.setBackgroundResource(R.color.colorPrimaryDark);
+        TextView tv_tabName = childAt.findViewById(R.id.textView);
+        tv_tabName.setTextColor(Color.WHITE);
     }
 
 }

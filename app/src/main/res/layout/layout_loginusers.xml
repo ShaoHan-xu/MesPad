@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="3dp">
 
         <TextView
             style="@style/textStyle_default"

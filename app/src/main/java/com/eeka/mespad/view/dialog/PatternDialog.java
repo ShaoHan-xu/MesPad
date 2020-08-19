@@ -84,7 +84,7 @@ public class PatternDialog extends BaseDialog {
             mLayout_process.addView(TabViewUtil.getTabView(mContext, mList_data.get(i), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TabViewUtil.refreshTabView(mLayout_process, finalI);
+                    TabViewUtil.refreshTabView(mContext, mLayout_process, finalI);
                     String picture_url = mList_data.get(finalI).getPICTURE_URL();
                     if (!TextUtils.isEmpty(picture_url)) {
                         Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_img);
@@ -92,7 +92,7 @@ public class PatternDialog extends BaseDialog {
                 }
             }));
         }
-        TabViewUtil.refreshTabView(mLayout_process, 0);
+        TabViewUtil.refreshTabView(mContext, mLayout_process, 0);
         String picture_url = mList_data.get(0).getPICTURE_URL();
         if (!isEmpty(picture_url))
             Picasso.with(mContext).load(picture_url).placeholder(R.drawable.loading).error(R.drawable.ic_error_img).into(mIv_img);

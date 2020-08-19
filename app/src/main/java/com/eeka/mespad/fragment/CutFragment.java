@@ -226,7 +226,7 @@ public class CutFragment extends BaseFragment {
                     }
                 }));
             }
-            TabViewUtil.refreshTabView(mLayout_matTab, 0);
+            TabViewUtil.refreshTabView(mContext,mLayout_matTab, 0);
         }
 
         VPAdapter mVPAdapter_matInfo = new VPAdapter<>(itemArray);
@@ -414,7 +414,7 @@ public class CutFragment extends BaseFragment {
             mTv_qualityDesc.setText(null);
         }
 
-        TabViewUtil.refreshTabView(mLayout_processTab, position);
+        TabViewUtil.refreshTabView(mContext,mLayout_processTab, position);
     }
 
     public void markSecondClass() {
@@ -816,7 +816,7 @@ public class CutFragment extends BaseFragment {
         @Override
         public void onPageSelected(int position) {
             if (TYPE == TYPE_MAT) {
-                TabViewUtil.refreshTabView(mLayout_matTab, position);
+                TabViewUtil.refreshTabView(mContext,mLayout_matTab, position);
             } else {
                 refreshProcessView(position);
             }

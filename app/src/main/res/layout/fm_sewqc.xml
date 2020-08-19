@@ -3,7 +3,8 @@
     android:id="@+id/layout_rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_2">
     
     <RelativeLayout
         android:layout_width="0dp"
@@ -23,16 +24,20 @@
             
             <Button
                 android:id="@+id/btn_sewQc_save"
-                style="@style/btnStyle_green_round"
-                android:layout_width="@dimen/dp_50"
-                android:text="保存" />
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_25"
+                android:background="@drawable/btn_orange_round"
+                android:text="保存"
+                android:textColor="@color/white" />
             
             <Button
                 android:id="@+id/btn_sewQc_refresh"
-                style="@style/btnStyle_green_round"
-                android:layout_width="@dimen/dp_50"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_25"
                 android:layout_marginLeft="@dimen/dp_10"
-                android:text="刷新" />
+                android:background="@drawable/btn_orange_round"
+                android:text="刷新"
+                android:textColor="@color/white" />
         
         </LinearLayout>
         
@@ -114,137 +119,42 @@
                 android:orientation="vertical">
                 
                 <LinearLayout
+                    android:id="@+id/layout_sewQC_lastPosition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_black"
-                    android:orientation="vertical"
-                    android:padding="0.5dp">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dp_5">
                     
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dp_2">
-                        
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="用户" />
-                        
-                        <View
-                            android:layout_width="0.5dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/text_gray_default" />
-                        
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="工号" />
+                    <TextView
+                        style="@style/textStyle_default"
+                        android:layout_width="@dimen/dp_45"
+                        android:gravity="right"
+                        android:text="上一站位" />
                     
-                    </LinearLayout>
-                    
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@drawable/divider_gray" />
-                    
-                    <ScrollView
-                        android:id="@+id/scrollView_loginUsers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        
-                        <LinearLayout
-                            android:id="@+id/layout_loginUsers"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:divider="@drawable/divider_gray"
-                            android:orientation="vertical"
-                            android:showDividers="middle" />
-                    </ScrollView>
+                    <TextView
+                        android:id="@+id/tv_sewQC_lastPosition"
+                        style="@style/textStyle_default"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:textColor="@color/orange" />
                 </LinearLayout>
                 
-                <LinearLayout
-                    android:id="@+id/layout_sewQC_outputInfo"
+                <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dp_2"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="@dimen/dp_2">
+                    android:background="@drawable/border_black"
+                    android:padding="0.5dp">
                     
                     <LinearLayout
+                        android:id="@+id/layout_sewQC_matInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:layout_width="@dimen/dp_45"
-                            android:gravity="right"
-                            android:text="SFC"
-                            android:textColor="@color/text_gray_default" />
-                        
-                        <TextView
-                            android:id="@+id/tv_sewQC_SFC"
-                            style="@style/textStyle_default"
-                            android:layout_marginLeft="@dimen/dp_5" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:orientation="horizontal">
-                        
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:layout_width="@dimen/dp_45"
-                            android:gravity="right"
-                            android:text="当前工序"
-                            android:textColor="@color/text_gray_default" />
-                        
-                        <TextView
-                            android:id="@+id/tv_sewQC_curProcess"
-                            style="@style/textStyle_default"
-                            android:layout_marginLeft="@dimen/dp_5" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:orientation="horizontal">
-                        
-                        <TextView
-                            style="@style/textStyle_default"
-                            android:layout_width="@dimen/dp_45"
-                            android:gravity="right"
-                            android:text="日产量"
-                            android:textColor="@color/text_gray_default" />
-                        
-                        <TextView
-                            android:id="@+id/tv_sewQC_dayOutput"
-                            style="@style/textStyle_default"
-                            android:layout_marginLeft="@dimen/dp_5" />
-                    </LinearLayout>
-                    
-                    <TextView
-                        android:id="@+id/tv_sewQC_ncTag"
-                        style="@style/textStyle_default"
-                        android:layout_marginTop="@dimen/dp_5"
+                        android:divider="@drawable/divider_gray"
+                        android:orientation="vertical"
                         android:padding="@dimen/dp_2"
-                        android:text="该件来自普通站位"
-                        android:textColor="@color/text_red_default"
-                        android:textSize="@dimen/textSize_itemTitle"
-                        android:visibility="gone" />
-                
-                </LinearLayout>
+                        android:showDividers="middle" />
+                </ScrollView>
             
             </LinearLayout>
             
@@ -253,8 +163,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/dp_2"
                 android:layout_weight="2"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:background="@drawable/border_black"
+                android:orientation="vertical"
+                android:padding="0.5dp">
                 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -304,17 +215,138 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/dp_2"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_weight="1.1"
+        android:background="@drawable/border_black"
+        android:orientation="vertical"
+        android:padding="0.5dp">
+        
+        <include layout="@layout/layout_loginusers" />
+        
+        <RelativeLayout
+            android:id="@+id/layout_dayOutput"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_22"
+            android:layout_margin="@dimen/dp_5"
+            android:background="@drawable/btn_orange_round"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingTop="@dimen/dp_2"
+            android:paddingBottom="@dimen/dp_2">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_centerVertical="true"
+                android:paddingRight="@dimen/dp_5"
+                android:text="日产量"
+                android:textColor="@color/white" />
+            
+            <TextView
+                android:id="@+id/tv_sewQC_dayOutput"
+                style="@style/textStyle_default"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="@color/white" />
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/dp_3"
+                android:src="@drawable/ic_arrow_right_solid" />
+        </RelativeLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_disable" />
         
         <LinearLayout
-            android:id="@+id/layout_sewQC_orderInfo"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.2"
-            android:background="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_3"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/dp_2">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:background="@drawable/border_bottom_dash"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
+                android:text="当前作业SFC" />
+            
+            <TextView
+                android:id="@+id/tv_sewQC_SFC"
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/dp_2"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/textSize_itemTitle"
+                android:textStyle="bold" />
+        </LinearLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_disable" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/dp_2"
+                android:layout_marginTop="@dimen/dp_2"
+                android:background="@drawable/border_bottom_dash"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
+                android:text="当前工序" />
+            
+            <TextView
+                android:id="@+id/tv_sewQC_curProcess"
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="@dimen/dp_2"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/textSize_itemTitle"
+                android:textStyle="bold" />
+        
+        </LinearLayout>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_disable" />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="0.5dp">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/dp_2"
+                android:layout_marginTop="@dimen/dp_2"
+                android:layout_marginBottom="@dimen/dp_2"
+                android:background="@drawable/border_bottom_dash"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
+                android:text="订单信息" />
             
             <LinearLayout
                 android:layout_width="match_parent"
@@ -323,7 +355,7 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="@dimen/width_100"
+                    android:layout_width="@dimen/dp_55"
                     android:gravity="right"
                     android:text="生产订单号"
                     android:textColor="@color/text_gray_default" />
@@ -342,7 +374,7 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="@dimen/width_100"
+                    android:layout_width="@dimen/dp_55"
                     android:gravity="right"
                     android:text="MTM订单号"
                     android:textColor="@color/text_gray_default" />
@@ -361,7 +393,7 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="@dimen/width_100"
+                    android:layout_width="@dimen/dp_55"
                     android:gravity="right"
                     android:text="物料号"
                     android:textColor="@color/text_gray_default" />
@@ -380,7 +412,7 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="@dimen/width_100"
+                    android:layout_width="@dimen/dp_55"
                     android:gravity="right"
                     android:text="物料描述"
                     android:textColor="@color/text_gray_default" />
@@ -399,7 +431,7 @@
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:layout_width="@dimen/width_100"
+                    android:layout_width="@dimen/dp_55"
                     android:gravity="right"
                     android:text="尺码"
                     android:textColor="@color/text_gray_default" />
@@ -410,17 +442,28 @@
                     android:layout_marginLeft="@dimen/dp_5" />
             </LinearLayout>
             
+            <view
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="@dimen/dp_5"
+                android:background="@drawable/divider_gray" />
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_2"
                 android:orientation="vertical">
                 
                 <TextView
                     style="@style/textStyle_default"
-                    android:text="特殊要求"
-                    android:textColor="@color/text_gray_default"
-                    android:textStyle="bold" />
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:background="@drawable/border_bottom_dash"
+                    android:paddingLeft="@dimen/dp_8"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:text="特殊要求" />
                 
                 <TextView
                     android:id="@+id/tv_sewQC_special"
@@ -434,33 +477,13 @@
             android:layout_marginTop="@dimen/dp_2"
             android:orientation="vertical">
             
-            <LinearLayout
-                android:id="@+id/layout_sewQC_lastPosition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:padding="@dimen/dp_2">
-                
-                <TextView
-                    style="@style/textStyle_default"
-                    android:layout_width="@dimen/dp_45"
-                    android:gravity="right"
-                    android:text="上一站位"
-                    android:textColor="@color/text_red_default" />
-                
-                <TextView
-                    android:id="@+id/tv_sewQC_lastPosition"
-                    style="@style/textStyle_default"
-                    android:layout_marginLeft="@dimen/dp_5"
-                    android:textColor="@color/text_red_default" />
-            </LinearLayout>
-            
             <TextView
                 android:id="@+id/tv_sewQC_reworkInfo"
                 style="@style/textStyle_default"
+                android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/dp_2"
                 android:background="@color/text_red_default"
+                android:gravity="center"
                 android:padding="@dimen/dp_2"
                 android:text="返修衣架回质检"
                 android:textColor="@color/white"
@@ -480,24 +503,7 @@
                 android:visibility="gone" />
         
         </LinearLayout>
-        
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/dp_2"
-            android:layout_weight="0.7"
-            android:background="@drawable/border_black"
-            android:padding="0.5dp">
-            
-            <LinearLayout
-                android:id="@+id/layout_sewQC_matInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/divider_gray"
-                android:orientation="vertical"
-                android:padding="@dimen/dp_2"
-                android:showDividers="middle|end" />
-        </ScrollView>
+    
     </LinearLayout>
 
 </LinearLayout>

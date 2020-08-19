@@ -226,7 +226,7 @@ public class RecordSewNCActivity extends BaseActivity {
                     mNcCodePosition = -1;
                     mProductPosition = finalI;
                     refreshDesignComponentView(component);
-                    TabViewUtil.refreshTabView(mLayout_productComponent, finalI);
+                    TabViewUtil.refreshTabView(mContext, mLayout_productComponent, finalI);
                 }
             }));
             if (i == 0) {
@@ -234,7 +234,7 @@ public class RecordSewNCActivity extends BaseActivity {
             }
         }
         if (mList_component.size() != 0) {
-            TabViewUtil.refreshTabView(mLayout_productComponent, 0);
+            TabViewUtil.refreshTabView(mContext, mLayout_productComponent, 0);
         }
     }
 
@@ -256,7 +256,7 @@ public class RecordSewNCActivity extends BaseActivity {
                         mLayout_NcProcess.removeAllViews();
                         showLoading();
                         HttpHelper.getSewNcCodeList(component.getName(), bean.getName(), RecordSewNCActivity.this);
-                        TabViewUtil.refreshTabView(mLayout_designComponent, finalI);
+                        TabViewUtil.refreshTabView(mContext, mLayout_designComponent, finalI);
                     }
                 }));
                 if (i == 0) {
@@ -266,7 +266,7 @@ public class RecordSewNCActivity extends BaseActivity {
                     HttpHelper.getSewNcCodeList(component.getName(), bean.getName(), RecordSewNCActivity.this);
                 }
             }
-            TabViewUtil.refreshTabView(mLayout_designComponent, 0);
+            TabViewUtil.refreshTabView(mContext, mLayout_designComponent, 0);
         }
     }
 

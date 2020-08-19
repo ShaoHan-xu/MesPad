@@ -234,14 +234,14 @@ public class QCFragment extends BaseFragment {
             mLayout_productComponent.addView(TabViewUtil.getTabView(mContext, component, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TabViewUtil.refreshTabView(mLayout_productComponent, finalI);
+                    TabViewUtil.refreshTabView(mContext, mLayout_productComponent, finalI);
                     List<SewQCDataBo.DesignComponentBean> designComponent = mSewQCData.getDesignComponent();
                     SewQCDataBo.DesignComponentBean component = designComponent.get(finalI);
                     refreshDesignComponentView(component);
                 }
             }));
             if (i == 0) {
-                TabViewUtil.refreshTabView(mLayout_productComponent, 0);
+                TabViewUtil.refreshTabView(mContext, mLayout_productComponent, 0);
                 refreshDesignComponentView(component);
             }
         }
@@ -514,12 +514,12 @@ public class QCFragment extends BaseFragment {
             mLayout_designComponent.addView(TabViewUtil.getTabView(mContext, bean, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TabViewUtil.refreshTabView(mLayout_designComponent, finalI);
+                    TabViewUtil.refreshTabView(mContext, mLayout_designComponent, finalI);
                     mTv_componentDesc.setText(bean.getQualityStandard());
                 }
             }));
             if (i == 0) {
-                TabViewUtil.refreshTabView(mLayout_designComponent, 0);
+                TabViewUtil.refreshTabView(mContext, mLayout_designComponent, 0);
                 mTv_componentDesc.setText(bean.getQualityStandard());
             }
         }
