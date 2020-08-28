@@ -98,6 +98,15 @@
             android:layout_width="@dimen/dp_90"
             android:layout_height="@dimen/dp_25"
             android:text="完成当前工序" />
+        
+        <Button
+            android:id="@+id/btn_pilotProd_done"
+            style="@style/btnStyle_green"
+            android:layout_width="@dimen/dp_90"
+            android:layout_height="@dimen/dp_25"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_toRightOf="@id/btn_pilotProd_complete"
+            android:text="缝制结束报工" />
     
     
     </RelativeLayout>

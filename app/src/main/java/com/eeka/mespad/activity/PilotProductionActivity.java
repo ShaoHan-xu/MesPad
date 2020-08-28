@@ -53,6 +53,8 @@ public class PilotProductionActivity extends BaseActivity {
     private TextView mTv_item;
     private TextView mTv_curStep;
     private Button mBtn_searchType;
+    private Button mBtn_complete;
+    private Button mBtn_done;
 
     private List<JSONObject> mList_data;
     private ItemAdapter mAdapter;
@@ -100,9 +102,14 @@ public class PilotProductionActivity extends BaseActivity {
         mImgAdapter = new ImgAdapter(mContext, mList_CurOperations, R.layout.item_pilot_image);
         vp_sopImg.setAdapter(mImgAdapter);
 
+        mBtn_done = findViewById(R.id.btn_pilotProd_done);
+        mBtn_done.setOnClickListener(this);
+
+        mBtn_complete = findViewById(R.id.btn_pilotProd_complete);
+        mBtn_complete.setOnClickListener(this);
+
         findViewById(R.id.iv_pilotProd_login).setOnClickListener(this);
         findViewById(R.id.btn_pilotProd_search).setOnClickListener(this);
-        findViewById(R.id.btn_pilotProd_complete).setOnClickListener(this);
         findViewById(R.id.btn_pilotProd_feedback).setOnClickListener(this);
         findViewById(R.id.btn_pilotProd_processSheets).setOnClickListener(this);
         findViewById(R.id.btn_pilotProd_video).setOnClickListener(this);
@@ -199,9 +206,12 @@ public class PilotProductionActivity extends BaseActivity {
             case R.id.btn_pilotProd_complete:
                 complete();
                 break;
+            case R.id.btn_pilotProd_done:
+                done();
+                break;
             case R.id.btn_pilotProd_feedback:
                 String loginUserId = SpUtil.getLoginUserId();
-                if (isEmpty(loginUserId)){
+                if (isEmpty(loginUserId)) {
                     toast("请登录");
                     return;
                 }
@@ -291,6 +301,16 @@ public class PilotProductionActivity extends BaseActivity {
         HttpHelper.trialOperationWork(json, this);
     }
 
+    private void done() {
+        String loginUserId = SpUtil.getLoginUserId();
+        if (isEmpty(loginUserId)) {
+            toast("请登录员工后操作");
+            return;
+        }
+        showLoading();
+        HttpHelper.shopOrderDone(mData.getString("orderNo"), loginUserId, this);
+    }
+
     private void search() {
         String loginUserId = SpUtil.getLoginUserId();
         if (isEmpty(loginUserId)) {
@@ -337,6 +357,12 @@ public class PilotProductionActivity extends BaseActivity {
                     mTv_item.setText(mData.getString("item"));
                 } else {
                     mTv_item.setText(mData.getString("orderNo"));
+                }
+                String isShopOrderDone = mData.getString("isShopOrderDone");
+                if ("Y".equals(isShopOrderDone)) {
+                    mBtn_done.setEnabled(false);
+                } else {
+                    mBtn_done.setEnabled(true);
                 }
                 mList_data = mData.getJSONArray("trialRouterOperations").toJavaList(JSONObject.class);
                 if (mList_data == null || mList_data.size() == 0) {
@@ -407,6 +433,9 @@ public class PilotProductionActivity extends BaseActivity {
                     mLayoutManager.smoothScrollToPosition(mRecyclerView, null, curPosition);
                 mImgAdapter.notifyDataSetChanged(mList_CurOperations);
                 setupCurStep();
+            } else if (HttpHelper.shopOrderDone.equals(url)) {
+                toast("操作成功");
+                mBtn_done.setEnabled(false);
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);

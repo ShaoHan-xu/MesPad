@@ -1,0 +1,188 @@
+{
+  "result": {
+    "currentOperations": [
+      {
+        "stepId": "910",
+        "operationDesc": "大烫",
+        "operation": "XQTPT004",
+        "resourceType": "ResourceTypeBO:8081,SF001",
+        "operationTime": 189.0140
+      }
+    ],
+    "isFinish": "N",
+    "item": "NV00657",
+    "router": "TRIAL-NV00657046",
+    "site": "8081",
+    "trialRouterOperations": [
+      {
+        "isWorked": "Y",
+        "operation": "FB",
+        "operationDesc": "分包",
+        "operationTime": 40.68,
+        "resourceType": "BH01",
+        "resourceTypeDesc": "编号",
+        "stepId": "10"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "SCBD001",
+        "operationDesc": "上裁绑定",
+        "operationTime": 0,
+        "resourceType": "DEFAULT",
+        "resourceTypeDesc": "Default Resource Type",
+        "stepId": "20"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBTN107",
+        "operationDesc": "裁片上架",
+        "operationTime": 19.44,
+        "resourceType": "SG001",
+        "resourceTypeDesc": "手工",
+        "sopUrl": "http://10.7.121.10/GST/XWBTN107-1.jpeg",
+        "stepId": "30"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBJN001",
+        "operationDesc": "平车拼接腰面",
+        "operationTime": 24.663,
+        "resourceType": "DPC01",
+        "resourceTypeDesc": "单针电脑车",
+        "sopUrl": "http://10.7.121.10/GST/XWBJN001-1.jpeg",
+        "stepId": "40"
+      },
+      {
+        "isWorked": "N",
+        "operation": "XWBJN003",
+        "operationDesc": "平车拼接腰里",
+        "operationTime": 24.663,
+        "resourceType": "DPC01",
+        "resourceTypeDesc": "单针电脑车",
+        "sopUrl": "http://10.7.121.10/GST/XWBJN003-1.jpeg",
+        "stepId": "50"
+      },
+      {
+        "isWorked": "N",
+        "operation": "XWBPO009",
+        "operationDesc": "烫开腰里拼接",
+        "operationTime": 9.032,
+        "resourceType": "TTZ01",
+        "resourceTypeDesc": "烫台",
+        "sopUrl": "http://10.7.121.10/GST/XWBPO009-1.jpeg",
+        "stepId": "60"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBPH016",
+        "operationDesc": "烫开腰面拼接,连包烫腰下沿画三边点位",
+        "operationTime": 62.654,
+        "resourceType": "TTZ01",
+        "resourceTypeDesc": "烫台",
+        "sopUrl": "http://10.7.121.10/GST/XWBPH016-1.jpeg",
+        "stepId": "70"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBBN011",
+        "operationDesc": "拉腰里下沿捆条连修编号",
+        "operationTime": 32.43,
+        "resourceType": "DKT01",
+        "resourceTypeDesc": "单针捆条车",
+        "sopUrl": "http://10.7.121.10/GST/XWBBN011-1.jpeg",
+        "stepId": "80"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBRS047",
+        "operationDesc": "平车运反腰上沿",
+        "operationTime": 63.588,
+        "resourceType": "DPC01",
+        "resourceTypeDesc": "单针电脑车",
+        "sopUrl": "http://10.7.121.10/GST/XWBRS047-1.jpeg",
+        "stepId": "90"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBTM019",
+        "operationDesc": "刀车修弯腰上沿止口",
+        "operationTime": 17.499,
+        "resourceType": "DC001",
+        "resourceTypeDesc": "刀车",
+        "sopUrl": "http://10.7.121.10/GST/XWBTM019-1.jpeg",
+        "stepId": "100"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBTS021",
+        "operationDesc": "平车压腰上沿0.1暗线",
+        "operationTime": 37.992,
+        "resourceType": "DPC01",
+        "resourceTypeDesc": "单针电脑车",
+        "sopUrl": "http://10.7.121.10/GST/XWBTS021-1.jpeg",
+        "stepId": "110"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBPF022",
+        "operationDesc": "整烫弯腰上沿运反 连整烫下沿",
+        "operationTime": 33.777,
+        "resourceType": "TTZ01",
+        "resourceTypeDesc": "烫台",
+        "sopUrl": "http://10.7.121.10/GST/XWBPF022-1.jpeg",
+        "stepId": "120"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XMSST002",
+        "operationDesc": "主唛固定尺码唛",
+        "operationTime": 18.536,
+        "resourceType": "DPC01",
+        "resourceTypeDesc": "单针电脑车",
+        "sopUrl": "http://10.7.121.10/GST/XMSST002-1.jpeg",
+        "stepId": "130"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XWBAT023",
+        "operationDesc": "平车明订腰头主唛两端连点位",
+        "operationTime": 37.761,
+        "resourceType": "DPC01",
+        "resourceTypeDesc": "单针电脑车",
+        "sopUrl": "http://10.7.121.10/GST/XWBAT023-1.jpeg",
+        "stepId": "140"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XFRTN099",
+        "operationDesc": "裁片上架",
+        "operationTime": 24.057,
+        "resourceType": "SG001",
+        "resourceTypeDesc": "手工",
+        "sopUrl": "http://10.7.121.10/GST/XFRTN099-1.jpeg",
+        "stepId": "150"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XFRDW052",
+        "operationDesc": "画前幅裁片刀口位",
+        "operationTime": 15.228,
+        "resourceType": "SG001",
+        "resourceTypeDesc": "手工",
+        "sopUrl": "http://10.7.121.10/GST/XFRDW052-1.jpeg",
+        "stepId": "160"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XPKPH083",
+        "operationDesc": "折烫前袋唇",
+        "operationTime": 22.194,
+        "resourceType": "TTZ01",
+        "resourceTypeDesc": "烫台",
+        "sopUrl": "http://10.7.121.10/GST/XPKPH083-1.jpeg",
+        "stepId": "170"
+      },
+      {
+        "isWorked": "Y",
+        "operation": "XFRPH012",
+        "operationDesc": "�
