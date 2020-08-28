@@ -13,18 +13,17 @@
         
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_80"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/border_black"
             android:divider="@drawable/divider_gray"
             android:orientation="vertical"
             android:padding="0.5dp"
-            android:showDividers="middle">
+            android:showDividers="middle|end">
             
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="@dimen/dp_25"
                 android:divider="@drawable/divider_gray"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -53,8 +52,7 @@
             
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="@dimen/dp_25"
                 android:divider="@drawable/divider_gray"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -82,8 +80,7 @@
             
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="@dimen/dp_25"
                 android:divider="@drawable/divider_gray"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -188,30 +185,32 @@
             
             <Button
                 android:id="@+id/btn_search"
-                style="@style/btnStyle_primary"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_25"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_margin="@dimen/dp_5"
+                android:background="@drawable/btn_orange_round"
                 android:text="查询"
+                android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
         </LinearLayout>
         
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/border_black"
             android:orientation="vertical"
             android:padding="0.5dp">
             
             <TextView
+                style="@style/textStyle_default"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_20"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
+                android:background="@drawable/border_bottom_dash"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_2"
                 android:text="在岗员工"
-                android:textColor="@color/white"
-                android:textSize="@dimen/textSize_title" />
+                android:textStyle="bold" />
             
             <ScrollView
                 android:id="@+id/scrollView_loginUsers"

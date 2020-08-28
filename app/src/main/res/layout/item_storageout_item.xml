@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:showDividers="middle">
-
+    
     <TextView
         android:id="@+id/tv_storageOut_shopOrder"
         style="@style/textStyle_default"
@@ -15,7 +15,7 @@
         android:layout_weight="1.2"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_workCenter"
         style="@style/textStyle_default"
@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_item"
         style="@style/textStyle_default"
@@ -31,7 +31,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_size"
         style="@style/textStyle_default"
@@ -39,7 +39,7 @@
         android:layout_weight="0.6"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_rfid"
         style="@style/textStyle_default"
@@ -47,7 +47,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_area"
         style="@style/textStyle_default"
@@ -55,7 +55,7 @@
         android:layout_weight="0.6"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_location"
         style="@style/textStyle_default"
@@ -63,7 +63,7 @@
         android:layout_weight="0.6"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_inQTY"
         style="@style/textStyle_default"
@@ -71,7 +71,7 @@
         android:layout_weight="0.6"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_outQTY"
         style="@style/textStyle_default"
@@ -79,7 +79,7 @@
         android:layout_weight="0.6"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <TextView
         android:id="@+id/tv_storageOut_lessQTY"
         style="@style/textStyle_default"
@@ -87,15 +87,16 @@
         android:layout_weight="0.6"
         android:gravity="center"
         android:padding="@dimen/dp_5" />
-
+    
     <Button
         android:id="@+id/btn_storageOut_out"
-        style="@style/btnStyle_primary"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:background="@drawable/btn_orange"
         android:gravity="center"
         android:minHeight="@dimen/dp_25"
         android:padding="@dimen/dp_5"
-        android:text="出库" />
+        android:text="出库"
+        android:textColor="@color/white" />
 </LinearLayout>
