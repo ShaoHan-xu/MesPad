@@ -67,6 +67,8 @@ public class PilotProductionActivity extends BaseActivity {
 
     private ImgAdapter mImgAdapter;
 
+    private boolean clickDoneBtn;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -244,6 +246,7 @@ public class PilotProductionActivity extends BaseActivity {
         }
         String item = mEt_item.getText().toString();
         if (item.length() < 14) {
+            clickDoneBtn = false;
             showLoading();
             HttpHelper.getProcessSheetsByItem(mData.getString("item"), this);
         } else {
@@ -307,6 +310,7 @@ public class PilotProductionActivity extends BaseActivity {
             toast("请登录员工后操作");
             return;
         }
+        clickDoneBtn = true;
         showLoading();
         HttpHelper.shopOrderDone(mData.getString("orderNo"), loginUserId, this);
     }
@@ -433,9 +437,6 @@ public class PilotProductionActivity extends BaseActivity {
                     mLayoutManager.smoothScrollToPosition(mRecyclerView, null, curPosition);
                 mImgAdapter.notifyDataSetChanged(mList_CurOperations);
                 setupCurStep();
-            } else if (HttpHelper.shopOrderDone.equals(url)) {
-                toast("操作成功");
-                mBtn_done.setEnabled(false);
             } else if (HttpHelper.positionLogin_url.equals(url)) {
                 toast("用户上岗成功");
                 List<UserInfoBo> positionUsers = JSON.parseArray(resultJSON.getJSONArray("result").toString(), UserInfoBo.class);
@@ -445,11 +446,16 @@ public class PilotProductionActivity extends BaseActivity {
                 toast("用户下岗成功");
                 logoutSuccess();
             } else if (HttpHelper.XMII_URL.equals(url)) {
-                ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
-                if (processSheets == null) {
-                    ErrorDialog.showAlert(mContext, "根据工单没有查到对应的款号");
-                } else {
-                    new ProcessSheetsDialog(mContext, processSheets).show();
+                if(clickDoneBtn){
+                    toast("操作成功");
+                    mBtn_done.setEnabled(false);
+                }else{
+                    ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
+                    if (processSheets == null) {
+                        ErrorDialog.showAlert(mContext, "根据工单没有查到对应的款号");
+                    } else {
+                        new ProcessSheetsDialog(mContext, processSheets).show();
+                    }
                 }
             }
         } else {

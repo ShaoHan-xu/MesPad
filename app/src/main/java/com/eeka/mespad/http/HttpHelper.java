@@ -172,7 +172,6 @@ public class HttpHelper {
     public static final String trialOperationWork = BASE_URL + "trialProduce/trialOperationWork?";
     public static final String trialFeedBack = BASE_URL + "trialProduce/trialFeedBack?";
     public static final String selectOperation = BASE_URL + "trialProduce/selectOperation?";
-    public static final String shopOrderDone = BASE_URL + "trialProduce/shopOrderDone?";
 
     //MII接口
     public static final String XMII_URL = PadApplication.XMII_URL;
@@ -219,12 +218,12 @@ public class HttpHelper {
     }
 
     public static void shopOrderDone(String orderNo,String userId, HttpCallback callback) {
-        RequestParams params = getBaseParams();
-        JSONObject json = new JSONObject();
-        json.put("orderNo", orderNo);
-        json.put("userId", userId);
-        params.put("params", json.toJSONString());
-        HttpRequest.post(shopOrderDone, params, getResponseHandler(shopOrderDone, callback));
+        RequestParams params = getXMIIParams();
+        params.put("Transaction", "EEKA_EXT/TRANS/Z_MES_TRIAL_PRODUCE/TRANSACTION/shopOrderDone");
+        params.put("site", SpUtil.getSite());
+        params.put("orderNo", orderNo);
+        params.put("userId", userId);
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
     /**

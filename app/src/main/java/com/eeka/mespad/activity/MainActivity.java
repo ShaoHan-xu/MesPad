@@ -122,6 +122,7 @@ public class MainActivity extends NFCActivity {
         SpUtil.cleanDictionaryData();
         LogUtil.deletePastLogFile();
         SpUtil.saveSalesOrder(null);
+        SpUtil.savePositionUsers(null);
         SpUtil.save(SpUtil.KEY_SHOPORDER, null);
 
         mWebServiceCallback = new WebServiceCallback();
