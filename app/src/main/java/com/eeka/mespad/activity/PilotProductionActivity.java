@@ -229,8 +229,7 @@ public class PilotProductionActivity extends NFCActivity {
                 showLogoutDialog();
                 break;
             case R.id.btn_pilotProd_search:
-//                search();
-                searchRFID("1234");
+                search();
                 break;
             case R.id.btn_pilotProd_complete:
                 complete();
