@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
@@ -29,16 +30,21 @@ import com.eeka.mespad.adapter.RecyclerViewHolder;
 import com.eeka.mespad.bo.ContextInfoBo;
 import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
+import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.CenterLayoutManager;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.eeka.mespad.view.dialog.CommListDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
-import com.eeka.mespad.view.dialog.HangerSwipeDialog;
 import com.eeka.mespad.view.dialog.ProcessSheetsDialog;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +52,7 @@ import java.util.List;
 /**
  * 试产
  */
-public class PilotProductionActivity extends BaseActivity {
+public class PilotProductionActivity extends NFCActivity {
 
     private TextView mTv_loginUser;
     private EditText mEt_item;
@@ -70,14 +76,34 @@ public class PilotProductionActivity extends BaseActivity {
     private boolean clickDoneBtn;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_pilotproduction);
 
         showLoading();
+        EventBus.getDefault().register(this);
+        SpUtil.savePositionUsers(null);
         HttpHelper.initData(this);
 
         initView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 收到推送消息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPushMsgReceive(PushJson push) {
+        String type = push.getType();
+        if (PushJson.TYPE_RFID.equals(type)) {
+            String content = push.getContent();
+            searchRFID(content);
+        }
     }
 
     @Override
@@ -203,7 +229,8 @@ public class PilotProductionActivity extends BaseActivity {
                 showLogoutDialog();
                 break;
             case R.id.btn_pilotProd_search:
-                search();
+//                search();
+                searchRFID("1234");
                 break;
             case R.id.btn_pilotProd_complete:
                 complete();
@@ -237,6 +264,35 @@ public class PilotProductionActivity extends BaseActivity {
                 showSearchTypeWindow();
                 break;
         }
+    }
+
+    private void searchRFID(String rfid) {
+        showLoading();
+        HttpHelper.querySOByRFID(rfid, new HttpCallback() {
+            @Override
+            public void onSuccess(String url, JSONObject resultJSON) {
+                JSONArray json = resultJSON.getJSONObject("Rowsets").getJSONArray("Rowset").getJSONObject(0).getJSONArray("Row");
+                if(json != null){
+                    JSONObject object = json.getJSONObject(0);
+                    String orderType = object.getString("ORDER_TYPE");
+                    if("P".equalsIgnoreCase(orderType)){
+                        mEt_item.setText(object.getString("ITEM_NO"));
+                    }else if("S".equalsIgnoreCase(orderType)){
+                        mEt_item.setText(object.getString("ORDER_NO"));
+                    }
+                    search();
+                }else{
+                    toast("该卡号未查询到相关工单信息");
+                }
+                dismissLoading();
+            }
+
+            @Override
+            public void onFailure(String url, int code, String message) {
+                dismissLoading();
+                ErrorDialog.showAlert(mContext, message);
+            }
+        });
     }
 
     private void showProcessSheets() {
@@ -446,10 +502,10 @@ public class PilotProductionActivity extends BaseActivity {
                 toast("用户下岗成功");
                 logoutSuccess();
             } else if (HttpHelper.XMII_URL.equals(url)) {
-                if(clickDoneBtn){
+                if (clickDoneBtn) {
                     toast("操作成功");
                     mBtn_done.setEnabled(false);
-                }else{
+                } else {
                     ProcessSheetsBo processSheets = JSON.parseObject(resultJSON.getString("result"), ProcessSheetsBo.class);
                     if (processSheets == null) {
                         ErrorDialog.showAlert(mContext, "根据工单没有查到对应的款号");

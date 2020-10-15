@@ -681,6 +681,28 @@ public class HttpHelper {
     }
 
     /**
+     * 获取订单上裁明细
+     */
+    public static void getShopOrderSizeCode(String orderNo, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("QueryTemplate", "EEKA_EXT/TRANS/Z_BINDING/QUERY/getShopOrderSizeCode");
+        params.put("Param.1", SpUtil.getSite());
+        params.put("Param.2", orderNo);
+        HttpRequest.post(XMII_URL_Illuminator, params, getResponseHandler(XMII_URL_Illuminator, callback));
+    }
+
+    /**
+     * 试产通过 RFID 获取工单号
+     */
+    public static void querySOByRFID(String rfid, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("QueryTemplate", "EEKA_EXT/TRANS/Z_TRAIL_REPORT/QUERY/querySOByRFID");
+        params.put("Param.1", SpUtil.getSite());
+        params.put("Param.2", rfid);
+        HttpRequest.post(XMII_URL_Illuminator, params, getResponseHandler(XMII_URL_Illuminator, callback));
+    }
+
+    /**
      * 获取日返修
      */
     public static void padShowOpeartionNc(String userId, HttpCallback callback) {
@@ -1607,7 +1629,7 @@ public class HttpHelper {
             }
         }
 //        PAD_IP = "10.10.34.49";
-//        PAD_IP = "4";// D 分包
+        PAD_IP = "12";// D 分包
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
 //        PAD_IP = "10.8.42.10";
         return PAD_IP;

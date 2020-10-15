@@ -354,6 +354,24 @@
                             android:id="@+id/tv_suspend_MTMOrderNum"
                             style="@style/textStyle_default" />
                     </LinearLayout>
+    
+                    <LinearLayout
+                        android:id="@+id/layout_dayOutput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_2"
+                        android:orientation="horizontal">
+        
+                        <TextView
+                            style="@style/textStyle_default"
+                            android:layout_marginRight="@dimen/dp_5"
+                            android:text="日产量"
+                            android:textColor="@color/text_gray_default" />
+        
+                        <TextView
+                            android:id="@+id/tv_suspend_dayOutput"
+                            style="@style/textStyle_default" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -371,7 +389,7 @@
                             android:id="@+id/tv_suspend_processLot"
                             style="@style/textStyle_default" />
                     </LinearLayout>
-
+    
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -17,8 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.eeka.mespad.PadApplication;
 import com.eeka.mespad.R;
 import com.eeka.mespad.activity.ImageBrowserActivity;
 import com.eeka.mespad.adapter.CommonAdapter;
@@ -34,9 +34,11 @@ import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.view.dialog.AutoPickDialog;
 import com.eeka.mespad.view.dialog.CreateCardDialog;
+import com.eeka.mespad.view.dialog.DayOutputDialog;
 import com.eeka.mespad.view.dialog.ErrorDialog;
 import com.eeka.mespad.view.dialog.MyAlertDialog;
 import com.eeka.mespad.view.dialog.SuspendAlertDialog;
+import com.eeka.mespad.view.dialog.SuspendInfoDialog;
 import com.eeka.mespad.view.dialog.WashLabelDialog;
 import com.squareup.picasso.Picasso;
 
@@ -138,17 +140,53 @@ public class SuspendFragment extends BaseFragment {
         mLayout_imgBar = mView.findViewById(R.id.layout_suspend_img);
 
         mBtn_binding = mView.findViewById(R.id.btn_suspend_binding);
-        mBtn_binding.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mBtn_binding.setOnClickListener(this);
+        mTv_orderNum.setOnClickListener(this);
+        mView.findViewById(R.id.layout_dayOutput).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.btn_suspend_binding:
                 if (mCurComponent == null) {
                     showErrorDialog("请点击选择要绑定的部件");
                     return;
                 }
                 binding(mCurComponent.getComponentId(), mHangerId, mCurSFC);
+                break;
+            case R.id.tv_suspend_orderNum:
+                getShopOrderSizeInfo();
+                break;
+            case R.id.layout_dayOutput:
+                new DayOutputDialog(mContext).show();
+                break;
+        }
+    }
+
+    private void getShopOrderSizeInfo() {
+        showLoading();
+        HttpHelper.getShopOrderSizeCode(mComponent.getSHOP_ORDER(), new HttpCallback() {
+            @Override
+            public void onSuccess(String url, JSONObject resultJSON) {
+                JSONArray json = resultJSON.getJSONObject("Rowsets").getJSONArray("Rowset").getJSONObject(0).getJSONArray("Row");
+                if (json != null) {
+                    new SuspendInfoDialog(mContext, mComponent.getSHOP_ORDER(), mComponent.getITEM(), json).show();
+                } else {
+                    toast("未查询到相关工单信息");
+                }
+                dismissLoading();
+            }
+
+            @Override
+            public void onFailure(String url, int code, String message) {
+                dismissLoading();
+                ErrorDialog.showAlert(mContext, message);
             }
         });
     }
+
 
     @Override
     protected void initData() {

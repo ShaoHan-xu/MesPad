@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:divider="@drawable/divider_gray"
+    android:orientation="vertical"
+    android:showDividers="middle|end">
+    
+    <include layout="@layout/layout_title_dlg" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_5">
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:padding="@dimen/dp_5"
+            android:text="工单号：" />
+        
+        <TextView
+            android:id="@+id/tv_shopOrder"
+            style="@style/textStyle_default"
+            android:layout_marginRight="@dimen/dp_20"
+            android:text="" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="款号：" />
+        
+        <TextView
+            android:id="@+id/tv_itemNum"
+            style="@style/textStyle_default"
+            android:layout_marginRight="@dimen/dp_20"
+            android:text="" />
+    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_gray"
+        android:divider="@drawable/divider_gray"
+        android:showDividers="middle">
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_5"
+            android:text="尺码" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_5"
+            android:text="下单数量" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:padding="@dimen/dp_5"
+            android:text="已发货数量" />
+        
+        <TextView
+            style="@style/textStyle_default"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/dp_5"
+            android:text="剩余数量" />
+    
+    </LinearLayout>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:id="@+id/layout_sizeCode_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="vertical"
+            android:showDividers="middle">
+        
+        </LinearLayout>
+    
+    </ScrollView>
+
+</LinearLayout>
