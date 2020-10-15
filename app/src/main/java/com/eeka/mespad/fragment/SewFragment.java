@@ -303,10 +303,13 @@ public class SewFragment extends BaseFragment {
         mSortingDialog.show();
     }
 
+    private boolean isSingleStart;
     /**
      * 手工开始
+     * @param isSingle 是否只调用开始接口，不调用 doing 接口
      */
-    public void manualStart(String rfid) {
+    public void manualStart(String rfid,boolean isSingle) {
+        isSingleStart = isSingle;
         mRFID = rfid;
         if (isEmpty(mRFID)) {
             showErrorDialog("请输入条码获取数据");
@@ -366,7 +369,11 @@ public class SewFragment extends BaseFragment {
         public void onSuccess(String method, JSONObject result) {
             dismissLoading();
             if (WebServiceUtils.INA_IN.equals(method)) {
-                inaDoing();
+                if(isSingleStart){
+                    toast("操作成功");
+                }else{
+                    inaDoing();
+                }
             } else if (WebServiceUtils.INA_OUT.equals(method)) {
                 jumpSorting = false;
                 String nextLine = result.getString("nextLineId");
@@ -426,7 +433,7 @@ public class SewFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 manualAlert = false;
-                manualStart(mRFID);
+                manualStart(mRFID,false);
             }
         });
         mProductOnOffDialog.show();

@@ -449,6 +449,10 @@ public class MainActivity extends NFCActivity {
             }
             Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button, null);
             switch (item.getBUTTON_ID()) {
+                case "SELF_START":
+                    button.setText("开始(单独)");
+                    button.setId(R.id.btn_singleStart);
+                    break;
                 case "HANGER_SWIPE":
                     button.setText("模拟上裁刷卡");
                     button.setId(R.id.btn_hangerSwipe);
@@ -871,9 +875,16 @@ public class MainActivity extends NFCActivity {
                     mQCFragment.change();
                 }
                 break;
+            case R.id.btn_singleStart:
+                if (mSewFragment != null) {
+                    mSewFragment.manualStart(mRFID,true);
+                } else {
+                    manualStart();
+                }
+                break;
             case R.id.btn_manualStart:
                 if (mSewFragment != null) {
-                    mSewFragment.manualStart(mRFID);
+                    mSewFragment.manualStart(mRFID,false);
                 } else {
                     manualStart();
                 }
