@@ -267,31 +267,7 @@ public class PilotProductionActivity extends NFCActivity {
 
     private void searchRFID(String rfid) {
         showLoading();
-        HttpHelper.querySOByRFID(rfid, new HttpCallback() {
-            @Override
-            public void onSuccess(String url, JSONObject resultJSON) {
-                JSONArray json = resultJSON.getJSONObject("Rowsets").getJSONArray("Rowset").getJSONObject(0).getJSONArray("Row");
-                if(json != null){
-                    JSONObject object = json.getJSONObject(0);
-                    String orderType = object.getString("ORDER_TYPE");
-                    if("P".equalsIgnoreCase(orderType)){
-                        mEt_item.setText(object.getString("ITEM_NO"));
-                    }else if("S".equalsIgnoreCase(orderType)){
-                        mEt_item.setText(object.getString("ORDER_NO"));
-                    }
-                    search();
-                }else{
-                    toast("该卡号未查询到相关工单信息");
-                }
-                dismissLoading();
-            }
-
-            @Override
-            public void onFailure(String url, int code, String message) {
-                dismissLoading();
-                ErrorDialog.showAlert(mContext, message);
-            }
-        });
+        HttpHelper.querySOByRFID(rfid, this);
     }
 
     private void showProcessSheets() {
@@ -512,6 +488,15 @@ public class PilotProductionActivity extends NFCActivity {
                         new ProcessSheetsDialog(mContext, processSheets).show();
                     }
                 }
+            } else if (HttpHelper.getCommonInfoByLogicNo.equalsIgnoreCase(url)) {
+                JSONObject object = resultJSON.getJSONArray("result").getJSONObject(0);
+                String orderType = object.getString("ORDER_TYPE");
+                if ("P".equalsIgnoreCase(orderType)) {
+                    mEt_item.setText(object.getString("ITEM_NO"));
+                } else if ("S".equalsIgnoreCase(orderType)) {
+                    mEt_item.setText(object.getString("ORDER_NO"));
+                }
+                search();
             }
         } else {
             String message = resultJSON.getString("message");

@@ -167,24 +167,7 @@ public class SuspendFragment extends BaseFragment {
 
     private void getShopOrderSizeInfo() {
         showLoading();
-        HttpHelper.getShopOrderSizeCode(mComponent.getSHOP_ORDER(), new HttpCallback() {
-            @Override
-            public void onSuccess(String url, JSONObject resultJSON) {
-                JSONArray json = resultJSON.getJSONObject("Rowsets").getJSONArray("Rowset").getJSONObject(0).getJSONArray("Row");
-                if (json != null) {
-                    new SuspendInfoDialog(mContext, mComponent.getSHOP_ORDER(), mComponent.getITEM(), json).show();
-                } else {
-                    toast("未查询到相关工单信息");
-                }
-                dismissLoading();
-            }
-
-            @Override
-            public void onFailure(String url, int code, String message) {
-                dismissLoading();
-                ErrorDialog.showAlert(mContext, message);
-            }
-        });
+        HttpHelper.getShopOrderSizeCode(mComponent.getSHOP_ORDER(), this);
     }
 
 
@@ -471,7 +454,10 @@ public class SuspendFragment extends BaseFragment {
         }
         super.onSuccess(url, resultJSON);
         if (HttpHelper.isSuccess(resultJSON)) {
-            if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
+            if(HttpHelper.getCommonInfoByLogicNo.equalsIgnoreCase(url)){
+                JSONArray json = resultJSON.getJSONArray("result");
+                new SuspendInfoDialog(mContext, mComponent.getSHOP_ORDER(), mComponent.getITEM(), json).show();
+            }else if (HttpHelper.queryPositionByPadIp_url.equals(url)) {
                 JSONObject result = resultJSON.getJSONObject("result");
                 mContextInfo = JSON.parseObject(result.toString(), ContextInfoBo.class);
                 SpUtil.saveContextInfo(mContextInfo);

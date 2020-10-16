@@ -186,6 +186,22 @@ public class HttpHelper {
     }
 
     /**
+     * 试产APP 通过 RFID 获取工单号
+     */
+    public static void querySOByRFID(String rfid, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("SITE", SpUtil.getSite());
+        json.put("LOGIC_NO", "query.soOrItem.by.rfid");
+        JSONObject json1 = new JSONObject();
+        json1.put("SITE", SpUtil.getSite());
+        json1.put("RFID", rfid);
+        json.put("PARAMS", json1);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getCommonInfoByLogicNo, params, getResponseHandler(getCommonInfoByLogicNo, callback));
+    }
+
+    /**
      * 试产 APP 选择工序
      */
     public static void selectOperation(String router,String operation, HttpCallback callback) {
@@ -683,23 +699,17 @@ public class HttpHelper {
     /**
      * 获取订单上裁明细
      */
-    public static void getShopOrderSizeCode(String orderNo, HttpCallback callback) {
-        RequestParams params = getXMIIParams();
-        params.put("QueryTemplate", "EEKA_EXT/TRANS/Z_BINDING/QUERY/getShopOrderSizeCode");
-        params.put("Param.1", SpUtil.getSite());
-        params.put("Param.2", orderNo);
-        HttpRequest.post(XMII_URL_Illuminator, params, getResponseHandler(XMII_URL_Illuminator, callback));
-    }
-
-    /**
-     * 试产通过 RFID 获取工单号
-     */
-    public static void querySOByRFID(String rfid, HttpCallback callback) {
-        RequestParams params = getXMIIParams();
-        params.put("QueryTemplate", "EEKA_EXT/TRANS/Z_TRAIL_REPORT/QUERY/querySOByRFID");
-        params.put("Param.1", SpUtil.getSite());
-        params.put("Param.2", rfid);
-        HttpRequest.post(XMII_URL_Illuminator, params, getResponseHandler(XMII_URL_Illuminator, callback));
+    public static void getShopOrderSizeCode(String shopOrder, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("SITE", SpUtil.getSite());
+        json.put("LOGIC_NO", "query.shopOrder.sizeCode.output");
+        JSONObject json1 = new JSONObject();
+        json1.put("SITE", SpUtil.getSite());
+        json1.put("SHOP_ORDER", shopOrder);
+        json.put("PARAMS", json1);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getCommonInfoByLogicNo, params, getResponseHandler(getCommonInfoByLogicNo, callback));
     }
 
     /**
