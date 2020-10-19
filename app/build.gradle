@@ -26,9 +26,9 @@ android {
         minSdkVersion 15
 
         targetSdkVersion 28
-        versionCode 154
+        versionCode 155
 
-        versionName "3.154"
+        versionName "3.155"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -121,7 +121,12 @@ android {
     //指定打包后应用名称
     android.applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "MesPad_${variant.productFlavors[0].name}_${variant.versionName}.apk"
+            if ('SHI_CHANG' == variant.productFlavors[0].name){
+                outputFileName = "${variant.productFlavors[0].name}_${variant.versionName}.apk"
+            }else{
+                outputFileName = "MesPad_${variant.productFlavors[0].name}_${variant.versionName}.apk"
+            }
+
         }
     }
 

@@ -32,7 +32,6 @@ import com.eeka.mespad.bo.PositionInfoBo;
 import com.eeka.mespad.bo.ProcessSheetsBo;
 import com.eeka.mespad.bo.PushJson;
 import com.eeka.mespad.bo.UserInfoBo;
-import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.manager.CenterLayoutManager;
 import com.eeka.mespad.utils.SpUtil;
@@ -489,14 +488,19 @@ public class PilotProductionActivity extends NFCActivity {
                     }
                 }
             } else if (HttpHelper.getCommonInfoByLogicNo.equalsIgnoreCase(url)) {
-                JSONObject object = resultJSON.getJSONArray("result").getJSONObject(0);
-                String orderType = object.getString("ORDER_TYPE");
-                if ("P".equalsIgnoreCase(orderType)) {
-                    mEt_item.setText(object.getString("ITEM_NO"));
-                } else if ("S".equalsIgnoreCase(orderType)) {
-                    mEt_item.setText(object.getString("ORDER_NO"));
+                JSONArray array = resultJSON.getJSONArray("result");
+                if(array.size() > 0){
+                    JSONObject object = array.getJSONObject(0);
+                    String orderType = object.getString("ORDER_TYPE");
+                    if ("P".equalsIgnoreCase(orderType)) {
+                        mEt_item.setText(object.getString("ITEM_NO"));
+                    } else if ("S".equalsIgnoreCase(orderType)) {
+                        mEt_item.setText(object.getString("ORDER_NO"));
+                    }
+                    search();
+                }else{
+                    toast("通过卡号查询工单失败");
                 }
-                search();
             }
         } else {
             String message = resultJSON.getString("message");
