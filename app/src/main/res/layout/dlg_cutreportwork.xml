@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:id="@+id/layout_sizeCode_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_10"
+        android:background="@drawable/border_black"
+        android:divider="@drawable/divider_gray"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+        
+        <LinearLayout
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="0.5dp"
+            android:showDividers="middle">
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:background="@color/divider_gray"
+                android:gravity="center"
+                android:padding="@dimen/dp_2"
+                android:text="码数" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:padding="@dimen/dp_2"
+                android:text="订单数" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:padding="@dimen/dp_2"
+                android:text="分包数" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:padding="@dimen/dp_2"
+                android:text="实裁数" />
+            
+            <TextView
+                style="@style/textStyle_default"
+                android:layout_width="match_parent"
+                android:background="@color/text_red_default"
+                android:gravity="center"
+                android:padding="@dimen/dp_2"
+                android:text="差异"
+                android:textColor="@color/white" />
+        
+        </LinearLayout>
+    
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_10"
+            android:background="@drawable/btn_green_round_new"
+            android:text="确认"
+            android:textColor="@color/white" />
+        
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_gray_round"
+            android:text="取消" />
+    
+    
+    </LinearLayout>
+
+</LinearLayout>

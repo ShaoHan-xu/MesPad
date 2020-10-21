@@ -25,7 +25,7 @@ public class FormatUtil {
             str = str + "0";
         }
         try {
-            return Float.valueOf(str);
+            return Float.parseFloat(str);
         } catch (NumberFormatException e) {
             Logger.w(e.toString());
         }

@@ -80,4 +80,5 @@
     <item name="btn_qrCode" type="id" />
     <item name="btn_hangerSwipe" type="id" />
     <item name="btn_singleStart" type="id" />
+    <item name="btn_cutreportwork" type="id" />
 </resources>

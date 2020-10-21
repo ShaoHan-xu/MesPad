@@ -186,6 +186,22 @@ public class HttpHelper {
     }
 
     /**
+     * 获取报工码数信息
+     */
+    public static void getReportWorkSizeInfo(String shopOrder, HttpCallback callback) {
+        JSONObject json = new JSONObject();
+        json.put("SITE", SpUtil.getSite());
+        json.put("LOGIC_NO", "query.shopOrder.sizeCode");
+        JSONObject json1 = new JSONObject();
+        json1.put("SITE", SpUtil.getSite());
+        json1.put("SHOP_ORDER", shopOrder);
+        json.put("PARAMS", json1);
+        RequestParams params = getBaseParams();
+        params.put("params", JSON.toJSONString(json));
+        HttpRequest.post(getCommonInfoByLogicNo, params, getResponseHandler(getCommonInfoByLogicNo, callback));
+    }
+
+    /**
      * 试产APP 通过 RFID 获取工单号
      */
     public static void querySOByRFID(String rfid, HttpCallback callback) {

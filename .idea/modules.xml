@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Android-MesPad.iml" filepath="$PROJECT_DIR$/Android-MesPad.iml" group="MesPad" />
       <module fileurl="file://$PROJECT_DIR$/MesPad.iml" filepath="$PROJECT_DIR$/MesPad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OkHttpFinal/MesPad-OkHttpFinal.iml" filepath="$PROJECT_DIR$/OkHttpFinal/MesPad-OkHttpFinal.iml" group="MesPad/OkHttpFinal" />
+      <module fileurl="file://$PROJECT_DIR$/app/MesPad-app.iml" filepath="$PROJECT_DIR$/app/MesPad-app.iml" group="MesPad/app" />
       <module fileurl="file://$PROJECT_DIR$/OkHttpFinal/OkHttpFinal.iml" filepath="$PROJECT_DIR$/OkHttpFinal/OkHttpFinal.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
