@@ -316,7 +316,7 @@ public class BatchLabuDetailActivity extends NFCActivity {
             for (PositionInfoBo.BUTTONINFORBean item : buttonList) {
                 Button button = (Button) LayoutInflater.from(mContext).inflate(R.layout.layout_button_orange, null);
                 switch (item.getBUTTON_ID()) {
-                    case "cutreportwork":
+                    case "CUTREPORTWORK":
                         button.setText("实裁报工");
                         button.setId(R.id.btn_cutreportwork);
                         break;
@@ -381,6 +381,11 @@ public class BatchLabuDetailActivity extends NFCActivity {
                 finish();
                 break;
             case R.id.btn_cutreportwork:
+                String userId = SpUtil.getLoginUserId();
+                if (isEmpty(userId)){
+                    showAlert("请员工登录后再操作");
+                    return;
+                }
                 new ReportWorkDialog(mContext, mShopOrder).show();
                 break;
             case R.id.btn_firstLabu:

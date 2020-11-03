@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -14,11 +15,16 @@ import com.eeka.mespad.R;
 import com.eeka.mespad.http.HttpCallback;
 import com.eeka.mespad.http.HttpHelper;
 import com.eeka.mespad.utils.FormatUtil;
+import com.eeka.mespad.utils.SpUtil;
 
+/**
+ * 实裁数上报
+ */
 public class ReportWorkDialog extends BaseDialog {
 
     private String mShopOrder;
     private LinearLayout mLayout_list;
+    private JSONArray mJsonArray;
 
     public ReportWorkDialog(@NonNull Context context, String shopOrder) {
         super(context);
@@ -61,7 +67,10 @@ public class ReportWorkDialog extends BaseDialog {
             EditText et_sc = childAt.findViewById(R.id.et_SC_QTY);
             String amount = tv_amount.getText().toString();
             String sc = et_sc.getText().toString();
-            if (!amount.equals(sc)) {
+            if (isEmpty(sc)) {
+                ErrorDialog.showAlert(mContext, "请把实裁数输入完整");
+                return false;
+            } else if (!amount.equals(sc)) {
                 flag = false;
                 TextView tv_sizeCode = childAt.findViewById(R.id.tv_sizeCode);
                 String sizeCode = tv_sizeCode.getText().toString();
@@ -85,15 +94,37 @@ public class ReportWorkDialog extends BaseDialog {
 
     private void submit() {
         int childCount = mLayout_list.getChildCount();
-        int allQty = 0;
         for (int i = 1; i < childCount; i++) {
             View childAt = mLayout_list.getChildAt(i);
             EditText et_sc = childAt.findViewById(R.id.et_SC_QTY);
             String sc = et_sc.getText().toString();
             int qty = FormatUtil.strToInt(sc);
-            allQty += qty;
+            JSONObject o = mJsonArray.getJSONObject(i - 1);
+            o.put("SC_QTY", qty);
+            mJsonArray.set(i - 1, o);
         }
 
+        String userId = SpUtil.getLoginUserId();
+        LoadingDialog.show(mContext);
+        HttpHelper.FB_REPORT_FMS(userId, mJsonArray, new HttpCallback() {
+            @Override
+            public void onSuccess(String url, JSONObject resultJSON) {
+                LoadingDialog.dismiss();
+                if (HttpHelper.isSuccess(resultJSON)) {
+                    Toast.makeText(mContext, "实裁数上报成功", Toast.LENGTH_SHORT).show();
+                    mView.findViewById(R.id.btn_ok).setEnabled(false);
+                    mView.findViewById(R.id.tv_tips).setVisibility(View.VISIBLE);
+                } else {
+                    ErrorDialog.showAlert(mContext, resultJSON.getString("result"));
+                }
+            }
+
+            @Override
+            public void onFailure(String url, int code, String message) {
+                LoadingDialog.dismiss();
+                ErrorDialog.showAlert(mContext, message);
+            }
+        });
     }
 
     private void getData() {
@@ -103,21 +134,27 @@ public class ReportWorkDialog extends BaseDialog {
             public void onSuccess(String url, JSONObject resultJSON) {
                 LoadingDialog.dismiss();
                 if (HttpHelper.isSuccess(resultJSON)) {
-                    JSONArray array = resultJSON.getJSONArray("result");
-                    if (array != null && array.size() > 0) {
-                        for (int i = 0; i < array.size(); i++) {
+                    mJsonArray = resultJSON.getJSONArray("result");
+                    if (mJsonArray != null && mJsonArray.size() > 0) {
+                        for (int i = 0; i < mJsonArray.size(); i++) {
                             View view = LayoutInflater.from(mContext).inflate(R.layout.item_reportwork, null);
                             TextView tv_sizeCode = view.findViewById(R.id.tv_sizeCode);
                             TextView tv_amount = view.findViewById(R.id.tv_AMOUNT);
                             TextView tv_FB_QTY = view.findViewById(R.id.tv_FB_QTY);
                             EditText et_SC_QTY = view.findViewById(R.id.et_SC_QTY);
                             TextView tv_different = view.findViewById(R.id.tv_different);
-                            JSONObject object = array.getJSONObject(i);
+                            JSONObject object = mJsonArray.getJSONObject(i);
+                            if (i == 0) {
+                                if ("Y".equals(object.getString("IS_REPORT"))) {
+                                    mView.findViewById(R.id.btn_ok).setEnabled(false);
+                                    mView.findViewById(R.id.tv_tips).setVisibility(View.VISIBLE);
+                                }
+                            }
                             tv_sizeCode.setText(object.getString("SIZE_CODE"));
                             tv_amount.setText(object.getString("SIZE_AMOUNT"));
                             tv_FB_QTY.setText(object.getString("FB_QTY"));
                             et_SC_QTY.setText(object.getString("SC_QTY"));
-                            tv_different.setText(object.getIntValue("SIZE_AMOUNT") - object.getIntValue("SC_QTY"));
+                            tv_different.setText(String.valueOf(object.getIntValue("SIZE_AMOUNT") - object.getIntValue("SC_QTY")));
                             mLayout_list.addView(view);
                         }
                     }

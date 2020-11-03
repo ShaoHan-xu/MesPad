@@ -60,9 +60,18 @@
     
     </LinearLayout>
     
+    <TextView
+        android:id="@+id/tv_tips"
+        android:textColor="@color/text_red_default"
+        android:text="该生产订单已上报或已完工/关闭"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        style="@style/textStyle_default"/>
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
         android:layout_gravity="center">
         
         <Button
@@ -79,6 +88,7 @@
             android:layout_width="@dimen/dp_70"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_gray_round"
+            android:textColor="@color/white"
             android:text="取消" />
     
     

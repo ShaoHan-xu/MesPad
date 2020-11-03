@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.eeka.mespad.PadApplication;
@@ -183,6 +184,18 @@ public class HttpHelper {
 
     static {
         mContext = PadApplication.mContext;
+    }
+
+    /**
+     * 实裁数上报
+     */
+    public static void FB_REPORT_FMS(String userId, JSONArray sizeCodeJson, HttpCallback callback) {
+        RequestParams params = getXMIIParams();
+        params.put("Transaction", "EEKA_EXT/TRANS/Z_CUSTOM_OPERATION/TRANSACTION/FB_REPORT_FMS");
+        params.put("userId", userId);
+        params.put("sizeCodeJson", JSON.toJSONString(sizeCodeJson,SerializerFeature.DisableCircularReferenceDetect));
+        params.put("shopOrder", sizeCodeJson.getJSONObject(0).getString("SHOP_ORDER"));
+        HttpRequest.post(XMII_URL, params, getResponseHandler(XMII_URL, callback));
     }
 
     /**
@@ -1655,7 +1668,7 @@ public class HttpHelper {
             }
         }
 //        PAD_IP = "10.10.34.49";
-//        PAD_IP = "12";// D 分包
+//        PAD_IP = "10.7.20.122";// D 分包
 //        PAD_IP = "10.10.31.173";//于都 P 拉布
 //        PAD_IP = "10.8.42.10";
         return PAD_IP;
