@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.eeka.mespad.bo.UserInfoBo;
+import com.eeka.mespad.manager.Logger;
 import com.eeka.mespad.utils.SpUtil;
 import com.eeka.mespad.utils.SystemUtils;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.smtt.sdk.QbSdk;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
@@ -41,7 +43,7 @@ public class PadApplication extends Application {
 
     public static final String URL_MTM_D = "http://att.eeka.info:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
     public static final String URL_MTM_Q = "http://mtm.ifashioncloud.com:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//Q系统
-    public static final String URL_MTM_P = "https://mtm.ifashioncloud.com:4080/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
+    public static final String URL_MTM_P = "http://mtm.ifashioncloud.com:4180/eeka-mtm-centric/externalcall/qrySaleOrderLineDetail?orderNoAndLine=";//P系统
 
     public static String MQTT_D = "10.7.121.40"; //MQ地址
     public static String MQTT_Q = "10.7.121.40"; //MQ地址
@@ -124,6 +126,22 @@ public class PadApplication extends Application {
             SpUtil.saveLoginUser(new UserInfoBo(getString(R.string.user), getString(R.string.password)));
 //            SpUtil.saveLoginUser(new UserInfoBo("SHAWN", "sap12345"));
         }
+
+        initX5();
+    }
+
+    private void initX5(){
+        QbSdk.initX5Environment(mContext, new QbSdk.PreInitCallback() {
+            @Override
+            public void onCoreInitFinished() {
+
+            }
+
+            @Override
+            public void onViewInitFinished(boolean b) {
+                Logger.d("onViewInitFinished:" + b);
+            }
+        });
     }
 
     private void initBugly() {
